@@ -160,6 +160,7 @@ namespace Unity.XR.OpenXR.Features.PICOSupport
                 CreateOrUpdateAndroidMetaData("pvr.app.type", "vr");
                 CreateOrUpdateAndroidMetaData("pvr.sdk.version", PICOFeature.SDKVersion);
                 CreateOrUpdateAndroidMetaData("pxr.sdk.version_code", "5800");
+                CreateOrUpdateAndroidPermissionData("android.permission.INTERNET");
 
                 if (PICOProjectSetting.GetProjectConfig().isEyeTracking)
                 {
@@ -177,6 +178,7 @@ namespace Unity.XR.OpenXR.Features.PICOSupport
                 CreateOrUpdateAndroidMetaData("handtracking", PICOProjectSetting.GetProjectConfig().isHandTracking ? "1" : "0");
                 CreateOrUpdateAndroidMetaData("pvr.app.splash", PICOProjectSetting.GetProjectConfig().GetSystemSplashScreen(path));
             }
+
         }
     }
 }
