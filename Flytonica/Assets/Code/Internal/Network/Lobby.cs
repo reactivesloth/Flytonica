@@ -4,6 +4,7 @@ using System.Linq;
 using Code.Internal.SceneManagement;
 using FishNet;
 using FishNet.Connection;
+using FishNet.Discovery;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
@@ -31,18 +32,16 @@ namespace Code.Internal.Network
 
         private void StartSingle()
         {
-            InstanceFinder.ServerManager.OnServerConnectionState += ServerManagerOnOnRemoteConnectionState;
+            InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().enabled = false;
+            InstanceFinder.ClientManager.OnConnectedClients += ClientManagerOnOnConnectedClients;
             InstanceFinder.ServerManager.StartConnection();
-            
+            InstanceFinder.ClientManager.StartConnection();
         }
 
-        private void ServerManagerOnOnRemoteConnectionState(ServerConnectionStateArgs obj)
+        private void ClientManagerOnOnConnectedClients(ConnectedClientsArgs obj)
         {
-            if (obj.ConnectionState != LocalConnectionState.Started) return;
-            
-            InstanceFinder.ClientManager.StartConnection();
             GameSceneManager.Instance.LoadGame();
-            InstanceFinder.ServerManager.OnServerConnectionState -= ServerManagerOnOnRemoteConnectionState;
+            InstanceFinder.ClientManager.OnConnectedClients -= ClientManagerOnOnConnectedClients;
         }
 
         public override void OnStartClient()
