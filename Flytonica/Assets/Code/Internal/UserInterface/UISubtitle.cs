@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.Internal.UI
+namespace Code.Internal.UserInterface 
 {
     public class UISubtitle : MonoBehaviour
     {

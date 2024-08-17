@@ -103,25 +103,25 @@ namespace Unity.XR.OpenXR.Features.PICOSupport
                 }, 
                 new ValidationRule(this)
                 {
-                    message = "Only Unity OpenXR Plugin prior to version 1.9.1 is supported right now.",
+                    message = "Only Unity OpenXR Plugin prior to version 1.11.0 is supported right now.",
                     checkPredicate = () =>
                     {
-#if OPENXR_1_9_1
-                        return false;
-#else
+#if OPENXR_1_11_0
                         return true;
+#else
+                        return false;
 #endif
                     },
                     fixIt = () =>
                     {
                         if (request == null)
                         {
-                            request =  Client.Add("com.unity.xr.openxr@1.8.2");
+                            request =  Client.Add("com.unity.xr.openxr@1.11.0");
                         }
                         EditorApplication.update += Progress;
                     },
                     error = true,
-                    fixItMessage = "Unity OpenXR plugin will be downgraded to 1.8.2."
+                    fixItMessage = "Unity OpenXR plugin will be downgraded to 1.11.0."
                 }
             };
 

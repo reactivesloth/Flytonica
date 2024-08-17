@@ -4,7 +4,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using Unity.VisualScripting;
 using Code.Internal.Input;
-using Code.Internal.UI;
+using Code.Internal.UserInterface;
 using UnityEngine;
 using UnityEngine.Serialization;
 
