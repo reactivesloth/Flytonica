@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using Code.Internal.UI;
+using Code.Internal.UserInterface;
 using Rewired;
 using UnityEngine;
 
