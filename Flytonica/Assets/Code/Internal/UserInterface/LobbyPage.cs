@@ -18,18 +18,15 @@ namespace Code.Internal.UserInterface
         [SerializeField] private Lobby lobby;
         
         private readonly Dictionary<NetworkConnection, GameObject> _playerItems = new ();
-        
-        public override void Open()
-        {
-            base.Open();
 
+        protected override void OnOpen()
+        {
             lobby.OnComplete += OnUsersLoad;
             startButton.onClick.AddListener(StartGame);
         }
 
-        public override void Close()
+        protected override void OnClose()
         {
-            base.Close();
             startButton.onClick.RemoveListener(StartGame);
         }
 

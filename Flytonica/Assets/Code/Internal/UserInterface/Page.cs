@@ -6,34 +6,56 @@ namespace Code.Internal.UserInterface
 {
     public class Page : MonoBehaviour
     {
-        [Header("Page base params:")]
-        [SerializeField] [CanBeNull] private Page _prevPage;
-        [SerializeField] [CanBeNull] private Button _backButton;
-
+        public static Page CurrentPage;
+        public static Page PrevPage;
+        
+        [Header("Page base elements: ")]
+        [SerializeField] [CanBeNull] private Page prevPage;
+        [SerializeField] [CanBeNull] private Button backButton;
+        
         protected void Awake()
         {
-            _backButton?.onClick.AddListener(OnBackClick);
+            backButton?.onClick.AddListener(OnBackClick);
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
-            _backButton?.onClick.RemoveListener(OnBackClick);
+            backButton?.onClick.RemoveListener(OnBackClick);
         }
 
-        public virtual void Open()
+        public void Open()
         {
+            PrevPage = CurrentPage;
+            CurrentPage = this;
             gameObject.SetActive(true);
+            OnOpen();
+            
         }
 
-        public virtual void Close()
+        protected void Close()
         {
             gameObject.SetActive(false);
+            OnClose();
+        }
+
+        protected virtual void OnOpen()
+        {
+            
+        }
+        
+        protected virtual void OnClose()
+        {
+            
         }
 
         protected virtual void OnBackClick()
         {
-            Close();
-            _prevPage?.Open();
+            print(CurrentPage.gameObject.name);
+            CurrentPage.Close();
+            if (!prevPage)
+                PrevPage?.Open();
+            else
+                prevPage?.Open();
         }
     }
 }

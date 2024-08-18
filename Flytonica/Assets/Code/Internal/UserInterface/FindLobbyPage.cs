@@ -23,18 +23,16 @@ namespace Code.Internal.UserInterface
 
         private readonly List<Button> _currentServersButton = new();
 
-        public override void Open()
+        protected override void OnOpen()
         {
-            base.Open();
             _networkDiscovery ??= InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>();
             refreshButton.onClick.AddListener(OnRefreshServersList);
             _networkDiscovery.SearchForServers();
             _networkDiscovery.ServerFoundCallback += OnServerFound;
         }
 
-        public override void Close()
+        protected override void OnClose()
         {
-            base.Close();
             refreshButton.onClick.RemoveListener(OnRefreshServersList);
             _networkDiscovery.StopSearchingOrAdvertising();
             _networkDiscovery.ServerFoundCallback -= OnServerFound;
