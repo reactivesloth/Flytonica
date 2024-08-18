@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using FishNet;
 using FishNet.Discovery;
@@ -8,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.Internal.UserInterface
+namespace Code.Internal.UserInterface.Pages
 {
     public class FindLobbyPage : Page
     {

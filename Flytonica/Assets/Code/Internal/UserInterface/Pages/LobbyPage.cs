@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Code.Internal.Network;
 using Code.Internal.SceneManagement;
@@ -8,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.Internal.UserInterface
+namespace Code.Internal.UserInterface.Pages
 {
     public class LobbyPage : Page
     {

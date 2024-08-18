@@ -3,7 +3,7 @@ using FishNet.Discovery;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.Internal.UserInterface
+namespace Code.Internal.UserInterface.Pages
 {
     public class CreateLobbyPage : Page
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.Internal.UserInterface
+namespace Code.Internal.UserInterface.Pages
 {
     public class Page : MonoBehaviour
     {
