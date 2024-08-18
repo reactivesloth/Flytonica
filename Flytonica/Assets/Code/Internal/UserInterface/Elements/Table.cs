@@ -16,6 +16,8 @@ namespace Code.Internal.UserInterface.Elements
         
         [SerializeField] private GameObject headerCellPrefab;
         [SerializeField] private GameObject cellPrefab;
+        
+        [SerializeField] private GameObject contentRow;
         [SerializeField] private float fixedColumnWidth = 72f;
         
         [SerializeField] private List<string> titlesHeaders;
@@ -34,18 +36,18 @@ namespace Code.Internal.UserInterface.Elements
             if(!isShowHeaders)
                 return;
             
-            var headerRow = new GameObject("HeaderRow", typeof(RectTransform));
-            headerRow.transform.SetParent(content);
-            headerRow.transform.localScale = Vector3.one;
+            var headerRowContent = Instantiate(contentRow, content.transform);
+            headerRowContent.transform.SetParent(content);
+            headerRowContent.transform.localScale = Vector3.one;
 
-            var hLayout = headerRow.AddComponent<HorizontalLayoutGroup>();
+            var hLayout = headerRowContent.AddComponent<HorizontalLayoutGroup>();
             hLayout.childControlWidth = true;
             hLayout.childForceExpandWidth = true;
 
-            AddCell(headerCellPrefab, "№", headerRow, true);
+            AddCell(headerCellPrefab, "№", numbers.gameObject);
 
             foreach (var title in titles)
-                AddCell(headerCellPrefab, title, headerRow);
+                AddCell(headerCellPrefab, title, headerRowContent);
         }
 
         public void AddRow(params string[] data)
@@ -56,28 +58,26 @@ namespace Code.Internal.UserInterface.Elements
                 return;
             }
 
-            GameObject rowObject = new GameObject("Row", typeof(RectTransform));
-            rowObject.transform.SetParent(content);
-            rowObject.transform.localScale = Vector3.one;
+            var rowContent = Instantiate(contentRow, content.transform);
+            rowContent.transform.SetParent(content);    
+            rowContent.transform.localScale = Vector3.one;
 
-            HorizontalLayoutGroup hLayout = rowObject.AddComponent<HorizontalLayoutGroup>();
+            var hLayout = rowContent.AddComponent<HorizontalLayoutGroup>();
             hLayout.childControlWidth = true;
             hLayout.childForceExpandWidth = true;
             
-            AddCell(cellPrefab, (_rows.Count + 1).ToString(), rowObject, true);
+            AddCell(cellPrefab, (_rows.Count + 1).ToString(), numbers.gameObject);
             
             foreach (var cellData in data)
-                AddCell(cellPrefab, cellData, rowObject);
+                AddCell(cellPrefab, cellData, rowContent);
             
-            _rows.Add(rowObject);
+            _rows.Add(rowContent);
         }
 
-        private void AddCell(GameObject prefab, string data, GameObject row, bool isFixWight = false)
+        private void AddCell(GameObject prefab, string data, GameObject row)
         {
             var cell = Instantiate(prefab, row.transform);
             cell.GetComponentInChildren<TMP_Text>().text = data;
-            if(!isFixWight) 
-                return;
         }
     }
 }

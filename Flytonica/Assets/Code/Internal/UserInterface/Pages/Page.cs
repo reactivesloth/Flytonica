@@ -29,7 +29,6 @@ namespace Code.Internal.UserInterface.Pages
             CurrentPage = this;
             gameObject.SetActive(true);
             OnOpen();
-            
         }
 
         protected void Close()
