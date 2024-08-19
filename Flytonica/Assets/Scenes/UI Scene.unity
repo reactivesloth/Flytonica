@@ -285,14 +285,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059104e47c7b4d56863133eb9bb2caba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prevPage: {fileID: 241070768}
+  forcePrevPage: {fileID: 0}
   backButton: {fileID: 14308179}
-  tasksButton: {fileID: 0}
-  singleScriptsButton: {fileID: 0}
-  toRoomButton: {fileID: 0}
-  deviceInfoButton: {fileID: 0}
+  tasksButton: {fileID: 1093242830}
+  singleScriptsButton: {fileID: 237880687}
+  toRoomButton: {fileID: 331547157}
+  deviceInfoButton: {fileID: 774944046}
   selectAvatarButton: {fileID: 0}
-  scriptsPage: {fileID: 0}
+  scriptsPage: {fileID: 2126040370}
 --- !u!1 &35416385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1551,7 @@ GameObject:
   - component: {fileID: 237880688}
   - component: {fileID: 237880687}
   m_Layer: 5
-  m_Name: TasksButton
+  m_Name: SingleScriptsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1748,7 +1748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abba7dfc536a40a1a20651b6c9c85292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prevPage: {fileID: 0}
+  forcePrevPage: {fileID: 0}
   backButton: {fileID: 0}
   loginField: {fileID: 69984734}
   passwordPage: {fileID: 1733216963}
@@ -2559,7 +2559,7 @@ GameObject:
   - component: {fileID: 331547158}
   - component: {fileID: 331547157}
   m_Layer: 5
-  m_Name: CreateGaneButton
+  m_Name: ToRoomButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3064,7 +3064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041E\u0434\u0438\u043D\u043E\u0447\u043D\u044B\u0435 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438"
+  m_text: "\u0417\u0430\u0434\u0430\u043D\u0438\u044F \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
   m_sharedMaterial: {fileID: 6180909801603300319, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
@@ -4764,7 +4764,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0417\u0430\u0434\u0430\u043D\u0438\u044F \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F"
+  m_text: "\u041E\u0434\u0438\u0447\u043D\u043E\u0447\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
   m_sharedMaterial: {fileID: 6180909801603300319, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
@@ -8661,7 +8661,7 @@ GameObject:
   - component: {fileID: 1093242831}
   - component: {fileID: 1093242830}
   m_Layer: 5
-  m_Name: SingleScriptsButton
+  m_Name: TasksButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15125,7 +15125,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2042203457
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16080,7 +16080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e69ef6b5daf482489e3359cdda1f7d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prevPage: {fileID: 29240556}
+  forcePrevPage: {fileID: 0}
   backButton: {fileID: 478177761}
   startGame: {fileID: 1599202123}
 --- !u!1 &2137641154

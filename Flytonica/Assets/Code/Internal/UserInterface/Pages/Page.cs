@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,11 +7,12 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class Page : MonoBehaviour
     {
+        public static Stack<Page> PrevPages = new ();
         public static Page CurrentPage;
-        public static Page PrevPage;
+        //public static Page PrevPage;
         
         [Header("Page base elements: ")]
-        [SerializeField] [CanBeNull] private Page prevPage;
+        [SerializeField] [CanBeNull] private Page forcePrevPage;
         [SerializeField] [CanBeNull] private Button backButton;
         
         protected void Awake()
@@ -23,12 +25,15 @@ namespace Code.Internal.UserInterface.Pages
             backButton?.onClick.RemoveListener(OnBackClick);
         }
 
-        public void Open()
+        public void Open(bool isBack = false)
         {
-            PrevPage = CurrentPage;
+            if(!isBack) 
+                PrevPages.Push(CurrentPage);
             CurrentPage = this;
             gameObject.SetActive(true);
             OnOpen();
+            
+            PrevPages.Peek()?.Close();
         }
 
         protected void Close()
@@ -51,10 +56,10 @@ namespace Code.Internal.UserInterface.Pages
         {
             print(CurrentPage.gameObject.name);
             CurrentPage.Close();
-            if (!prevPage)
-                PrevPage?.Open();
+            if (!forcePrevPage)
+                PrevPages?.Pop()?.Open(true);
             else
-                prevPage?.Open();
+                forcePrevPage?.Open(true);
         }
     }
 }

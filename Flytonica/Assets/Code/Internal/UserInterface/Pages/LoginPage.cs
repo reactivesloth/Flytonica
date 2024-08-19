@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,11 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_InputField loginField, passwordPage;
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
+
+        private void Start()
+        {
+            Open();
+        }
 
         protected override void OnOpen()
         {
