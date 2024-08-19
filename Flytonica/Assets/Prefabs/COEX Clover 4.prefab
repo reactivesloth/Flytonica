@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: 6844157008723873181}
   - component: {fileID: 5605338558957389092}
   - component: {fileID: 1625880259260389076}
+  - component: {fileID: 6410941242121581068}
   m_Layer: 0
   m_Name: COEX Clover 4
   m_TagString: Untagged
@@ -240,7 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 6410941242121581068}
   droneSettings: {fileID: 11400000, guid: 2f791b720e14e1f4f995d076f3bed167, type: 2}
   engineFL: {fileID: 1771281082741106923}
   engineFR: {fileID: 220187889536851688}
@@ -260,8 +261,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   Throttle: 0
   Yaw: 0
   Pitch: 0
@@ -284,9 +285,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   cameraObject: {fileID: 1166384199582626754}
+--- !u!114 &6410941242121581068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  _networkBehaviours:
+  - {fileID: 6844157008723873181}
+  - {fileID: 5605338558957389092}
+  - {fileID: 1625880259260389076}
+  - {fileID: -8188918118421788108}
+  - {fileID: -221304252494100637}
+  - {fileID: -3482821694420630919}
+  - {fileID: -7607302233469574155}
+  <SerializedRootNetworkBehaviour>k__BackingField: {fileID: 0}
+  <NestedRootNetworkBehaviours>k__BackingField: []
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 8
+  <SpawnableCollectionId>k__BackingField: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 15189126259755887127
 --- !u!1 &1022046699937227879
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,8 +421,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 3
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -459,7 +512,7 @@ MonoBehaviour:
     FieldOfView: 90
     OrthographicSize: 10
     NearClipPlane: 0.01
-    FarClipPlane: 500
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -989,8 +1042,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 4
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -1102,8 +1155,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 5
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -1397,8 +1450,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 6
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
+  _networkObjectCache: {fileID: 6410941242121581068}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
