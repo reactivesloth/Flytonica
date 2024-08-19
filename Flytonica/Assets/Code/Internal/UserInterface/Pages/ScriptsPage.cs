@@ -3,6 +3,7 @@ using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
+using FishNet.Discovery;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -81,9 +82,10 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentMap = infoPanel.CurrentMap;
             sceneSettings.currentDrone = infoPanel.CurrentDrone;
 
+            InstanceFinder.ClientManager.OnConnectedClients += _ => GameSceneManager.Instance.LoadGame();
             InstanceFinder.ServerManager.StartConnection();
             InstanceFinder.ClientManager.StartConnection();
-            GameSceneManager.Instance.LoadGame();
+            InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().enabled = false;
         }
 
         private void OnSelect(SelectScriptButton button)
