@@ -57,27 +57,47 @@ namespace Code.Internal.Scenario.Race
                     }
                     else
                     {
-                        UISubtitle.Instance?.SetTextInstant("Чекпоинт пройден!", 1.5f);
+                        UpdateCheckpointColors();
+
+                        // Correct gate
                     }
                 }
             }
             else
             {
-                UISubtitle.Instance?.SetTextInstant("Неправильные ворота :(", 1.5f);
+                // Not correct gate
             }
+        }
+
+        private void UpdateCheckpointColors()
+        {
+            foreach (var cp in checkpoints)
+            {
+                cp.ChangeColor(CheckpointFlashType.None);
+            }
+            checkpoints[_nextCheckpoint].ChangeColor(CheckpointFlashType.Current);
+            if (_nextCheckpoint + 1 <= checkpoints.Count)
+                checkpoints[_nextCheckpoint + 1].ChangeColor(CheckpointFlashType.Next);
         }
 
         private void StartRace()
         {
             _time = 0;
             _raceCondition = RaceCondition.Running;
-            UISubtitle.Instance?.SetTextInstant("Гонка началась!", 1.5f);
+            //UISubtitle.Instance?.SetTextInstant("Гонка началась!", 1.5f);
+            
+            UpdateCheckpointColors();
         }
 
         private void FinishRace ()
         {
             _raceCondition = RaceCondition.Finished;
-            UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            //UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            
+            foreach (var cp in checkpoints)
+            {
+                cp.ChangeColor(CheckpointFlashType.Current);
+            }
         }
 
         public string GetResult()
