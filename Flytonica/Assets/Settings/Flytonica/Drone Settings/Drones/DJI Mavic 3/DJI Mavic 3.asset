@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 105574ae97e94add958b367af406a184, type: 3}
+  m_Name: DJI Mavic 3
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 3084223439770484522, guid: 1af7a6f635f67fa4ebe4e513645f07f6, type: 3}
+  modeName: DJI Mavic 3
+  weight: 0.85
+  airframeType: 4
+  droneEngine: {fileID: 11400000, guid: 091dbf04c883a8140a7d34bf7474af35, type: 2}
+  dronePropeller: {fileID: 11400000, guid: f9a1a58af622b954cbb858114851d38d, type: 2}
+  flightModes:
+  - {fileID: 11400000, guid: 2aee06479b65e60418e7d550e2eeb956, type: 2}
+  - {fileID: 11400000, guid: b0a85db7108525449a9c6d427ed15c8c, type: 2}
+  - {fileID: 11400000, guid: a607b5ccf5b6bb44fbcd1b35ebdbfb99, type: 2}
+  batteryVoltageV: 15.4
+  batteryCapacityMah: 5000
+  batteryEnergyWh: 77
+  failsafeAction: 1
+  batteryWarnLevel: 15
+  batteryFailsafeLevel: 7
+  batteryEmergencyLevel: 5
+  rCLossFailsafeTrigger: 6
+  rCLossTimeout: 2

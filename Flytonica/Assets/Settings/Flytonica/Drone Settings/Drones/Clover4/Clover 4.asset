@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 105574ae97e94add958b367af406a184, type: 3}
+  m_Name: Clover 4
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 541629917646721985, guid: 1d44866c81258c542aef5418c559ed66, type: 3}
+  modeName: Clover 4
+  weight: 1
+  airframeType: 1
+  droneEngine: {fileID: 11400000, guid: e532afbba10408e46af7a1c01378b661, type: 2}
+  dronePropeller: {fileID: 11400000, guid: b218ac518ef5ae7449835dd7fa33c7e6, type: 2}
+  flightModes:
+  - {fileID: 11400000, guid: 5e8d1b14af6734d488060c6f91d69aa5, type: 2}
+  - {fileID: 11400000, guid: 607cd98b3a90cb846b06ea2fb23ae64f, type: 2}
+  - {fileID: 11400000, guid: 6f336bd0cf2a7a54ab665305edfec878, type: 2}
+  - {fileID: 11400000, guid: 69a571b385be9ae41bea071843468290, type: 2}
+  batteryVoltageV: 12.4
+  batteryCapacityMah: 2000
+  batteryEnergyWh: 36
+  failsafeAction: 1
+  batteryWarnLevel: 15
+  batteryFailsafeLevel: 7
+  batteryEmergencyLevel: 5
+  rCLossFailsafeTrigger: 6
+  rCLossTimeout: 2

@@ -886,7 +886,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c8c20271894cacabee3a234f08a162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dronesPrefabs: {fileID: 6844157008723873181, guid: 1d44866c81258c542aef5418c559ed66, type: 3}
 --- !u!1 &1237133633
 GameObject:
   m_ObjectHideFlags: 0
@@ -960,8 +959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aee560de1674e639ea6bfa0a4ea557f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadSceneName: Stadium
-  drone: {fileID: 6844157008723873181, guid: 1d44866c81258c542aef5418c559ed66, type: 3}
+  settings: {fileID: 11400000, guid: 56bb72999f85c1a4e81b7eef178419e1, type: 2}
 --- !u!4 &1339894654
 Transform:
   m_ObjectHideFlags: 0
@@ -987,9 +985,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1610147535}
   - component: {fileID: 1610147537}
-  - component: {fileID: 1610147536}
-  - component: {fileID: 1610147538}
-  - component: {fileID: 1610147539}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1012,24 +1007,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 24081629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1610147536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610147534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Device: 0
-  m_PoseSource: 2
-  m_PoseProviderComponent: {fileID: 0}
-  m_TrackingType: 0
-  m_UpdateType: 0
-  m_UseRelativeTransform: 0
 --- !u!114 &1610147537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1073,35 +1050,6 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
---- !u!114 &1610147538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610147534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1610147539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610147534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Camera: {fileID: 0}
-  m_OriginBaseGameObject: {fileID: 1610147534}
-  m_CameraFloorOffsetObject: {fileID: 0}
-  m_RequestedTrackingOriginMode: 0
-  m_CameraYOffset: 1.1176
 --- !u!1 &1918380066
 GameObject:
   m_ObjectHideFlags: 0
