@@ -9,7 +9,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button tasksButton, singleScriptsButton, toRoomButton,
             deviceInfoButton, selectAvatarButton;
         [SerializeField] private ScriptsPage scriptsPage;
-        [SerializeField] private AvailableMapsSettings mapsSettings;
+        [SerializeField] private ScenarioSettings[] scenarioSettings;
 
         protected override void OnOpen()
         {
@@ -25,7 +25,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnSingleScripts()
         {
-            scriptsPage.Init(mapsSettings.maps);
+            scriptsPage.Init(scenarioSettings);
             scriptsPage.Open();
         }
     }

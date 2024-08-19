@@ -1,9 +1,12 @@
+
 using System;
 using System.Collections.Generic;
 using Code.Internal.SceneManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
+using Toggle = UnityEngine.UI.Toggle;
 
 namespace Code.Internal.UserInterface.Elements
 {
@@ -11,9 +14,15 @@ namespace Code.Internal.UserInterface.Elements
     public class SelectScriptButton : MonoBehaviour
     {
         [HideInInspector][SerializeField] private Button mainButton;
+        [HideInInspector][SerializeField] private InteractiveObjectView objectView;
 
+        [Header("Own Elements:")]
+        [SerializeField] private TMP_Text numberText;
         [SerializeField] private TMP_Text titleText;
-        [SerializeField] private GameObject openListArrow;
+        [SerializeField] private GameObject arrowObject;
+        [SerializeField] private Toggle selectToggle;
+
+        private Sprite _standatrSprite;
         
         //private bool _isOpenList = false;
         private GameObject _list;
@@ -21,41 +30,50 @@ namespace Code.Internal.UserInterface.Elements
         private List<SelectScriptButton> _childButtonsList;
 
         public Transform ParentForButtons => _list.transform;
+
+        public event Action<SelectScriptButton> Selected;
         
         private void OnValidate()
         {
             mainButton = GetComponent<Button>();
+            objectView = GetComponent<InteractiveObjectView>();
         }
 
-        public void Init(string title, GameObject list)
+        private void OnEnable()
         {
-            _list = list;
-            mainButton.onClick.AddListener(OpenCloseList);
-            openListArrow.SetActive(true);
-            titleText.text = title;
+            mainButton.onClick.AddListener(OnButtonPress);
         }
         
-        public void Init(ScenarioSettings settings)
+        public void Init(ScenarioSettings settings, GameObject list = null)
         {
-            //TODO: ButtonHandling
-            openListArrow.SetActive(false);
+            _list = list;
+            arrowObject.SetActive(list != null);
             titleText.text = settings.name;
         }
 
-        private void InitListOpenButton()
+        private void OnButtonPress()
         {
-            
+            OpenCloseList();
+            objectView.OnPress();
+            Selected?.Invoke(this);
         }
-
+        
         private void OpenCloseList()
         {
+            if(!_list) return;
+            
             _list.SetActive(!_list.activeSelf);
             transform.parent.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
         }
 
         private void OnDisable()
         {
-            mainButton.onClick.RemoveListener(OpenCloseList);
+            mainButton.onClick.RemoveListener(OnButtonPress);
+        }
+
+        public void UnSelected()
+        {
+            objectView.ToNormal();
         }
     }
 }

@@ -54,7 +54,6 @@ namespace Code.Internal.UserInterface.Pages
 
         protected virtual void OnBackClick()
         {
-            print(CurrentPage.gameObject.name);
             CurrentPage.Close();
             if (!forcePrevPage)
                 PrevPages?.Pop()?.Open(true);
