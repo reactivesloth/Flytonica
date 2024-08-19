@@ -19,7 +19,7 @@ namespace Code.Internal.UserInterface.Elements
         [Header("Own Elements:")]
         [SerializeField] private TMP_Text numberText;
         [SerializeField] private TMP_Text titleText;
-        [SerializeField] private GameObject arrowObject;
+        [SerializeField] private GameObject arrowObject, arrowObjectDown;
         [SerializeField] private Toggle selectToggle;
         
         //private bool _isOpenList = false;
@@ -55,6 +55,12 @@ namespace Code.Internal.UserInterface.Elements
         {
             OpenCloseList();
             objectView.OnPress();
+
+            print(objectView.State);
+            
+            arrowObject.SetActive(objectView.State != State.Selected);
+            arrowObjectDown.SetActive(objectView.State == State.Selected);
+
             Selected?.Invoke(this);
         }
         
