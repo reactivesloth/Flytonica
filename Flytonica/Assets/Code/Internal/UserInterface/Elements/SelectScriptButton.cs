@@ -58,8 +58,8 @@ namespace Code.Internal.UserInterface.Elements
 
             print(objectView.State);
             
-            arrowObject.SetActive(objectView.State != State.Selected);
-            arrowObjectDown.SetActive(objectView.State == State.Selected);
+            arrowObject.SetActive(objectView.State != State.Selected && _list != null);
+            arrowObjectDown.SetActive(objectView.State == State.Selected && _list != null);
 
             Selected?.Invoke(this);
         }
