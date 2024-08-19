@@ -7,5 +7,6 @@ namespace Code.Internal.SceneManagement
     public class MapSettings : ScriptableObject
     {
         public new string name;
+        public string loadingSceneName;
     }
 }
