@@ -29,7 +29,7 @@ namespace Code.Internal.SceneManagement
         public void LoadGame()
         {
             UnloadScene("UI Scene");
-            LoadSceneGlobal(settings.currentMap.scene.name,
+            LoadSceneGlobal(settings.currentMap.name,
                 () =>
                 {
                     FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
