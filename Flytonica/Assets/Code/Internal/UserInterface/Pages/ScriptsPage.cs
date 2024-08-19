@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
+using FishNet;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,8 +18,9 @@ namespace Code.Internal.UserInterface.Pages
 
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
+        [SerializeField] private SceneLoadingSettings sceneSettings;
 
-        private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new ();
+        private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
 
         protected override void OnOpen()
@@ -36,7 +38,7 @@ namespace Code.Internal.UserInterface.Pages
         public void Init(IEnumerable<ScenarioSettings> scenarios)
         {
             Clear();
-            
+
             foreach (var scenario in scenarios)
             {
                 var nestedScenarios = scenario.nestedScenarios;
@@ -48,7 +50,7 @@ namespace Code.Internal.UserInterface.Pages
 
                 if (!list || nestedScenarios == null)
                     continue;
-                
+
                 foreach (var scenario2 in nestedScenarios)
                 {
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
@@ -63,14 +65,25 @@ namespace Code.Internal.UserInterface.Pages
         {
             foreach (var button in _buttonScenarioDictionary.Keys)
                 Destroy(button.gameObject);
-            
+
             _buttonScenarioDictionary.Clear();
         }
 
         private void OnStartGame()
         {
             print(
-                $"{_selectedScenario.name} - {infoPanel.CurrentMap.name} {infoPanel.CurrentDrone.name} {infoPanel.CurrentFlyMode.name}");
+                $"Scenario: {_selectedScenario.name}\n" +
+                $"Map: {infoPanel.CurrentMap.name}\n" +
+                $"Drone:{infoPanel.CurrentDrone.name}\n" +
+                $"Mode:{infoPanel.CurrentFlyMode.name}");
+
+            sceneSettings.currentScenario = _selectedScenario;
+            sceneSettings.currentMap = infoPanel.CurrentMap;
+            sceneSettings.currentDrone = infoPanel.CurrentDrone;
+
+            InstanceFinder.ServerManager.StartConnection();
+            InstanceFinder.ClientManager.StartConnection();
+            GameSceneManager.Instance.LoadGame();
         }
 
         private void OnSelect(SelectScriptButton button)
@@ -78,9 +91,9 @@ namespace Code.Internal.UserInterface.Pages
             print($"select {_buttonScenarioDictionary[button].name}");
             foreach (var b in _buttonScenarioDictionary.Keys.Where(b => b != button))
                 b.UnSelected();
-            
+
             var scenarioInfo = _buttonScenarioDictionary[button];
-            if(!scenarioInfo)
+            if (!scenarioInfo)
                 return;
 
             _selectedScenario = scenarioInfo;

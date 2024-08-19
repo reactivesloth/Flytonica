@@ -24,13 +24,11 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-            
-            LoadSceneLocal("MatchmakingDemoScene");
         }
 
         public void LoadGame()
         {
-            UnloadScene("MatchmakingDemoScene");
+            UnloadScene("UI Scene");
             LoadSceneGlobal(settings.currentMap.scene.name,
                 () =>
                 {
