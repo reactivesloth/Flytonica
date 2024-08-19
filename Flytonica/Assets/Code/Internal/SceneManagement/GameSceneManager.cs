@@ -34,8 +34,8 @@ namespace Code.Internal.SceneManagement
             LoadSceneGlobal(settings.currentMap.scene.name,
                 () =>
                 {
-                    InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
                     FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
+                    InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
                 });
         }
 
