@@ -10,6 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 571583e582ff4b689c7336c8dff15854, type: 3}
-  m_Name: Stadium Scenario Transporting
+  m_Name: Tutorial Scenario Base
   m_EditorClassIdentifier: 
-  name: Transporting
+  name: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435"
+  scenarioType: 1
+  availableMaps:
+  - {fileID: 11400000, guid: 8c8832a3664b9a24e96d2ff61e0ff0c3, type: 2}
+  nestedScenarios:
+  - {fileID: 11400000, guid: fc4c921b9e03b744a801ff475c38cc0a, type: 2}
+  nextScenario: {fileID: 0}

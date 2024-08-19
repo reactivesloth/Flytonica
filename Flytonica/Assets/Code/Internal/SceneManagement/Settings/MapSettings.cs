@@ -8,6 +8,5 @@ namespace Code.Internal.SceneManagement
     {
         public SceneAsset scene;
         public new string name;
-        public ScenarioSettings[] mapScenarios;
     }
 }
