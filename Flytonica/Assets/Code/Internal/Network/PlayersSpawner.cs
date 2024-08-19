@@ -4,6 +4,7 @@ using Code.Internal.Drone;
 using FishNet;
 using FishNet.Object;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Code.Internal.Network
@@ -18,7 +19,7 @@ namespace Code.Internal.Network
 
             for (var i = 0; i < connections.Length; i++)
             {
-                var spawn = spawners[i];
+                var spawn = spawners[Random.Range(0, spawners.Length)];
                 var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position, spawn.rotation, true);
                 InstanceFinder.ServerManager.Spawn(drone, connections[i], SceneManager.GetSceneByName("Main"));
             }

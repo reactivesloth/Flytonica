@@ -110,7 +110,8 @@ namespace Code.Internal.Drone
 
             if (_droneInput.RestartButton)
             {
-                _transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
+                _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
                 _rigidBody.linearVelocity = Vector3.zero;
                 _rigidBody.angularVelocity = Vector3.zero;
             }

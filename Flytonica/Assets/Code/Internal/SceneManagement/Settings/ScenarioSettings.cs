@@ -7,6 +7,7 @@ namespace Code.Internal.SceneManagement
     public class ScenarioSettings : ScriptableObject
     {
         public new string name;
+        public string description;
         public ScenarioType scenarioType = ScenarioType.FreeFlight;
         public MapSettings[] availableMaps;
 
