@@ -36,26 +36,30 @@ namespace Code.Internal.UserInterface.Pages
             startGameButton?.onClick.RemoveListener(OnStartGame);
         }
 
-        public void Init(IEnumerable<ScenarioSettings> scenarios)
+        public void Init(ScenarioSettings[] scenarios)
         {
             Clear();
 
-            foreach (var scenario in scenarios)
+            for (var i = 0; i < scenarios.Length; i++)
             {
+                var scenario = scenarios[i];
+
                 var nestedScenarios = scenario.nestedScenarios;
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
                 var list = nestedScenarios is { Length: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
-                openListButton.Init(scenario, list);
+                openListButton.Init(scenario, (i + 1).ToString(), list);
                 _buttonScenarioDictionary.Add(openListButton, scenario);
                 openListButton.Selected += OnSelect;
 
                 if (!list || nestedScenarios == null)
                     continue;
 
-                foreach (var scenario2 in nestedScenarios)
+                for (var j = 0; j < nestedScenarios.Length; j++)
                 {
+                    var scenario2 = nestedScenarios[j];
+
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
-                    scenarioButton.Init(scenario2);
+                    scenarioButton.Init(scenario2, $"{i + 1}.{j + 1}");
                     _buttonScenarioDictionary.Add(scenarioButton, scenario2);
                     scenarioButton.Selected += OnSelect;
                 }

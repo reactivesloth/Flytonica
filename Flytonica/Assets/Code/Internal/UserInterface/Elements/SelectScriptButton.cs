@@ -21,8 +21,6 @@ namespace Code.Internal.UserInterface.Elements
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private GameObject arrowObject;
         [SerializeField] private Toggle selectToggle;
-
-        private Sprite _standatrSprite;
         
         //private bool _isOpenList = false;
         private GameObject _list;
@@ -44,10 +42,12 @@ namespace Code.Internal.UserInterface.Elements
             mainButton.onClick.AddListener(OnButtonPress);
         }
         
-        public void Init(ScenarioSettings settings, GameObject list = null)
+        public void Init(ScenarioSettings settings, string number = "", GameObject list = null)
         {
             _list = list;
             arrowObject.SetActive(list != null);
+
+            numberText.text = number;
             titleText.text = settings.name;
         }
 
