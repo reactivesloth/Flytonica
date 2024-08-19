@@ -7,55 +7,57 @@ namespace Code.Internal
 {
     public class PlaneUIRaycaster : MonoBehaviour
     {
-        public Camera mainCamera;
-        public RectTransform ui;
+        [SerializeField] private RectTransform ui;
 
-        void Update()
+        private void Update()
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0))
-                Raycast();
+            Raycast();
+        }
+
+        public void Init(RectTransform uiObject)
+        {
+            ui = uiObject;
         }
 
         private void Raycast()
         {
-            var ray = mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition);
+            var ray = new Ray(transform.position, transform.forward);
+
+            if (!Physics.Raycast(ray, out var hit)) return;
             
-            if (Physics.Raycast(ray, out var hit))
+            var textureCoordinates = hit.textureCoord;
+
+            var screenPosition = new Vector2(
+                textureCoordinates.x * ui.rect.width,
+                textureCoordinates.y * ui.rect.height
+            );
+
+            var pointerData = new PointerEventData(EventSystem.current)
             {
-                var textureCoordinates = hit.textureCoord;
+                position = screenPosition
+            };
 
-                var screenPosition = new Vector2(
-                    textureCoordinates.x * ui.rect.width,
-                    textureCoordinates.y * ui.rect.height
-                );
+            var results = new List<RaycastResult>();
+            var uiRaycaster = ui.GetComponent<GraphicRaycaster>();
 
-                var pointerData = new PointerEventData(EventSystem.current)
+            if (uiRaycaster != null)
+            {
+                uiRaycaster.Raycast(pointerData, results);
+
+                if (results.Count > 0)
                 {
-                    position = screenPosition
-                };
-
-                var results = new List<RaycastResult>();
-                var uiRaycaster = ui.GetComponent<GraphicRaycaster>();
-
-                if (uiRaycaster != null)
-                {
-                    uiRaycaster.Raycast(pointerData, results);
-
-                    if (results.Count > 0)
+                    foreach (var result in results)
                     {
-                        foreach (var result in results)
-                        {
-                            var button = result.gameObject.GetComponent<Button>();
-                            if (button == null) continue;
-                            EmulateButtonClick(button, pointerData);
-                            break;
-                        }
+                        var button = result.gameObject.GetComponent<Button>();
+                        if (button == null) continue;
+                        EmulateButtonClick(button, pointerData);
+                        break;
                     }
                 }
-                else
-                {
-                    Debug.LogError("UI камера не имеет компонента GraphicRaycaster.");
-                }
+            }
+            else
+            {
+                Debug.LogError("UI камера не имеет компонента GraphicRaycaster.");
             }
         }
 
