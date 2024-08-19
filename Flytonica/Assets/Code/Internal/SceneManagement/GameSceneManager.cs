@@ -31,7 +31,7 @@ namespace Code.Internal.SceneManagement
         public void LoadGame()
         {
             UnloadScene("MatchmakingDemoScene");
-            LoadSceneGlobal(settings.currentMap.scene.name,
+            LoadSceneGlobal(settings.currentMap.name,
                 () =>
                 {
                     FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
