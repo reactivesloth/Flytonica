@@ -12,9 +12,8 @@ namespace Code.Internal.SceneManagement
     public class GameSceneManager : MonoBehaviour
     {
         public static GameSceneManager Instance { get; private set; }
-        
-        [SerializeField] private string loadSceneName;
-        [SerializeField] private DroneController drone;
+
+        public SceneLoadingSettings settings;
 
         public string CurrentGlobalScene { get; private set; }
 
@@ -31,7 +30,11 @@ namespace Code.Internal.SceneManagement
         public void LoadGame()
         {
             UnloadScene("MatchmakingDemoScene");
-            LoadSceneGlobal(loadSceneName, InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones);
+            LoadSceneGlobal(settings.currentMap.scene.name,
+                () =>
+                {
+                    InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
+                });
         }
 
         private void LoadSceneLocal(string sceneName)

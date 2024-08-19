@@ -3,9 +3,10 @@ using UnityEngine.Serialization;
 
 namespace Code.Internal.Drone
 {
-    [CreateAssetMenu(fileName = "Drone", menuName = "Drones/Drone", order = 1)]
+    [CreateAssetMenu(fileName = "Drone", menuName = "Flytoncia/Drones/Drone", order = 1)]
     public class DroneSettings : ScriptableObject
     {
+        public GameObject prefab;
         public string modeName = "Drone";
         [Header("Body")] 
         public float weight = 0.8f;

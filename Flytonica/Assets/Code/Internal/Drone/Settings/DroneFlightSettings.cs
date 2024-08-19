@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Code.Internal.Drone
 {
-    [CreateAssetMenu(fileName = "Flight Mode", menuName = "Drones/Fligh Mode", order = 1)]
+    [CreateAssetMenu(fileName = "Flight Mode", menuName = "Flytoncia/Drones/Fligh Mode", order = 1)]
     public class DroneFlightSettings : ScriptableObject
     {
         public string modeName = "Flight Mode";
