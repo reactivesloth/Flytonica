@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.Network;
+using Code.Internal.Scenario;
 using FishNet;
 using FishNet.Managing.Scened;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace Code.Internal.SceneManagement
                 () =>
                 {
                     InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
+                    FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
                 });
         }
 
