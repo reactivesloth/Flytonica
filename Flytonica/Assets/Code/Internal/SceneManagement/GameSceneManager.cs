@@ -24,6 +24,8 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
+            
+            LoadSceneLocal("UI Scene");
         }
 
         public void LoadGame()
