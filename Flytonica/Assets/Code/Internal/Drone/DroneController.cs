@@ -134,12 +134,17 @@ namespace Code.Internal.Drone
 
         private void UpdateFlightMode()
         {
-            _currentFlightMode++;
-            if (_currentFlightMode >= droneSettings.flightModes.Length)
-                _currentFlightMode = 0;
-                
-            _currentFlightSettings = droneSettings.flightModes[_currentFlightMode];
-            UISubtitle.Instance?.SetTextInstant($"Полетный режим: {_currentFlightSettings.name}", 3);
+            if (_currentFlightSettings == null)
+                _currentFlightSettings = droneSettings.initFlightMode;
+            else
+            {
+                _currentFlightMode++;
+                if (_currentFlightMode >= droneSettings.flightModes.Length)
+                    _currentFlightMode = 0;
+
+                _currentFlightSettings = droneSettings.flightModes[_currentFlightMode];
+                UISubtitle.Instance?.SetTextInstant($"Полетный режим: {_currentFlightSettings.name}", 3);
+            }
         }
 
         private void UpdateEngines()

@@ -15,6 +15,7 @@ namespace Code.Internal.Drone
         public DronePropellerSettings dronePropeller;
         
         [Header("Flight Modes")] public DroneFlightSettings[] flightModes;
+        [HideInInspector] public DroneFlightSettings initFlightMode;
 
         [FormerlySerializedAs("batteryVoltage_V")] [Header("Power")] 
         public float batteryVoltageV = 15.4f;
