@@ -1,18 +1,9 @@
-﻿using Code.Internal.Input;
-using FishNet.Object;
+﻿using FishNet.Object;
 using UnityEngine;
 using Rewired;
 
 namespace Code.Internal.Drone
 {
-    public enum DroneFlyingMode
-    {
-        ACRO,
-        ANGLE,
-        HORIZON,
-        ALTHOLD
-    }
-
     public class DroneInput : NetworkBehaviour
     {
         [Range(0, 1)] public float Throttle;
@@ -44,12 +35,6 @@ namespace Code.Internal.Drone
 
             if (_player.controllers.joystickCount > 0)
                 UpdateJoystick();
-            
-            if (Calibration.Instance != null)
-            {
-                if (Calibration.Instance.IsCalibrating)
-                    return;
-            }
             
             Throttle = _player.GetAxis("Throttle");
             Yaw = _player.GetAxis("Yaw");

@@ -1,4 +1,3 @@
-using System;
 using FishNet.Component.Transforming;
 using FishNet.Connection;
 using FishNet.Object;
