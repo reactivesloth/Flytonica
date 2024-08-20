@@ -51,7 +51,7 @@ namespace Code.Internal.UserInterface.Elements
             titleText.text = settings.name;
         }
 
-        private void OnButtonPress()
+        public void OnButtonPress()
         {
             OpenCloseList();
             objectView.OnPress();

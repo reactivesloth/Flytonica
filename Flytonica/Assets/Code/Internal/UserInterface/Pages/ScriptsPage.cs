@@ -64,6 +64,10 @@ namespace Code.Internal.UserInterface.Pages
                     scenarioButton.Selected += OnSelect;
                 }
             }
+
+            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
+            OnSelect(select);
+            select.OnButtonPress();
         }
 
         private void Clear()
