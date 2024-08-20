@@ -24,6 +24,8 @@ namespace Code.Internal.Input
 
         private Joystick _findJoystick;
         private Joystick _joystick;
+
+        public GameObject enableAfterFinish;
         
         private void Awake()
         {
@@ -33,14 +35,19 @@ namespace Code.Internal.Input
                 Destroy(gameObject);
             
             _player = ReInput.players.GetPlayer(0);
-            
         }
 
         private void Update()
         {
-            if (ReInput.controllers.joystickCount < 1) return;
-            //if (!_isCalibrating) 
-            //    UISubtitle.Instance.SetTextInstant("Для калибровки контроллера нажмите любую клавишу");
+            if (ReInput.controllers.joystickCount < 1)
+            {
+                enableAfterFinish.SetActive(true);
+                gameObject.SetActive(false);
+                return;
+            }
+            
+            if (!_isCalibrating) 
+                UISubtitle.Instance.SetTextInstant("Для калибровки контроллера нажмите любую клавишу");
 
             UpdateJoystick();
             
@@ -129,6 +136,7 @@ namespace Code.Internal.Input
             yield return new WaitForSeconds(2);
             UISubtitle.Instance.ClearText();
             _isCalibrating = false;
+            enableAfterFinish.SetActive(true);
             gameObject.SetActive(false);
         }
 
