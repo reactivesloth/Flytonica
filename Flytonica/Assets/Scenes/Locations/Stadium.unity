@@ -306,7 +306,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 2
+    m_NearPlane: 1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -2060,6 +2060,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_Size.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_Size.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_Size.z
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_Center.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214858304323288940, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.244
+      objectReference: {fileID: 0}
     - target: {fileID: 3017108938311583747, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
@@ -2107,6 +2127,10 @@ PrefabInstance:
     - target: {fileID: 4258906841450292671, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5019208096360718905, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7720770060656992223, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
