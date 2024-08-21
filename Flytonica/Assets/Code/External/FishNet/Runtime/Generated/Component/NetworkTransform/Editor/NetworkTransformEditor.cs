@@ -61,12 +61,12 @@ namespace FishNet.Component.Transforming.Editing
 
             GameKitEditing.AddObjectField("Script:", MonoScript.FromMonoBehaviour((NetworkTransform)target), typeof(NetworkTransform), false, EditorLayoutEnableType.Disabled);
 
-            //bool isPro = false;
-            //
-            //if (isPro)
-            //    EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_UNLOCKED_TEXT, MessageType.None);
-            //else
-            //    EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_LOCKED_TEXT, MessageType.Warning);
+            bool isPro = false;
+            
+            if (isPro)
+                EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_UNLOCKED_TEXT, MessageType.None);
+            else
+                EditorGUILayout.HelpBox(EditingConstants.PRO_ASSETS_LOCKED_TEXT, MessageType.Warning);
 
             //Misc.
             EditorGUILayout.LabelField("Misc", EditorStyles.boldLabel);
