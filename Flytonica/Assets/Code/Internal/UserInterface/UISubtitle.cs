@@ -11,16 +11,9 @@ namespace Code.Internal.UserInterface
 
         public static UISubtitle Instance;
         
-        private void Awake()
+        private void OnEnable()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            Instance = this;
             
             _text = gameObject.GetComponent<Text>();
         }

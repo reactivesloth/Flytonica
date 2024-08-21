@@ -136,7 +136,7 @@ namespace Code.Internal.Input
             yield return new WaitForSeconds(2);
             UISubtitle.Instance.ClearText();
             _isCalibrating = false;
-            enableAfterFinish.SetActive(true);
+            enableAfterFinish?.SetActive(true);
             gameObject.SetActive(false);
         }
 
