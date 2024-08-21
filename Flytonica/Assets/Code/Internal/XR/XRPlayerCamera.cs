@@ -7,21 +7,18 @@ namespace Code.Internal.XR
 {
     public class XRPlayerCamera : MonoBehaviour
     {
-        private CinemachineCamera _camera;
+        private Transform _myTransform;
         
         private void Awake()
         {
-            _camera = gameObject.GetComponentInChildren<CinemachineCamera>(true);
+            _myTransform = transform;
         }
 
         private void Update()
         {
-            if (_camera.Target.TrackingTarget == null)
-            {
-                var target = FindAnyObjectByType<DroneController>();
-                if (target != null)
-                    _camera.Target.TrackingTarget = target.transform;
-            }
+            var target = FindAnyObjectByType<DroneController>();
+            if (target != null)
+                _myTransform.LookAt(target.transform);
         }
     }
 }
