@@ -77,8 +77,6 @@ namespace Code.Internal.Input
                 _player.controllers.Joysticks.Clear();
                 _player.controllers.Joysticks.Add(_joystick);
             }
-
-            print(_joystick.hardwareName + " " + _joystick.name);
         }
 
         private IEnumerator CalibrateJoysticks()
