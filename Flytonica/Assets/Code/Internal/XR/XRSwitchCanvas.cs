@@ -7,9 +7,15 @@ namespace Code.Internal.XR
     {
         void Start()
         {
-            gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled
+            var canvas = gameObject.GetComponent<Canvas>();
+            canvas.renderMode = XRSettings.isDeviceActive && XRSettings.enabled
                 ? RenderMode.ScreenSpaceCamera
                 : RenderMode.ScreenSpaceOverlay;
+
+            if (canvas.renderMode == RenderMode.WorldSpace)
+            {
+                canvas.worldCamera = Camera.main;
+            }
         }
     }
 }
