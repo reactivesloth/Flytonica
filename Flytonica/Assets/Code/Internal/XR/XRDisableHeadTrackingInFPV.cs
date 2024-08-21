@@ -7,12 +7,12 @@ namespace Code.Internal.XR
     {
         public bool shouldBeEnabledInFPV = true;
         
-        private Camera _camera;
+        private GameObject _camera;
         private DroneInput _droneInput;
 
         private void Awake()
         {
-            _camera = gameObject.GetComponentInChildren<Camera>(true);
+            _camera = gameObject.GetComponentInChildren<Camera>(true).gameObject;
         }
 
         private void Update()
@@ -23,11 +23,11 @@ namespace Code.Internal.XR
                 return;
             }
 
-            _camera.enabled = _droneInput.DroneCam switch
+            _camera.SetActive(_droneInput.DroneCam switch
             {
                 true => shouldBeEnabledInFPV,
                 false => !shouldBeEnabledInFPV
-            };
+            });
         }
     }
 }

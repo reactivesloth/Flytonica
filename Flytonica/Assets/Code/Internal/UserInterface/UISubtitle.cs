@@ -10,12 +10,15 @@ namespace Code.Internal.UserInterface
         [SerializeField] private float typingSpeed = 10;
 
         public static UISubtitle Instance;
-        
+
         private void OnEnable()
         {
             Instance = this;
             
             _text = gameObject.GetComponent<Text>();
+            ClearText();
+            StopAllCoroutines();
+            CancelInvoke();
         }
 
         public void ClearText()
