@@ -133,7 +133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &105036319
 Transform:
   m_ObjectHideFlags: 0
@@ -216,13 +216,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 451674020}
+  - component: {fileID: 451674022}
+  - component: {fileID: 451674021}
   m_Layer: 0
   m_Name: XR Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &451674020
 Transform:
   m_ObjectHideFlags: 0
@@ -239,6 +241,36 @@ Transform:
   - {fileID: 639924015}
   m_Father: {fileID: 625229559}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &451674021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451674017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldBeEnabledInFPV: 0
+--- !u!114 &451674022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451674017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 0}
+  m_OriginBaseGameObject: {fileID: 451674017}
+  m_CameraFloorOffsetObject: {fileID: 0}
+  m_RequestedTrackingOriginMode: 0
+  m_CameraYOffset: 1.1176
 --- !u!1 &457245980
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +378,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 625229559}
-  - component: {fileID: 625229558}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -354,20 +385,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &625229558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625229557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a245daa0620341febec467a4e918a226, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  desktopPlayer: {fileID: 105036315}
-  XRPlayer: {fileID: 451674017}
 --- !u!4 &625229559
 Transform:
   m_ObjectHideFlags: 0
@@ -3090,7 +3107,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 90
+  field of view: 60
   orthographic: 0
   orthographic size: 10
   m_Depth: -1

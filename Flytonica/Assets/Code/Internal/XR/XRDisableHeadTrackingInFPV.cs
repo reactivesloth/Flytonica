@@ -1,22 +1,18 @@
-using System;
 using Code.Internal.Drone;
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.SpatialTracking;
 
 namespace Code.Internal.XR
 {
-    [RequireComponent(typeof(XROrigin))]
     public class XRDisableHeadTrackingInFPV : MonoBehaviour
     {
-        private XROrigin _xrOrigin;
-        private TrackedPoseDriver[] _poseDriver;
+        public bool shouldBeEnabledInFPV = true;
+        
+        private Camera _camera;
         private DroneInput _droneInput;
 
         private void Awake()
         {
-            _xrOrigin = gameObject.GetComponent<XROrigin>();
-            _poseDriver = gameObject.GetComponentsInChildren<TrackedPoseDriver>(true);
+            _camera = gameObject.GetComponentInChildren<Camera>(true);
         }
 
         private void Update()
@@ -27,14 +23,11 @@ namespace Code.Internal.XR
                 return;
             }
 
-            if (_xrOrigin.enabled != !_droneInput.DroneCam)
-                _xrOrigin.enabled = !_droneInput.DroneCam;
-
-            foreach (var poseDriver in _poseDriver)
+            _camera.enabled = _droneInput.DroneCam switch
             {
-                if (poseDriver.enabled != !_droneInput.DroneCam)
-                    poseDriver.enabled = !_droneInput.DroneCam;
-            }
+                true => shouldBeEnabledInFPV,
+                false => !shouldBeEnabledInFPV
+            };
         }
     }
 }
