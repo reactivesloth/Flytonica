@@ -311,13 +311,13 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.xr.openxr.picoxr": {
-      "version": "file:External Packages/PICO Unity OpenXR Integration SDK",
+    "com.unity.xr.picoxr": {
+      "version": "file:External Packages/PICO Unity Integration SDK",
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.xr.core-utils": "2.2.0",
-        "com.unity.xr.openxr": "1.11.0"
+        "com.unity.xr.management": "4.0.0",
+        "com.unity.xr.interaction.toolkit": "2.0.0"
       }
     },
     "com.vrmada.ultimatexr-unity": {
