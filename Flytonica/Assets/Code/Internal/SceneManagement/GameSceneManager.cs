@@ -17,6 +17,7 @@ namespace Code.Internal.SceneManagement
         public SceneLoadingSettings settings;
 
         public string CurrentGlobalScene { get; private set; }
+        public bool IsPlaying { get; private set; }
 
         private void Awake()
         {
@@ -36,7 +37,20 @@ namespace Code.Internal.SceneManagement
                 {
                     FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
                     InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
+                    IsPlaying = true;
                 });
+        }
+
+        public void ToMenuSingle()
+        {
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
+            InstanceFinder.ClientManager.StopConnection();
+            InstanceFinder.ServerManager.StopConnection(false);
+            
+            LoadSceneLocal("UI Scene");
+            UnloadScene(CurrentGlobalScene);
+
+            IsPlaying = false;
         }
 
         private void LoadSceneLocal(string sceneName)
@@ -56,8 +70,11 @@ namespace Code.Internal.SceneManagement
             InstanceFinder.SceneManager.LoadGlobalScenes(sceneData);
             InstanceFinder.SceneManager.OnLoadEnd += args =>
             {
-                if (args.LoadedScenes.Select(s => s.name).Contains(sceneName)) 
+                if (args.LoadedScenes.Select(s => s.name).Contains(sceneName))
+                {
                     callback?.Invoke();
+                    CurrentGlobalScene = sceneName;
+                }
             };
         }
 

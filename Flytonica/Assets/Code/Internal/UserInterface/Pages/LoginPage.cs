@@ -1,4 +1,5 @@
 ﻿using System;
+using FishNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,13 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
 
+        protected new void Awake()
+        {
+            base.Awake();
+            
+            print(InstanceFinder.ClientManager.Clients.Values.Count);
+        }
+        
         private void Start()
         {
             Open();

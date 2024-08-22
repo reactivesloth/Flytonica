@@ -9,7 +9,6 @@ namespace Code.Internal.UserInterface.Pages
     {
         public static Stack<Page> PrevPages = new ();
         public static Page CurrentPage;
-        //public static Page PrevPage;
         
         [Header("Page base elements: ")]
         [SerializeField] [CanBeNull] private Page forcePrevPage;
@@ -25,7 +24,7 @@ namespace Code.Internal.UserInterface.Pages
             backButton?.onClick.RemoveListener(OnBackClick);
         }
 
-        public void Open(bool isBack = false)
+        public virtual void Open(bool isBack = false)
         {
             if(!isBack) 
                 PrevPages.Push(CurrentPage);
@@ -36,7 +35,7 @@ namespace Code.Internal.UserInterface.Pages
             PrevPages.Peek()?.Close();
         }
 
-        public void Close()
+        public virtual void Close()
         {
             gameObject.SetActive(false);
             OnClose();
