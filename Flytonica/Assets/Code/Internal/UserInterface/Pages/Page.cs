@@ -32,7 +32,7 @@ namespace Code.Internal.UserInterface.Pages
             gameObject.SetActive(true);
             OnOpen();
             
-            PrevPages.Peek()?.Close();
+            PrevPages?.Peek()?.Close();
         }
 
         public virtual void Close()
