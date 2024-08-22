@@ -31,16 +31,18 @@ namespace Code.Internal.Scenario.Searching
         private void Update()
         {
             if (_raceCondition == RaceCondition.Running)
+            {
                 _time += Time.deltaTime;
 
-            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            if (Physics.Raycast(ray,  out var hit, 20))
-            {
-                foreach (var finingObject in searchingObjects[currentObject].finingObjects)
+                Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+                if (Physics.Raycast(ray, out var hit, 35))
                 {
-                    if (finingObject.GetComponent<Collider>() == hit.collider)
+                    foreach (var finingObject in searchingObjects[currentObject].finingObjects)
                     {
-                        FindObject();
+                        if (finingObject.GetComponent<Collider>() == hit.collider)
+                        {
+                            FindObject();
+                        }
                     }
                 }
             }
@@ -70,7 +72,6 @@ namespace Code.Internal.Scenario.Searching
             var search = searchingObjects[0].descriptionTask;
             UISubtitle.Instance?.SetTextInstant($"Вам необходимо найти {searchingObjects.Length} объектов." +
                                                 $"\nНайдите {search}", 3);
-            UpdateTask();
         }
 
         private void FinishRace()
@@ -82,7 +83,7 @@ namespace Code.Internal.Scenario.Searching
         private void UpdateTask()
         { 
             var search = searchingObjects[currentObject].descriptionTask;
-            UISubtitle.Instance.SetTextInstant($"Вам необходимо найти {searchingObjects.Length} объектов.\nНайдите {search}");
+            UISubtitle.Instance.SetTextInstant($"Отлично!\nНайдите {search}", 3);
         }
         
         public string GetResult()
