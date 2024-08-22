@@ -452,6 +452,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Button X",
+                    "type": "Button",
+                    "id": "25689522-a103-4c34-beb8-16a019d05fed",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Button Y",
+                    "type": "Button",
+                    "id": "ea18d748-0218-46c5-bd8f-d860cbbbfaa8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -861,6 +879,28 @@
                     "action": "Thumbstick",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a7577d7-b7db-4651-8143-59a12cc0bfd6",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button Y",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f331956-0427-49c9-867c-dcd724040695",
+                    "path": "<XRController>{LeftHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -962,7 +1002,7 @@
                     "name": "Scale Toggle",
                     "type": "Button",
                     "id": "80ed7d74-56de-473c-bf76-da3bdd16b562",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1523,6 +1563,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Button A",
+                    "type": "Button",
+                    "id": "d81a786d-889e-4131-a128-0b93afa019d8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Button B",
+                    "type": "Button",
+                    "id": "447f857a-9080-48ff-8e35-f146a428cb2e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1930,6 +1988,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Thumbstick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1da96c98-cd98-43df-b304-bb9aca633fd0",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0eb40360-9c81-4d7b-b5a7-c4ba7c643cad",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button B",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
