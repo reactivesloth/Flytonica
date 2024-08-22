@@ -52,7 +52,7 @@ namespace Code.Internal.Drone
         {
             _rigidbody = rigidBody;
             _acceleration = acceleration;
-            _control = Mathf.Clamp01(_acceleration - control);
+            _control = (_acceleration + control)/2;
         }
     }
 }
