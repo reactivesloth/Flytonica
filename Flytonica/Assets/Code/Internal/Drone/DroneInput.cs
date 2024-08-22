@@ -1,11 +1,15 @@
 ﻿using FishNet.Object;
 using UnityEngine;
 using Rewired;
+using UnityEngine.InputSystem;
+using Joystick = Rewired.Joystick;
 
 namespace Code.Internal.Drone
 {
     public class DroneInput : NetworkBehaviour
     {
+        [SerializeField] private InputActionReference changeModeAction, changeCameraAction, restartAction;
+        
         [Range(0, 1)] public float Throttle;
         [Range(-1, 1)] public float Yaw;
         [Range(-1, 1)] public float Pitch;
@@ -41,11 +45,11 @@ namespace Code.Internal.Drone
             Pitch = _player.GetAxis("Pitch");
             Roll = _player.GetAxis("Roll");
             
-            DroneMode = _player.GetButtonDown("DroneMode");
-            if (_player.GetButtonDown("DroneCamera"))
+            DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
+            if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
                 DroneCam = !DroneCam;
 
-            RestartButton = _player.GetButtonDown("DroneRestart");
+            RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
             
             if (Throttle < -0.9f && DISARM)
             {

@@ -36,7 +36,7 @@ namespace Code.Internal.UserInterface.Pages
             PrevPages.Peek()?.Close();
         }
 
-        protected void Close()
+        public void Close()
         {
             gameObject.SetActive(false);
             OnClose();
