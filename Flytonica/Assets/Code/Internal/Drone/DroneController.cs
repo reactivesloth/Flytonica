@@ -166,16 +166,23 @@ namespace Code.Internal.Drone
                     targetHeight = _transform.position.y;
                     break;
                 case ControlType.STABILIZED:
-                    targetHeight += _droneInput.Throttle * (_droneInput.Throttle > 0 ? _currentFlightSettings.maxAscendingSpeed : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
-                    targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
+                    if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
+                    {
+                        targetHeight += _droneInput.Throttle *
+                                        (_droneInput.Throttle > 0
+                                            ? _currentFlightSettings.maxAscendingSpeed
+                                            : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
+                        targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
+
+                    }
                     
-                    var speed = Mathf.Clamp(targetHeight - _transform.position.y, -_currentFlightSettings.maxDescendingSpeed, _currentFlightSettings.maxAscendingSpeed) / 10;
+                    var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
                     acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
                     if (targetHeight < 1)
                     {
                         acceleration = 0;
                     }
-                    
+
                     break;
             }
             
