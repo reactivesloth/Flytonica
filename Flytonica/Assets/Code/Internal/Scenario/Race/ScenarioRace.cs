@@ -26,6 +26,11 @@ namespace Code.Internal.Scenario.Race
             _raceCondition = RaceCondition.Waiting;
         }
 
+        private void Start()
+        {
+            UISubtitle.Instance.SetTextInstant("Пролетите через кольцо СТАРТ чтобы начать гонку");
+        }
+
         private void Update()
         {
             if (_raceCondition == RaceCondition.Running)
@@ -84,7 +89,7 @@ namespace Code.Internal.Scenario.Race
         {
             _time = 0;
             _raceCondition = RaceCondition.Running;
-            //UISubtitle.Instance?.SetTextInstant("Гонка началась!", 1.5f);
+            UISubtitle.Instance?.SetTextInstant("Гонка началась! Летите через зеленые кольца", 1.5f);
             
             UpdateCheckpointColors();
         }
@@ -92,7 +97,7 @@ namespace Code.Internal.Scenario.Race
         private void FinishRace ()
         {
             _raceCondition = RaceCondition.Finished;
-            //UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
             
             foreach (var cp in checkpoints)
             {

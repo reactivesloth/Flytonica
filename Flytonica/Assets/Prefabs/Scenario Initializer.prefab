@@ -284,6 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6461628768773411193}
+  - component: {fileID: 7542913969204022256}
   m_Layer: 0
   m_Name: Searching
   m_TagString: Untagged
@@ -307,6 +308,19 @@ Transform:
   - {fileID: 3377395109077401833}
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7542913969204022256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698275271113696638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e85865ade342bf8eb9eb2ba11d3594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  searchingObjects: []
 --- !u!1 &6023197090695324669
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72cbdec87da97c4688a9c89d8e1d3e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkpoints: []
 --- !u!1 &6586777364904685921
 GameObject:
   m_ObjectHideFlags: 0
