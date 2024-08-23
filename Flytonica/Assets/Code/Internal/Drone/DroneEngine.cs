@@ -40,7 +40,12 @@ namespace Code.Internal.Drone
             var propPitchInches = _droneSettings.dronePropeller.propPitchInches;
 
             var thrust = (float) (4.392399f * Math.Pow(10, -8) * rpm * (Math.Pow(propDiameterInches, 3.5f) / Math.Sqrt(propPitchInches)) * (4.23333f * Math.Pow(10, -4) * rpm * propPitchInches * enterVelocity));
-            var force = _transform.up * thrust;
+            
+            var upVec = _rigidbody.transform.up;
+            upVec.x = 0;
+            upVec.z = 0;
+            float diff = 1 - upVec.magnitude;
+            var force = _transform.up * (thrust + diff);
             
             _rigidbody.AddForce(force * Time.deltaTime, ForceMode.Impulse);
 
