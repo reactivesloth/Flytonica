@@ -6,6 +6,7 @@ namespace Code.Internal.XR
     public class XRSwitchCanvas : MonoBehaviour
     {
         [SerializeField] private Camera uiCamera;
+        [SerializeField] private GameObject panelRTUI;
         
         void Start()
         {
@@ -17,11 +18,13 @@ namespace Code.Internal.XR
             if (canvas.renderMode == RenderMode.WorldSpace)
             {
                 canvas.worldCamera = Camera.main;
+                panelRTUI?.SetActive(true);
             }
             
             if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 canvas.worldCamera = uiCamera;
+                panelRTUI?.SetActive(false);
             }
         }
     }
