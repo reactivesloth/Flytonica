@@ -26,13 +26,14 @@ namespace Code.Internal.Drone
         private int _currentFlightMode;
         private DroneFlightSettings _currentFlightSettings;
 
-        [FormerlySerializedAs("_targetHeight")] public float targetHeight = 1;
 
         private float _throttle = 0;
         private float _pitch = 0;
         private float _roll = 0;
         private float _yaw = 0;
 
+        public float targetHeight = 1;
+        
         protected override void OnValidate()
         {
             InitializeDrone();
@@ -159,33 +160,36 @@ namespace Code.Internal.Drone
             var controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
             var acceleration = 0.0f;
 
-            switch (_currentFlightSettings.throttleType)
+            if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
-                case ControlType.MANUAL:
-                    acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
-                    targetHeight = _transform.position.y;
-                    break;
-                case ControlType.STABILIZED:
-                    if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
-                    {
-                        targetHeight += _droneInput.Throttle *
-                                        (_droneInput.Throttle > 0
-                                            ? _currentFlightSettings.maxAscendingSpeed
-                                            : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
-                        targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
+                if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
+                {
+                    targetHeight += _droneInput.Throttle * (_droneInput.Throttle > 0 ? _currentFlightSettings.maxAscendingSpeed : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
+                    targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
+                }
+                
+                var speed = (targetHeight > _transform.position.y) ? 0.07f : -0.07f;
+                acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
+                if (targetHeight < 1)
+                {
+                    acceleration = 0;
+                }
 
-                    }
-                    
-                    var speed = (targetHeight > _transform.position.y) ? 0.07f : -0.07f;
-                    acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
-                    if (targetHeight < 1)
-                    {
-                        acceleration = 0;
-                    }
-
-                    break;
+                switch (targetHeight - transform.position.y)
+                {
+                    case > 0 when _droneInput.Throttle < 0.44f:
+                    case < 0 when _droneInput.Throttle > 0.56f:
+                        targetHeight = _transform.position.y;
+                        _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity, new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f), _rigidBody.linearVelocity.z), Time.deltaTime * 5);
+                        break;
+                }
             }
-            
+            else
+            {
+                acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
+                targetHeight = _transform.position.y;
+            }
+
             engineFL.UpdateEngine(_rigidBody, acceleration, controlFl);
             engineFR.UpdateEngine(_rigidBody, acceleration, controlFr);
             engineRR.UpdateEngine(_rigidBody, acceleration, controlRl);
@@ -196,30 +200,42 @@ namespace Code.Internal.Drone
         {
             if (_currentFlightSettings == null) return;
             
-            var rot = _transform.eulerAngles;
+            var rotation = Quaternion.identity;
+            var eulerAngles = _transform.eulerAngles;
             var rotationMagnitude = new Vector2(_pitch, _roll).magnitude;
-
-            if (_rigidBody.linearVelocity.magnitude > 0.1f)
+            
+            var linearVelocity = _rigidBody.linearVelocity;
+            if (linearVelocity.magnitude > 0.01f)
             {
-                if (_currentFlightSettings.rotatingType == ControlType.STABILIZED ||
-                    (_currentFlightSettings.rotatingType == ControlType.MIXED &&
-                     rotationMagnitude < _currentFlightSettings.axisModeChangeValue))
+                switch (_currentFlightSettings.rotatingType)
                 {
-                    _transform.Rotate(
-                        new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
-                        Space.Self);
-                    
-                    _transform.rotation = Quaternion.Lerp(_transform.rotation, rotationMagnitude > 0.1f
-                        ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle,
-                            rot.y,
-                            -_roll * _currentFlightSettings.maxStabilizedAngle)
-                        : Quaternion.Euler(-rot.x, rot.y, -rot.z), Time.deltaTime * 5);
-                }
-                else
-                {
-                    _transform.Rotate(
-                        new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
-                        Space.Self);
+                    case ControlType.STABILIZED:
+                    case ControlType.MIXED when
+                        rotationMagnitude < _currentFlightSettings.axisModeChangeValue:
+                    {
+                        rotation = rotationMagnitude > 0.1f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
+
+                        _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
+                        break;
+                    }
+                    case ControlType.HOLD:
+                        if (rotationMagnitude > 0.1f)
+                        {
+                            rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle);
+                        }
+                        else
+                        {
+                            rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
+                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime * 5);
+                        }
+
+                        _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
+                        break;
+                    case ControlType.MANUAL:
+                        _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                        break;
                 }
             }
         }

@@ -41,8 +41,8 @@ namespace Code.Internal.Drone
 
             var thrust = (float) (4.392399f * Math.Pow(10, -8) * rpm * (Math.Pow(propDiameterInches, 3.5f) / Math.Sqrt(propPitchInches)) * (4.23333f * Math.Pow(10, -4) * rpm * propPitchInches * enterVelocity));
             var force = _transform.up * thrust;
-
-            _rigidbody.AddForce(force, ForceMode.Force);
+            
+            _rigidbody.AddForce(force * Time.deltaTime, ForceMode.Impulse);
 
             var visualRpm = _maxRPM * _control * (_clockwise ? 1:-1);
             _transform.Rotate(new Vector3(0, visualRpm, 0) * Time.fixedDeltaTime, Space.Self);

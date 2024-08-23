@@ -9,10 +9,10 @@ namespace Code.Internal.Drone
         public string modeName = "Flight Mode";
 
         [Header("Throttle")] 
-        public ControlType throttleType = ControlType.STABILIZED;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxAscendingSpeed = 1;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxDescendingSpeed = 1;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxHeight = 6000;
+        public ControlType throttleType = ControlType.HOLD;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxAscendingSpeed = 1;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxDescendingSpeed = 1;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxHeight = 6000;
         [ShowIf("throttleType", ControlType.MANUAL)] public AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
         
         
@@ -31,6 +31,7 @@ namespace Code.Internal.Drone
     {
         MANUAL,
         STABILIZED,
-        MIXED
+        MIXED,
+        HOLD
     }
 }

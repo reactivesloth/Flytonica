@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Clover 4 Flight Mode ALTCTL
   m_EditorClassIdentifier: 
   modeName: ALTCTL
-  throttleType: 1
-  maxAscendingSpeed: 8
-  maxDescendingSpeed: 6
+  throttleType: 3
+  maxAscendingSpeed: 10
+  maxDescendingSpeed: 10
   maxHeight: 6000
   accelerationCurve:
     serializedVersion: 2
@@ -60,7 +60,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxAngularSpeed: 200
-  rotatingType: 1
+  rotatingType: 3
   maxStabilizedSpeed: 20
   maxStabilizedAngle: 45
   axisModeChangeValue: 0.5
