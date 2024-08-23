@@ -15,8 +15,6 @@ namespace Code.Internal.UserInterface.Pages
         protected new void Awake()
         {
             base.Awake();
-            
-            print(InstanceFinder.ClientManager.Clients.Values.Count);
         }
         
         private void Start()
