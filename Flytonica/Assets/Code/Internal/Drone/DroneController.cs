@@ -229,11 +229,11 @@ namespace Code.Internal.Drone
                         else
                         {
                             rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime * 5);
+                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime * 2f);
                         }
 
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
-                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
+                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 2f);
                         break;
                     default:
                         _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
