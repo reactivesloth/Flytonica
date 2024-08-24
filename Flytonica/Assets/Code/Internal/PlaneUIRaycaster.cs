@@ -28,7 +28,7 @@ namespace Code.Internal
 
             foreach (var rayInteractor in xrRayInteractors)
             {
-                if (rayInteractor.TryGetCurrent3DRaycastHit(out var hit))
+                if (rayInteractor.TryGetCurrent3DRaycastHit(out var hit) && hit.collider.gameObject.CompareTag("UIPlane"))
                 {
                     var screenPosition = GetScreenPosition(hit);
                     Simulate(rayInteractor, screenPosition);
