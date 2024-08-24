@@ -235,7 +235,7 @@ namespace Code.Internal.Drone
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
                         _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
                         break;
-                    case ControlType.MANUAL:
+                    default:
                         _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
                         break;
                 }
