@@ -25,14 +25,15 @@ namespace Code.Internal.Drone
         private DroneInput _droneInput;
         private int _currentFlightMode;
         private DroneFlightSettings _currentFlightSettings;
-
-
+        
         private float _throttle = 0;
         private float _pitch = 0;
         private float _roll = 0;
         private float _yaw = 0;
 
         public float targetHeight = 1;
+
+        private float controlFl, controlFr, controlRl, controlRr, acceleration;
         
         protected override void OnValidate()
         {
@@ -114,6 +115,7 @@ namespace Code.Internal.Drone
                 _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
                 _rigidBody.linearVelocity = Vector3.zero;
                 _rigidBody.angularVelocity = Vector3.zero;
+                targetHeight = _transform.position.y;
             }
             
             UpdateRotation();
@@ -154,11 +156,11 @@ namespace Code.Internal.Drone
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
             _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 1 ? 0.5f : 0;
 
-            var controlFl = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? 0 : -_roll);
-            var controlFr = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? _roll : 0);
-            var controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
-            var controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
-            var acceleration = 0.0f;
+            controlFl = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? 0 : -_roll);
+            controlFr = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? _roll : 0);
+            controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
+            controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
+            acceleration = 0.0f;
 
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
@@ -179,7 +181,7 @@ namespace Code.Internal.Drone
                 {
                     case > 0 when _droneInput.Throttle < 0.44f:
                     case < 0 when _droneInput.Throttle > 0.56f:
-                        targetHeight = _transform.position.y;
+                        //targetHeight = _transform.position.y;
                         _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity, new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f), _rigidBody.linearVelocity.z), Time.deltaTime * 5);
                         break;
                 }
@@ -238,6 +240,16 @@ namespace Code.Internal.Drone
                         break;
                 }
             }
+        }
+
+        public float GetRPM()
+        {
+            return (engineFL.GetRPM() + engineFR.GetRPM() + engineRL.GetRPM() + engineRR.GetRPM()) / 4;
+        }
+        
+        public float GetMaxRPM()
+        {
+            return (engineFL.MaxRPM + engineFR.MaxRPM + engineRL.MaxRPM + engineRR.MaxRPM) / 4;
         }
     }
 }

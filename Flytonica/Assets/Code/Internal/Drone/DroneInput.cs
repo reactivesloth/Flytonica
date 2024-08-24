@@ -10,7 +10,7 @@ namespace Code.Internal.Drone
     {
         [SerializeField] private InputActionReference changeModeAction, changeCameraAction, restartAction;
         
-        [Range(0, 1)] public float Throttle;
+        [Range(-1, 1)] public float Throttle;
         [Range(-1, 1)] public float Yaw;
         [Range(-1, 1)] public float Pitch;
         [Range(-1, 1)] public float Roll;

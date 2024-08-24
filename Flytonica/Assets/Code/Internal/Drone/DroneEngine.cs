@@ -41,7 +41,7 @@ namespace Code.Internal.Drone
 
             var thrust = (float) (4.392399f * Math.Pow(10, -8) * rpm * (Math.Pow(propDiameterInches, 3.5f) / Math.Sqrt(propPitchInches)) * (4.23333f * Math.Pow(10, -4) * rpm * propPitchInches * enterVelocity));
             
-            var upVec = _rigidbody.transform.up;
+            var upVec = transform.up;
             upVec.x = 0;
             upVec.z = 0;
             float diff = 1 - upVec.magnitude;
@@ -57,7 +57,14 @@ namespace Code.Internal.Drone
         {
             _rigidbody = rigidBody;
             _acceleration = acceleration;
-            _control = (_acceleration + control)/2;
+            _control = Mathf.Abs(_acceleration + control);
         }
+
+        public float GetRPM()
+        {
+            return _maxRPM * _control;
+        }
+
+        public float MaxRPM => _maxRPM;
     }
 }
