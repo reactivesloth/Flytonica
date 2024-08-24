@@ -8,6 +8,8 @@ namespace Code.Internal.UserInterface
     {
         public static DroneHUD Instance { get; private set; }
         
+        [SerializeField] private GameObject HUDPanel;
+        
         [Header("UI element")] 
         
         [SerializeField] private TMP_Text modeText;
@@ -26,10 +28,14 @@ namespace Code.Internal.UserInterface
             Instance = this;
         }
 
+        public void ShowHUD(bool value) => HUDPanel.SetActive(value);
+        
         public void SetTask(string text) => taskText.text = text;
         
         public void SetMode(string text) => modeText.text = text;
         
-        public void SetTime(string text) => modeText.text = $"SECS {text}";
+        public void SetTime(string text) => timeText.text = $"SECS {text}";
+
+        public bool IsShowing() => HUDPanel.activeSelf;
     }
 }

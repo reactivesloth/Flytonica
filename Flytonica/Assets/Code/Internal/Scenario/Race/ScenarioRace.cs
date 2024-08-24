@@ -28,13 +28,17 @@ namespace Code.Internal.Scenario.Race
 
         private void Start()
         {
-            UISubtitle.Instance.SetTextInstant("Пролетите через кольцо СТАРТ чтобы начать гонку");
+            DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
+            UISubtitle.Instance?.SetTextInstant("Пролетите через стартовое кольцо чтобы начать гонку", 3);
         }
 
         private void Update()
         {
             if (_raceCondition == RaceCondition.Running)
+            {
                 _time += Time.deltaTime;
+            }
+            DroneHUD.Instance?.SetTime(GetResult ());
         }
 
         private void OnValidate()
@@ -89,7 +93,7 @@ namespace Code.Internal.Scenario.Race
         {
             _time = 0;
             _raceCondition = RaceCondition.Running;
-            UISubtitle.Instance?.SetTextInstant("Гонка началась! Летите через зеленые кольца", 1.5f);
+            DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
             
             UpdateCheckpointColors();
         }
@@ -97,6 +101,7 @@ namespace Code.Internal.Scenario.Race
         private void FinishRace ()
         {
             _raceCondition = RaceCondition.Finished;
+            DroneHUD.Instance?.SetTask(string.Empty);
             UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
             
             foreach (var cp in checkpoints)
@@ -109,7 +114,7 @@ namespace Code.Internal.Scenario.Race
         {
             TimeSpan time = TimeSpan.FromSeconds(GetResultInSeconds());
             DateTime dateTime = DateTime.Today.Add(time);
-            return dateTime.ToString("mm:ss");
+            return dateTime.ToString("mm:ss:fff");
         }
 
         public float GetResultInSeconds()

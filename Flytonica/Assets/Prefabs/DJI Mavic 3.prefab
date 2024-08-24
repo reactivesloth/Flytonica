@@ -223,6 +223,8 @@ GameObject:
   - component: {fileID: 4973870330401012139}
   - component: {fileID: 7794961175099019535}
   - component: {fileID: -5479848009921656366}
+  - component: {fileID: 7968847895797777297}
+  - component: {fileID: 4020091474735691375}
   m_Layer: 0
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -426,6 +428,30 @@ MonoBehaviour:
   minPitch: 0.2
   maxPitch: 1.1
   propellerLoop: {fileID: 8300000, guid: 68502284364466a4fbc043bbeeecdcf8, type: 3}
+--- !u!114 &7968847895797777297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4ae277a41a46fe9ca11238b20ab2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4020091474735691375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80c67aaa7554c0fba489f7423e9bf5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0

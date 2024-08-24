@@ -35,7 +35,7 @@ namespace Code.Internal.UserInterface.DroneHudElements
             var percent = value / maxValue;
             SetColor(percent);
             slider.value = percent;
-            valueText.text = value.ToString();
+            valueText.text = value.ToString("F0");
         }
 
         private void SetColor(float percent)

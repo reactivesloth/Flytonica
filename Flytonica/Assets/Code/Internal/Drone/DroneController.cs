@@ -1,3 +1,4 @@
+using System;
 using FishNet.Component.Transforming;
 using FishNet.Connection;
 using FishNet.Object;
@@ -6,6 +7,7 @@ using Code.Internal.Input;
 using Code.Internal.UserInterface;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Code.Internal.Drone
 {
@@ -34,6 +36,8 @@ namespace Code.Internal.Drone
         public float targetHeight = 1;
 
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
+
+        public DroneSettings Settings => droneSettings;
         
         protected override void OnValidate()
         {
@@ -137,7 +141,7 @@ namespace Code.Internal.Drone
         private void UpdateFlightMode()
         {
             if (_currentFlightSettings == null)
-                _currentFlightSettings = droneSettings.initFlightMode;
+                _currentFlightSettings = droneSettings.currentFlightMode;
             else
             {
                 _currentFlightMode++;
@@ -145,7 +149,7 @@ namespace Code.Internal.Drone
                     _currentFlightMode = 0;
 
                 _currentFlightSettings = droneSettings.flightModes[_currentFlightMode];
-                UISubtitle.Instance?.SetTextInstant($"Полетный режим: {_currentFlightSettings.name}", 3);
+                droneSettings.currentFlightMode = _currentFlightSettings;
             }
         }
 
@@ -170,7 +174,7 @@ namespace Code.Internal.Drone
                     targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
                 }
                 
-                var speed = (targetHeight > _transform.position.y) ? 0.07f : -0.07f;
+                var speed = (targetHeight > _transform.position.y) ? 0.25f : -0.25f;
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
                 if (targetHeight < 1)
                 {

@@ -18,13 +18,13 @@ namespace Code.Internal.XR
             if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
             {
                 canvas.worldCamera = Camera.main;
-                panelRTUI?.SetActive(false);
+                if (panelRTUI != null) panelRTUI.SetActive(false);
             }
 
             if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 canvas.worldCamera = uiCamera;
-                panelRTUI?.SetActive(true);
+                if (panelRTUI != null) panelRTUI.SetActive(true);
             }
         }
     }

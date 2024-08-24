@@ -89,7 +89,7 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentScenario = _selectedScenario;
             sceneSettings.currentMap = infoPanel.CurrentMap;
             sceneSettings.currentDrone = infoPanel.CurrentDrone;
-            sceneSettings.currentDrone.initFlightMode = infoPanel.CurrentFlyMode;
+            sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;
 
             InstanceFinder.ClientManager.OnConnectedClients += _ => GameSceneManager.Instance.LoadGame();
             InstanceFinder.ServerManager.StartConnection();
