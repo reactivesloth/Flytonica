@@ -39,7 +39,7 @@ namespace Code.Internal.Scenario.Race
 
         private void OnValidate()
         {
-            checkpoints = gameObject.GetComponentsInChildren<Checkpoint>(true).ToList();
+            checkpoints = gameObject.GetComponentsInChildren<Checkpoint>(false).ToList();
         }
 
         public void CheckpointUpdate(Checkpoint checkpoint)
@@ -81,7 +81,7 @@ namespace Code.Internal.Scenario.Race
                 cp.ChangeColor(CheckpointFlashType.None);
             }
             checkpoints[_nextCheckpoint].ChangeColor(CheckpointFlashType.Current);
-            if (_nextCheckpoint + 1 <= checkpoints.Count)
+            if (_nextCheckpoint + 1 < checkpoints.Count)
                 checkpoints[_nextCheckpoint + 1].ChangeColor(CheckpointFlashType.Next);
         }
 
