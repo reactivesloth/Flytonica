@@ -7,7 +7,7 @@ namespace Code.Internal.XR
     {
         [SerializeField] private Camera uiCamera;
         [SerializeField] private GameObject panelRTUI;
-        
+
         void Start()
         {
             var canvas = gameObject.GetComponent<Canvas>();
@@ -15,16 +15,16 @@ namespace Code.Internal.XR
                 ? RenderMode.ScreenSpaceCamera
                 : RenderMode.ScreenSpaceOverlay;
 
-            if (canvas.renderMode == RenderMode.WorldSpace)
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
             {
                 canvas.worldCamera = Camera.main;
-                panelRTUI?.SetActive(true);
+                panelRTUI?.SetActive(false);
             }
-            
+
             if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 canvas.worldCamera = uiCamera;
-                panelRTUI?.SetActive(false);
+                panelRTUI?.SetActive(true);
             }
         }
     }

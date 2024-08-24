@@ -1,18 +1,25 @@
 using System;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Code.Internal.UserInterface
 {
-    public class PauseController : MonoBehaviour
+    public class UIController : MonoBehaviour
     {
-        [SerializeField] private PauseMenuPage pauseMenuPage;
+        public static UIController Instance { get; private set; }
+
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
+        [SerializeField] private GameObject drawUIPanel;
 
         private void Awake()
         {
+            Instance = this;
+            
             foreach (var pauseButton in pauseButtons)
             {
                 pauseButton.action.performed += _ => OnPauseClick();
@@ -35,26 +42,41 @@ namespace Code.Internal.UserInterface
             var isPaused = pauseMenuPage.gameObject.activeSelf;
 
             if (isPaused)
-            {
-                pauseMenuPage.Close();
                 Unpause();
-            }
             else
-            {
-                pauseMenuPage.Open();
                 Pause();
-            }
         }
 
         public void Pause()
         {
+            print("Pause");
+            canvas.gameObject.SetActive(true);
+            drawUIPanel.SetActive(true);
+            pauseMenuPage.Open(true);
             Time.timeScale = 0;
         }
 
         public void Unpause()
         {
-            print("Unpause()");
+            canvas.gameObject.SetActive(false);
+            drawUIPanel.SetActive(false);
+            pauseMenuPage.Close();
             Time.timeScale = 1f;
+        }
+
+        public void OnGameStart()
+        {
+            Page.CurrentPage.Close();
+            drawUIPanel.SetActive(false);
+            pauseMenuPage.Open(true);
+            canvas.gameObject.SetActive(false);
+        }
+
+        public void OnMainMenu()
+        {
+            canvas.gameObject.SetActive(true);
+            drawUIPanel.SetActive(true);
+            firstPage.Open(true);
         }
     }
 }

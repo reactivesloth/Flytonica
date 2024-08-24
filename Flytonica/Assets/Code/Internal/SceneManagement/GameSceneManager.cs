@@ -3,6 +3,7 @@ using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.Network;
 using Code.Internal.Scenario;
+using Code.Internal.UserInterface;
 using FishNet;
 using FishNet.Managing.Scened;
 using UnityEngine;
@@ -31,12 +32,12 @@ namespace Code.Internal.SceneManagement
 
         public void LoadGame()
         {
-            UnloadScene("UI Scene");
             LoadSceneGlobal(settings.currentMap.loadingSceneName,
                 () =>
                 {
                     FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
                     InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
+                    UIController.Instance.OnGameStart();
                     IsPlaying = true;
                 });
         }
@@ -47,7 +48,8 @@ namespace Code.Internal.SceneManagement
             InstanceFinder.ClientManager.StopConnection();
             InstanceFinder.ServerManager.StopConnection(false);
             
-            LoadSceneLocal("UI Scene");
+            UIController.Instance.OnMainMenu();
+            
             UnloadScene(CurrentGlobalScene);
 
             IsPlaying = false;
