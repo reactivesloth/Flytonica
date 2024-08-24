@@ -19,6 +19,7 @@ namespace Code.Internal.UserInterface
         [field: SerializeField] public AimElement AimElement { get; private set; }
         [field: SerializeField] public HorizonElement HorizonElement { get; private set; }
         [field: SerializeField] public ErrorElement ErrorElement { get; private set; }
+        [field: SerializeField] public BatteryElement BatteryElement { get; private set; }
 
         private void Awake()
         {
