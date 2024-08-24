@@ -42,17 +42,25 @@ namespace Code.Internal.SceneManagement
                 });
         }
 
+        public void Replay()
+        {
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
+            UnloadSceneGlobal(CurrentGlobalScene, LoadGame);
+        }
+
         public void ToMenuSingle()
+        {
+            StopLocalConnection();
+            UIController.Instance.OnMainMenu();
+            UnloadScene(CurrentGlobalScene);
+            IsPlaying = false;
+        }
+
+        private void StopLocalConnection()
         {
             InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
             InstanceFinder.ClientManager.StopConnection();
             InstanceFinder.ServerManager.StopConnection(false);
-            
-            UIController.Instance.OnMainMenu();
-            
-            UnloadScene(CurrentGlobalScene);
-
-            IsPlaying = false;
         }
 
         private void LoadSceneLocal(string sceneName)
@@ -68,7 +76,6 @@ namespace Code.Internal.SceneManagement
         private void LoadSceneGlobal(string sceneName, Action callback = null)
         {
             var sceneData = new SceneLoadData(sceneName);
-            
             InstanceFinder.SceneManager.LoadGlobalScenes(sceneData);
             InstanceFinder.SceneManager.OnLoadEnd += args =>
             {
@@ -77,6 +84,17 @@ namespace Code.Internal.SceneManagement
                     callback?.Invoke();
                     CurrentGlobalScene = sceneName;
                 }
+            };
+        }
+
+        private void UnloadSceneGlobal(string sceneName, Action callback = null)
+        {
+            var sud = new SceneUnloadData(sceneName);
+            InstanceFinder.NetworkManager.SceneManager.UnloadGlobalScenes(sud);
+            InstanceFinder.SceneManager.OnUnloadEnd += args =>
+            {
+                callback?.Invoke();
+                CurrentGlobalScene = null;
             };
         }
 

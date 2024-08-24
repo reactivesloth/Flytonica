@@ -8,13 +8,14 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class PauseMenuPage : Page
     {
-        [SerializeField] private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton;
+        [SerializeField] private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton, replayButton;
 
         protected new void Awake()
         {
             base.Awake();
             toMainMenuButton.onClick.AddListener(ToMainMenuButton);
             returnToGameButton.onClick.AddListener(ReturnToGame);
+            replayButton.onClick.AddListener(Replay);
             gameObject.SetActive(false);
         }
 
@@ -29,6 +30,12 @@ namespace Code.Internal.UserInterface.Pages
             Time.timeScale = 1f;
             Close();
             UIController.Instance.Unpause();
+        }
+
+        private void Replay()
+        {
+            GameSceneManager.Instance.Replay();
+            ReturnToGame();
         }
     }
 }
