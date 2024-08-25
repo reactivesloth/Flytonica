@@ -35,8 +35,8 @@ namespace Code.Internal.XR
             });
 
             SwitchObject(shouldBeEnabledInFPV, _camera);
-            SwitchObject(shouldBeEnabledInFPV, enabledInFPVObjects);
-            SwitchObject(!shouldBeEnabledInFPV, disabledInFPVObjects);
+            SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
+            SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
         }
 
         private void SwitchObject (bool value, GameObject o) {
