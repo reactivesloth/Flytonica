@@ -11,7 +11,6 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private AvailableScenariosSettings singleScenariosSettings;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
-        [SerializeField] private AvailableScenariosSettings увгсфешщ;
 
         protected override void OnOpen()
         {
