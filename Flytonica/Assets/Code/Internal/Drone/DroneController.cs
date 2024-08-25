@@ -176,10 +176,6 @@ namespace Code.Internal.Drone
                 
                 var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
-                if (targetHeight < 0.2f)
-                {
-                    acceleration = 0;
-                }
 
                 switch (targetHeight - transform.position.y)
                 {
