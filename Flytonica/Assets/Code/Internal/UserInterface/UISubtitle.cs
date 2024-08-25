@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ namespace Code.Internal.UserInterface
 {
     public class UISubtitle : MonoBehaviour
     {
-        private Text _text;
+        private TextMeshProUGUI _text;
         [SerializeField] private float typingSpeed = 10;
 
         public static UISubtitle Instance;
@@ -15,7 +16,7 @@ namespace Code.Internal.UserInterface
         {
             Instance = this;
             
-            _text = gameObject.GetComponent<Text>();
+            _text = gameObject.GetComponent<TextMeshProUGUI>();
             ClearText();
             StopAllCoroutines();
             CancelInvoke();

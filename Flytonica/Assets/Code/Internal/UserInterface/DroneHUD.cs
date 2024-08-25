@@ -34,7 +34,7 @@ namespace Code.Internal.UserInterface
         
         public void SetMode(string text) => modeText.text = text;
         
-        public void SetTime(string text) => timeText.text = $"SECS {text}";
+        public void SetTime(string text) => timeText.text = $"SEC {text}";
 
         public bool IsShowing() => HUDPanel.activeSelf;
     }

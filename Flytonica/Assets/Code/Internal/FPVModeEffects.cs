@@ -8,13 +8,14 @@ namespace Code.Internal
     {
         private DroneInput _input;
 
-        private void Awake()
-        {
-            _input = FindAnyObjectByType<DroneInput>();
-        }
-
         private void Update()
         {
+            if (_input == null)
+            {
+                _input = FindAnyObjectByType<DroneInput>();
+                return;
+            }
+            
             if (_input.DroneCam)
             {
                 DroneHUD.Instance.ShowHUD(true);
