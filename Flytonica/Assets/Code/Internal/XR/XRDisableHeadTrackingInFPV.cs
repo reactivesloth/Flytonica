@@ -1,6 +1,7 @@
 using System;
 using Code.Internal.Drone;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.XR
 {
@@ -9,6 +10,8 @@ namespace Code.Internal.XR
         public bool shouldBeEnabledInFPV = true;
         
         private GameObject _camera;
+        [SerializeField] private GameObject[] enabledInFPVObjects;
+        [SerializeField] private GameObject[] disabledInFPVObjects;
         private DroneInput _droneInput;
 
         private void Awake()
@@ -30,6 +33,26 @@ namespace Code.Internal.XR
                 true => shouldBeEnabledInFPV,
                 false => !shouldBeEnabledInFPV
             });
+
+            SwitchObject(shouldBeEnabledInFPV, _camera);
+            SwitchObject(shouldBeEnabledInFPV, enabledInFPVObjects);
+            SwitchObject(!shouldBeEnabledInFPV, disabledInFPVObjects);
+        }
+
+        private void SwitchObject (bool value, GameObject o) {
+            o.SetActive(_droneInput.DroneCam switch
+            {
+                true => value,
+                false => !value
+            });
+        }
+        
+        private void SwitchObject(bool value, GameObject[] ojbects)
+        {
+            foreach (var o in ojbects)
+            {
+                SwitchObject(value, o);
+            }
         }
 
         private void OnDisable()
