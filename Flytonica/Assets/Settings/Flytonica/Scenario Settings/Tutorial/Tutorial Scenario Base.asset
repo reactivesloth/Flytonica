@@ -12,10 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571583e582ff4b689c7336c8dff15854, type: 3}
   m_Name: Tutorial Scenario Base
   m_EditorClassIdentifier: 
-  name: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435"
+  name: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E"
+  description: 
   scenarioType: 1
   availableMaps:
   - {fileID: 11400000, guid: 8c8832a3664b9a24e96d2ff61e0ff0c3, type: 2}
   nestedScenarios:
   - {fileID: 11400000, guid: fc4c921b9e03b744a801ff475c38cc0a, type: 2}
-  nextScenario: {fileID: 0}
+  - {fileID: 11400000, guid: c5a7fe3332f58624b8a12136cbb34a3b, type: 2}
+  - {fileID: 11400000, guid: 3ab989962d5ef114ab1b17debe7664a6, type: 2}
+  - {fileID: 11400000, guid: 7812f9a82cef0ec46bb9206d14fb549f, type: 2}
+  - {fileID: 11400000, guid: 652cdc52fe943364c9efd33e8ad0afe6, type: 2}
+  - {fileID: 11400000, guid: 66b47cfededab914da626594e38bc4c5, type: 2}
+  - {fileID: 11400000, guid: f347b65df92d83944830bb4b7e73cc3d, type: 2}
+  - {fileID: 11400000, guid: fedb2187ad7baf848b7d6935acf7f809, type: 2}
+  - {fileID: 11400000, guid: 67c7477b070021a46aab42a77eb2b37e, type: 2}
+  nextScenario: {fileID: 11400000, guid: fc4c921b9e03b744a801ff475c38cc0a, type: 2}
