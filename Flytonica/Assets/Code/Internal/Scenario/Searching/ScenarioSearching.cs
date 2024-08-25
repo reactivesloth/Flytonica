@@ -20,6 +20,9 @@ namespace Code.Internal.Scenario.Searching
         private int currentObject = 0;
         private float _time;
 
+        private float _gazeTime;
+        private float _gazeTimeNotResponceTime;
+        
         private void Start()
         {
             if (_raceCondition == RaceCondition.Waiting)
@@ -30,39 +33,78 @@ namespace Code.Internal.Scenario.Searching
 
         private void Update()
         {
+            if (Camera.main == null) return;
+            
             if (_raceCondition == RaceCondition.Running)
             {
                 _time += Time.deltaTime;
 
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                if (Physics.Raycast(ray, out var hit, 35))
+                if (searchingObjects[currentObject] != null)
                 {
-                    foreach (var finingObject in searchingObjects[currentObject].finingObjects)
+                    if (Physics.Raycast(ray, out var hit, 15))
                     {
-                        if (finingObject.GetComponent<Collider>() == hit.collider)
+                        foreach (var finingObject in searchingObjects[currentObject].finingObjects)
                         {
-                            FindObject();
+                            if (finingObject.GetComponent<Collider>() == hit.collider)
+                            {
+                                FindObject();
+                                break;
+                            }
                         }
                     }
                 }
             }
+            CancelFinding();
+            DroneHUD.Instance?.SetTime(GetResult ());
         }
 
         private void FindObject()
         {
             if (_raceCondition == RaceCondition.Running)
             {
-                currentObject++;
-                
-                if (currentObject >= searchingObjects.Length)
+                if (_gazeTime > 3)
                 {
-                    FinishRace();
+                    DroneHUD.Instance.AimElement.Flash(Color.green, 1, () =>
+                    {
+                        if (currentObject + 1 >= searchingObjects.Length)
+                        {
+                            FinishRace();
+                        }
+                        else
+                        {
+                            UpdateTask();
+                        }
+                    });
                 }
                 else
                 {
-                    UpdateTask();
+                    _gazeTime += Time.deltaTime;
+                    _gazeTimeNotResponceTime = 0;
+                    DroneHUD.Instance.AimElement.SetProgressValue(_gazeTime/3);
                 }
             }
+        }
+
+        private void CancelFinding()
+        {
+            switch (_gazeTime)
+            {
+                case 0:
+                    _gazeTimeNotResponceTime = 0;
+                    break;
+                case > 0:
+                    _gazeTimeNotResponceTime += Time.deltaTime;
+                    break;
+            }
+
+            if (!(_gazeTimeNotResponceTime > 2)) return;
+            _gazeTimeNotResponceTime = 0;
+                
+            DroneHUD.Instance.AimElement.Flash(Color.red, 1, () =>
+            {
+                _gazeTime = 0;
+            });
         }
         
         private void StartRace()
@@ -70,20 +112,25 @@ namespace Code.Internal.Scenario.Searching
             _time = 0;
             _raceCondition = RaceCondition.Running;
             var search = searchingObjects[0].descriptionTask;
-            UISubtitle.Instance?.SetTextInstant($"Вам необходимо найти {searchingObjects.Length} объектов." +
-                                                $"\nНайдите {search}", 3);
+            
+            UISubtitle.Instance.SetTextInstant($"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {search}." + "\nКамера работает с 15 метров.", 3);
+            DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
+            
         }
 
         private void FinishRace()
         {
             _raceCondition = RaceCondition.Finished;
-            UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            UISubtitle.Instance.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            DroneHUD.Instance.SetTask("Задание выполнено!");
         }
         
         private void UpdateTask()
-        { 
+        {
+            currentObject++;
             var search = searchingObjects[currentObject].descriptionTask;
-            UISubtitle.Instance.SetTextInstant($"Отлично!\nНайдите {search}", 3);
+            UISubtitle.Instance.SetTextInstant($"Отличная работа! А теперь найдите {search}");
+            DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
         }
         
         public string GetResult()

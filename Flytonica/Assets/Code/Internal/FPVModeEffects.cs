@@ -1,4 +1,5 @@
-﻿using Code.Internal.Drone;
+﻿using System;
+using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Code.Internal
         {
             if (_input == null)
             {
+                DroneHUD.Instance.ShowHUD(false);
                 _input = FindAnyObjectByType<DroneInput>();
                 return;
             }
@@ -24,6 +26,11 @@ namespace Code.Internal
             {
                 DroneHUD.Instance.ShowHUD(false);
             }
+        }
+
+        private void OnDisable()
+        {
+            DroneHUD.Instance.ShowHUD(false);
         }
     }
 }

@@ -51,6 +51,7 @@ namespace Code.Internal.UserInterface.DroneHudElements
             while (currentTime < sectionTime)
             {
                 cameraIcon.color = Color.Lerp(_startColor, color, currentTime / sectionTime);
+                progressImage.color = Color.Lerp(_startColor, color, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
             }
@@ -60,21 +61,27 @@ namespace Code.Internal.UserInterface.DroneHudElements
             while (currentTime < sectionTime)
             {
                 cameraIcon.color = Color.Lerp(currentColor, Color.clear, currentTime / sectionTime);
+                progressImage.color = Color.Lerp(currentColor, Color.clear, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
             }
+            
+            SetProgressValue(0);
             
             currentTime = 0f;
             currentColor = cameraIcon.color;
             while (currentTime < sectionTime)
             {
                 cameraIcon.color = Color.Lerp(currentColor, startColor, currentTime / sectionTime);
+                progressImage.color = Color.Lerp(currentColor, startColor, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
             }
             
             _currentAnim = null;
             cameraIcon.color = startColor;
+            progressImage.color = startColor;
+            
             callback?.Invoke();
         }
     }

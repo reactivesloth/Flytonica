@@ -24,6 +24,7 @@ namespace Code.Internal.Scenario.Race
         private void Awake()
         {
             _raceCondition = RaceCondition.Waiting;
+            UpdateCheckpointColors();
         }
 
         private void Start()
@@ -101,7 +102,7 @@ namespace Code.Internal.Scenario.Race
         private void FinishRace ()
         {
             _raceCondition = RaceCondition.Finished;
-            DroneHUD.Instance?.SetTask(string.Empty);
+            DroneHUD.Instance?.SetTask("Задание выполнено!");
             UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
             
             foreach (var cp in checkpoints)

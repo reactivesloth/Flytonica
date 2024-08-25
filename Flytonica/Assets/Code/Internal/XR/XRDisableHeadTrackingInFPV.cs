@@ -1,3 +1,4 @@
+using System;
 using Code.Internal.Drone;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ namespace Code.Internal.XR
         {
             if (_droneInput == null)
             {
+                _camera.SetActive(!shouldBeEnabledInFPV);
                 _droneInput = FindAnyObjectByType<DroneInput>();
                 return;
             }
@@ -28,6 +30,11 @@ namespace Code.Internal.XR
                 true => shouldBeEnabledInFPV,
                 false => !shouldBeEnabledInFPV
             });
+        }
+
+        private void OnDisable()
+        {
+            _camera.SetActive(!shouldBeEnabledInFPV);
         }
     }
 }

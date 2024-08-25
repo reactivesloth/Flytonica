@@ -174,7 +174,7 @@ namespace Code.Internal.Drone
                     targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
                 }
                 
-                var speed = (targetHeight > _transform.position.y) ? 0.25f : -0.25f;
+                var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
                 if (targetHeight < 0.2f)
                 {
