@@ -26,10 +26,11 @@ namespace Code.Internal.UserInterface
             Generate();
         }
 
+        /*
         private void FixedUpdate()
         {
             Generate();
-        }
+        }*/
 
         private void Generate()
         {
