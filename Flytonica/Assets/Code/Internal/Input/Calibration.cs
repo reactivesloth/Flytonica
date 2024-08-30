@@ -83,7 +83,7 @@ namespace Code.Internal.Input
         {
             _isCalibrating = true;
 
-            UISubtitle.Instance.SetTextInstant("Калибровка начата. Двигайте джойстики по кругу.");
+            UISubtitle.Instance.SetTextInstant("Калибровка начата. Вращайте джойстики по кругу.");
             yield return StartCoroutine(CalibrateExtremes());
 
             UISubtitle.Instance.ClearText();
@@ -140,6 +140,12 @@ namespace Code.Internal.Input
 
         private IEnumerator CalibrateExtremes()
         {
+            var startMovingSticks = false;
+            
+            yield return new WaitUntil(() => { return _joystick.Axes.ToList().FirstOrDefault(a => a.valueDelta > 0.2f) != null; });
+
+            UISubtitle.Instance.SetTextInstant("Продолжайте вращать джойстики по кругу.");
+
             axesCount = _joystick.Axes.Count;
             minValues = new float[axesCount];
             maxValues = new float[axesCount];
