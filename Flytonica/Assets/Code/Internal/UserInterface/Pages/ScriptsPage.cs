@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
 using FishNet.Discovery;
+using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +25,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
+        private bool _isNetGame;
 
         protected override void OnOpen()
         {
@@ -36,8 +39,9 @@ namespace Code.Internal.UserInterface.Pages
             startGameButton?.onClick.RemoveListener(OnStartGame);
         }
 
-        public void Init(ScenarioSettings[] scenarios)
+        public void Init(ScenarioSettings[] scenarios, bool isNet = false)
         {
+            _isNetGame = isNet;
             Clear();
 
             for (var i = 0; i < scenarios.Length; i++)
@@ -80,11 +84,11 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnStartGame()
         {
-            print(
-                $"Scenario: {_selectedScenario.name}\n" +
-                $"Map: {infoPanel.CurrentMap.name}\n" +
-                $"Drone:{infoPanel.CurrentDrone.name}\n" +
-                $"Mode:{infoPanel.CurrentFlyMode.name}");
+                Debug.Log(
+                    $"Scenario: {_selectedScenario.name}\n" +
+                    $"Map: {infoPanel.CurrentMap.name}\n" +
+                    $"Drone:{infoPanel.CurrentDrone.name}\n" +
+                    $"Mode:{infoPanel.CurrentFlyMode.name}");
 
             sceneSettings.currentScenario = _selectedScenario;
             sceneSettings.currentMap = infoPanel.CurrentMap;
@@ -93,8 +97,20 @@ namespace Code.Internal.UserInterface.Pages
 
             InstanceFinder.ClientManager.OnConnectedClients += _ => GameSceneManager.Instance.LoadGame();
             InstanceFinder.ServerManager.StartConnection();
-            InstanceFinder.ClientManager.StartConnection();
-            InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().enabled = false;
+            
+            Action<ServerConnectionStateArgs> callback = null;
+            callback = args =>
+            {
+                if (args.ConnectionState == LocalConnectionState.Started)
+                {
+                    InstanceFinder.ClientManager.StartConnection();
+                    InstanceFinder.ServerManager.OnServerConnectionState -= callback;
+                }
+            };
+            InstanceFinder.ServerManager.OnServerConnectionState += callback;
+            
+            if (_isNetGame)
+                InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().AdvertiseServer();
         }
 
         private void OnSelect(SelectScriptButton button)

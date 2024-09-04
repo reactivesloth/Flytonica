@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.Drone;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -13,40 +14,31 @@ namespace Code.Internal.Network
     {
         private readonly List<NetworkObject> _drones = new();
 
-        private bool _isSpawned = false;
-
-        public void SpawnDrones(DroneSettings settings)
+        public NetworkObject Spawn(NetworkConnection connection, DroneSettings settings, bool isTeacher = false)
         {
-            if(_isSpawned)
-                return;
-            
-            var connections = InstanceFinder.ClientManager.Clients.Values.ToArray();
-            print(connections.Length);
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
-            for (var i = 0; i < connections.Length; i++)
-            {
-                var spawn = spawners[Random.Range(0, spawners.Length)];
-                var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position, spawn.rotation, true);
-                InstanceFinder.ServerManager.Spawn(drone, connections[i], SceneManager.GetSceneByName("Main"));
-                _drones.Add(drone);
-            }
+            /*var spawners = Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(go => go.CompareTag("Respawn"))  
+                .Select(o => o.transform)s
+                .ToArray();*/
 
-            _isSpawned = true;
+            var spawn = spawners[Random.Range(0, spawners.Length)];
+            var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position,
+                spawn.rotation, true);
+            InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));
+            _drones.Add(drone);
+            return drone;
         }
 
-        public void Despawn()
+        public void Despawn(NetworkConnection connection)
         {
-            _isSpawned = false;
-            foreach (var drone in _drones)
-            {
-                if (drone != null && drone.gameObject.activeSelf)
-                {
-                    InstanceFinder.ServerManager.Despawn(drone);
-                }
-            }
-            _drones.Clear(); 
+            var drone = _drones.FirstOrDefault(d => d.GetComponent<NetworkObject>().Owner == connection);
+            if (drone == null)
+                return;
+            _drones.Remove(drone);
+            InstanceFinder.ServerManager.Despawn(drone.GetComponent<NetworkObject>(), DespawnType.Destroy);
         }
     }
 }

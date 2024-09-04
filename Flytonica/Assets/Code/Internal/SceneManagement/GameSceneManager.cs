@@ -5,13 +5,15 @@ using Code.Internal.Network;
 using Code.Internal.Scenario;
 using Code.Internal.UserInterface;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Managing.Scened;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Code.Internal.SceneManagement
 {
-    public class GameSceneManager : MonoBehaviour
+    public class GameSceneManager : NetworkBehaviour
     {
         public static GameSceneManager Instance { get; private set; }
 
@@ -29,23 +31,43 @@ namespace Code.Internal.SceneManagement
             
             LoadSceneLocal("UI Scene");
         }
+        
+        public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
+        {
+            var sceneName = sceneSettingsCurrentMap.loadingSceneName;
+
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                Debug.LogError("Scene name is null or empty. Please check the MapSettings.");
+                return;
+            }
+            
+            var sceneLoadData = new SceneLoadData(sceneName);
+            Action<SceneLoadEndEventArgs> onSceneLoaded = null;
+
+            onSceneLoaded = args =>
+            {
+                if(!args.LoadedScenes.Select(s => s.name).Contains(sceneName)) 
+                    return;
+                Debug.Log($"Scene {sceneName} loaded successfully.");
+                callback?.Invoke();
+                InstanceFinder.SceneManager.OnLoadEnd -= onSceneLoaded;
+            };
+
+            InstanceFinder.SceneManager.OnLoadEnd += onSceneLoaded;
+            InstanceFinder.SceneManager.LoadGlobalScenes(sceneLoadData);
+        }
 
         public void LoadGame()
         {
-            LoadSceneGlobal(settings.currentMap.loadingSceneName,
-                () =>
-                {
-                    FindAnyObjectByType<ScenarioInitializer>().Initialize(settings);
-                    InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones(settings.currentDrone);
-                    UIController.Instance.OnGameStart();
-                    IsPlaying = true;
-                });
+            base.OnStartClient();
+            LoadGameClient(Owner);
         }
-
-        public void Replay()
+        
+        private void LoadGameClient(NetworkConnection connection)
         {
-            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
-            UnloadSceneGlobal(CurrentGlobalScene, LoadGame);
+            UIController.Instance.OnGameStart();
+            IsPlaying = true;
         }
 
         public void ToMenuSingle()
@@ -58,7 +80,6 @@ namespace Code.Internal.SceneManagement
 
         private void StopLocalConnection()
         {
-            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
             InstanceFinder.ClientManager.StopConnection();
             InstanceFinder.ServerManager.StopConnection(false);
         }
@@ -67,41 +88,18 @@ namespace Code.Internal.SceneManagement
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
-        
-        /// <summary>
-        /// Загрузка глобальной сцены для всех подключений 
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="callback"></param>
-        private void LoadSceneGlobal(string sceneName, Action callback = null)
-        {
-            var sceneData = new SceneLoadData(sceneName);
-            InstanceFinder.SceneManager.LoadGlobalScenes(sceneData);
-            InstanceFinder.SceneManager.OnLoadEnd += args =>
-            {
-                if (args.LoadedScenes.Select(s => s.name).Contains(sceneName))
-                {
-                    callback?.Invoke();
-                    CurrentGlobalScene = sceneName;
-                }
-            };
-        }
-
-        private void UnloadSceneGlobal(string sceneName, Action callback = null)
-        {
-            var sud = new SceneUnloadData(sceneName);
-            InstanceFinder.NetworkManager.SceneManager.UnloadGlobalScenes(sud);
-            InstanceFinder.SceneManager.OnUnloadEnd += args =>
-            {
-                callback?.Invoke();
-                CurrentGlobalScene = null;
-            };
-        }
 
         private void UnloadScene(string sceneName)
         {
-            var sud = new SceneUnloadData(sceneName);
-            InstanceFinder.NetworkManager.SceneManager.UnloadGlobalScenes(sud);
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if(scene.name != "Main")
+                UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
+        }
+        
+        public void Replay()
+        {
+            /*InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
+            UnloadSceneGlobal(CurrentGlobalScene, LoadGame);*/
         }
     }
 }

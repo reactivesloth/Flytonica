@@ -95,7 +95,6 @@ namespace Code.Internal.Drone
         public override void OnOwnershipClient(NetworkConnection prevOwner)
         {
             base.OnOwnershipClient(prevOwner);
-            print($"{_droneInput.Throttle} {_droneInput.Yaw} {_droneInput.Pitch} {_droneInput.Roll}");
             _rigidBody.isKinematic = !IsOwner;
         }
 
