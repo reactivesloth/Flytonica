@@ -13,7 +13,7 @@ namespace Code.Internal.Scenario
         [SerializeField] private GameObject searchingModeObjects;
         [SerializeField] private GameObject searchingIRModeObjects;
         
-        public void Initialize(SceneLoadingSettings settings)
+        public void Initialize(ScenarioSettings settings)
         {
             freeFlightObjects?.SetActive(false);
             tutorialModeObjects?.SetActive(false);
@@ -22,7 +22,7 @@ namespace Code.Internal.Scenario
             searchingModeObjects?.SetActive(false);
             searchingIRModeObjects?.SetActive(false);
             
-            switch (settings.currentScenario.scenarioType)
+            switch (settings.scenarioType)
             {
                 case ScenarioType.FreeFlight:
                     freeFlightObjects.SetActive(true);

@@ -24,7 +24,7 @@ namespace Code.Internal.Network
                 .Select(o => o.transform)s
                 .ToArray();*/
 
-            var spawn = spawners[Random.Range(0, spawners.Length)];
+                var spawn = spawners[Random.Range(0, spawners.Length)];
             var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position,
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));

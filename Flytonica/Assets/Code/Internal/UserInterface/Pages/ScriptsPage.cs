@@ -95,7 +95,6 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentDrone = infoPanel.CurrentDrone;
             sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;
 
-            InstanceFinder.ClientManager.OnConnectedClients += _ => GameSceneManager.Instance.LoadGame();
             InstanceFinder.ServerManager.StartConnection();
             
             Action<ServerConnectionStateArgs> callback = null;

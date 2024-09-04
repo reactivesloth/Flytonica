@@ -32,6 +32,12 @@ namespace Code.Internal.SceneManagement
             LoadSceneLocal("UI Scene");
         }
         
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            LoadGameClient(Owner);
+        }
+        
         public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
         {
             var sceneName = sceneSettingsCurrentMap.loadingSceneName;
@@ -58,11 +64,6 @@ namespace Code.Internal.SceneManagement
             InstanceFinder.SceneManager.LoadGlobalScenes(sceneLoadData);
         }
 
-        public void LoadGame()
-        {
-            base.OnStartClient();
-            LoadGameClient(Owner);
-        }
         
         private void LoadGameClient(NetworkConnection connection)
         {

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Code.Internal.SceneManagement;
 using FishNet;
+using FishNet.Discovery;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,12 +22,22 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
 
         private List<IPEndPoint> _points = new();
-        private IPEndPoint _currentIPEndPoint;
-        
+        private IPEndPoint _currentIPEndPoint => _points.LastOrDefault();
+        private NetworkDiscovery _discovery => InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>();
+
+        private void OnDisable()
+        {
+            _discovery.StopSearchingOrAdvertising();
+            _discovery.ServerFoundCallback -= NetworkDiscoveryOnServerFoundCallback;
+        }
+
         protected override void OnOpen()
         {
             base.OnOpen();
             toRoomButton.interactable = _currentIPEndPoint != null;
+            _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
+            _discovery.SearchForServers();
+            
             singleScriptsButton.onClick.AddListener(OnSingleScripts);
             tasksButton.onClick.AddListener(OnTaskScripts);
             deviceInfoButton.onClick.AddListener(OnDeviceInfo);
