@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Code.Internal
             if (_input == null)
             {
                 DroneHUD.Instance.ShowHUD(false);
-                _input = FindAnyObjectByType<DroneInput>();
+                _input = FindObjectsByType<DroneInput>(FindObjectsSortMode.None).FirstOrDefault(i => i.IsOwner);
                 return;
             }
             

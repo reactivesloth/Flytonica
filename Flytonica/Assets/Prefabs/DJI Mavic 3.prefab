@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4636697258005054653}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6712816830602990229}
   - component: {fileID: 6132660623355822419}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Reflection Probe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 6964787242371951599}
   - component: {fileID: 2245326068582155539}
   - component: {fileID: 2095079231955691752}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_lf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,8 @@ GameObject:
   - component: {fileID: -5479848009921656366}
   - component: {fileID: 7968847895797777297}
   - component: {fileID: 4020091474735691375}
-  m_Layer: 0
+  - component: {fileID: 835091436568997191}
+  m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,6 +453,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a80c67aaa7554c0fba489f7423e9bf5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &835091436568997191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
+  _componentConfiguration: 0
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _interpolation: 2
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _scaleThreshold: 1
+  _clientAuthoritative: 1
+  _sendToOwner: 1
+  _enableNetworkLod: 1
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,7 +509,7 @@ GameObject:
   - component: {fileID: 9152640690050283953}
   - component: {fileID: 9091774705202788996}
   - component: {fileID: 5409346087989613945}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_cam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -551,7 +597,7 @@ GameObject:
   - component: {fileID: 7683294162799265470}
   - component: {fileID: 1526221523625188499}
   - component: {fileID: 8604697657438685796}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_engine_RL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -661,7 +707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3317688966239663838}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -696,7 +742,7 @@ GameObject:
   - component: {fileID: 5498201892723543587}
   - component: {fileID: 2378220750633182696}
   - component: {fileID: 559483779103950717}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_engine_FL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +854,7 @@ GameObject:
   - component: {fileID: 378359396965307440}
   - component: {fileID: 8847944496613940025}
   - component: {fileID: 3301660926460241728}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -894,7 +940,7 @@ GameObject:
   - component: {fileID: 6877153321603574753}
   - component: {fileID: 5504363945081311026}
   - component: {fileID: 7373961110583506567}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -978,7 +1024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1313710568930765570}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1056,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1757186776446247132}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1045,7 +1091,7 @@ GameObject:
   - component: {fileID: 6379903688898613166}
   - component: {fileID: 3822823531806900407}
   - component: {fileID: 7746378888919790767}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_cam_mount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1154,7 +1200,7 @@ GameObject:
   - component: {fileID: 6996990822719045157}
   - component: {fileID: 8084825040660230918}
   - component: {fileID: 5898321545949964306}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_engine_FR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1266,7 +1312,7 @@ GameObject:
   - component: {fileID: 8867518585547980400}
   - component: {fileID: 8000715510706499949}
   - component: {fileID: 692973031615209841}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mavic3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1358,7 +1404,7 @@ GameObject:
   - component: {fileID: 4347113419046309548}
   - component: {fileID: 4753217565921677602}
   - component: {fileID: 5819878686269447118}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1444,7 +1490,7 @@ GameObject:
   - component: {fileID: 3237286246525009722}
   - component: {fileID: 7263743897725200249}
   - component: {fileID: 5678784065917167177}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1529,7 +1575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8083152023332325364}
   - component: {fileID: 6081422299041346518}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Audio Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1659,7 +1705,7 @@ GameObject:
   - component: {fileID: 2507488922953283021}
   - component: {fileID: 2090693257491887906}
   - component: {fileID: 1299576397765111624}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_cam_mount_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1747,7 +1793,7 @@ GameObject:
   - component: {fileID: 3876820939114964587}
   - component: {fileID: 4204243638859190340}
   - component: {fileID: 6851102989252274537}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_rl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1856,7 +1902,7 @@ GameObject:
   - component: {fileID: 3105130221797702141}
   - component: {fileID: 43503694359249458}
   - component: {fileID: 4515149016467391778}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_cam_mount_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1944,7 +1990,7 @@ GameObject:
   - component: {fileID: 6191527197458738487}
   - component: {fileID: 5094402938973556379}
   - component: {fileID: 6966057604891523660}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_rb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2053,7 +2099,7 @@ GameObject:
   - component: {fileID: 6013389251945455712}
   - component: {fileID: 8780277497565772278}
   - component: {fileID: 8840645426825554043}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2141,7 +2187,7 @@ GameObject:
   - component: {fileID: 8778483851212344379}
   - component: {fileID: 1007459308522761147}
   - component: {fileID: 2350224159818370647}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_rf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2251,7 +2297,7 @@ GameObject:
   - component: {fileID: 9364214749516368}
   - component: {fileID: 5750858850943205238}
   - component: {fileID: -6871288054280019721}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: dji_engine_RR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2360,6 +2406,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6013389251945455712}
     m_Modifications:
+    - target: {fileID: 1021987828876290121, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
     - target: {fileID: 3063956669541261683, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2400,9 +2450,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3265104555839065635, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5797242781445422106, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_Name
       value: 'FPVCamera '
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797242781445422106, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266812811258087292, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

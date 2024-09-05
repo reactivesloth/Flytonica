@@ -16,9 +16,6 @@ namespace Code.Internal.SceneManagement
     public class GameSceneManager : NetworkBehaviour
     {
         public static GameSceneManager Instance { get; private set; }
-
-        public SceneLoadingSettings settings;
-
         public string CurrentGlobalScene { get; private set; }
         public bool IsPlaying { get; private set; }
 
@@ -35,7 +32,8 @@ namespace Code.Internal.SceneManagement
         public override void OnStartClient()
         {
             base.OnStartClient();
-            LoadGameClient(Owner);
+            UIController.Instance.OnGameStart();
+            IsPlaying = true;
         }
         
         public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
@@ -64,25 +62,11 @@ namespace Code.Internal.SceneManagement
             InstanceFinder.SceneManager.LoadGlobalScenes(sceneLoadData);
         }
 
-        
-        private void LoadGameClient(NetworkConnection connection)
-        {
-            UIController.Instance.OnGameStart();
-            IsPlaying = true;
-        }
-
         public void ToMenuSingle()
         {
-            StopLocalConnection();
             UIController.Instance.OnMainMenu();
-            UnloadScene(CurrentGlobalScene);
+            UnloadScene();
             IsPlaying = false;
-        }
-
-        private void StopLocalConnection()
-        {
-            InstanceFinder.ClientManager.StopConnection();
-            InstanceFinder.ServerManager.StopConnection(false);
         }
 
         private void LoadSceneLocal(string sceneName)
@@ -90,7 +74,7 @@ namespace Code.Internal.SceneManagement
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
 
-        private void UnloadScene(string sceneName)
+        private void UnloadScene()
         {
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
             if(scene.name != "Main")

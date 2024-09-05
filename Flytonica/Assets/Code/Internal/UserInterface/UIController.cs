@@ -66,9 +66,8 @@ namespace Code.Internal.UserInterface
 
         public void OnGameStart()
         {
-            Page.CurrentPage.Close();
             drawUIPanel.SetActive(false);
-            pauseMenuPage.Open(true);
+            pauseMenuPage.Open();
             canvas.gameObject.SetActive(false);
         }
 

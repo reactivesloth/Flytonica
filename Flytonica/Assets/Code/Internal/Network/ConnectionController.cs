@@ -17,7 +17,7 @@ namespace Code.Internal.Network
         [SerializeField] private AvailableScenariosSettings scenarios;
         [SerializeField] private AvailableDronesSettings drones;
 
-        private bool _sceneLoaded = false;
+        private bool _sceneLoaded;
         private readonly List<NetworkConnection> _pendingConnections = new();
 
         public override void OnStartServer()
@@ -31,6 +31,7 @@ namespace Code.Internal.Network
         {
             base.OnStopServer();
             ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
+            _sceneLoaded = false;
         }
 
         private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -86,7 +87,7 @@ namespace Code.Internal.Network
         }
 
         [TargetRpc]
-        public void TargetInitializeScenario(NetworkConnection connection, string scenarioName)
+        private void TargetInitializeScenario(NetworkConnection connection, string scenarioName)
         {
             Debug.Log($"Init scenario for connection {connection.ClientId}");
             var scenarioSettings = scenarios.scenarios.First(s => s.name == scenarioName);

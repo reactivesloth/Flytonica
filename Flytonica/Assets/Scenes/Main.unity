@@ -650,8 +650,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secret: secret
   port: 8888
-  searchTimeout: 1
-  automatic: 1
+  searchTimeout: 4
+  automatic: 0
 --- !u!114 &1026477552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,7 +926,6 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1339894655}
   _networkObjectCache: {fileID: 1339894655}
-  settings: {fileID: 11400000, guid: 56bb72999f85c1a4e81b7eef178419e1, type: 2}
 --- !u!4 &1339894654
 Transform:
   m_ObjectHideFlags: 0

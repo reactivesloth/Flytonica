@@ -19,12 +19,7 @@ namespace Code.Internal.Network
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
-            /*var spawners = Resources.FindObjectsOfTypeAll<GameObject>()
-                .Where(go => go.CompareTag("Respawn"))  
-                .Select(o => o.transform)s
-                .ToArray();*/
-
-                var spawn = spawners[Random.Range(0, spawners.Length)];
+            var spawn = spawners[Random.Range(0, spawners.Length)];
             var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position,
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));
