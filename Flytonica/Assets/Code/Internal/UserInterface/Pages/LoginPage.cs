@@ -1,22 +1,18 @@
 ﻿using System;
-using FishNet;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
 {
-    public class LoginPage: Page
+    public class LoginPage : Page
     {
-        [SerializeField] private TMP_InputField loginField, passwordPage;
+        [SerializeField] private TMP_InputField loginField, passwordField;
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
 
-        protected new void Awake()
-        {
-            base.Awake();
-        }
-        
         private void Start()
         {
             Open();
@@ -38,14 +34,41 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLogin()
         {
-            //TODO: Login logic
-            studentMainMenu.Open();
+            var jsonData = JsonUtility.ToJson(new AuthData(loginField.text, passwordField.text));
+            HttpClient.Post(LinkConstants.AuthUrl, jsonData, OnResponseLogin, OnErrorLogin);
         }
 
         private void OnDemo()
         {
             //TODO: Go to demo logic
             studentMainMenu.Open();
+        }
+
+        private void OnResponseLogin(string response)
+        {
+            var authData = JsonUtility.FromJson<AuthResponseData>(response);
+            HttpClient.SetAuthData(authData);
+            
+            switch (authData.type)
+            {
+                case UserType.Teacher:
+                    teacherMainMenu.Open();
+                    break;
+                case UserType.Student:
+                    studentMainMenu.Open();
+                    break;
+                case UserType.SuperAdmin:
+                case UserType.Admin:
+                    Debug.LogWarning("Only for Teacher or Student");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void OnErrorLogin(string response)
+        {
+            Debug.LogError(response);
         }
     }
 }

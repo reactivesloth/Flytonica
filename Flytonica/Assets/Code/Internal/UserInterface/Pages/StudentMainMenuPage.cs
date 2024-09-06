@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.SceneManagement;
 using FishNet;
 using FishNet.Discovery;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +15,7 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class StudentMainMenuPage: Page
     {
+        [SerializeField] private TMP_Text studentNameText;
         [SerializeField] private Button tasksButton,
             singleScriptsButton,
             toRoomButton,
@@ -42,6 +46,11 @@ namespace Code.Internal.UserInterface.Pages
             tasksButton.onClick.AddListener(OnTaskScripts);
             deviceInfoButton.onClick.AddListener(OnDeviceInfo);
             toRoomButton.onClick.AddListener(OnConnect);
+
+            if (HttpClient.IsAuthorized)
+                RequestAndSetUserData();
+            else
+                SetDemo();
         }
 
         protected override void OnClose()
@@ -78,10 +87,34 @@ namespace Code.Internal.UserInterface.Pages
         
         private void NetworkDiscoveryOnServerFoundCallback(IPEndPoint obj)
         {
-            print(obj.Address);
             if(!_points.Contains(obj))  
                 _points.Add(obj);
             toRoomButton.interactable = _currentIPEndPoint != null;
+        }
+
+        private void RequestAndSetUserData()
+        {
+            if(HttpClient.UserData == null)
+                HttpClient.Get(LinkConstants.UserInfoUrl, data =>
+                {
+                    HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
+                    SetData();
+                },
+                Debug.LogError);
+            else
+                SetData();
+        }
+
+        private void SetData()
+        {
+            var data = HttpClient.UserData;
+            print(data.name);
+            studentNameText.text = data.name;
+        }
+        
+        private void SetDemo()
+        {
+            
         }
     }
 }
