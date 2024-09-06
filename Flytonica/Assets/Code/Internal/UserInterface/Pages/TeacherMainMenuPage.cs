@@ -37,9 +37,9 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
-            playScenarioButton.interactable =
-                !XRSettings.enabled || !XRSettings.isDeviceActive || _currentIPEndPoint != null;
-
+            playScenarioButton.interactable = !XRSettings.enabled || !XRSettings.isDeviceActive || _currentIPEndPoint != null;
+            editScenarioButton.interactable = !XRSettings.enabled && !XRSettings.isDeviceActive;
+            
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
             _discovery.SearchForServers();
 
