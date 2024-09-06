@@ -381,6 +381,7 @@ MonoBehaviour:
   - {fileID: 5167742280540814752}
   - {fileID: 2709657467242320990}
   - {fileID: 4973870330401012139}
+  - {fileID: 835091436568997191}
   - {fileID: 8604697657438685796}
   - {fileID: 559483779103950717}
   - {fileID: -6871288054280019721}
@@ -465,9 +466,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 7794961175099019535}
+  _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -665,7 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -810,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1268,7 +1269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2365,7 +2366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2409,6 +2410,10 @@ PrefabInstance:
     - target: {fileID: 1021987828876290121, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 183
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117281578685865741, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3063956669541261683, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2461,6 +2466,10 @@ PrefabInstance:
     - target: {fileID: 5797242781445422106, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6621631294702329077, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8266812811258087292, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_Layer
