@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 7968847895797777297}
   - component: {fileID: 4020091474735691375}
   - component: {fileID: 835091436568997191}
+  - component: {fileID: 9201690127512337188}
   m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -381,6 +382,7 @@ MonoBehaviour:
   - {fileID: 5167742280540814752}
   - {fileID: 2709657467242320990}
   - {fileID: 4973870330401012139}
+  - {fileID: 835091436568997191}
   - {fileID: 8604697657438685796}
   - {fileID: 559483779103950717}
   - {fileID: -6871288054280019721}
@@ -397,12 +399,12 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
-  _predictionType: 0
+  _enablePrediction: 1
+  _predictionType: 1
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
+  _enableStateForwarding: 0
+  _networkTransform: {fileID: 835091436568997191}
   _ownerInterpolation: 1
   _ownerSmoothedProperties: 255
   _adaptiveInterpolation: 3
@@ -465,17 +467,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
-  _componentConfiguration: 0
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 7794961175099019535}
+  _networkObjectCache: {fileID: 7794961175099019535}
+  _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
     Position: 1
     Rotation: 1
     Scale: 0
-  _interpolation: 2
-  _extrapolation: 2
+  _interpolation: 3
+  _extrapolation: 0
   _enableTeleport: 0
   _teleportThreshold: 1
   _scaleThreshold: 1
@@ -498,6 +500,20 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &9201690127512337188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b749f90d4c9961c4991179db1130fa4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbodyType: 0
+  _getInChildren: 1
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,7 +681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -810,7 +826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1268,7 +1284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2365,7 +2381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
