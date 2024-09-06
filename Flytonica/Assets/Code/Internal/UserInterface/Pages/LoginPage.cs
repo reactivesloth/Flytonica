@@ -18,9 +18,22 @@ namespace Code.Internal.UserInterface.Pages
             Open();
         }
 
+        private void LoadPrefs()
+        {
+            loginField.text = PlayerPrefs.GetString("Login");
+            passwordField.text = PlayerPrefs.GetString("Password");
+        }
+
+        private void SetPrefs()
+        {
+            PlayerPrefs.SetString("Login", loginField.text);
+            PlayerPrefs.SetString("Password", passwordField.text);
+        }
+
         protected override void OnOpen()
         {
             base.OnOpen();
+            LoadPrefs();
             loginButton.onClick.AddListener(OnLogin);
             demoButton.onClick.AddListener(OnDemo);
         }
@@ -52,9 +65,11 @@ namespace Code.Internal.UserInterface.Pages
             switch (authData.type)
             {
                 case UserType.Teacher:
+                    SetPrefs();
                     teacherMainMenu.Open();
                     break;
                 case UserType.Student:
+                    SetPrefs();
                     studentMainMenu.Open();
                     break;
                 case UserType.SuperAdmin:
