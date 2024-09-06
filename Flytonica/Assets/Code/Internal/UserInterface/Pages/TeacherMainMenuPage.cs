@@ -1,7 +1,133 @@
-﻿namespace Code.Internal.UserInterface.Pages
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
+using Code.Internal.SceneManagement;
+using FishNet;
+using FishNet.Discovery;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.XR;
+
+namespace Code.Internal.UserInterface.Pages
 {
-    public class TeacherMainMenuPage: Page
+    public class TeacherMainMenuPage : Page
     {
-        
+        [SerializeField] private TMP_Text usernameText;
+
+        [SerializeField]
+        private Button playScenarioButton, editScenarioButton, studentsButton, settingsButton, logoutButton;
+
+        [SerializeField] private LoginPage loginPage;
+        [SerializeField] private ScriptsPage scriptsPage;
+        [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
+
+        private List<IPEndPoint> _points = new();
+        private IPEndPoint _currentIPEndPoint => _points.LastOrDefault();
+        private NetworkDiscovery _discovery => InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>();
+
+        private void OnDisable()
+        {
+            _discovery.StopSearchingOrAdvertising();
+            _discovery.ServerFoundCallback -= NetworkDiscoveryOnServerFoundCallback;
+        }
+
+        protected override void OnOpen()
+        {
+            base.OnOpen();
+            playScenarioButton.interactable =
+                !XRSettings.enabled || !XRSettings.isDeviceActive || _currentIPEndPoint != null;
+
+            _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
+            _discovery.SearchForServers();
+
+            playScenarioButton.onClick.AddListener(OnPlayScenarioClicked);
+            editScenarioButton.onClick.AddListener(OnEditScenarioClicked);
+            studentsButton.onClick.AddListener(OnStudentsClicked);
+            settingsButton.onClick.AddListener(OnSettingsClicked);
+            logoutButton.onClick.AddListener(OnLogoutClicked);
+
+            if (HttpClient.IsAuthorized)
+                RequestAndSetUserData();
+            else
+                SetDemo();
+        }
+
+        private void OnLogoutClicked()
+        {
+            loginPage.Open();
+        }
+
+        private void OnPlayScenarioClicked()
+        {
+            if (XRSettings.enabled && XRSettings.isDeviceActive)
+            {
+                InstanceFinder.ClientManager.StartConnection(_currentIPEndPoint.Address.ToString());
+            }
+            else
+            {
+                scriptsPage.Init(taskScenariosSettings.scenarios, true);
+                scriptsPage.Open();
+            }
+        }
+
+        private void OnEditScenarioClicked()
+        {
+            
+        }
+
+        private void OnStudentsClicked()
+        {
+            
+        }
+
+        private void OnSettingsClicked()
+        {
+            
+        }
+
+        protected override void OnClose()
+        {
+            base.OnClose();
+            playScenarioButton.onClick.RemoveListener(OnPlayScenarioClicked);
+            editScenarioButton.onClick.RemoveListener(OnEditScenarioClicked);
+            studentsButton.onClick.RemoveListener(OnStudentsClicked);
+            settingsButton.onClick.RemoveListener(OnSettingsClicked);
+            logoutButton.onClick.RemoveListener(OnLogoutClicked);
+        }
+
+        private void NetworkDiscoveryOnServerFoundCallback(IPEndPoint obj)
+        {
+            if (!_points.Contains(obj))
+                _points.Add(obj);
+            playScenarioButton.interactable = _currentIPEndPoint != null;
+        }
+
+        private void RequestAndSetUserData()
+        {
+            if (HttpClient.UserData == null)
+                HttpClient.Get(LinkConstants.UserInfoUrl, data =>
+                    {
+                        HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
+                        SetData();
+                    },
+                    Debug.LogError);
+            else
+                SetData();
+        }
+
+        private void SetData()
+        {
+            var data = HttpClient.UserData;
+            print(data.name);
+            usernameText.text = data.name;
+        }
+
+        private void SetDemo()
+        {
+
+        }
     }
 }
