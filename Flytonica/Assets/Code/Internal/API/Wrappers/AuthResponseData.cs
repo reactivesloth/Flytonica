@@ -1,4 +1,5 @@
-﻿namespace Code.Internal.API.Wrappers
+
+namespace Code.Internal.API.Wrappers
 {
     [System.Serializable]
     public class AuthResponseData

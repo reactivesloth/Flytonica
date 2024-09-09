@@ -4,6 +4,7 @@ using Code.Internal.API.Wrappers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UserType = Code.Internal.API.Wrappers.UserType;
 
 namespace Code.Internal.UserInterface.Pages
 {
@@ -47,7 +48,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLogin()
         {
-            var jsonData = JsonUtility.ToJson(new AuthData(loginField.text, passwordField.text));
+            var jsonData = JsonUtility.ToJson(new UserAuthData(loginField.text, passwordField.text));
             HttpClient.Post(LinkConstants.AuthUrl, jsonData, OnResponseLogin, OnErrorLogin);
         }
 
@@ -61,7 +62,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             var authData = JsonUtility.FromJson<AuthResponseData>(response);
             HttpClient.SetAuthData(authData);
-            
+
             switch (authData.type)
             {
                 case UserType.Teacher:
@@ -84,6 +85,19 @@ namespace Code.Internal.UserInterface.Pages
         private void OnErrorLogin(string response)
         {
             Debug.LogError(response);
+        }
+
+        private void TestRequests()
+        {
+            var jsonData = JsonUtility.ToJson(new UserAuthData("teacher", "Pa'CSp/R&8XQ5Y=m~Mzf6b"));
+            HttpClient.Post(LinkConstants.AuthUrl, jsonData,
+                response =>
+                {
+                    var authData = JsonUtility.FromJson<AuthResponseData>(response);
+                    HttpClient.SetAuthData(authData);
+                    HttpClient.Get(LinkConstants.ScenarioMultiUrl(), print);
+                },
+                OnErrorLogin);
         }
     }
 }
