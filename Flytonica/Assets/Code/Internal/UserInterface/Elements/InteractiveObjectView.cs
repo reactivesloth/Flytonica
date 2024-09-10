@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Elements
 {
-    public class InteractiveObjectView: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class InteractiveObjectView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private List<SpriteChangeElement> spriteChangeElements;
         [SerializeField] private List<ColorChangeElement> colorChangeElements;
@@ -16,17 +15,21 @@ namespace Code.Internal.UserInterface.Elements
 
         public State State => _state;
 
+        public event Action OnPressAction;
+
         public void OnPress()
         {
-            if(_state == State.Selected)
+            OnPressAction?.Invoke();
+
+            if (_state == State.Selected)
                 ToNormal();
             else
                 Select();
         }
-        
+
         public void Hover()
         {
-            if(_state == State.Selected)
+            if (_state == State.Selected)
                 return;
 
             _state = State.Hover;
@@ -36,7 +39,7 @@ namespace Code.Internal.UserInterface.Elements
 
         public void Unhover()
         {
-            if(_state == State.Hover)
+            if (_state == State.Hover)
             {
                 _state = State.Non;
                 ToNormal();
@@ -56,7 +59,7 @@ namespace Code.Internal.UserInterface.Elements
             spriteChangeElements.ForEach(s => s.SetNormal());
             colorChangeElements.ForEach(s => s.SetNormal());
         }
-        
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             Hover();
