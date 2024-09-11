@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Code.Internal.API.Wrappers;
+using Code.Internal.API.Wrappers.ReceiveModels;
 using UnityEngine;
 using UnityEngine.Networking;
 
