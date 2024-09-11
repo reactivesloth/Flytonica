@@ -14,7 +14,7 @@ namespace Code.Internal.UserInterface.Elements
     public class SelectScriptButton : MonoBehaviour
     {
         [HideInInspector][SerializeField] private Button mainButton;
-        [HideInInspector][SerializeField] private InteractiveObjectView objectView;
+        [HideInInspector][SerializeField] private InteractiveObject @object;
 
         [Header("Own Elements:")]
         [SerializeField] private TMP_Text numberText;
@@ -34,7 +34,7 @@ namespace Code.Internal.UserInterface.Elements
         private void OnValidate()
         {
             mainButton = GetComponent<Button>();
-            objectView = GetComponent<InteractiveObjectView>();
+            @object = GetComponent<InteractiveObject>();
         }
 
         private void OnEnable()
@@ -54,12 +54,12 @@ namespace Code.Internal.UserInterface.Elements
         public void OnButtonPress()
         {
             OpenCloseList();
-            objectView.OnPress();
+            @object.OnPress();
 
-            print(objectView.State);
+            print(@object.State);
             
-            arrowObject.SetActive(objectView.State != State.Selected && _list != null);
-            arrowObjectDown.SetActive(objectView.State == State.Selected && _list != null);
+            arrowObject.SetActive(@object.State != State.Selected && _list != null);
+            arrowObjectDown.SetActive(@object.State == State.Selected && _list != null);
 
             Selected?.Invoke(this);
         }
@@ -79,7 +79,7 @@ namespace Code.Internal.UserInterface.Elements
 
         public void UnSelected()
         {
-            objectView.ToNormal();
+            @object.ToNormal();
         }
     }
 }

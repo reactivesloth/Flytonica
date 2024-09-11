@@ -1,6 +1,8 @@
 ﻿using System;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
+using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.API.Wrappers.SendModels;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

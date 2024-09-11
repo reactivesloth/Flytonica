@@ -9,19 +9,7 @@ namespace Code.Internal.UserInterface.Elements.TableElements
         [SerializeField] private List<TableButton> tableRows;
         [SerializeField] private TableButton buttonPrefab;
         
-        
-        private TableButton _selectedButton;
-
-        public TableButton SelectedButton => _selectedButton;
-        
-        private void Start()
-        {
-            foreach (var row in tableRows)
-            {
-                var interactiveObject = row.GetComponent<InteractiveObjectView>();
-                interactiveObject.OnPressAction += () => OnRowSelected(row);
-            }
-        }
+        public TableButton SelectedButton { get; private set; }
 
         public void Generate<T>(List<TableButtonGenerateData<T>> datas)
         {
@@ -33,17 +21,21 @@ namespace Code.Internal.UserInterface.Elements.TableElements
                 button.InitValues(number, data.DisplayData);
                 button.InitSaveData(data.Data);
                 tableRows.Add(button);
+                
+                var interactiveObject = button.GetComponent<InteractiveObject>();
+                interactiveObject.OnPressAction += () => OnRowSelected(button);
+                
                 number++;
             }
         }
 
         private void Clear()
         {
-            if (_selectedButton != null)
+            if (SelectedButton != null)
             {
-                var previousInteractiveObject = _selectedButton.GetComponent<InteractiveObjectView>();
+                var previousInteractiveObject = SelectedButton.GetComponent<InteractiveObject>();
                 previousInteractiveObject.ToNormal();
-                _selectedButton = null;
+                SelectedButton = null;
             }
 
             foreach (var button in tableRows)
@@ -56,15 +48,9 @@ namespace Code.Internal.UserInterface.Elements.TableElements
 
         private void OnRowSelected(TableButton selectedButton)
         {
-            if (_selectedButton != null && _selectedButton != selectedButton)
-            {
-                var previousInteractiveObject = _selectedButton.GetComponent<InteractiveObjectView>();
-                previousInteractiveObject.ToNormal();
-            }
-
-            _selectedButton = selectedButton;
-            var interactiveObjectView = _selectedButton.GetComponent<InteractiveObjectView>();
-            interactiveObjectView.Select();
+            print(SelectedButton);
+            SelectedButton?.GetComponent<InteractiveObject>()?.ToNormal();
+            SelectedButton = selectedButton;
         }
     }
 

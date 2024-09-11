@@ -1,11 +1,10 @@
-
-namespace Code.Internal.API.Wrappers
+﻿namespace Code.Internal.API.Wrappers
 {
     public enum UserType
     {
-        Admin,
-        SuperAdmin,
-        Teacher,
-        Student
+        SuperAdmin = 0,
+        Admin = 1,
+        Teacher = 2,
+        Student = 3
     }
 }

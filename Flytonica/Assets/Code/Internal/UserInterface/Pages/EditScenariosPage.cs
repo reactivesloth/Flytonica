@@ -1,39 +1,62 @@
 ﻿using System.Collections.Generic;
 using Code.Internal.API;
-using Code.Internal.API.Wrappers;
+using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.UserInterface.Elements.TableElements;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
 {
-    public class EditScenariosPage: Page
+    public class EditScenariosPage : Page
     {
         [SerializeField] private SelectionCollectionManager scenariosRoot;
+        [SerializeField] private Button createButton, deleteButton;
+        [SerializeField] private Page createScenarioPage;
 
         protected override void OnOpen()
         {
             base.OnOpen();
-            
+
+            InitScenariosList();
+
+            createButton.onClick.AddListener(OnCreate);
+            deleteButton.onClick.AddListener(OnDelete);
+        }
+
+        protected override void OnClose()
+        {
+            base.OnClose();
+
+            createButton.onClick.RemoveListener(OnCreate);
+            deleteButton.onClick.RemoveListener(OnDelete);
+        }
+
+        private void OnCreate()
+        {
+            createScenarioPage?.Open();
+        }
+
+        private void OnDelete()
+        {
+            //TODO: Delete Scenario logick 
+        }
+
+        private void InitScenariosList()
+        {
             HttpClient.Get(LinkConstants.MapConfigMultiUrl(), response =>
             {
-                var scenarios = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response).data;
-
-                var generateData = new List<TableButtonGenerateData<AssignedScenarioData>>();
+                var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response).data;
+                var generateData = new List<TableButtonGenerateData<ScenarioData>>();
 
                 foreach (var scenarioData in scenarios)
                 {
-                    var display = new string[] { scenarioData.scenario_name };
-                    var data = new TableButtonGenerateData<AssignedScenarioData>(display, scenarioData);
+                    var display = new[] { scenarioData.name };
+                    var data = new TableButtonGenerateData<ScenarioData>(display, scenarioData);
                     generateData.Add(data);
                 }
-                
-                scenariosRoot.Generate<AssignedScenarioData>(generateData);
-            }, Debug.LogError);
-        }
 
-        private void GenerateTable()
-        {
-            //TODO: Генерация таблицы 
+                scenariosRoot.Generate(generateData);
+            }, Debug.LogError);
         }
     }
 }
