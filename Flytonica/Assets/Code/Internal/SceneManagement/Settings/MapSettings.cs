@@ -8,5 +8,6 @@ namespace Code.Internal.SceneManagement
     {
         public new string name;
         public string loadingSceneName;
+        public int windLayersCount;
     }
 }

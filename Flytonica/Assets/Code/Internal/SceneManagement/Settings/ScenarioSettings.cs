@@ -14,7 +14,7 @@ namespace Code.Internal.SceneManagement
         [CanBeNull] public ScenarioSettings[] nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
         
-        public string GetScenarioTypeName(ScenarioType type)
+        public static string GetScenarioTypeName(ScenarioType type)
         {
             return type switch
             {

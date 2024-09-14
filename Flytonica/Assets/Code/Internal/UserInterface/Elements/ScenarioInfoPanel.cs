@@ -37,7 +37,7 @@ namespace Code.Internal.UserInterface.Elements
 
         private void Init(ScenarioSettings scenarioSettings)
         {
-            typeText.text = scenarioSettings.GetScenarioTypeName(scenarioSettings.scenarioType);
+            typeText.text = ScenarioSettings.GetScenarioTypeName(scenarioSettings.scenarioType);
             descriptionText.text = scenarioSettings.description;
             
             locationDropdown.ClearOptions();
