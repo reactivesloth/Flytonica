@@ -5,6 +5,7 @@ using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
@@ -46,10 +47,13 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private GameObject windHeader;
         [SerializeField] private GameObject overlaySettings;
         [SerializeField] private List<GameObject> layersSettings;
-        [SerializeField] private Dropdown overlayForce, overlayDirection;
-        [SerializeField] private List<Dropdown> forces, directions;
+        [SerializeField] private TMP_Dropdown overlayForce, overlayDirection;
+        [SerializeField] private List<TMP_Dropdown> forces, directions;
+
+        [Header("Step 4: ")] [SerializeField] private InputField title;
+        [SerializeField] private InputField description;
         
-        [Header("Step 4: ")] [Header("Prefabs: ")] [SerializeField]
+        [Header("Prefabs: ")] [SerializeField]
         private Toggle togglePrefab;
 
         private int _currentStep;
@@ -62,6 +66,14 @@ namespace Code.Internal.UserInterface.Pages
         private DroneSettings _currentDrone;
         private DroneFlightSettings _currentMode;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            isWindToggle.onValueChanged.AddListener(WindTogglesChange);
+            isAllLayersEqualToggle.onValueChanged.AddListener(WindTogglesChange);
+        }
+        
         protected override void OnOpen()
         {
             base.OnOpen();
@@ -170,14 +182,19 @@ namespace Code.Internal.UserInterface.Pages
         private void InitStep3()
         {
             var isEnableWindSettings = _currentMap.windLayersCount > 0;
+            
             isWindToggle.isOn = !isEnableWindSettings;
             isWindToggle.interactable = isEnableWindSettings;
             
-            WindTogglesChange(isWindToggle.isOn, isAllLayersEqualToggle.isOn);
+            WindTogglesChange();
         }
 
-        private void WindTogglesChange(bool isWind, bool isEqual)
+        private void WindTogglesChange(bool _ = false)
         {
+            var isWind = !isWindToggle.isOn;
+            var isEqual = isAllLayersEqualToggle.isOn;
+            print($"{isWind} {isEqual}");
+            
             windHeader.SetActive(isWind);
             isAllLayersEqualToggle.interactable = isWind;
 
@@ -207,6 +224,7 @@ namespace Code.Internal.UserInterface.Pages
         //Last
         private void InitStep4()
         {
+            
         }
 
         private void SetToggle<T>(ToggleGroup group, string text, IDictionary<Toggle, T> dictionary, T data)
