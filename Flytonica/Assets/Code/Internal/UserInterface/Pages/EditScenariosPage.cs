@@ -38,7 +38,12 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnDelete()
         {
-            //TODO: Delete Scenario logick 
+            var popup = FindObjectOfType<PopupPanel>(true);
+            popup.SetTitle("Удалить сценарий?");
+            popup.SetDescription($"Вы уверены, что хотите удалить сценарий {scenariosRoot.SelectedButton.GetSaveData<ScenarioData>().name}? Его нельзя будет восстановить.");
+            popup.SetLeftButton(() => Debug.Log("Удалить"), "Удалить");
+            popup.SetRightButton(popup.Hide, "Отменить");
+            popup.Show();
         }
 
         private void InitScenariosList()
