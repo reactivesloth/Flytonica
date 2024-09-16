@@ -46,7 +46,7 @@ namespace Code.Internal.UserInterface.Elements.TableElements
             tableRows.Clear();
         }
 
-        private void OnRowSelected(TableButton selectedButton)
+        public void OnRowSelected(TableButton selectedButton)
         {
             print(SelectedButton);
             SelectedButton?.GetComponent<InteractiveObject>()?.ToNormal();

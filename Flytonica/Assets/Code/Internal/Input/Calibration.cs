@@ -12,9 +12,10 @@ namespace Code.Internal.Input
         private Player _player;
         private bool _isCalibrating;
 
-        private int _throttleAxisId, _yawAxisId, _pitchAxisId, _rollAxisId, _cameraButtonId, _modeButtonId, _restartButtonId;
+        public int _throttleAxisId, _yawAxisId, _pitchAxisId, _rollAxisId, _cameraButtonId, _modeButtonId, _restartButtonId;
 
         public static Calibration Instance;
+        
         public bool IsCalibrating => _isCalibrating;
 
         private int axesCount;
@@ -23,9 +24,11 @@ namespace Code.Internal.Input
         private float[] zeroValues;
 
         private Joystick _findJoystick;
-        private Joystick _joystick;
+        public Joystick _joystick;
 
         public GameObject enableAfterFinish;
+
+        public event Action<int> StepDone; 
         
         private void Awake()
         {
@@ -39,20 +42,22 @@ namespace Code.Internal.Input
 
         private void Update()
         {
-            if (ReInput.controllers.joystickCount < 1)
+            /*if (ReInput.controllers.joystickCount < 1)
             {
                 enableAfterFinish.SetActive(true);
                 gameObject.SetActive(false);
                 return;
-            }
+            }*/
             
-            if (!_isCalibrating) 
+            /*if (!_isCalibrating) 
                 UISubtitle.Instance.SetTextInstant("Для калибровки контроллера нажмите любую клавишу");
+                */
 
             UpdateJoystick();
             
+            /*
             if ((UnityEngine.Input.anyKeyDown) && !_isCalibrating)
-                StartCoroutine(CalibrateJoysticks());
+                StartCoroutine(CalibrateJoysticks());*/
         }
         
         private void UpdateJoystick()
@@ -79,12 +84,19 @@ namespace Code.Internal.Input
             }
         }
 
+        public void StartCalibration()
+        {
+            StartCoroutine(CalibrateJoysticks());
+        }
+
         private IEnumerator CalibrateJoysticks()
         {
             _isCalibrating = true;
 
             UISubtitle.Instance.SetTextInstant("Калибровка начата. Вращайте джойстики по кругу.");
             yield return StartCoroutine(CalibrateExtremes());
+            
+            StepDone?.Invoke(0);
 
             UISubtitle.Instance.ClearText();
             yield return new WaitForSeconds(1f);
@@ -99,24 +111,29 @@ namespace Code.Internal.Input
             UISubtitle.Instance.SetTextInstant("Левый стик вверх");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _throttleAxisId = i));
+            StepDone?.Invoke(1);
             UISubtitle.Instance.ClearText();
             yield return new WaitForSeconds(1);
             UISubtitle.Instance.SetTextInstant("Левый стик вправо");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _yawAxisId = i));
+            StepDone?.Invoke(2);
             UISubtitle.Instance.ClearText();
             yield return new WaitForSeconds(1);
             UISubtitle.Instance.SetTextInstant("Правый стик вверх");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _pitchAxisId = i));
+            StepDone?.Invoke(3);
             UISubtitle.Instance.ClearText();
             yield return new WaitForSeconds(1);
             UISubtitle.Instance.SetTextInstant("Правый стик вправо");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _rollAxisId = i));
+            StepDone?.Invoke(4);
             UISubtitle.Instance.ClearText();
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Кнопка переключения камеры");
+            
+            /*UISubtitle.Instance.SetTextInstant("Кнопка переключения камеры");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckButton (i => _cameraButtonId = i));
             yield return new WaitForSeconds(1);
@@ -126,7 +143,7 @@ namespace Code.Internal.Input
             yield return new WaitForSeconds(1);
             UISubtitle.Instance.SetTextInstant("Кнопка рестарта дрона");
             //yield return StartCoroutine(WaitZeros());
-            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));
+            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));*/
             
             BindAxes();
 

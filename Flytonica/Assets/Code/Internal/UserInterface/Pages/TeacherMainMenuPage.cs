@@ -25,6 +25,8 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
         [SerializeField] private EditScenariosPage editEditScenariosPage;
+        [SerializeField] private GroupsPage groupsPage;
+        [SerializeField] private Page calibrationPage;
 
         private List<IPEndPoint> _points = new();
         private IPEndPoint _currentIPEndPoint => _points.LastOrDefault();
@@ -82,12 +84,12 @@ namespace Code.Internal.UserInterface.Pages
     
         private void OnStudentsClicked()
         {
-            
+            groupsPage?.Open();
         }
 
         private void OnSettingsClicked()
         {
-            
+            calibrationPage?.Open();
         }
 
         protected override void OnClose()

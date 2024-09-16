@@ -910,7 +910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1339894653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1113,6 +1113,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f84c6b1f101d49178bebfc593078c969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _throttleAxisId: 0
+  _yawAxisId: 0
+  _pitchAxisId: 0
+  _rollAxisId: 0
+  _cameraButtonId: 0
+  _modeButtonId: 0
+  _restartButtonId: 0
   enableAfterFinish: {fileID: 1339894652}
 --- !u!4 &1625281486
 Transform:
