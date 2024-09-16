@@ -3,15 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
 {
     public class CreateScenarioPage : Page
     {
+        [Serializable]
+        private struct StepMark
+        {
+            public Image numberMark, lineMark;
+
+            public void Unmark() => SetMark(false);
+            public void Mark() => SetMark(true);
+
+            public void SetMark(bool isMark)
+            {
+                numberMark?.gameObject.SetActive(isMark);
+                lineMark?.gameObject.SetActive(isMark);
+            }
+        }
+        
         [Header("Containers: ")] [SerializeField]
         private AvailableMapsSettings availableMaps;
 
@@ -23,7 +38,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button toLocationSettingsButton;
 
         [Header("Steps management: ")] [SerializeField]
-        private List<Image> stepsMarks;
+        private List<StepMark> stepsMarks;
 
         [SerializeField] private GameObject step1, step2, step3, step4;
 
@@ -50,8 +65,8 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_Dropdown overlayForce, overlayDirection;
         [SerializeField] private List<TMP_Dropdown> forces, directions;
 
-        [Header("Step 4: ")] [SerializeField] private InputField title;
-        [SerializeField] private InputField description;
+        [Header("Step 4: ")] [SerializeField] private TMP_InputField title;
+        [SerializeField] private TMP_InputField description;
         
         [Header("Prefabs: ")] [SerializeField]
         private Toggle togglePrefab;
@@ -81,12 +96,14 @@ namespace Code.Internal.UserInterface.Pages
             _currentStep = 1;
             SetStep();
             continueButton.onClick.AddListener(NextStep);
+            toLocationSettingsButton.onClick.AddListener(GoToLocationSettings);
         }
 
         protected override void OnClose()
         {
             base.OnClose();
             continueButton.onClick.RemoveListener(NextStep);
+            toLocationSettingsButton.onClick.RemoveListener(GoToLocationSettings);
         }
 
         protected override void OnBackClick()
@@ -95,7 +112,12 @@ namespace Code.Internal.UserInterface.Pages
             if (_currentStep < 1)
                 base.OnBackClick();
             else
-                SetStep();
+                SetStep(true);
+        }
+
+        private void GoToLocationSettings()
+        {
+            
         }
 
         private void NextStep()
@@ -104,36 +126,47 @@ namespace Code.Internal.UserInterface.Pages
             SetStep();
         }
 
-        private void SetStep()
+        private void SetStep(bool isBack = false)
         {
-            switch (_currentStep)
+            if(!isBack)
             {
-                case 1:
-                    InitStep1();
-                    break;
-                case 2:
-                    _isViewSelection = enableViewSelection.isOn;
-                    _isFirstView = viewSelection.isOn;
-                    _currentMap = _mapToggles[mapsGroup.GetFirstActiveToggle()];
-                    _currentType = _scenarioTypeToggles[typeSelectionGroup.GetFirstActiveToggle()];
-                    InitStep2();
-                    break;
-                case 3:
-                    _currentDrone = _droneToggles[droneGroup.GetFirstActiveToggle()];
-                    _currentMode = _modeToggles[modeGroup.GetFirstActiveToggle()];
-                    InitStep3();
-                    break;
-                case 4:
-                    InitStep4();
-                    break;
-                default:
-                    Debug.LogError("Argument Index exeption");
-                    break;
+                switch (_currentStep)
+                {
+                    case 1:
+                        InitStep1();
+                        break;
+                    case 2:
+                        _isViewSelection = enableViewSelection.isOn;
+                        _isFirstView = viewSelection.isOn;
+                        _currentMap = _mapToggles[mapsGroup.GetFirstActiveToggle()];
+                        _currentType = _scenarioTypeToggles[typeSelectionGroup.GetFirstActiveToggle()];
+                        InitStep2();
+                        break;
+                    case 3:
+                        _currentDrone = _droneToggles[droneGroup.GetFirstActiveToggle()];
+                        _currentMode = _modeToggles[modeGroup.GetFirstActiveToggle()];
+                        InitStep3();
+                        break;
+                    case 4:
+                        InitStep4();
+                        break;
+                    default:
+                        Debug.LogError("Argument Index exeption");
+                        break;
+                }
             }
-
+            
             OnCurrentStep(_currentStep);
             continueButton.gameObject.SetActive(_currentStep < 4);
             toLocationSettingsButton.gameObject.SetActive(_currentStep == 4);
+            SetStepMarks();
+        }
+
+        private void SetStepMarks()
+        {
+            stepsMarks.Select((mark, index) => new { mark, index })
+                .ToList()
+                .ForEach(item => item.mark.SetMark(item.index < _currentStep));
         }
 
 
