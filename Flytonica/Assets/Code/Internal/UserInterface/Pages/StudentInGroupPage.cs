@@ -13,6 +13,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private SelectionCollectionManager studentsRoot;
         [SerializeField] private Button showReplays, setTask;
+        [SerializeField] private UserTaskControlPage userTaskControlPage;
 
         private GroupData _currentGroupData;
 
@@ -62,7 +63,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void SetTask()
         {
-            
+            userTaskControlPage.Init(studentsRoot.SelectedButton.GetSaveData<StudentData>().user_id);
+            userTaskControlPage.Open();
         }
 
         private void SetButtons(bool isSelected)

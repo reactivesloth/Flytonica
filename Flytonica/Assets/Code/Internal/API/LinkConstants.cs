@@ -34,6 +34,8 @@ namespace Code.Internal.API
         // Receives: MultiAssignedScenarioDataResponse (List<AssignedScenarioData>, total_count)
         private const string UserScenarioPath = "users/scenario/{0}";
 
+        private const string UserScenarioEmptyPath = "users/scenario";
+
         // Path for uploading a map configuration
         // Sends: UploadScenarioFileData (file, name)
         // Receives: ScenarioData (id, name, owner_id, created_at, FileData)
@@ -92,6 +94,8 @@ namespace Code.Internal.API
         public static string UserScenarioUrl(int userId, Dictionary<string, string> queryParams = null) =>
             CombineUrl(string.Format(UserScenarioPath, userId), queryParams);
 
+        public static string UserScenarioUrl() => CombineUrl(UserScenarioEmptyPath);
+
         public static string MapConfigCreateUrl => CombineUrl(MapConfigCreatePath);
 
         public static string MapConfigMultiUrl(Dictionary<string, string> queryParams = null) =>
@@ -116,7 +120,7 @@ namespace Code.Internal.API
 
         public static string GroupsMulti(Dictionary<string, string> queryParams = null) =>
             CombineUrl(GroupsList, queryParams);
-        
+
         public static string GetGroup(int id) =>
             CombineUrl(string.Format(Group, id));
 
