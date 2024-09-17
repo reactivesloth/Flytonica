@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274046177649460532}
   - component: {fileID: 4139166411179568071}
+  - component: {fileID: 4454506770096933095}
   m_Layer: 0
   m_Name: Scenario Initializer
   m_TagString: Untagged
@@ -87,6 +88,19 @@ MonoBehaviour:
   transportModeObjects: {fileID: 8557777868805177551}
   searchingModeObjects: {fileID: 5698275271113696638}
   searchingIRModeObjects: {fileID: 2661550932784029582}
+--- !u!114 &4454506770096933095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282199168816122625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644f4a3574634aa28218086384f32033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneLoadingSettings: {fileID: 11400000, guid: 56bb72999f85c1a4e81b7eef178419e1, type: 2}
 --- !u!1 &2296211153392694394
 GameObject:
   m_ObjectHideFlags: 0

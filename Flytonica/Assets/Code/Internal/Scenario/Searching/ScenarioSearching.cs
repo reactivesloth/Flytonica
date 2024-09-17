@@ -1,6 +1,7 @@
 ﻿using System;
 using Code.Internal.Scenario.Race;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
 
 namespace Code.Internal.Scenario.Searching
@@ -113,7 +114,7 @@ namespace Code.Internal.Scenario.Searching
             _raceCondition = RaceCondition.Running;
             var search = searchingObjects[0].descriptionTask;
             
-            UISubtitle.Instance.SetTextInstant($"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {search}." + "\nКамера работает с 15 метров.", 3);
+            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {search}." + "\nКамера работает с 15 метров.", 3);
             DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
             
         }
@@ -121,7 +122,7 @@ namespace Code.Internal.Scenario.Searching
         private void FinishRace()
         {
             _raceCondition = RaceCondition.Finished;
-            UISubtitle.Instance.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
             DroneHUD.Instance.SetTask("Задание выполнено!");
         }
         
@@ -129,7 +130,7 @@ namespace Code.Internal.Scenario.Searching
         {
             currentObject++;
             var search = searchingObjects[currentObject].descriptionTask;
-            UISubtitle.Instance.SetTextInstant($"Отличная работа! А теперь найдите {search}");
+            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Отличная работа! А теперь найдите {search}");
             DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
         }
         

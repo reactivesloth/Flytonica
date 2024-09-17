@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Linq;
 using Code.Internal.UserInterface;
@@ -47,17 +47,17 @@ namespace Code.Internal.Input
                 enableAfterFinish.SetActive(true);
                 gameObject.SetActive(false);
                 return;
-            }*/
+            }#1#
             
             /*if (!_isCalibrating) 
                 UISubtitle.Instance.SetTextInstant("Для калибровки контроллера нажмите любую клавишу");
-                */
+                #1#
 
             UpdateJoystick();
             
             /*
             if ((UnityEngine.Input.anyKeyDown) && !_isCalibrating)
-                StartCoroutine(CalibrateJoysticks());*/
+                StartCoroutine(CalibrateJoysticks());#1#
         }
         
         private void UpdateJoystick()
@@ -145,7 +145,7 @@ namespace Code.Internal.Input
             yield return new WaitForSeconds(1);
             UISubtitle.Instance.SetTextInstant("Кнопка рестарта дрона");
             //yield return StartCoroutine(WaitZeros());
-            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));*/
+            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));#1#
             
             BindAxes();
 
@@ -294,4 +294,4 @@ namespace Code.Internal.Input
             controllerMap.CreateElementMap(assignment);
         }
     }
-}
+}*/

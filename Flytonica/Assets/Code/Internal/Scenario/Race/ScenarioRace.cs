@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
 
 namespace Code.Internal.Scenario.Race
@@ -30,7 +31,7 @@ namespace Code.Internal.Scenario.Race
         private void Start()
         {
             DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
-            UISubtitle.Instance?.SetTextInstant("Пролетите через стартовое кольцо чтобы начать гонку", 3);
+            DroneHUD.Instance.SetMessage(MessageType.Normal,"Пролетите через стартовое кольцо чтобы начать гонку", 3);
         }
 
         private void Update()
@@ -103,7 +104,7 @@ namespace Code.Internal.Scenario.Race
         {
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance?.SetTask("Задание выполнено!");
-            UISubtitle.Instance?.SetTextInstant("Поздравляем! Ваше время: " + GetResult());
+            DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
             
             foreach (var cp in checkpoints)
             {

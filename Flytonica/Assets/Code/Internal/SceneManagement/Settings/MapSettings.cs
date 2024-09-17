@@ -9,5 +9,6 @@ namespace Code.Internal.SceneManagement
         public new string name;
         public string loadingSceneName;
         public int windLayersCount;
+        public int maxAllowedHeight = 0;
     }
 }
