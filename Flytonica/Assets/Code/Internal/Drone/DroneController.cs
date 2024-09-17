@@ -37,9 +37,14 @@ namespace Code.Internal.Drone
 
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
 
+        [Range(2.4f, 2.4f)]
+        public float currentVoltage = 3.8f;
+
         public DroneSettings Settings => droneSettings;
         
         public static DroneController Instance { get; private set; }
+
+        private float batteryLevelPercent = 1;
         
         protected override void OnValidate()
         {
@@ -198,13 +203,27 @@ namespace Code.Internal.Drone
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
                 targetHeight = _transform.position.y;
             }
+            
+            CalculateBattery();
 
-            engineFL.UpdateEngine(_rigidBody, acceleration, controlFl);
-            engineFR.UpdateEngine(_rigidBody, acceleration, controlFr);
-            engineRR.UpdateEngine(_rigidBody, acceleration, controlRl);
-            engineRL.UpdateEngine(_rigidBody, acceleration, controlRr);
+            if (batteryLevelPercent > 0)
+            {
+                engineFL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFl);
+                engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
+                engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
+                engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
+            }
         }
 
+        private void CalculateBattery()
+        {
+            currentVoltage -= droneSettings.batteryEnergyWh / 3600 / droneSettings.bateteryCellCount * Math.Min(0.1f, acceleration)* Time.deltaTime;
+            float batteryLevel = droneSettings.bateteryCellCount * currentVoltage;
+            float minBatteryLevel = droneSettings.bateteryCellCount * droneSettings.minBatteryCellVoltage;
+            float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
+            batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);
+        }
+        
         private void UpdateRotation()
         {
             if (_currentFlightSettings == null) return;

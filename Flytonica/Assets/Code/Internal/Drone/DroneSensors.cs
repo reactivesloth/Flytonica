@@ -27,7 +27,14 @@ namespace Code.Internal.Drone
             {
                 DroneHUD.Instance.AltValueElement.Set(_transform.position.y);
                 DroneHUD.Instance.SpeedValueElement.Set(_rigidbody.linearVelocity.magnitude * 3.6f);
-                DroneHUD.Instance.BatteryElement.SetVoltage(_droneController.Settings.currentVoltageV);
+                
+                float batteryLevel = _droneController.Settings.bateteryCellCount * _droneController.currentVoltage;
+                float minBatteryLevel = _droneController.Settings.bateteryCellCount * _droneController.Settings.minBatteryCellVoltage;
+                float maxBatteryLevel = _droneController.Settings.bateteryCellCount * _droneController.Settings.maxBatteryCellVoltage;
+                var bLevel = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel)/100;
+                
+                DroneHUD.Instance.BatteryElement.SetVoltage(batteryLevel);
+                DroneHUD.Instance.BatteryElement.SetСharge(bLevel);
                 DroneHUD.Instance.HorizonElement.SetPitch(-_transform.localRotation.eulerAngles.x);
                 DroneHUD.Instance.HorizonElement.SetRoll(transform.localEulerAngles.z);
                 DroneHUD.Instance.SetMode(savedFlightSettings.modeName);

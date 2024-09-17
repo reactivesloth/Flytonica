@@ -36,6 +36,6 @@ namespace Code.Internal.UserInterface.DroneHudElements
             }
         }
 
-        public void SetVoltage(float value) => voltageText.text = value.ToString();
+        public void SetVoltage(float value) => voltageText.text = value.ToString("F1");
     }
 }

@@ -16,6 +16,8 @@ namespace Code.Internal.Drone
         private float _maxRPM = 0;
         private Vector3 lastError;
         private Vector3 totalError;
+
+        private float _voltage;
         
         private void Awake()
         {
@@ -25,7 +27,6 @@ namespace Code.Internal.Drone
         public void InitializeEngine(DroneSettings drone, bool clockwise)
         {
             _droneSettings = drone;
-            _maxRPM = drone.droneEngine.kv * drone.batteryVoltageV;
             _clockwise = clockwise;
         }
 
@@ -35,6 +36,7 @@ namespace Code.Internal.Drone
             if (!_droneSettings) return;
             
             var enterVelocity = 1;
+            _maxRPM = _droneSettings.droneEngine.kv * _voltage * _droneSettings.bateteryCellCount;
             var rpm = _maxRPM * _acceleration;
             var propDiameterInches = _droneSettings.dronePropeller.propDiameterInches;
             var propPitchInches = _droneSettings.dronePropeller.propPitchInches;
@@ -53,11 +55,12 @@ namespace Code.Internal.Drone
             _transform.Rotate(new Vector3(0, visualRpm, 0) * Time.fixedDeltaTime, Space.Self);
         }
 
-        public void UpdateEngine (Rigidbody rigidBody, float acceleration, float control)
+        public void UpdateEngine (Rigidbody rigidBody, float voltage, float acceleration, float control)
         {
             _rigidbody = rigidBody;
             _acceleration = acceleration;
             _control = Mathf.Abs(_acceleration + control);
+            _voltage = voltage;
         }
 
         public float GetRPM()
