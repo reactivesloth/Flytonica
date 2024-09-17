@@ -1,4 +1,6 @@
-﻿using Code.Internal.UserInterface;
+﻿using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
 
 namespace Code.Internal.Drone
@@ -28,14 +30,13 @@ namespace Code.Internal.Drone
                 DroneHUD.Instance.BatteryElement.SetVoltage(_droneController.Settings.currentVoltageV);
                 DroneHUD.Instance.HorizonElement.SetPitch(-_transform.localRotation.eulerAngles.x);
                 DroneHUD.Instance.HorizonElement.SetRoll(transform.localEulerAngles.z);
-                
-                if (savedFlightSettings != _droneController.Settings.currentFlightMode)
-                {
-                    savedFlightSettings = _droneController.Settings.currentFlightMode;
-                    //UI Message
-                }
-
                 DroneHUD.Instance.SetMode(savedFlightSettings.modeName);
+            }
+            
+            if (savedFlightSettings != _droneController.Settings.currentFlightMode)
+            {
+                savedFlightSettings = _droneController.Settings.currentFlightMode;
+                DroneHUD.Instance.SetMessage (MessageType.Normal, $"Переключение режима: {savedFlightSettings.modeName}", 2);
             }
         }
     }

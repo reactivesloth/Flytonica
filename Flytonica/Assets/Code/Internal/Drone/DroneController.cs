@@ -39,6 +39,8 @@ namespace Code.Internal.Drone
 
         public DroneSettings Settings => droneSettings;
         
+        public static DroneController Instance { get; private set; }
+        
         protected override void OnValidate()
         {
             InitializeDrone();
@@ -102,8 +104,14 @@ namespace Code.Internal.Drone
         {
             if(!_droneInput.IsOwner)
                 return;
-            if (Calibration.Instance.IsCalibrating)
-                return;
+            
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            
+            // if (Calibration.Instance.IsCalibrating)
+            //     return;
 
             UpdateInput();
             

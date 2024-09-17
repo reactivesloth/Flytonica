@@ -1,0 +1,69 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Code.Internal.UserInterface.DroneHudElements
+{
+
+    public enum MessageType
+    {
+        Normal,
+        Warning,
+        Error
+    }
+    
+    public class MessageBox : MonoBehaviour
+    {
+        [SerializeField] private Color 
+            normalColor = Color.white, 
+            warningColor = Color.yellow, 
+            errorColor = Color.red;
+        
+        [Header("Elements: ")] [SerializeField] private TMP_Text messageText;
+        [Header("Elements: ")] [SerializeField] private Image warningImage;
+
+        public static MessageBox Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+        }
+        
+        public void DrawMessage (MessageType type, string message, float duration = 0)
+        {
+            CancelInvoke();
+            ClearMessage();
+            
+            switch (type)
+            {
+                case MessageType.Normal:
+                    warningImage.gameObject.SetActive(false);
+                    messageText.color = normalColor;
+                    break;
+                case MessageType.Warning:
+                    warningImage.gameObject.SetActive(true);
+                    warningImage.color = warningColor;
+                    messageText.color = warningColor;
+                    break;
+                case MessageType.Error:
+                    warningImage.gameObject.SetActive(true);
+                    warningImage.color = errorColor;
+                    messageText.color = errorColor;
+                    break;
+            }
+
+            messageText.text = message;
+
+            if (duration > 0)
+            {
+                Invoke("ClearMessage", duration);
+            }
+        }
+
+        public void ClearMessage()
+        {
+            messageText.text = string.Empty;
+            warningImage.gameObject.SetActive(false);
+        }
+    }
+}
