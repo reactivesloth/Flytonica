@@ -80,6 +80,7 @@ namespace Code.Internal.API
         private const string LogsMultiPath = "logs/get_multi";
 
         private const string GroupsList = "groups/get_multi";
+        private const string Group = "groups/get/{0}";
 
         public static string AuthUrl => CombineUrl(UserAuthPath);
         public static string UserInfoUrl => CombineUrl(CurrentUserInfoPath);
@@ -115,6 +116,9 @@ namespace Code.Internal.API
 
         public static string GroupsMulti(Dictionary<string, string> queryParams = null) =>
             CombineUrl(GroupsList, queryParams);
+        
+        public static string GetGroup(int id) =>
+            CombineUrl(string.Format(Group, id));
 
         private static string CombineUrl(string path, Dictionary<string, string> queryParams = null)
         {

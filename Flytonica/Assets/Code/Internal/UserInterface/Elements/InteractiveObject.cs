@@ -13,7 +13,8 @@ namespace Code.Internal.UserInterface.Elements
 
         public State State { get; private set; } = State.Non;
 
-        public event Action OnPressAction;
+        public event Action SelectAction;
+        public event Action UnselectAction;
 
         public void OnPress()
         {
@@ -44,7 +45,7 @@ namespace Code.Internal.UserInterface.Elements
 
         public void Select()
         {
-            OnPressAction?.Invoke();
+            SelectAction?.Invoke();
             State = State.Selected;
             spriteChangeElements.ForEach(s => s.SetSelected());
             colorChangeElements.ForEach(s => s.SetSelected());
@@ -52,6 +53,7 @@ namespace Code.Internal.UserInterface.Elements
 
         public void ToNormal()
         {
+            UnselectAction?.Invoke();
             State = State.Non;
             spriteChangeElements.ForEach(s => s.SetNormal());
             colorChangeElements.ForEach(s => s.SetNormal());

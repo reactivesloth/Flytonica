@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Code.Internal.UserInterface.Elements.TableElements
@@ -10,6 +12,8 @@ namespace Code.Internal.UserInterface.Elements.TableElements
         [SerializeField] private TableButton buttonPrefab;
         
         public TableButton SelectedButton { get; private set; }
+
+        public event Action<bool> SelectionStateChange; 
 
         public void Generate<T>(List<TableButtonGenerateData<T>> datas)
         {
@@ -23,7 +27,8 @@ namespace Code.Internal.UserInterface.Elements.TableElements
                 tableRows.Add(button);
                 
                 var interactiveObject = button.GetComponent<InteractiveObject>();
-                interactiveObject.OnPressAction += () => OnRowSelected(button);
+                interactiveObject.SelectAction += () => OnRowSelected(button);
+                interactiveObject.UnselectAction += () => OnRowUnselected(button);
                 
                 number++;
             }
@@ -48,9 +53,16 @@ namespace Code.Internal.UserInterface.Elements.TableElements
 
         public void OnRowSelected(TableButton selectedButton)
         {
-            print(SelectedButton);
             SelectedButton?.GetComponent<InteractiveObject>()?.ToNormal();
             SelectedButton = selectedButton;
+            SelectionStateChange?.Invoke(true);
+        }
+
+        public void OnRowUnselected(TableButton unselectedButton)
+        {
+            if(SelectedButton != unselectedButton) return;
+            SelectedButton = null;
+            SelectionStateChange?.Invoke(false);
         }
     }
 

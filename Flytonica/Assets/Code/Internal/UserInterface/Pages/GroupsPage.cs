@@ -11,18 +11,18 @@ namespace Code.Internal.UserInterface.Pages
     public class GroupsPage: Page
     {
         [SerializeField] private SelectionCollectionManager groupsRoot;
-        [SerializeField] private Button delete, create, edit, showStudents, update;
+        [SerializeField] private Button showStudents, setTask;
+        [SerializeField] private StudentInGroupPage studentsPage;
 
         protected override void OnOpen()
         {
             base.OnOpen();
             
-            delete?.onClick.AddListener(Delete);
-            create?.onClick.AddListener(Create);
-            edit?.onClick.AddListener(Edit);
             showStudents?.onClick.AddListener(ShowStudent);
-            update?.onClick.AddListener(UpdateList);
+            setTask?.onClick.AddListener(SetTaskList);
+            groupsRoot.SelectionStateChange += SetButtons;
             
+            SetButtons(groupsRoot.SelectedButton);
             InitList();
         }
 
@@ -30,11 +30,9 @@ namespace Code.Internal.UserInterface.Pages
         {
             base.OnClose();
             
-            delete?.onClick.RemoveListener(Delete);
-            create?.onClick.RemoveListener(Create);
-            edit?.onClick.RemoveListener(Edit);
             showStudents?.onClick.RemoveListener(ShowStudent);
-            update?.onClick.RemoveListener(UpdateList);
+            setTask?.onClick.RemoveListener(SetTaskList);
+            groupsRoot.SelectionStateChange -= SetButtons;
         }
 
         private void InitList()
@@ -55,29 +53,21 @@ namespace Code.Internal.UserInterface.Pages
             }, Debug.LogError);
         }
 
-        private void Delete()
-        {
-            
-        }
-
-        private void Create()
-        {
-            
-        }
-
-        private void Edit()
-        {
-            
-        }
-
         private void ShowStudent()
         {
+            studentsPage.Init(groupsRoot.SelectedButton.GetSaveData<GroupData>().id);
+            studentsPage.Open();
+        }
+
+        private void SetTaskList()
+        {
             
         }
 
-        private void UpdateList()
+        private void SetButtons(bool isSelected)
         {
-            
+            showStudents?.gameObject.SetActive(isSelected);
+            setTask?.gameObject.SetActive(isSelected);
         }
     }
 }
