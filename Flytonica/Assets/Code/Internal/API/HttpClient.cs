@@ -10,17 +10,17 @@ namespace Code.Internal.API
     public class HttpClient : MonoBehaviour
     {
         private static AuthResponseData _authData;
-        
+
         public static UserData UserData { get; private set; }
         public static bool IsAuthorized => _authData != null;
 
         public static void SetAuthData(AuthResponseData authData) => _authData = authData;
         public static void SetUserData(UserData userData) => UserData = userData;
 
-        
+
         public static void Get(string url, Action<string> onSuccess = null, Action<string> onError = null)
         {
-            var instance = CreateInstance();
+            var instance = CreateInstance(url);
             instance.StartCoroutine(instance
                 .SendRequestProcess(url, UnityWebRequest.kHttpVerbGET, null, onSuccess, onError));
         }
@@ -28,9 +28,24 @@ namespace Code.Internal.API
         public static void Post(string url, string jsonData, Action<string> onSuccess = null,
             Action<string> onError = null)
         {
-            var instance = CreateInstance();
+            var instance = CreateInstance(url);
             instance.StartCoroutine(instance
                 .SendRequestProcess(url, UnityWebRequest.kHttpVerbPOST, jsonData, onSuccess, onError));
+        }
+
+        public static void PostFormData(string url, WWWForm formData, Action<string> onSuccess = null,
+            Action<string> onError = null)
+        {
+            var instance = CreateInstance(url);
+            instance.StartCoroutine(instance
+                .SendFormDataRequestProcess(url, formData, onSuccess, onError));
+        }
+
+        public static void Delete(string url, Action<string> onSuccess = null, Action<string> onError = null)
+        {
+            var instance = CreateInstance(url);
+            instance.StartCoroutine(instance
+                .SendRequestProcess(url, UnityWebRequest.kHttpVerbDELETE, null, onSuccess, onError));
         }
 
         private IEnumerator SendRequestProcess(string url, string method, string jsonData, Action<string> onSuccess,
@@ -59,9 +74,27 @@ namespace Code.Internal.API
             Destroy(gameObject);
         }
 
-        private static HttpClient CreateInstance()
+        private IEnumerator SendFormDataRequestProcess(string url, WWWForm formData, Action<string> onSuccess,
+            Action<string> onError)
         {
-            var httpClientObject = new GameObject("HttpClient");
+            using (UnityWebRequest request = UnityWebRequest.Post(url, formData))
+            {
+                request.SetRequestHeader("Authorization", "Bearer " + _authData?.access_token);
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                else
+                    onError?.Invoke(request.downloadHandler.text);
+
+                Destroy(gameObject);
+            }
+        }
+
+        private static HttpClient CreateInstance(string url)
+        {
+            var httpClientObject = new GameObject(url);
             return httpClientObject.AddComponent<HttpClient>();
         }
     }
