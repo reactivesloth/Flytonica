@@ -37,7 +37,7 @@ namespace Code.Internal.Drone
 
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
 
-        [Range(2.4f, 2.4f)]
+        [Range(2.4f, 3.8f)]
         public float currentVoltage = 3.8f;
 
         public DroneSettings Settings => droneSettings;
@@ -168,7 +168,7 @@ namespace Code.Internal.Drone
         private void UpdateEngines()
         {
             if (_currentFlightSettings == null) return;
-            
+
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
             _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 1 ? 0.5f : 0;
 
@@ -182,10 +182,13 @@ namespace Code.Internal.Drone
             {
                 if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
                 {
-                    targetHeight += _droneInput.Throttle * (_droneInput.Throttle > 0 ? _currentFlightSettings.maxAscendingSpeed : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
+                    targetHeight += _droneInput.Throttle *
+                                    (_droneInput.Throttle > 0
+                                        ? _currentFlightSettings.maxAscendingSpeed
+                                        : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
                     targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
                 }
-                
+
                 var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
 
@@ -194,7 +197,9 @@ namespace Code.Internal.Drone
                     case > 0 when _droneInput.Throttle < 0.44f:
                     case < 0 when _droneInput.Throttle > 0.56f:
                         //targetHeight = _transform.position.y;
-                        _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity, new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f), _rigidBody.linearVelocity.z), Time.deltaTime * 5);
+                        _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity,
+                            new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f),
+                                _rigidBody.linearVelocity.z), Time.deltaTime * 5);
                         break;
                 }
             }
@@ -203,16 +208,13 @@ namespace Code.Internal.Drone
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
                 targetHeight = _transform.position.y;
             }
-            
+
             CalculateBattery();
 
-            if (batteryLevelPercent > 0)
-            {
-                engineFL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFl);
-                engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
-                engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
-                engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
-            }
+            engineFL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFl);
+            engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
+            engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
+            engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
         }
 
         private void CalculateBattery()

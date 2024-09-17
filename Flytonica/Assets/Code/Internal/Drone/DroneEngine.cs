@@ -36,7 +36,7 @@ namespace Code.Internal.Drone
             if (!_droneSettings) return;
             
             var enterVelocity = 1;
-            _maxRPM = _droneSettings.droneEngine.kv * _voltage * _droneSettings.bateteryCellCount;
+            _maxRPM = _droneSettings.droneEngine.kv * (_voltage * _droneSettings.bateteryCellCount);
             var rpm = _maxRPM * _acceleration;
             var propDiameterInches = _droneSettings.dronePropeller.propDiameterInches;
             var propPitchInches = _droneSettings.dronePropeller.propPitchInches;
@@ -60,7 +60,10 @@ namespace Code.Internal.Drone
             _rigidbody = rigidBody;
             _acceleration = acceleration;
             _control = Mathf.Abs(_acceleration + control);
-            _voltage = voltage;
+            if (voltage > 0)
+            {
+                _voltage = voltage;
+            }
         }
 
         public float GetRPM()
