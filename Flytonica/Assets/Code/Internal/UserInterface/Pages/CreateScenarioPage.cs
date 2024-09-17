@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Code.Internal.API;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,23 @@ namespace Code.Internal.UserInterface.Pages
             {
                 numberMark?.gameObject.SetActive(isMark);
                 lineMark?.gameObject.SetActive(isMark);
+            }
+        }
+
+        [Serializable]
+        private class TestSaveFormat
+        {
+            public MapSettings currentMap;
+            public ScenarioType currentType;
+            public DroneSettings currentDrone;
+            public DroneFlightSettings currentMode;
+
+            public TestSaveFormat(MapSettings currentMap, ScenarioType currentType, DroneSettings currentDrone, DroneFlightSettings currentMode)
+            {
+                this.currentMap = currentMap;
+                this.currentType = currentType;
+                this.currentDrone = currentDrone;
+                this.currentMode = currentMode;
             }
         }
         
@@ -118,6 +136,16 @@ namespace Code.Internal.UserInterface.Pages
         private void GoToLocationSettings()
         {
             
+            var form = new WWWForm();
+            form.AddField("name", title.text);
+
+            var jsonData = JsonUtility.ToJson(new TestSaveFormat(_currentMap, _currentType, _currentDrone, _currentMode));
+            print(jsonData);
+            var binaryData = Encoding.UTF8.GetBytes(jsonData);
+
+            form.AddBinaryData("file", binaryData, $"{title.text}.json");
+            
+            HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
         }
 
         private void NextStep()
