@@ -62,6 +62,8 @@ namespace Code.Internal.Input
         
         private void UpdateJoystick()
         {
+            if (_player.controllers.Joysticks.Count == 0) return;
+            
             _findJoystick = null;
             
             foreach (var joystick in ReInput.controllers.Joysticks)
