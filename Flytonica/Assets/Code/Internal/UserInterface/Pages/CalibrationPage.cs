@@ -17,21 +17,21 @@ namespace Code.Internal.UserInterface.Pages
 
         private void Update()
         {
-            //var calibration = Calibration.Instance;
-            // gasSlider.value = calibration._joystick.GetAxis(0);
-            // rotateSlider.value = calibration._joystick.GetAxis(1);
-            // pitchSlider.value = calibration._joystick.GetAxis(2);
-            // rollSlider.value = calibration._joystick.GetAxis(3);
+            var calibration = Calibration.Instance;
+            gasSlider.value = calibration._joystick.GetAxis(0);
+            rotateSlider.value = calibration._joystick.GetAxis(1);
+            pitchSlider.value = calibration._joystick.GetAxis(2);
+            rollSlider.value = calibration._joystick.GetAxis(3);
         }
 
         protected override void OnOpen()
         {
             base.OnOpen();
-            //Calibration.Instance.StepDone += NextStep;
+            Calibration.Instance.StepDone += NextStep;
             
             _currentStep = 0;
             SetCurrentStep();
-            //Calibration.Instance.StartCalibration();
+            Calibration.Instance.StartCalibration();
             calibrating.SetActive(true);
             endCalibration.SetActive(false);
         }
@@ -39,7 +39,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnClose()
         {
             base.OnClose();
-            //Calibration.Instance.StepDone -= NextStep;
+            Calibration.Instance.StepDone -= NextStep;
         }
 
         private void NextStep(int doneStep)
@@ -76,6 +76,7 @@ namespace Code.Internal.UserInterface.Pages
         public void Hide()
         {
             help?.SetActive(false);
+            Calibration.Instance.StopCalibration();
         }
     }
 }

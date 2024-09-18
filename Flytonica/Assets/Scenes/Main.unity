@@ -554,8 +554,8 @@ MonoBehaviour:
   <SpeedValueElement>k__BackingField: {fileID: 0}
   <AimElement>k__BackingField: {fileID: 0}
   <HorizonElement>k__BackingField: {fileID: 0}
-  <ErrorElement>k__BackingField: {fileID: 0}
   <BatteryElement>k__BackingField: {fileID: 0}
+  <MessageBoxElement>k__BackingField: {fileID: 0}
 --- !u!114 &974406804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -910,7 +910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1339894653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1121,6 +1121,7 @@ MonoBehaviour:
   _modeButtonId: 0
   _restartButtonId: 0
   enableAfterFinish: {fileID: 1339894652}
+  calibrationText: {fileID: 1988327422}
 --- !u!4 &1625281486
 Transform:
   m_ObjectHideFlags: 0
@@ -1334,7 +1335,6 @@ GameObject:
   - component: {fileID: 1988327420}
   - component: {fileID: 1988327423}
   - component: {fileID: 1988327422}
-  - component: {fileID: 1988327421}
   m_Layer: 5
   m_Name: UISubtitle
   m_TagString: Untagged
@@ -1361,19 +1361,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -300}
   m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1988327421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1988327419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bbb4de421374cfdb50cbfce7064df01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  typingSpeed: 10
 --- !u!114 &1988327422
 MonoBehaviour:
   m_ObjectHideFlags: 0

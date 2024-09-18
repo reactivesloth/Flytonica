@@ -1,8 +1,8 @@
-﻿/*using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
-using Code.Internal.UserInterface;
 using Rewired;
+using TMPro;
 using UnityEngine;
 
 namespace Code.Internal.Input
@@ -28,6 +28,8 @@ namespace Code.Internal.Input
 
         public GameObject enableAfterFinish;
 
+        [SerializeField] private TextMeshProUGUI calibrationText;
+        
         public event Action<int> StepDone; 
         
         private void Awake()
@@ -42,22 +44,21 @@ namespace Code.Internal.Input
 
         private void Update()
         {
-            /*if (ReInput.controllers.joystickCount < 1)
+            if (ReInput.controllers.joystickCount < 1)
             {
                 enableAfterFinish.SetActive(true);
                 gameObject.SetActive(false);
                 return;
-            }#1#
+            }
             
-            /*if (!_isCalibrating) 
-                UISubtitle.Instance.SetTextInstant("Для калибровки контроллера нажмите любую клавишу");
-                #1#
-
+            if (!_isCalibrating) 
+                calibrationText.SetText("Для калибровки контроллера нажмите любую клавишу");
+            
             UpdateJoystick();
             
-            /*
+            
             if ((UnityEngine.Input.anyKeyDown) && !_isCalibrating)
-                StartCoroutine(CalibrateJoysticks());#1#
+                StartCoroutine(CalibrateJoysticks());
         }
         
         private void UpdateJoystick()
@@ -91,67 +92,73 @@ namespace Code.Internal.Input
             StartCoroutine(CalibrateJoysticks());
         }
 
+        public void StopCalibration()
+        {
+            StopAllCoroutines();
+            if (calibrationText != null) calibrationText.text = string.Empty;
+        }
+
         private IEnumerator CalibrateJoysticks()
         {
             _isCalibrating = true;
 
-            UISubtitle.Instance.SetTextInstant("Калибровка начата. Вращайте джойстики по кругу.");
+            calibrationText?.SetText("Калибровка начата. Вращайте джойстики по кругу.");
             yield return StartCoroutine(CalibrateExtremes());
             
             StepDone?.Invoke(0);
 
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1f);
 
-            UISubtitle.Instance.SetTextInstant("Переведите стики в центр.");
+            calibrationText?.SetText("Переведите стики в центр.");
             yield return StartCoroutine(CalibrateZeros());
 
             ApplyCalibration();
             
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Левый стик вверх");
+            calibrationText?.SetText("Левый стик вверх");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _throttleAxisId = i));
             StepDone?.Invoke(1);
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Левый стик вправо");
+            calibrationText?.SetText("Левый стик вправо");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _yawAxisId = i));
             StepDone?.Invoke(2);
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Правый стик вверх");
+            calibrationText?.SetText("Правый стик вверх");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _pitchAxisId = i));
             StepDone?.Invoke(3);
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Правый стик вправо");
+            calibrationText?.SetText("Правый стик вправо");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckAxis(i => _rollAxisId = i));
             StepDone?.Invoke(4);
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             yield return new WaitForSeconds(1);
             
-            /*UISubtitle.Instance.SetTextInstant("Кнопка переключения камеры");
+            calibrationText?.SetText("Кнопка переключения камеры");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckButton (i => _cameraButtonId = i));
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Кнопка переключения режима управления");
+            calibrationText?.SetText("Кнопка переключения режима управления");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckButton (i => _modeButtonId = i));
             yield return new WaitForSeconds(1);
-            UISubtitle.Instance.SetTextInstant("Кнопка рестарта дрона");
+            calibrationText?.SetText("Кнопка рестарта дрона");
             //yield return StartCoroutine(WaitZeros());
-            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));#1#
+            yield return StartCoroutine(CheckButton (i => _restartButtonId = i));
             
             BindAxes();
 
-            UISubtitle.Instance.SetTextInstant("Калибровка завершена!");
+            calibrationText?.SetText("Калибровка завершена!");
             yield return new WaitForSeconds(2);
-            UISubtitle.Instance.ClearText();
+            if (calibrationText != null) calibrationText.text = string.Empty;
             _isCalibrating = false;
             enableAfterFinish?.SetActive(true);
             gameObject.SetActive(false);
@@ -163,7 +170,7 @@ namespace Code.Internal.Input
             
             yield return new WaitUntil(() => { return _joystick.Axes.ToList().FirstOrDefault(a => a.valueDelta > 0.2f) != null; });
 
-            UISubtitle.Instance.SetTextInstant("Продолжайте вращать джойстики по кругу.");
+            calibrationText?.SetText("Продолжайте вращать джойстики по кругу.");
 
             axesCount = _joystick.Axes.Count;
             minValues = new float[axesCount];
@@ -294,4 +301,4 @@ namespace Code.Internal.Input
             controllerMap.CreateElementMap(assignment);
         }
     }
-}*/
+}

@@ -26,7 +26,9 @@ namespace Code.Internal.Scenario
             if (DroneController.Instance != null)
             {
                 float maxHeight = _sceneLoadingSettings.currentMap.maxAllowedHeight;
-
+                if (maxHeight > 0)
+                    DroneHUD.Instance.AltValueElement.MaxValue = (int) maxHeight;
+                
                 if (maxHeight > 0 && !droneInForbiddenZone)
                 {
                     if (DroneController.Instance.transform.position.y >= maxHeight - 10 &&

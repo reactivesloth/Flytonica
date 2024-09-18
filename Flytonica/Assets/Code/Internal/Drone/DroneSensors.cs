@@ -19,6 +19,8 @@ namespace Code.Internal.Drone
             _droneController = gameObject.GetComponent<DroneController>();
             _rigidbody = gameObject.GetComponent<Rigidbody>();
             _transform = transform;
+            if (savedFlightSettings != null)
+                DroneHUD.Instance.AltValueElement.MaxValue = (int) savedFlightSettings.maxHeight;
         }
 
         private void Update()
@@ -37,7 +39,8 @@ namespace Code.Internal.Drone
                 DroneHUD.Instance.BatteryElement.SetСharge(bLevel);
                 DroneHUD.Instance.HorizonElement.SetPitch(-_transform.localRotation.eulerAngles.x);
                 DroneHUD.Instance.HorizonElement.SetRoll(transform.localEulerAngles.z);
-                DroneHUD.Instance.SetMode(savedFlightSettings.modeName);
+                if (savedFlightSettings != null)
+                    DroneHUD.Instance.SetMode(savedFlightSettings.modeName);
             }
             
             if (savedFlightSettings != _droneController.Settings.currentFlightMode)
