@@ -102,7 +102,10 @@ namespace Code.Internal.UserInterface.Pages
                     generateData.Add(data);
                 }
 
-                scenariosRoot.Add(generateData);
+                if(!_isEditMode)
+                    scenariosRoot.Add(generateData);
+                else
+                    scenariosRoot.Generate(generateData);
             }, Debug.LogError);
         }
 
