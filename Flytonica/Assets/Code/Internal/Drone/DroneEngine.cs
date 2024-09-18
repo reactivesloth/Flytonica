@@ -49,7 +49,7 @@ namespace Code.Internal.Drone
             float diff = 1 - upVec.magnitude;
             var force = _transform.up * (thrust + diff);
             
-            _rigidbody.AddForce(force * Time.deltaTime, ForceMode.Impulse);
+            _rigidbody.AddForce(force/4 * Time.deltaTime, ForceMode.Impulse);
 
             var visualRpm = _maxRPM * _control * (_clockwise ? 1:-1);
             _transform.Rotate(new Vector3(0, visualRpm, 0) * Time.fixedDeltaTime, Space.Self);

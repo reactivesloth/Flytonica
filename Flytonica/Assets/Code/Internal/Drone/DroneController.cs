@@ -33,8 +33,6 @@ namespace Code.Internal.Drone
         private float _roll = 0;
         private float _yaw = 0;
 
-        public float targetHeight = 1;
-
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
 
         [Range(2.4f, 3.8f)]
@@ -45,7 +43,9 @@ namespace Code.Internal.Drone
         public static DroneController Instance { get; private set; }
 
         private float batteryLevelPercent = 1;
-        
+        private float deltaSpd;
+        private float throttleHold;
+
         protected override void OnValidate()
         {
             InitializeDrone();
@@ -131,7 +131,6 @@ namespace Code.Internal.Drone
                 _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
                 _rigidBody.linearVelocity = Vector3.zero;
                 _rigidBody.angularVelocity = Vector3.zero;
-                targetHeight = _transform.position.y;
             }
             
             UpdateRotation();
@@ -176,37 +175,25 @@ namespace Code.Internal.Drone
             controlFr = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? _roll : 0);
             controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
             controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
-            acceleration = 0.0f;
-
+            acceleration = Mathf.Clamp(acceleration, 0, 1);
+            
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
-                if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
+                acceleration += (_rigidBody.linearVelocity.y > 0 ? -0.5f : 0.5f) * Time.deltaTime;
+
+                if (_droneInput.Throttle > 0.2f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxAscendingSpeed)
                 {
-                    targetHeight += _droneInput.Throttle *
-                                    (_droneInput.Throttle > 0
-                                        ? _currentFlightSettings.maxAscendingSpeed
-                                        : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
-                    targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
+                    acceleration += Time.deltaTime;
                 }
 
-                var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
-                acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
-
-                switch (targetHeight - transform.position.y)
+                if (_droneInput.Throttle < -0.2f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxDescendingSpeed)
                 {
-                    case > 0 when _droneInput.Throttle < 0.44f:
-                    case < 0 when _droneInput.Throttle > 0.56f:
-                        //targetHeight = _transform.position.y;
-                        _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity,
-                            new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f),
-                                _rigidBody.linearVelocity.z), Time.deltaTime * 5);
-                        break;
+                    acceleration -= Time.deltaTime;
                 }
             }
             else
             {
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
-                targetHeight = _transform.position.y;
             }
 
             CalculateBattery();
@@ -244,24 +231,23 @@ namespace Code.Internal.Drone
                         rotationMagnitude < _currentFlightSettings.axisModeChangeValue:
                     {
                         rotation = rotationMagnitude > 0.1f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
                         _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
                         break;
                     }
                     case ControlType.HOLD:
-                        if (rotationMagnitude > 0.1f)
+                        if (rotationMagnitude > 0.1f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed)
                         {
                             rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle);
                         }
                         else
                         {
                             rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime * 2f);
+                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime);
                         }
 
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
-                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 2f);
+                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime);
                         break;
                     default:
                         _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
