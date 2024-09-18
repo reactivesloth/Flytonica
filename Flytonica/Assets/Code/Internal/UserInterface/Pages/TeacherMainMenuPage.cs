@@ -24,7 +24,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private LoginPage loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
-        [SerializeField] private EditScenariosPage editEditScenariosPage;
+        [SerializeField] private ScenariosManagmentPage scenariosManagementPage;
         [SerializeField] private GroupsPage groupsPage;
         [SerializeField] private Page calibrationPage;
 
@@ -72,14 +72,15 @@ namespace Code.Internal.UserInterface.Pages
             }
             else
             {
-                scriptsPage.Init(taskScenariosSettings.scenarios, true);
-                scriptsPage.Open();
+                scenariosManagementPage.Init(false);
+                scenariosManagementPage.Open();
             }
         }
 
         private void OnEditScenarioClicked()
         {
-            editEditScenariosPage.Open();
+            scenariosManagementPage.Init(true);
+            scenariosManagementPage.Open();
         }
     
         private void OnStudentsClicked()

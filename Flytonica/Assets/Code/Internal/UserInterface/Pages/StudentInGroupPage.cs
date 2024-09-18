@@ -14,6 +14,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private SelectionCollectionManager studentsRoot;
         [SerializeField] private Button showReplays, setTask;
         [SerializeField] private UserTaskControlPage userTaskControlPage;
+        [SerializeField] private ReplaysPage replaysPage;
 
         private GroupData _currentGroupData;
 
@@ -58,7 +59,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void ShowReplays()
         {
-            
+            replaysPage.Init(studentsRoot.SelectedButton.GetSaveData<StudentData>().user_id);
+            replaysPage.Open();
         }
 
         private void SetTask()

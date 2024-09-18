@@ -13,12 +13,20 @@ namespace Code.Internal.UserInterface.Elements.TableElements
         
         public TableButton SelectedButton { get; private set; }
 
-        public event Action<bool> SelectionStateChange; 
+        public event Action<bool> SelectionStateChange;
+
+        public int _lastNumber;
 
         public void Generate<T>(List<TableButtonGenerateData<T>> datas)
         {
             Clear();
-            var number = 1;
+            _lastNumber = 1;
+            Add(datas);
+        }
+
+        public void Add<T>(List<TableButtonGenerateData<T>> datas)
+        {
+            var number = _lastNumber;
             foreach (var data in datas)
             {
                 var button = Instantiate(buttonPrefab, transform);
@@ -32,6 +40,14 @@ namespace Code.Internal.UserInterface.Elements.TableElements
                 
                 number++;
             }
+
+            _lastNumber = number;
+        }
+
+        public void Unselect()
+        {
+            SelectedButton?.GetComponent<InteractiveObject>()?.ToNormal();
+            SelectedButton = null;
         }
 
         private void Clear()
@@ -51,14 +67,15 @@ namespace Code.Internal.UserInterface.Elements.TableElements
             tableRows.Clear();
         }
 
-        public void OnRowSelected(TableButton selectedButton)
+        private void OnRowSelected(TableButton selectedButton)
         {
+            print(gameObject.name);
             SelectedButton?.GetComponent<InteractiveObject>()?.ToNormal();
             SelectedButton = selectedButton;
             SelectionStateChange?.Invoke(true);
         }
 
-        public void OnRowUnselected(TableButton unselectedButton)
+        private void OnRowUnselected(TableButton unselectedButton)
         {
             if(SelectedButton != unselectedButton) return;
             SelectedButton = null;

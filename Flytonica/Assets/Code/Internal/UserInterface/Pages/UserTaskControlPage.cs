@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
-using Code.Internal.API.Wrappers.SendModels;
 using Code.Internal.UserInterface.Elements.TableElements;
 using TMPro;
 using UnityEngine;
@@ -30,6 +29,12 @@ namespace Code.Internal.UserInterface.Pages
             
             InitCurrentTasks();
             InitAvailableTasks();
+
+            currentUserTasksRoot.SelectionStateChange += OnSelectStateCurrentTask;
+            availableTasksRoot.SelectionStateChange += OnSelectStateAvailableTask;
+
+            OnSelectStateCurrentTask(currentUserTasksRoot.SelectedButton);
+            OnSelectStateAvailableTask(availableTasksRoot.SelectedButton);
         }
 
         protected override void OnClose()
@@ -37,6 +42,9 @@ namespace Code.Internal.UserInterface.Pages
             base.OnClose();
             deleteTask?.onClick.RemoveListener(Delete);
             setTask?.onClick.RemoveListener(Add);
+            
+            currentUserTasksRoot.SelectionStateChange -= OnSelectStateCurrentTask;
+            availableTasksRoot.SelectionStateChange -= OnSelectStateAvailableTask;
         }
 
         private void InitCurrentTasks()
@@ -99,6 +107,20 @@ namespace Code.Internal.UserInterface.Pages
                     Debug.Log(response);
                     InitCurrentTasks();
                 }, Debug.LogError);
+        }
+
+        private void OnSelectStateCurrentTask(bool isSelect)
+        {
+            deleteTask.gameObject.SetActive(isSelect);
+            if(isSelect)
+                availableTasksRoot.Unselect();
+        }
+
+        private void OnSelectStateAvailableTask(bool isSelect)
+        {
+            setTask.gameObject.SetActive(isSelect);
+            if(isSelect)
+                currentUserTasksRoot.Unselect();
         }
     }
 }

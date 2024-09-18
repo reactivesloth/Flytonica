@@ -54,9 +54,7 @@ namespace Code.Internal.UserInterface.Elements
         public void OnButtonPress()
         {
             OpenCloseList();
-            @object.OnPress();
-
-            print(@object.State);
+            //@object.OnPress();
             
             arrowObject.SetActive(@object.State != State.Selected && _list != null);
             arrowObjectDown.SetActive(@object.State == State.Selected && _list != null);
