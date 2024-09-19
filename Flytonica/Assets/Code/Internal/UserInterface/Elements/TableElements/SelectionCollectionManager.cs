@@ -16,7 +16,7 @@ namespace Code.Internal.UserInterface.Elements.TableElements
         public event Action<bool> SelectionStateChange;
 
         public int _lastNumber;
-
+        
         public void Generate<T>(List<TableButtonGenerateData<T>> datas)
         {
             Clear();
@@ -29,19 +29,24 @@ namespace Code.Internal.UserInterface.Elements.TableElements
             var number = _lastNumber;
             foreach (var data in datas)
             {
-                var button = Instantiate(buttonPrefab, transform);
-                button.InitValues(number, data.DisplayData);
-                button.InitSaveData(data.Data);
-                tableRows.Add(button);
-                
-                var interactiveObject = button.GetComponent<InteractiveObject>();
-                interactiveObject.SelectAction += () => OnRowSelected(button);
-                interactiveObject.UnselectAction += () => OnRowUnselected(button);
-                
-                number++;
+                Add(data);
             }
 
             _lastNumber = number;
+        }
+
+        public void Add<T>(TableButtonGenerateData<T> data)
+        {
+            var button = Instantiate(buttonPrefab, transform);
+            button.InitValues(_lastNumber, data.DisplayData);
+            button.InitSaveData(data.Data);
+            tableRows.Add(button);
+                
+            var interactiveObject = button.GetComponent<InteractiveObject>();
+            interactiveObject.SelectAction += () => OnRowSelected(button);
+            interactiveObject.UnselectAction += () => OnRowUnselected(button);
+                
+            _lastNumber++;
         }
 
         public void Unselect()
@@ -50,7 +55,7 @@ namespace Code.Internal.UserInterface.Elements.TableElements
             SelectedButton = null;
         }
 
-        private void Clear()
+        public void Clear()
         {
             if (SelectedButton != null)
             {

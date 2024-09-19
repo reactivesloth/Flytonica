@@ -37,7 +37,7 @@ namespace Code.Internal.UserInterface.Elements
 
         private void Init(ScenarioSettings scenarioSettings)
         {
-            typeText.text = ScenarioSettings.GetScenarioTypeName(scenarioSettings.scenarioType);
+            typeText.text = scenarioSettings.scenarioType.GetName();
             descriptionText.text = scenarioSettings.description;
             
             locationDropdown.ClearOptions();
@@ -70,7 +70,7 @@ namespace Code.Internal.UserInterface.Elements
             flyModeDropdown.ClearOptions();
             _dropdownFlyModes.Clear();
             var droneOptionData = new List<string>();
-            for (var i = 0; i < CurrentDrone.flightModes.Length; i++)
+            for (var i = 0; i < CurrentDrone.flightModes.Count; i++)
             {
                 var droneMode = CurrentDrone.flightModes[i];
                 _dropdownFlyModes.Add(i, droneMode);

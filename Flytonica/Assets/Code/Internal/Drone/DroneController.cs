@@ -156,7 +156,7 @@ namespace Code.Internal.Drone
             else
             {
                 _currentFlightMode++;
-                if (_currentFlightMode >= droneSettings.flightModes.Length)
+                if (_currentFlightMode >= droneSettings.flightModes.Count)
                     _currentFlightMode = 0;
 
                 _currentFlightSettings = droneSettings.flightModes[_currentFlightMode];

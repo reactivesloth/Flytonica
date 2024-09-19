@@ -39,12 +39,12 @@ namespace Code.Internal.UserInterface.Pages
             startGameButton?.onClick.RemoveListener(OnStartGame);
         }
 
-        public void Init(ScenarioSettings[] scenarios, bool isNet = false)
+        public void Init(List<ScenarioSettings> scenarios, bool isNet = false)
         {
             _isNetGame = isNet;
             Clear();
 
-            for (var i = 0; i < scenarios.Length; i++)
+            for (var i = 0; i < scenarios.Count; i++)
             {
                 var scenario = scenarios[i];
 

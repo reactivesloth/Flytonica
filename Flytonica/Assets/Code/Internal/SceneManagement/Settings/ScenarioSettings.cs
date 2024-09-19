@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Code.Internal.Drone;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Code.Internal.SceneManagement
@@ -11,10 +12,38 @@ namespace Code.Internal.SceneManagement
         public ScenarioType scenarioType = ScenarioType.FreeFlight;
         public MapSettings[] availableMaps;
 
+        [CanBeNull] public DroneSettings currentDrone;
+        [CanBeNull] public MapSettings currentMap;
         [CanBeNull] public ScenarioSettings[] nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
-        
-        public static string GetScenarioTypeName(ScenarioType type)
+
+        public static ScenarioSettings Create(string name, string description, ScenarioType scenarioType, MapSettings mapSettings, DroneSettings drone)
+        {
+            var instance = CreateInstance<ScenarioSettings>();
+            
+            instance.name = name;
+            instance.description = description;
+            instance.scenarioType = scenarioType;
+            instance.currentMap = mapSettings;
+            instance.currentDrone = drone;
+            
+            return instance;
+        }
+    }
+
+    public enum ScenarioType
+    {
+        FreeFlight,
+        Tutorial,
+        Race,
+        Transport,
+        Searching,
+        SearchingWithIR
+    }
+    
+    public static class ScenarioTypeExtension
+    {
+        public static string GetName(this ScenarioType type)
         {
             return type switch
             {
@@ -27,15 +56,5 @@ namespace Code.Internal.SceneManagement
                 _ => $"Пользовательский сценарий"
             };
         }
-    }
-
-    public enum ScenarioType
-    {
-        FreeFlight,
-        Tutorial,
-        Race,
-        Transport,
-        Searching,
-        SearchingWithIR
     }
 }

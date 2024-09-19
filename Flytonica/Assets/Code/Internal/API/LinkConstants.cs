@@ -7,7 +7,7 @@ namespace Code.Internal.API
 {
     public static class LinkConstants
     {
-        private const string ServerUrl = "https://dronesimapi.4app.pro/v1";
+        public const string ServerUrl = "https://dronesimapi.4app.pro", Version = "v1";
 
         // Path for user authentication
         // Sends: UserAuthRequestData (login, password)
@@ -124,10 +124,15 @@ namespace Code.Internal.API
         public static string GetGroup(int id) =>
             CombineUrl(string.Format(Group, id));
 
-        private static string CombineUrl(string path, Dictionary<string, string> queryParams = null)
-        {
-            var url = new StringBuilder($"{ServerUrl}/{path}");
+        public static string GetFile(string path) => CombineUrl(path, isVersion: false);
 
+        private static string CombineUrl(string path, Dictionary<string, string> queryParams = null, bool isVersion = true)
+        {
+            var url = new StringBuilder($"{ServerUrl}/");
+            if (isVersion)
+                url.Append($"{Version}/");
+            url.Append($"{path}");
+            
             if (queryParams != null && queryParams.Count > 0)
             {
                 var query = HttpUtility.ParseQueryString(string.Empty);

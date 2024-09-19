@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Code.Internal.Drone
@@ -14,7 +15,7 @@ namespace Code.Internal.Drone
         public DroneEngineSettings droneEngine;
         public DronePropellerSettings dronePropeller;
         
-        [Header("Flight Modes")] public DroneFlightSettings[] flightModes;
+        [Header("Flight Modes")] public List<DroneFlightSettings> flightModes;
         [HideInInspector] public DroneFlightSettings currentFlightMode;
 
         [Header("Battery")] 
