@@ -43,13 +43,17 @@ namespace Code.Internal.UserInterface.Elements
             locationDropdown.ClearOptions();
             _dropdownLocations.Clear();
             var locationOptionData = new List<string>();
-            for (var i = 0; i < scenarioSettings.availableMaps.Length; i++)
+            if(scenarioSettings.availableMaps != null)
             {
-                var scenarioSettingsAvailableMap = scenarioSettings.availableMaps[i];
-                _dropdownLocations.Add(i, scenarioSettingsAvailableMap);
-                locationOptionData.Add(scenarioSettingsAvailableMap.name);
+                for (var i = 0; i < scenarioSettings.availableMaps.Length; i++)
+                {
+                    var scenarioSettingsAvailableMap = scenarioSettings.availableMaps[i];
+                    _dropdownLocations.Add(i, scenarioSettingsAvailableMap);
+                    locationOptionData.Add(scenarioSettingsAvailableMap.name);
+                }
+
+                locationDropdown.AddOptions(locationOptionData);
             }
-            locationDropdown.AddOptions(locationOptionData);
             
             droneDropdown.ClearOptions();
             _dropdownDrones.Clear();

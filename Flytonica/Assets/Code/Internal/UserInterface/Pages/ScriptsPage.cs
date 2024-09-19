@@ -50,7 +50,7 @@ namespace Code.Internal.UserInterface.Pages
 
                 var nestedScenarios = scenario.nestedScenarios;
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
-                var list = nestedScenarios is { Length: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
+                var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
                 openListButton.Init(scenario, (i + 1).ToString(), list);
                 _buttonScenarioDictionary.Add(openListButton, scenario);
                 openListButton.Selected += OnSelect;
@@ -58,7 +58,7 @@ namespace Code.Internal.UserInterface.Pages
                 if (!list || nestedScenarios == null)
                     continue;
 
-                for (var j = 0; j < nestedScenarios.Length; j++)
+                for (var j = 0; j < nestedScenarios.Count; j++)
                 {
                     var scenario2 = nestedScenarios[j];
 
@@ -69,9 +69,9 @@ namespace Code.Internal.UserInterface.Pages
                 }
             }
 
-            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
-            OnSelect(select);
-            select.OnButtonPress();
+//            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
+//            OnSelect(select);
+//            select.OnButtonPress();
         }
 
         private void Clear()

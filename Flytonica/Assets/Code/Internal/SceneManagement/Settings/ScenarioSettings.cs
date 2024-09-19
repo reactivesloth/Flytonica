@@ -1,4 +1,5 @@
-﻿using Code.Internal.Drone;
+﻿using System.Collections.Generic;
+using Code.Internal.Drone;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Code.Internal.SceneManagement
 
         [CanBeNull] public DroneSettings currentDrone;
         [CanBeNull] public MapSettings currentMap;
-        [CanBeNull] public ScenarioSettings[] nestedScenarios;
+        [CanBeNull] public List<ScenarioSettings> nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
 
         public static ScenarioSettings Create(string name, string description, ScenarioType scenarioType, MapSettings mapSettings, DroneSettings drone)
