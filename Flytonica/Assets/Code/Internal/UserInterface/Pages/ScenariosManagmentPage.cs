@@ -106,7 +106,7 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentScenario = scenario;
             sceneSettings.currentMap = scenario.currentMap;
             sceneSettings.currentDrone = scenario.currentDrone;
-            sceneSettings.currentDrone.currentFlightMode = scenario.currentDrone.currentFlightMode;
+            sceneSettings.currentDrone.currentFlightMode = scenario.currentDroneMode;
 
             InstanceFinder.ServerManager.StartConnection();
 
