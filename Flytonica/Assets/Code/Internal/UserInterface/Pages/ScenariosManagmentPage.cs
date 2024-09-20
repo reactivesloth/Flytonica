@@ -80,27 +80,36 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnDelete()
         {
-            var popup = FindObjectOfType<PopupPanel>(true);
-            popup.SetTitle("Удалить сценарий?");
-            popup.SetDescription(
-                $"Вы уверены, что хотите удалить сценарий {scenariosRoot.SelectedButton.GetSaveData<ScenarioData>().name}? Его нельзя будет восстановить.");
-            popup.SetLeftButton(() => Debug.Log("Удалить"), "Удалить", null, Color.red, Color.white);
-            popup.SetRightButton(popup.Hide, "Отменить");
-            popup.Show();
+            PopupPanel.ShowDeleteTemplate(
+                Delete, "сценарий", scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>().name);
+        }
+
+        private void Delete()
+        {
+            print(LinkConstants.MapConfigDeleteUrl(scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>()
+                .id));
+            HttpClient.Delete(
+                LinkConstants.MapConfigDeleteUrl(scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>()
+                    .id),
+                _ =>
+                {
+                    taskScenariosSettings.scenarios.Remove(scenariosRoot.SelectedButton
+                        .GetSaveData<ScenarioSettings>());
+                    InitViewList();
+                }, Debug.LogError);
         }
 
         private void OnStart()
         {
-            //TODO: Start Game Logic
             var scenario = scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>();
-            
+
             sceneSettings.currentScenario = scenario;
             sceneSettings.currentMap = scenario.currentMap;
             sceneSettings.currentDrone = scenario.currentDrone;
             sceneSettings.currentDrone.currentFlightMode = scenario.currentDrone.currentFlightMode;
 
             InstanceFinder.ServerManager.StartConnection();
-            
+
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
@@ -111,7 +120,7 @@ namespace Code.Internal.UserInterface.Pages
                 }
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
-            
+
             InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().AdvertiseServer();
         }
 
@@ -123,46 +132,48 @@ namespace Code.Internal.UserInterface.Pages
             HttpClient.Get(LinkConstants.MapConfigMultiUrl(), response =>
             {
                 taskScenariosSettings.scenarios.Clear();
-                scenariosRoot.Clear();
                 var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response);
                 var loadedScenariosCount = 0;
 
-                print(scenarios.total_count);
                 foreach (var scenarioData in scenarios.data)
                 {
-                    HttpClient.Get(LinkConstants.GetFile(scenarioData.file_file_path), settingsText =>
-                    {
-                        loadedScenariosCount++;
-                        var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsText);
-                        var scenarioSetting = ScenarioSettings.Create(scenarioData.name, "", settings.typeId,
-                            maps.maps[settings.mapId], drones.drones[settings.droneId]);
-                        
-                        taskScenariosSettings.scenarios.Add(scenarioSetting);
+                    HttpClient.Get(LinkConstants.GetFile(scenarioData.file_file_path), settingsJson =>
+                        {
+                            var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
+                            print($"{loadedScenariosCount}.{settings.name}");
+                            var scenarioSetting = ScenarioSettings.Create(scenarioData.id, settings.name,
+                                settings.description, settings.typeId,
+                                maps.maps[settings.mapId], drones.drones[settings.droneId],
+                                drones.drones[settings.droneId].flightModes[settings.droneModeId]);
 
-                        if (loadedScenariosCount >= scenarios.total_count)
-                            InitViewList();
-                    },
-                    error =>
-                    {
-                        Debug.LogError(error);
-                        loadedScenariosCount++;
-                        
-                        if (loadedScenariosCount >= scenarios.total_count)
-                            InitViewList();
-                    });
+                            taskScenariosSettings.scenarios.Add(scenarioSetting);
+
+                            loadedScenariosCount++;
+                            if (loadedScenariosCount >= scenarios.data.Count)
+                                InitViewList();
+                        },
+                        error =>
+                        {
+                            Debug.LogError(error);
+                            loadedScenariosCount++;
+
+                            if (loadedScenariosCount >= scenarios.data.Count)
+                                InitViewList();
+                        });
                 }
             }, Debug.LogError);
         }
 
         private void InitViewList()
         {
+            print("INIT");
             var scenarios = taskScenariosSettings.scenarios;
             var generateData = new List<TableButtonGenerateData<ScenarioSettings>>();
 
-            foreach (var scenarioData in scenarios)
+            foreach (var scenarioSettings in scenarios)
             {
-                var display = new[] { scenarioData.name };
-                var data = new TableButtonGenerateData<ScenarioSettings>(display, scenarioData);
+                var display = new[] { scenarioSettings.name };
+                var data = new TableButtonGenerateData<ScenarioSettings>(display, scenarioSettings);
                 generateData.Add(data);
             }
 

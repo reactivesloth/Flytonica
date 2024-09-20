@@ -40,6 +40,7 @@ namespace Code.Internal.API
         // Sends: UploadScenarioFileData (file, name)
         // Receives: ScenarioData (id, name, owner_id, created_at, FileData)
         private const string MapConfigCreatePath = "mapconfig/create";
+        private const string MapConfigDeletePath = "mapconfig/delete/{0}";
 
         // Path for fetching multiple map configurations with pagination
         // Sends: Query parameters (page, itemsPerPage)
@@ -55,6 +56,7 @@ namespace Code.Internal.API
         // Sends: None
         // Receives: ScenarioData (id, name, owner_id, file_id, created_at)
         private const string ScenarioGetPath = "scenario/get/{0}";
+        private const string ScenarioDeletePath = "scenario/delete/{0}";
 
         // Path for fetching multiple scenarios with pagination
         // Sends: Query parameters (page, itemsPerPage)
@@ -100,6 +102,8 @@ namespace Code.Internal.API
 
         public static string MapConfigMultiUrl(Dictionary<string, string> queryParams = null) =>
             CombineUrl(MapConfigMultiPath, queryParams);
+        
+        public static string MapConfigDeleteUrl(int scenarioId) => CombineUrl(string.Format(MapConfigDeletePath, scenarioId));
 
         public static string ScenarioCreateUrl => CombineUrl(ScenarioCreatePath);
         public static string ScenarioGetUrl(int scenarioId) => CombineUrl(string.Format(ScenarioGetPath, scenarioId));

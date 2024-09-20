@@ -3,6 +3,7 @@ using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.API.Wrappers.SendModels;
+using Code.Internal.UserInterface.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_InputField loginField, passwordField;
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
+        [SerializeField] private Header teacherHeader;
 
         private void Start()
         {
@@ -36,6 +38,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
+            teacherHeader.gameObject.SetActive(false);
             LoadPrefs();
             loginButton.onClick.AddListener(OnLogin);
             demoButton.onClick.AddListener(OnDemo);
@@ -70,6 +73,7 @@ namespace Code.Internal.UserInterface.Pages
                 case UserType.Teacher:
                     SetPrefs();
                     teacherMainMenu.Open();
+                    teacherHeader.gameObject.SetActive(true);
                     break;
                 case UserType.Student:
                     SetPrefs();

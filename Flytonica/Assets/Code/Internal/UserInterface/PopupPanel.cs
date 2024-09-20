@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface
@@ -49,7 +51,7 @@ namespace Code.Internal.UserInterface
                 descriptionText.text = description;
         }
 
-        public void SetLeftButton(UnityEngine.Events.UnityAction onClickAction = null, string text = null,
+        public void SetLeftButton(UnityAction onClickAction = null, string text = null,
             Sprite sprite = null, Color? buttonColor = null,
             Color? textColor = null)
         {
@@ -72,7 +74,7 @@ namespace Code.Internal.UserInterface
             }
         }
 
-        public void SetRightButton(UnityEngine.Events.UnityAction onClickAction = null, string text = null,
+        public void SetRightButton(UnityAction onClickAction = null, string text = null,
             Sprite sprite = null, Color? buttonColor = null,
             Color? textColor = null)
         {
@@ -97,9 +99,9 @@ namespace Code.Internal.UserInterface
 
         public void ConfigurePopup(string title, string description,
             Sprite leftButtonSprite = null, string leftButtonText = null, Color? leftButtonColor = null,
-            Color? leftButtonTextColor = null, UnityEngine.Events.UnityAction leftButtonAction = null,
+            Color? leftButtonTextColor = null, UnityAction leftButtonAction = null,
             Sprite rightButtonSprite = null, string rightButtonText = null, Color? rightButtonColor = null,
-            Color? rightButtonTextColor = null, UnityEngine.Events.UnityAction rightButtonAction = null)
+            Color? rightButtonTextColor = null, UnityAction rightButtonAction = null)
         {
             SetTitle(title);
             SetDescription(description);
@@ -108,12 +110,21 @@ namespace Code.Internal.UserInterface
                 rightButtonTextColor);
         }
 
-        private void OnEnable()
+        public static void ShowDeleteTemplate(UnityAction deleteAction, string entityName, string objectName)
         {
-        }
-
-        private void OnDisable()
-        {
+            
+            var popup = FindObjectOfType<PopupPanel>(true);
+            var action = new UnityAction(() =>
+            {
+                deleteAction?.Invoke();
+                popup.Hide();
+            });
+            popup.SetTitle($"Удалить {entityName}?");
+            popup.SetDescription(
+                $"Вы уверены, что хотите удалить сценарий {objectName}? Его нельзя будет восстановить.");
+            popup.SetLeftButton(action, "Удалить", null, Color.red, Color.white);
+            popup.SetRightButton(popup.Hide, "Отменить");
+            popup.Show();
         }
     }
 }

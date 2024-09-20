@@ -69,9 +69,9 @@ namespace Code.Internal.UserInterface.Pages
                 }
             }
 
-//            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
-//            OnSelect(select);
-//            select.OnButtonPress();
+            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
+            OnSelect(select);
+            select?.OnButtonPress();
         }
 
         private void Clear()
@@ -100,11 +100,9 @@ namespace Code.Internal.UserInterface.Pages
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
-                if (args.ConnectionState == LocalConnectionState.Started)
-                {
-                    InstanceFinder.ClientManager.StartConnection();
-                    InstanceFinder.ServerManager.OnServerConnectionState -= callback;
-                }
+                if (args.ConnectionState != LocalConnectionState.Started) return;
+                InstanceFinder.ClientManager.StartConnection();
+                InstanceFinder.ServerManager.OnServerConnectionState -= callback;
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
             

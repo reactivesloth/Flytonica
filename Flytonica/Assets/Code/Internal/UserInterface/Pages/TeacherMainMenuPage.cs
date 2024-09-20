@@ -16,10 +16,8 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class TeacherMainMenuPage : Page
     {
-        [SerializeField] private TMP_Text usernameText;
-
         [SerializeField]
-        private Button playScenarioButton, editScenarioButton, studentsButton, settingsButton, logoutButton;
+        private Button playScenarioButton, editScenarioButton, studentsButton, settingsButton;
 
         [SerializeField] private LoginPage loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
@@ -51,17 +49,9 @@ namespace Code.Internal.UserInterface.Pages
             editScenarioButton.onClick.AddListener(OnEditScenarioClicked);
             studentsButton.onClick.AddListener(OnStudentsClicked);
             settingsButton.onClick.AddListener(OnSettingsClicked);
-            logoutButton.onClick.AddListener(OnLogoutClicked);
 
-            if (HttpClient.IsAuthorized)
-                RequestAndSetUserData();
-            else
+            if (!HttpClient.IsAuthorized)
                 SetDemo();
-        }
-
-        private void OnLogoutClicked()
-        {
-            loginPage.Open();
         }
 
         private void OnPlayScenarioClicked()
@@ -100,7 +90,6 @@ namespace Code.Internal.UserInterface.Pages
             editScenarioButton.onClick.RemoveListener(OnEditScenarioClicked);
             studentsButton.onClick.RemoveListener(OnStudentsClicked);
             settingsButton.onClick.RemoveListener(OnSettingsClicked);
-            logoutButton.onClick.RemoveListener(OnLogoutClicked);
         }
 
         private void NetworkDiscoveryOnServerFoundCallback(IPEndPoint obj)
@@ -108,26 +97,6 @@ namespace Code.Internal.UserInterface.Pages
             if (!_points.Contains(obj))
                 _points.Add(obj);
             playScenarioButton.interactable = _currentIPEndPoint != null;
-        }
-
-        private void RequestAndSetUserData()
-        {
-            if (HttpClient.UserData == null)
-                HttpClient.Get(LinkConstants.UserInfoUrl, data =>
-                    {
-                        HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
-                        SetData();
-                    },
-                    Debug.LogError);
-            else
-                SetData();
-        }
-
-        private void SetData()
-        {
-            var data = HttpClient.UserData;
-            print(data.name);
-            usernameText.text = data.name;
         }
 
         private void SetDemo()

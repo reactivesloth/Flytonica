@@ -99,10 +99,12 @@ namespace Code.Internal.UserInterface.Pages
                                     {
                                         var scenarioSettingsData =
                                             JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
-                                        var scenarioSetting = ScenarioSettings.Create(scenarioSettingsData.name,
+
+                                        var scenarioSetting = ScenarioSettings.Create(scenario.id, scenarioSettingsData.name,
                                             scenarioSettingsData.description, scenarioSettingsData.typeId,
                                             maps.maps[scenarioSettingsData.mapId],
-                                            drones.drones[scenarioSettingsData.droneId]);
+                                            drones.drones[scenarioSettingsData.droneId],
+                                            drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId]);
 
                                         taskScenarios.Add(scenarioSetting);
 
@@ -111,10 +113,9 @@ namespace Code.Internal.UserInterface.Pages
                                         {
                                             loadedTaskCount++;
                                             OnTaskInit(taskData.scenario.name, taskScenarios);
-                                            if(loadedTaskCount >= tasksInfo.total_count)
+                                            if (loadedTaskCount >= tasksInfo.total_count)
                                                 OnAllTaskInit();
                                         }
-                                        
                                     }, error =>
                                     {
                                         Debug.LogError(error);
@@ -124,17 +125,13 @@ namespace Code.Internal.UserInterface.Pages
                                         {
                                             loadedTaskCount++;
                                             OnTaskInit(taskData.scenario.name, taskScenarios);
-                                            if(loadedTaskCount >= tasksInfo.total_count)
+                                            if (loadedTaskCount >= tasksInfo.total_count)
                                                 OnAllTaskInit();
                                         }
                                     });
                                 }
-                                
                             },
-                            error =>
-                            {
-                                Debug.LogError(error);
-                            });
+                            error => { Debug.LogError(error); });
                     }
                 },
                 Debug.LogError);
