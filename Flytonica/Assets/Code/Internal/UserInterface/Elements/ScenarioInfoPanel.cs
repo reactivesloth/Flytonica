@@ -78,7 +78,7 @@ namespace Code.Internal.UserInterface.Elements
             if (scenarioSettings.currentDrone)
             {
                 _dropdownDrones.Add(0, scenarioSettings.currentDrone);
-                droneOptionData.Add(scenarioSettings.currentDrone.modeName);
+                droneOptionData.Add(scenarioSettings.currentDrone.modelName);
             }
             else if(scenarioSettings.nestedScenarios == null || scenarioSettings.nestedScenarios.Count == 0)
             {
@@ -86,7 +86,7 @@ namespace Code.Internal.UserInterface.Elements
                 {
                     var droneSettings = drones[i];
                     _dropdownDrones.Add(i, droneSettings);
-                    droneOptionData.Add(droneSettings.modeName);
+                    droneOptionData.Add(droneSettings.modelName);
                 }
             }
 

@@ -172,7 +172,11 @@ namespace Code.Internal.UserInterface.Pages
 
             foreach (var scenarioSettings in scenarios)
             {
-                var display = new[] { scenarioSettings.name };
+                var display = new[]
+                {
+                    scenarioSettings.name, scenarioSettings.currentMap.name, scenarioSettings.scenarioType.GetName(),
+                    scenarioSettings.currentDrone.modelName, scenarioSettings.currentDroneMode.modeName
+                };
                 var data = new TableButtonGenerateData<ScenarioSettings>(display, scenarioSettings);
                 generateData.Add(data);
             }

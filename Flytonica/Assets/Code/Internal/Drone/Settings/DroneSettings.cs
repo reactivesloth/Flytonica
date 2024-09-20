@@ -8,7 +8,7 @@ namespace Code.Internal.Drone
     public class DroneSettings : ScriptableObject
     {
         public GameObject prefab;
-        public string modeName = "Drone";
+        public string modelName = "Drone";
         [Header("Body")] 
         public float weight = 0.8f;
         public AirframeType airframeType = AirframeType.QuadX;
