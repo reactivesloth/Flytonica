@@ -21,18 +21,19 @@ namespace Code.Internal.UserInterface.Elements
         [SerializeField] private GameObject arrowObject, arrowObjectDown;
         [SerializeField] private Toggle selectToggle;
 
-        //private bool _isOpenList = false;
         private GameObject _list;
         private Transform _buttonsParent;
         private List<SelectScriptButton> _childButtonsList;
 
         public SelectScriptButton ParentButton { get; private set; }
         public List<SelectScriptButton> ChildButtons { get; private set; } = new List<SelectScriptButton>();
+        public bool ToggleIsOn => selectToggle.isOn;
 
         public event Action<SelectScriptButton> Selected;
+        public event Action<SelectScriptButton> ToggleChanged;
 
         private void OnValidate()
-        {   
+        {
             @object = GetComponent<InteractiveObject>();
         }
 
@@ -43,7 +44,8 @@ namespace Code.Internal.UserInterface.Elements
             @object.StateChanged += UpdateArrowVisibility;
         }
 
-        public void Init(ScenarioSettings settings, string number = "#", GameObject list = null, bool isTaskInit = false)
+        public void Init(ScenarioSettings settings, string number = "#", GameObject list = null,
+            bool isTaskInit = false)
         {
             _list = list;
             selectToggle.gameObject.SetActive(!isTaskInit);
@@ -56,8 +58,10 @@ namespace Code.Internal.UserInterface.Elements
             if (isTaskInit && ParentButton != null)
             {
                 @object.Interactable = false;
-                @object.enabled = false; 
+                @object.enabled = false;
             }
+
+            selectToggle?.onValueChanged.AddListener(OnToggleValueChanged);
         }
 
         public void SetParent(SelectScriptButton parent)
@@ -91,21 +95,32 @@ namespace Code.Internal.UserInterface.Elements
 
         public void SelectWithoutNotify()
         {
-            selectToggle.isOn = true;
             @object.SelectWithoutNotify();
+        }
+
+        public void SetToggleState(bool isOn, bool notify = false)
+        {
+            if (notify)
+            {
+                selectToggle.isOn = isOn;
+            }
+            else
+            {
+                selectToggle.SetIsOnWithoutNotify(isOn);
+            }
         }
 
         private void OnSelectAction()
         {
-            selectToggle.isOn = true;
             Selected?.Invoke(this);
-            OpenList();
+            if (ChildButtons.Count > 0)
+                OpenList();
         }
 
         private void OnUnselectAction()
         {
-            selectToggle.isOn = false;
-            CloseList();
+            if (ChildButtons.Count > 0)
+                CloseList();
         }
 
         private void OpenList()
@@ -148,11 +163,17 @@ namespace Code.Internal.UserInterface.Elements
             }
         }
 
+        private void OnToggleValueChanged(bool isOn)
+        {
+            ToggleChanged?.Invoke(this);
+        }
+
         private void OnDisable()
         {
             @object.SelectAction -= OnSelectAction;
             @object.UnselectAction -= OnUnselectAction;
             @object.StateChanged -= UpdateArrowVisibility;
+            selectToggle?.onValueChanged.RemoveListener(OnToggleValueChanged);
         }
 
         public void Select()
@@ -162,7 +183,6 @@ namespace Code.Internal.UserInterface.Elements
 
         public void UnSelected()
         {
-            selectToggle.isOn = false;
             @object.ToNormal();
         }
     }

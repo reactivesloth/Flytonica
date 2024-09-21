@@ -55,6 +55,7 @@ namespace Code.Internal.UserInterface.Pages
                 openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit);
                 _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
+                openListButton.ToggleChanged += OnToggleChanged;
 
                 if (!list || nestedScenarios == null)
                     continue;
@@ -68,6 +69,7 @@ namespace Code.Internal.UserInterface.Pages
                     scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit);
                     _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
+                    scenarioButton.ToggleChanged += OnToggleChanged;
                 }
             }
 
@@ -110,6 +112,16 @@ namespace Code.Internal.UserInterface.Pages
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
         }
 
+        private void StartTask()
+        {
+            
+        }
+
+        private void StartScenariosList()
+        {
+            
+        }
+
         private void OnSelect(SelectScriptButton button)
         {
             if (_isTaskInit && button.ParentButton != null)
@@ -118,37 +130,17 @@ namespace Code.Internal.UserInterface.Pages
                 return;
             }
 
-            // Получаем корневую кнопку выбранной кнопки
-            var rootButton = button.GetRootButton();
-
-            // Снимаем выбор со всех кнопок, которые не относятся к этому корню
+            // Снимаем выбор со всех кнопок, кроме текущей и ее родителей
             foreach (var b in _buttonScenarioDictionary.Keys)
             {
-                if (b.GetRootButton() != rootButton)
+                if (b != button && b.ParentButton != button && b != button.ParentButton)
                 {
                     b.UnSelected();
                 }
             }
 
-            // Выбираем все потомки, если выбрана корневая кнопка
-            if (button.ParentButton == null)
-            {
-                button.SelectWithoutNotify();
-                foreach (var child in button.GetAllDescendants())
-                {
-                    child.SelectWithoutNotify();
-                }
-            }
-            else
-            {
-                // Выбираем выбранную кнопку и ее родителей
-                var currentButton = button;
-                while (currentButton != null)
-                {
-                    currentButton.SelectWithoutNotify();
-                    currentButton = currentButton.ParentButton;
-                }
-            }
+            // Выбираем текущую кнопку
+            button.SelectWithoutNotify();
 
             // Обновляем информацию о выбранном сценарии
             var scenarioInfo = _buttonScenarioDictionary[button];
@@ -157,6 +149,35 @@ namespace Code.Internal.UserInterface.Pages
 
             _selectedScenario = scenarioInfo;
             infoPanel?.Open(_selectedScenario);
+        }
+
+        private void OnToggleChanged(SelectScriptButton button)
+        {
+            // Получаем корневую кнопку выбранной кнопки
+            var rootButton = button.GetRootButton();
+
+            // Если выбран переключатель родительской кнопки
+            if (button.ParentButton == null)
+            {
+                // Устанавливаем состояние всех дочерних переключателей
+                foreach (var child in button.GetAllDescendants())
+                {
+                    child.SetToggleState(button.ToggleIsOn);
+                }
+            }
+
+            // Сбрасываем переключатели в других корнях
+            foreach (var b in _buttonScenarioDictionary.Keys)
+            {
+                if (b.GetRootButton() != rootButton)
+                {
+                    b.SetToggleState(false);
+                    foreach (var child in b.GetAllDescendants())
+                    {
+                        child.SetToggleState(false);
+                    }
+                }
+            }
         }
     }
 }
