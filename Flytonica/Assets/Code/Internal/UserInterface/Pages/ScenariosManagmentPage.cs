@@ -23,6 +23,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private SelectionCollectionManager scenariosRoot;
         [SerializeField] private Button createButton, deleteButton, startButton;
         [SerializeField] private Page createScenarioPage;
+        [SerializeField] private Page menuPage;
 
         private bool _isEditMode;
 
@@ -71,6 +72,11 @@ namespace Code.Internal.UserInterface.Pages
             scenariosRoot.SelectionStateChange -= startButton.gameObject.SetActive;
         }
 
+        protected override void OnBackClick ()
+        {
+            menuPage?.Open();
+        }
+
         private void OnCreate()
         {
             createScenarioPage?.Open();
@@ -81,7 +87,7 @@ namespace Code.Internal.UserInterface.Pages
             PopupPanel.ShowDeleteTemplate(
                 Delete, "сценарий", scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>().name);
         }
-
+        
         private void Delete()
         {
             print(LinkConstants.MapConfigDeleteUrl(scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>()

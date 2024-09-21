@@ -46,30 +46,36 @@ namespace Code.Internal.UserInterface.Pages
         
         private void OnLeaveButtonClick()
         {
-            ///PopupPanel.ShowDeleteTemplate(
-                //Delete, "сценарий", scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>().name);
-            createScenarioPage?.Open(false);
+            PopupPanel.ConfigurePopup("Выйти в меню?", "Вы уверены, что хотите удалить редактируемый сценарий? Прогресс нельзя будет восстановить.", null, "Вернуться в меню", Color.red, Color.white,
+                () => { scenariosManagementPage?.Open();}, null, "Продолжить редактирование", Color.green, Color.black, () => {});
         }
         
         private void OnUploadButtonClick()
         {
-            if (_data == null)
-            {
-                Debug.LogError("Data is null");
-                return;
-            }
+            PopupPanel.ConfigurePopup("Сохранить сценарий?", "Сценарий будет опубликован и доступен для назаначения в заданиях.", null, "Продолжить редактирование", Color.red, Color.white,
+                () =>
+                {
+                }, null, "Сохранить сценарий", Color.green, Color.black,
+                () =>
+                {
+                    if (_data == null)
+                    {
+                        Debug.LogError("Data is null");
+                        return;
+                    }
             
-            var jsonData = JsonUtility.ToJson(_data);
-            print(jsonData);
-            var settingsFile = Encoding.UTF8.GetBytes(jsonData);
+                    var jsonData = JsonUtility.ToJson(_data);
+                    print(jsonData);
+                    var settingsFile = Encoding.UTF8.GetBytes(jsonData);
 
-            var form = new WWWForm();
-            form.AddField("name", _title);
-            form.AddBinaryData("file", settingsFile, $"Scenario.json");
+                    var form = new WWWForm();
+                    form.AddField("name", _title);
+                    form.AddBinaryData("file", settingsFile, $"Scenario.json");
 
-            HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
+                    HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
             
-            scenariosManagementPage?.Open(false);
+                    scenariosManagementPage?.Open(false);
+                });
         }
     }
 }

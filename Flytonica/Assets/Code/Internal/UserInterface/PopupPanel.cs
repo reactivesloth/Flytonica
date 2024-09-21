@@ -97,32 +97,29 @@ namespace Code.Internal.UserInterface
             }
         }
 
-        public void ConfigurePopup(string title, string description,
+        public static void ConfigurePopup(string title, string description,
             Sprite leftButtonSprite = null, string leftButtonText = null, Color? leftButtonColor = null,
             Color? leftButtonTextColor = null, UnityAction leftButtonAction = null,
             Sprite rightButtonSprite = null, string rightButtonText = null, Color? rightButtonColor = null,
             Color? rightButtonTextColor = null, UnityAction rightButtonAction = null)
         {
-            SetTitle(title);
-            SetDescription(description);
-            SetLeftButton(leftButtonAction, leftButtonText, leftButtonSprite, leftButtonColor, leftButtonTextColor);
-            SetRightButton(rightButtonAction, rightButtonText, rightButtonSprite, rightButtonColor,
+            var popup = FindObjectOfType<PopupPanel>(true);
+            popup.SetTitle(title);
+            popup.SetDescription(description);
+            popup.SetLeftButton(()=> { leftButtonAction?.Invoke(); popup.Hide(); }, leftButtonText, leftButtonSprite, leftButtonColor, leftButtonTextColor);
+            popup.SetRightButton(()=> { rightButtonAction?.Invoke(); popup.Hide(); }, rightButtonText, rightButtonSprite, rightButtonColor,
                 rightButtonTextColor);
+            popup.Show();
         }
 
         public static void ShowDeleteTemplate(UnityAction deleteAction, string entityName, string objectName)
         {
             
             var popup = FindObjectOfType<PopupPanel>(true);
-            var action = new UnityAction(() =>
-            {
-                deleteAction?.Invoke();
-                popup.Hide();
-            });
             popup.SetTitle($"Удалить {entityName}?");
             popup.SetDescription(
                 $"Вы уверены, что хотите удалить сценарий {objectName}? Его нельзя будет восстановить.");
-            popup.SetLeftButton(action, "Удалить", null, Color.red, Color.white);
+            popup.SetLeftButton(()=> { deleteAction?.Invoke(); popup.Hide(); }, "Удалить", null, Color.red, Color.white);
             popup.SetRightButton(popup.Hide, "Отменить");
             popup.Show();
         }
