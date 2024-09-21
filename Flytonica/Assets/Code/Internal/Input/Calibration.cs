@@ -9,7 +9,7 @@ namespace Code.Internal.Input
 {
     public class Calibration : MonoBehaviour
     {
-        private Player _player;
+        public Player _player;
         private bool _isCalibrating;
 
         public int _throttleAxisId, _yawAxisId, _pitchAxisId, _rollAxisId, _cameraButtonId, _modeButtonId, _restartButtonId;
