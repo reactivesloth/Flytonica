@@ -124,13 +124,15 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnSelect(SelectScriptButton button)
         {
-            if (_isTaskInit && button.ParentButton != null)
-            {
-                // Не позволяем выбирать дочерние кнопки
+            if (!button)
+            {   
+                infoPanel.Close();
                 return;
             }
+            
+            if (_isTaskInit && button.ParentButton != null)
+                return;
 
-            // Снимаем выбор со всех кнопок, кроме текущей и ее родителей
             foreach (var b in _buttonScenarioDictionary.Keys)
             {
                 if (b != button && b.ParentButton != button && b != button.ParentButton)
@@ -139,10 +141,8 @@ namespace Code.Internal.UserInterface.Pages
                 }
             }
 
-            // Выбираем текущую кнопку
             button.SelectWithoutNotify();
 
-            // Обновляем информацию о выбранном сценарии
             var scenarioInfo = _buttonScenarioDictionary[button];
             if (!scenarioInfo)
                 return;
