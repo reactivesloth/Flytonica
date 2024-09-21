@@ -39,10 +39,8 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
-
-            if (!_isEditMode)
-                InitViewList();
-            InitScenariosList();
+            
+            LoadScenariosList();
 
             if (_isEditMode)
             {
@@ -127,7 +125,7 @@ namespace Code.Internal.UserInterface.Pages
         /// <summary>
         /// Загрузка сценариев, запаковка в ScenarioSettings и добавление в taskScenariosSettings
         /// </summary>
-        private void InitScenariosList()
+        private void LoadScenariosList()
         {
             HttpClient.Get(
                 LinkConstants.MapConfigMultiUrl(new Dictionary<string, string>
