@@ -8,6 +8,7 @@ namespace Code.Internal.SceneManagement
     [CreateAssetMenu(fileName = "Scenario", menuName = "Flytoncia/Scenario", order = 1)]
     public class ScenarioSettings : ScriptableObject
     {
+        public SettingType settingType;
         [HideInInspector] public int id;
         public new string name;
         public string description;
@@ -21,11 +22,12 @@ namespace Code.Internal.SceneManagement
         [CanBeNull] public List<ScenarioSettings> nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
 
-        public static ScenarioSettings CreateDynamic(int id, string name, string description, ScenarioType scenarioType,
+        public static ScenarioSettings CreateDynamicTaskScenario(int id, string name, string description, ScenarioType scenarioType,
             MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode)
         {
             var instance = CreateInstance<ScenarioSettings>();
 
+            instance.settingType = SettingType.TaskScenario;
             instance.id = id;
             instance.name = name;
             instance.description = description;
@@ -46,6 +48,14 @@ namespace Code.Internal.SceneManagement
         Transport,
         Searching,
         SearchingWithIR
+    }
+
+    public enum SettingType
+    {
+        Scenario,
+        TaskScenario,
+        Task,
+        List
     }
 
     public static class ScenarioTypeExtension

@@ -119,6 +119,7 @@ namespace Code.Internal.UserInterface.Elements
 
         private void OnUnselectAction()
         {
+            Selected?.Invoke(null);
             if (ChildButtons.Count > 0)
                 CloseList();
         }

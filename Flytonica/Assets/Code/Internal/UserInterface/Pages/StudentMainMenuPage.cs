@@ -99,7 +99,7 @@ namespace Code.Internal.UserInterface.Pages
                                         var scenarioSettingsData =
                                             JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
 
-                                        var scenarioSetting = ScenarioSettings.CreateDynamic(scenario.id,
+                                        var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenario.id,
                                             scenarioSettingsData.name,
                                             scenarioSettingsData.description, scenarioSettingsData.typeId,
                                             maps.maps[scenarioSettingsData.mapId],
@@ -130,6 +130,7 @@ namespace Code.Internal.UserInterface.Pages
         private void OnTaskInit(string taskName, List<ScenarioSettings> scenarios)
         {
             var task = ScriptableObject.CreateInstance<ScenarioSettings>();
+            task.settingType = SettingType.Task;
             task.name = taskName;
             task.nestedScenarios = scenarios;
 

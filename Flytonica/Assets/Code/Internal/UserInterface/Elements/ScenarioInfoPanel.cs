@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using TMPro;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 namespace Code.Internal.UserInterface.Elements
@@ -13,6 +15,7 @@ namespace Code.Internal.UserInterface.Elements
         [SerializeField] private TMP_Dropdown locationDropdown, droneDropdown, flyModeDropdown;
         [SerializeField] private List<DroneSettings> drones;
 
+        private ScenarioSettings _currentScenarioSettings;
 
         private readonly Dictionary<int, MapSettings> _dropdownLocations = new();
         private Dictionary<int, DroneSettings> _dropdownDrones = new();
@@ -24,10 +27,16 @@ namespace Code.Internal.UserInterface.Elements
 
         public void Open(ScenarioSettings scenarioSettings)
         {
+            locationDropdown.onValueChanged.RemoveAllListeners();
             droneDropdown.onValueChanged.RemoveAllListeners();
+            flyModeDropdown.onValueChanged.RemoveAllListeners();
+            
+            locationDropdown.onValueChanged.AddListener(OnMapDropdownChange);
+            droneDropdown.onValueChanged.AddListener(OnDroneDropdownChange);
+            flyModeDropdown.onValueChanged.AddListener(OnModeDropdownChange);
+
             gameObject.SetActive(true);
             Init(scenarioSettings);
-            droneDropdown.onValueChanged.AddListener(_ => InitModesDropdown(scenarioSettings));
         }
 
         public void Close()
@@ -37,6 +46,7 @@ namespace Code.Internal.UserInterface.Elements
 
         private void Init(ScenarioSettings scenarioSettings)
         {
+            _currentScenarioSettings = scenarioSettings;
             typeText.text = scenarioSettings.scenarioType.GetName();
             descriptionText.text = scenarioSettings.description;
 
@@ -50,7 +60,7 @@ namespace Code.Internal.UserInterface.Elements
             _dropdownLocations.Clear();
             var locationOptionData = new List<string>();
 
-            if (scenarioSettings.currentMap)
+            if (scenarioSettings.currentMap && scenarioSettings.settingType == SettingType.TaskScenario)
             {
                 _dropdownLocations.Add(0, scenarioSettings.currentMap);
                 locationOptionData.Add(scenarioSettings.currentMap.name);
@@ -67,6 +77,10 @@ namespace Code.Internal.UserInterface.Elements
 
             locationDropdown.AddOptions(locationOptionData);
             locationDropdown.interactable = locationDropdown.options.Count > 1;
+
+            if (scenarioSettings.currentMap)
+                locationDropdown.value =
+                    _dropdownLocations.FirstOrDefault(l => l.Value == scenarioSettings.currentMap).Key;
         }
 
         private void InitDronesDropDown(ScenarioSettings scenarioSettings)
@@ -75,12 +89,12 @@ namespace Code.Internal.UserInterface.Elements
             _dropdownDrones.Clear();
             var droneOptionData = new List<string>();
 
-            if (scenarioSettings.currentDrone)
+            if (scenarioSettings.currentDrone && scenarioSettings.settingType == SettingType.TaskScenario)
             {
                 _dropdownDrones.Add(0, scenarioSettings.currentDrone);
                 droneOptionData.Add(scenarioSettings.currentDrone.modelName);
             }
-            else if(scenarioSettings.nestedScenarios == null || scenarioSettings.nestedScenarios.Count == 0)
+            else if (scenarioSettings.nestedScenarios == null || scenarioSettings.nestedScenarios.Count == 0)
             {
                 for (var i = 0; i < drones.Count; i++)
                 {
@@ -93,22 +107,25 @@ namespace Code.Internal.UserInterface.Elements
             droneDropdown.AddOptions(droneOptionData);
             droneDropdown.interactable = droneDropdown.options.Count > 1;
 
-            InitModesDropdown(scenarioSettings);
+            if (scenarioSettings.currentDrone)
+                droneDropdown.value =
+                    _dropdownDrones.FirstOrDefault(d => d.Value == scenarioSettings.currentDrone).Key;
+            else
+                InitModesDropdown(scenarioSettings);
         }
 
         private void InitModesDropdown(ScenarioSettings scenarioSettings)
         {
-            
             flyModeDropdown.ClearOptions();
             _dropdownFlyModes.Clear();
 
             var droneOptionData = new List<string>();
-            if (scenarioSettings.currentDroneMode)
+            if (scenarioSettings.currentDroneMode && scenarioSettings.settingType == SettingType.TaskScenario)
             {
                 _dropdownFlyModes.Add(0, scenarioSettings.currentDroneMode);
                 droneOptionData.Add(scenarioSettings.currentDroneMode.modeName);
             }
-            else if(scenarioSettings.nestedScenarios == null || scenarioSettings.nestedScenarios.Count == 0)
+            else if (scenarioSettings.nestedScenarios == null || scenarioSettings.nestedScenarios.Count == 0)
             {
                 for (var i = 0; i < CurrentDrone.flightModes.Count; i++)
                 {
@@ -117,9 +134,29 @@ namespace Code.Internal.UserInterface.Elements
                     droneOptionData.Add(droneMode.modeName);
                 }
             }
-            
+
             flyModeDropdown.AddOptions(droneOptionData);
             flyModeDropdown.interactable = flyModeDropdown.options.Count > 1;
+            
+            if (scenarioSettings.currentDroneMode)
+                flyModeDropdown.value =
+                    _dropdownFlyModes.FirstOrDefault(m => m.Value == scenarioSettings.currentDroneMode).Key;
+        }
+
+        private void OnMapDropdownChange(int value)
+        {
+            _currentScenarioSettings.currentMap = _dropdownLocations[value];
+        }
+
+        private void OnDroneDropdownChange(int value)
+        {
+            _currentScenarioSettings.currentDrone = _dropdownDrones[value];
+            InitModesDropdown(_currentScenarioSettings);
+        }
+        
+        private void OnModeDropdownChange(int value)
+        {
+            _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[value];
         }
     }
 }

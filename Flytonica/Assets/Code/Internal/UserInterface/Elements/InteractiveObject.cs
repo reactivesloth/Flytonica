@@ -80,7 +80,8 @@ namespace Code.Internal.UserInterface.Elements
 
         public void ToNormal()
         {
-            UnselectAction?.Invoke();
+            if(State == State.Selected)
+                UnselectAction?.Invoke();
             State = State.Non;
             spriteChangeElements.ForEach(s => s.SetNormal());
             colorChangeElements.ForEach(s => s.SetNormal());

@@ -12,11 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571583e582ff4b689c7336c8dff15854, type: 3}
   m_Name: Tutorial Scenario Base
   m_EditorClassIdentifier: 
+  settingType: 3
+  id: 0
   name: "\u041E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E"
   description: 
   scenarioType: 1
   availableMaps:
   - {fileID: 11400000, guid: 8c8832a3664b9a24e96d2ff61e0ff0c3, type: 2}
+  currentDrone: {fileID: 0}
+  currentDroneMode: {fileID: 0}
+  currentMap: {fileID: 0}
   nestedScenarios:
   - {fileID: 11400000, guid: fc4c921b9e03b744a801ff475c38cc0a, type: 2}
   - {fileID: 11400000, guid: c5a7fe3332f58624b8a12136cbb34a3b, type: 2}
