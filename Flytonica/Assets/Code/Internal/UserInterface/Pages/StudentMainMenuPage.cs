@@ -76,7 +76,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             HttpClient.Get(
                 LinkConstants.UserScenarioUrl(HttpClient.UserData.id,
-                    new Dictionary<string, string> { { "status", "0" } }),
+                    new Dictionary<string, string> { { "status", "0" },{ "limit", "9999" }, { "page", "1" }}),
                 response =>
                 {
                     taskScenariosSettings.scenarios.Clear();
@@ -91,7 +91,6 @@ namespace Code.Internal.UserInterface.Pages
                                 var taskData = JsonUtility.FromJson<TaskData>(taskResponse);
 
                                 var taskScenarios = new List<ScenarioSettings>(); // Список сценариев в задании
-
                                 var loadedScenarioCount = 0;
                                 foreach (var scenario in taskData.mapconfigs.data)
                                 {
@@ -100,32 +99,23 @@ namespace Code.Internal.UserInterface.Pages
                                         var scenarioSettingsData =
                                             JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
 
-                                        var scenarioSetting = ScenarioSettings.Create(scenario.id, scenarioSettingsData.name,
+                                        var scenarioSetting = ScenarioSettings.Create(scenario.id,
+                                            scenarioSettingsData.name,
                                             scenarioSettingsData.description, scenarioSettingsData.typeId,
                                             maps.maps[scenarioSettingsData.mapId],
                                             drones.drones[scenarioSettingsData.droneId],
-                                            drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId]);
+                                            drones.drones[scenarioSettingsData.droneId]
+                                                .flightModes[scenarioSettingsData.droneModeId]);
 
                                         taskScenarios.Add(scenarioSetting);
-
-                                        loadedScenarioCount++;
-                                        if (loadedScenarioCount >= taskData.mapconfigs.total_count)
-                                        {
-                                            loadedTaskCount++;
-                                            OnTaskInit(taskData.scenario.name, taskScenarios);
-                                            if (loadedTaskCount >= tasksInfo.total_count)
-                                                OnAllTaskInit();
-                                        }
-                                    }, error =>
+                                    }, Debug.LogError, () =>
                                     {
-                                        Debug.LogError(error);
-
                                         loadedScenarioCount++;
-                                        if (loadedScenarioCount >= taskData.mapconfigs.total_count)
+                                        if (loadedScenarioCount >= taskData.mapconfigs.data.Count)
                                         {
                                             loadedTaskCount++;
                                             OnTaskInit(taskData.scenario.name, taskScenarios);
-                                            if (loadedTaskCount >= tasksInfo.total_count)
+                                            if (loadedTaskCount >= tasksInfo.data.Count)
                                                 OnAllTaskInit();
                                         }
                                     });
@@ -146,7 +136,6 @@ namespace Code.Internal.UserInterface.Pages
             print($"Задание {task.name}, Сценариев {task.nestedScenarios.Count}");
 
             taskScenariosSettings.scenarios.Add(task);
-            print(taskScenariosSettings.scenarios.Count);
         }
 
         private void OnAllTaskInit()

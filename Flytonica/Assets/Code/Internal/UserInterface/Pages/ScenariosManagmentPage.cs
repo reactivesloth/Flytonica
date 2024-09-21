@@ -129,39 +129,41 @@ namespace Code.Internal.UserInterface.Pages
         /// </summary>
         private void InitScenariosList()
         {
-            HttpClient.Get(LinkConstants.MapConfigMultiUrl(), response =>
-            {
-                taskScenariosSettings.scenarios.Clear();
-                var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response);
-                var loadedScenariosCount = 0;
-
-                foreach (var scenarioData in scenarios.data)
+            HttpClient.Get(
+                LinkConstants.MapConfigMultiUrl(new Dictionary<string, string>
+                    { { "page", "1" }, { "itemsPerPage", "9999" } }), response =>
                 {
-                    HttpClient.Get(LinkConstants.GetFile(scenarioData.file_file_path), settingsJson =>
-                        {
-                            var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
-                            print($"{loadedScenariosCount}.{settings.name}");
-                            var scenarioSetting = ScenarioSettings.Create(scenarioData.id, settings.name,
-                                settings.description, settings.typeId,
-                                maps.maps[settings.mapId], drones.drones[settings.droneId],
-                                drones.drones[settings.droneId].flightModes[settings.droneModeId]);
+                    taskScenariosSettings.scenarios.Clear();
+                    var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response);
+                    var loadedScenariosCount = 0;
 
-                            taskScenariosSettings.scenarios.Add(scenarioSetting);
+                    foreach (var scenarioData in scenarios.data)
+                    {
+                        HttpClient.Get(LinkConstants.GetFile(scenarioData.file_file_path), settingsJson =>
+                            {
+                                var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
+                                print($"{loadedScenariosCount}.{settings.name}");
+                                var scenarioSetting = ScenarioSettings.Create(scenarioData.id, settings.name,
+                                    settings.description, settings.typeId,
+                                    maps.maps[settings.mapId], drones.drones[settings.droneId],
+                                    drones.drones[settings.droneId].flightModes[settings.droneModeId]);
 
-                            loadedScenariosCount++;
-                            if (loadedScenariosCount >= scenarios.data.Count)
-                                InitViewList();
-                        },
-                        error =>
-                        {
-                            Debug.LogError(error);
-                            loadedScenariosCount++;
+                                taskScenariosSettings.scenarios.Add(scenarioSetting);
 
-                            if (loadedScenariosCount >= scenarios.data.Count)
-                                InitViewList();
-                        });
-                }
-            }, Debug.LogError);
+                                loadedScenariosCount++;
+                                if (loadedScenariosCount >= scenarios.data.Count)
+                                    InitViewList();
+                            },
+                            error =>
+                            {
+                                Debug.LogError(error);
+                                loadedScenariosCount++;
+
+                                if (loadedScenariosCount >= scenarios.data.Count)
+                                    InitViewList();
+                            });
+                    }
+                }, Debug.LogError);
         }
 
         private void InitViewList()
@@ -175,7 +177,7 @@ namespace Code.Internal.UserInterface.Pages
                 var display = new[]
                 {
                     scenarioSettings.name, scenarioSettings.currentMap.name, scenarioSettings.scenarioType.GetName(),
-                    scenarioSettings.currentDrone.modelName, scenarioSettings.currentDroneMode.modeName
+                    scenarioSettings.currentDrone.name, scenarioSettings.currentDroneMode.modeName
                 };
                 var data = new TableButtonGenerateData<ScenarioSettings>(display, scenarioSettings);
                 generateData.Add(data);

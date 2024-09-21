@@ -49,19 +49,23 @@ namespace Code.Internal.UserInterface.Pages
         private void GenerateList()
         {
             HttpClient.Get(LinkConstants.LogsMultiUrl(new Dictionary<string, string>
-                { { "user_id", _currentUserId.ToString() } }), response =>
+                { { "user_id", _currentUserId.ToString() }, { "page", "1" }, { "itemsPerPage", "9999" } }), response =>
             {
                 var list = JsonUtility.FromJson<MultiLogDataResponse>(response).data;
                 var generateData = new List<TableButtonGenerateData<LogData>>();
-                
+
                 foreach (var replayData in list)
                 {
                     print(replayData.created_at);
-                    var display = new[] { DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture), replayData.user_name, replayData.scenario_name, "-", "-"};
+                    var display = new[]
+                    {
+                        DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture),
+                        replayData.user_name, replayData.scenario_name, "-", "-"
+                    };
                     var data = new TableButtonGenerateData<LogData>(display, replayData);
                     generateData.Add(data);
                 }
-                
+
                 replaysRoot.Generate(generateData);
             }, Debug.LogError);
         }

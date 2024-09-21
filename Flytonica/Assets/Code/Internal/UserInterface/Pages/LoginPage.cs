@@ -92,18 +92,5 @@ namespace Code.Internal.UserInterface.Pages
         {
             Debug.LogError(response);
         }
-
-        private void TestRequests()
-        {
-            var jsonData = JsonUtility.ToJson(new UserAuthData("teacher", "Pa'CSp/R&8XQ5Y=m~Mzf6b"));
-            HttpClient.Post(LinkConstants.AuthUrl, jsonData,
-                response =>
-                {
-                    var authData = JsonUtility.FromJson<AuthResponseData>(response);
-                    HttpClient.SetAuthData(authData);
-                    HttpClient.Get(LinkConstants.ScenarioMultiUrl(), print);
-                },
-                OnErrorLogin);
-        }
     }
 }

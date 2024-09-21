@@ -53,6 +53,8 @@ namespace Code.Internal.API
         {
             var request = new UnityWebRequest(url, method);
 
+            print(url);
+            
             if (!string.IsNullOrEmpty(jsonData))
             {
                 var bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);
@@ -73,6 +75,8 @@ namespace Code.Internal.API
                 Debug.LogError(request.error);
                 onError?.Invoke(request.downloadHandler.text);
             }
+            
+            callback?.Invoke();
 
             Destroy(gameObject);
         }
