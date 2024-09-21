@@ -141,14 +141,12 @@ namespace Code.Internal.UserInterface.Pages
         private void OnAllTaskInit()
         {
             print(taskScenariosSettings.scenarios.Count);
-            scriptsPage.Init(taskScenariosSettings.scenarios);
+            scriptsPage.Init(taskScenariosSettings.scenarios, true);
             scriptsPage.Open();
         }
 
         private void OnDeviceInfo()
         {
-            scriptsPage.Init(taskScenariosSettings.scenarios, true);
-            scriptsPage.Open();
         }
 
         private void OnConnect()

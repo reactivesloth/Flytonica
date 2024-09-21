@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,13 +12,32 @@ namespace Code.Internal.UserInterface.Elements
         [SerializeField] private List<SpriteChangeElement> spriteChangeElements;
         [SerializeField] private List<ColorChangeElement> colorChangeElements;
 
-        public State State { get; private set; } = State.Non;
+        private State _state;
+
+        public bool Interactable { get; set; } = true;
+
+        public State State
+        {
+            get => _state;
+            private set
+            {
+                if (!Enum.IsDefined(typeof(State), value))
+                    throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(State));
+                _state = value;
+                StateChanged?.Invoke(State);
+            }
+        }
 
         public event Action SelectAction;
         public event Action UnselectAction;
 
+        public event Action<State> StateChanged;
+
         public void OnPress()
         {
+            if(!Interactable)
+                return;
+            
             if (State == State.Selected)
                 ToNormal();
             else
@@ -43,6 +63,13 @@ namespace Code.Internal.UserInterface.Elements
             }
         }
 
+        public void SelectWithoutNotify()
+        {
+            State = State.Selected;
+            spriteChangeElements.ForEach(s => s.SetSelected());
+            colorChangeElements.ForEach(s => s.SetSelected());
+        }
+        
         public void Select()
         {
             SelectAction?.Invoke();

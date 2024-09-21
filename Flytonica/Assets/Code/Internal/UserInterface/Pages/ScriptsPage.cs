@@ -4,7 +4,6 @@ using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
-using FishNet.Discovery;
 using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +24,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
-        private bool _isNetGame;
+
+        private bool _isTaskInit;
 
         protected override void OnOpen()
         {
@@ -39,31 +39,33 @@ namespace Code.Internal.UserInterface.Pages
             startGameButton?.onClick.RemoveListener(OnStartGame);
         }
 
-        public void Init(List<ScenarioSettings> scenarios, bool isNet = false)
+        public void Init(List<ScenarioSettings> scenarios, bool isTask = false)
         {
-            _isNetGame = isNet;
+            _isTaskInit = isTask;
             Clear();
 
-            for (var i = 0; i < scenarios.Count; i++)
+            for (var rootsCounter = 0; rootsCounter < scenarios.Count; rootsCounter++)
             {
-                var scenarioRoot = scenarios[i];
+                var scenarioRoot = scenarios[rootsCounter];
 
                 var nestedScenarios = scenarioRoot.nestedScenarios;
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
                 var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
-                openListButton.Init(scenarioRoot, (i + 1).ToString(), list);
+                openListButton.SetParent(null);
+                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit);
                 _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
 
                 if (!list || nestedScenarios == null)
                     continue;
 
-                for (var j = 0; j < nestedScenarios.Count; j++)
+                for (var nestedCounter = 0; nestedCounter < nestedScenarios.Count; nestedCounter++)
                 {
-                    var scenario = nestedScenarios[j];
+                    var scenario = nestedScenarios[nestedCounter];
 
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
-                    scenarioButton.Init(scenario, $"{i + 1}.{j + 1}");
+                    scenarioButton.SetParent(openListButton);
+                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit);
                     _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
                 }
@@ -71,7 +73,7 @@ namespace Code.Internal.UserInterface.Pages
 
             var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
             OnSelect(select);
-            select?.OnButtonPress();
+            select?.Select();
         }
 
         private void Clear()
@@ -82,13 +84,14 @@ namespace Code.Internal.UserInterface.Pages
             _buttonScenarioDictionary.Clear();
         }
 
+        //TODO: переписать для вариации запуска мульти\одичночный сценарий 
         private void OnStartGame()
         {
-                Debug.Log(
-                    $"Scenario: {_selectedScenario.name}\n" +
-                    $"Map: {infoPanel.CurrentMap.name}\n" +
-                    $"Drone:{infoPanel.CurrentDrone.name}\n" +
-                    $"Mode:{infoPanel.CurrentFlyMode.name}");
+            Debug.Log(
+                $"Scenario: {_selectedScenario.name}\n" +
+                $"Map: {infoPanel.CurrentMap.name}\n" +
+                $"Drone:{infoPanel.CurrentDrone.name}\n" +
+                $"Mode:{infoPanel.CurrentFlyMode.name}");
 
             sceneSettings.currentScenario = _selectedScenario;
             sceneSettings.currentMap = infoPanel.CurrentMap;
@@ -96,7 +99,7 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;
 
             InstanceFinder.ServerManager.StartConnection();
-            
+
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
@@ -105,17 +108,49 @@ namespace Code.Internal.UserInterface.Pages
                 InstanceFinder.ServerManager.OnServerConnectionState -= callback;
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
-            
-            if (_isNetGame)
-                InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().AdvertiseServer();
         }
 
         private void OnSelect(SelectScriptButton button)
         {
-            print($"select {_buttonScenarioDictionary[button].name}");
-            foreach (var b in _buttonScenarioDictionary.Keys.Where(b => b != button))
-                b.UnSelected();
+            if (_isTaskInit && button.ParentButton != null)
+            {
+                // Не позволяем выбирать дочерние кнопки
+                return;
+            }
 
+            // Получаем корневую кнопку выбранной кнопки
+            var rootButton = button.GetRootButton();
+
+            // Снимаем выбор со всех кнопок, которые не относятся к этому корню
+            foreach (var b in _buttonScenarioDictionary.Keys)
+            {
+                if (b.GetRootButton() != rootButton)
+                {
+                    b.UnSelected();
+                }
+            }
+
+            // Выбираем все потомки, если выбрана корневая кнопка
+            if (button.ParentButton == null)
+            {
+                button.SelectWithoutNotify();
+                foreach (var child in button.GetAllDescendants())
+                {
+                    child.SelectWithoutNotify();
+                }
+            }
+            else
+            {
+                // Выбираем выбранную кнопку и ее родителей
+                var currentButton = button;
+                while (currentButton != null)
+                {
+                    currentButton.SelectWithoutNotify();
+                    currentButton = currentButton.ParentButton;
+                }
+            }
+
+            // Обновляем информацию о выбранном сценарии
             var scenarioInfo = _buttonScenarioDictionary[button];
             if (!scenarioInfo)
                 return;
