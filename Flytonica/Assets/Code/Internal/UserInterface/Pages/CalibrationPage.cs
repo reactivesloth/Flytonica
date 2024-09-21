@@ -18,10 +18,10 @@ namespace Code.Internal.UserInterface.Pages
         private void Update()
         {
             var calibration = Calibration.Instance;
-            gasSlider.value = calibration._joystick.GetAxis(0);
-            rotateSlider.value = calibration._joystick.GetAxis(1);
-            pitchSlider.value = calibration._joystick.GetAxis(2);
-            rollSlider.value = calibration._joystick.GetAxis(3);
+            gasSlider.value = calibration._player.GetAxis("Throttle");
+            rotateSlider.value = calibration._player.GetAxis("Yaw");
+            pitchSlider.value = calibration._player.GetAxis("Pitch");
+            rollSlider.value = calibration._player.GetAxis("Roll");
         }
 
         protected override void OnOpen()
