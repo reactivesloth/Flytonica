@@ -98,7 +98,9 @@ namespace Code.Internal.UserInterface.Pages
         private ScenarioType _currentType;
         private DroneSettings _currentDrone;
         private DroneFlightSettings _currentMode;
-
+        
+        [SerializeField] private Page constructorPage;
+        
         protected override void Awake()
         {
             base.Awake();
@@ -136,7 +138,6 @@ namespace Code.Internal.UserInterface.Pages
         private void GoToLocationSettings()
         {
             var wind = new List<WindLayerSettings>();
-
             for (var i = 0; i < _currentMap.windLayersCount; i++)
                 wind.Add(!isAllLayersEqualToggle
                     ? new WindLayerSettings(forces[i].value, directions[i].value)
@@ -147,18 +148,13 @@ namespace Code.Internal.UserInterface.Pages
                 availableDrones.drones.IndexOf(_currentDrone),
                 availableMaps.maps.IndexOf(_currentMap), _currentType, _currentDrone.flightModes.IndexOf(_currentMode),
                 wind);
-
-
-            //Tут временно отправка файла
-            var jsonData = JsonUtility.ToJson(dataContainer);
-            print(jsonData);
-            var settingsFile = Encoding.UTF8.GetBytes(jsonData);
-
-            var form = new WWWForm();
-            form.AddField("name", title.text);
-            form.AddBinaryData("file", settingsFile, $"Scenario.json");
-
-            HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
+            
+            var page = constructorPage as ConstructorScenarioPage;
+            if (page != null)
+            {
+                page.Open();
+                page.SendData(dataContainer, title.text);
+            }
         }
 
         private void NextStep()
