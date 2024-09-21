@@ -142,7 +142,7 @@ namespace Code.Internal.UserInterface.Pages
                     ? new WindLayerSettings(forces[i].value, directions[i].value)
                     : new WindLayerSettings(overlayForce.value, overlayDirection.value));
 
-            //Этот объект надо будет пробросит в 3D редактор чтобы добавлять предметы
+            //TODO: Этот объект надо будет пробросит в 3D редактор чтобы добавлять предметы
             var dataContainer = new ScenarioSettingsData(title.text, description.text,
                 availableDrones.drones.IndexOf(_currentDrone),
                 availableMaps.maps.IndexOf(_currentMap), _currentType, _currentDrone.flightModes.IndexOf(_currentMode),

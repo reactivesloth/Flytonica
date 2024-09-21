@@ -99,7 +99,7 @@ namespace Code.Internal.UserInterface.Pages
                                         var scenarioSettingsData =
                                             JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
 
-                                        var scenarioSetting = ScenarioSettings.Create(scenario.id,
+                                        var scenarioSetting = ScenarioSettings.CreateDynamic(scenario.id,
                                             scenarioSettingsData.name,
                                             scenarioSettingsData.description, scenarioSettingsData.typeId,
                                             maps.maps[scenarioSettingsData.mapId],

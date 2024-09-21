@@ -14,9 +14,7 @@ namespace Code.Internal.API.Wrappers
         public int mapId;
         public int droneModeId;
         public ScenarioType typeId;
-
         public List<WindLayerSettings> windLayers;
-        
         public List<SpawnedObject> objects;
 
         public ScenarioSettingsData(string name, string description, int droneId, int mapId, ScenarioType typeId, int droneModeId, List<WindLayerSettings> windLayers = null, List<SpawnedObject> objects = null)
@@ -36,6 +34,7 @@ namespace Code.Internal.API.Wrappers
     public class SpawnedObject
     {
         public string prefabName;
+        
         public Vector3 position;
         public Quaternion rotation;
 

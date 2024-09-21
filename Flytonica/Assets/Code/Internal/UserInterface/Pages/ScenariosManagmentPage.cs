@@ -141,7 +141,7 @@ namespace Code.Internal.UserInterface.Pages
                             {
                                 var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
                                 print($"{loadedScenariosCount}.{settings.name}");
-                                var scenarioSetting = ScenarioSettings.Create(scenarioData.id, settings.name,
+                                var scenarioSetting = ScenarioSettings.CreateDynamic(scenarioData.id, settings.name,
                                     settings.description, settings.typeId,
                                     maps.maps[settings.mapId], drones.drones[settings.droneId],
                                     drones.drones[settings.droneId].flightModes[settings.droneModeId]);

@@ -46,13 +46,13 @@ namespace Code.Internal.UserInterface.Pages
 
             for (var i = 0; i < scenarios.Count; i++)
             {
-                var scenario = scenarios[i];
+                var scenarioRoot = scenarios[i];
 
-                var nestedScenarios = scenario.nestedScenarios;
+                var nestedScenarios = scenarioRoot.nestedScenarios;
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
                 var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
-                openListButton.Init(scenario, (i + 1).ToString(), list);
-                _buttonScenarioDictionary.Add(openListButton, scenario);
+                openListButton.Init(scenarioRoot, (i + 1).ToString(), list);
+                _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
 
                 if (!list || nestedScenarios == null)
@@ -60,11 +60,11 @@ namespace Code.Internal.UserInterface.Pages
 
                 for (var j = 0; j < nestedScenarios.Count; j++)
                 {
-                    var scenario2 = nestedScenarios[j];
+                    var scenario = nestedScenarios[j];
 
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
-                    scenarioButton.Init(scenario2, $"{i + 1}.{j + 1}");
-                    _buttonScenarioDictionary.Add(scenarioButton, scenario2);
+                    scenarioButton.Init(scenario, $"{i + 1}.{j + 1}");
+                    _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
                 }
             }
