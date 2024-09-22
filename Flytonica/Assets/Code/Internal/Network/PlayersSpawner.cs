@@ -33,7 +33,16 @@ namespace Code.Internal.Network
             if (drone == null)
                 return;
             _drones.Remove(drone);
-            InstanceFinder.ServerManager.Despawn(drone.GetComponent<NetworkObject>(), DespawnType.Destroy);
+            InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
+        }
+
+        public void DespawnAll()
+        {
+            foreach (var networkObject in _drones.ToList())
+            {
+                _drones.Remove(networkObject);
+                InstanceFinder.ServerManager.Despawn(networkObject, DespawnType.Destroy);
+            }
         }
     }
 }

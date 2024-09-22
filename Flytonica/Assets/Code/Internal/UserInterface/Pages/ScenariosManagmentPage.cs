@@ -110,6 +110,7 @@ namespace Code.Internal.UserInterface.Pages
             var scenarioCollection = ScriptableObject.CreateInstance<ScenarioSettings>();
             scenarioCollection.nestedScenarios = new List<ScenarioSettings> { scenario };
             sceneSettings.currentScenarioCollection = scenarioCollection;
+            sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
 
             InstanceFinder.ServerManager.StartConnection();
 

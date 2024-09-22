@@ -94,11 +94,7 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentScenarioCollection = currentScenario;
             sceneSettings.isTask = _isTaskInit;
             sceneSettings.taskId = _isTaskInit ? currentScenario.id: -1 ;
-            
-            /*sceneSettings.currentScenario = _selectedScenario;
-            sceneSettings.currentMap = infoPanel.CurrentMap;
-            sceneSettings.currentDrone = infoPanel.CurrentDrone;
-            sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;*/
+            sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
 
             InstanceFinder.ServerManager.StartConnection();
 
@@ -114,6 +110,10 @@ namespace Code.Internal.UserInterface.Pages
 
         private ScenarioSettings GetTask()
         {
+            //Init next
+            if (_selectedScenario.nestedScenarios == null) return _selectedScenario;
+            for (var i = 0; i < _selectedScenario.nestedScenarios.Count - 1; i++)
+                _selectedScenario.nestedScenarios[i].nextScenario = _selectedScenario.nestedScenarios[i + 1];
             return _selectedScenario;
         }
 
@@ -123,6 +123,10 @@ namespace Code.Internal.UserInterface.Pages
                 _buttonScenarioDictionary.Where(s => s.Key.ToggleIsOn && s.Value.settingType == SettingType.Scenario)
                     .Select(s => s.Value).ToList();
 
+            //Init next
+            for (var i = 0; i < selectedScenarios.Count - 1; i++)
+                selectedScenarios[i].nextScenario = selectedScenarios[i + 1];
+            
             var scenarioList = ScriptableObject.CreateInstance<ScenarioSettings>();
             scenarioList.settingType = SettingType.List;
             scenarioList.nestedScenarios = selectedScenarios;

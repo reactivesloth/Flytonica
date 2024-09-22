@@ -15,7 +15,6 @@ namespace Code.Internal.Network
     {
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
-        [SerializeField] private AvailableDronesSettings drones;
 
         private bool _sceneLoaded;
         private readonly List<NetworkConnection> _pendingConnections = new();
@@ -24,8 +23,8 @@ namespace Code.Internal.Network
         {
             base.OnStartServer();
             ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
-            print(sceneSettings.currentScenarioCollection.nestedScenarios[0].currentMap);
-            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenarioCollection.nestedScenarios[0].currentMap, OnSceneLoaded);
+            print(sceneSettings.currentScenario.currentMap);
+            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
         }
         
         public override void OnStopServer()
@@ -55,7 +54,7 @@ namespace Code.Internal.Network
 
         private void OnConnectedPlayer(NetworkConnection connection)
         {
-            var drone = NetworkManager.GetComponent<PlayersSpawner>().Spawn(connection, sceneSettings.currentScenarioCollection.nestedScenarios[0].currentDrone);
+            var drone = NetworkManager.GetComponent<PlayersSpawner>().Spawn(connection, sceneSettings.currentScenario.currentDrone);
             InvokeTargetInitializeScenario(connection);
         }
         
@@ -68,7 +67,7 @@ namespace Code.Internal.Network
         private void OnSceneLoaded()
         {
             _sceneLoaded = true;
-            FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenarioCollection.nestedScenarios[0]);
+            FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenario);
 
             foreach (var connection in _pendingConnections)
             {
@@ -81,15 +80,15 @@ namespace Code.Internal.Network
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
             await Task.Delay(1000);
-            TargetInitializeScenario(connection, sceneSettings.currentScenarioCollection.nestedScenarios[0].name);
-            print(NetworkObject.Observers.Count);
+            TargetInitializeScenario(connection, sceneSettings.currentScenarioCollection.name);
         }
 
         [TargetRpc]
         private void TargetInitializeScenario(NetworkConnection connection, string scenarioName)
         {
             Debug.Log($"Init scenario for connection {connection.ClientId}");
-            var scenarioSettings = scenarios.scenarios.First(s => s.name == scenarioName);
+            
+            /*var scenarioSettings = scenarios.scenarios.First(s => s.name == scenarioName);
             var scenarioInitializer = FindAnyObjectByType<ScenarioInitializer>();
             if (scenarioInitializer != null && scenarioSettings != null)
             {
@@ -98,7 +97,7 @@ namespace Code.Internal.Network
             else
             {
                 Debug.LogError("ScenarioInitializer not found on the client.");
-            }
+            }*/
         }
     }
 }

@@ -110,6 +110,8 @@ namespace Code.Internal.Scenario.Race
             {
                 cp.ChangeColor(CheckpointFlashType.Current);
             }
+            
+            ScenarioSwitcherController.Instance.NextOrEnd();
         }
 
         public string GetResult()

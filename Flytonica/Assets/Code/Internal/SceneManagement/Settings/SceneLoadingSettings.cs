@@ -11,5 +11,6 @@ namespace Code.Internal.SceneManagement
         public int taskId;
         public MapSettings currentMap;
         public ScenarioSettings currentScenarioCollection;
+        public ScenarioSettings currentScenario;
     }
 }

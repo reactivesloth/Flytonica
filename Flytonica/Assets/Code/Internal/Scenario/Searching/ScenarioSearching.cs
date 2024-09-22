@@ -124,6 +124,8 @@ namespace Code.Internal.Scenario.Searching
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
             DroneHUD.Instance.SetTask("Задание выполнено!");
+            
+            ScenarioSwitcherController.Instance.NextOrEnd();
         }
         
         private void UpdateTask()
