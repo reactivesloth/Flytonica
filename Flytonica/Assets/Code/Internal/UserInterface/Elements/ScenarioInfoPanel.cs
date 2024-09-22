@@ -107,7 +107,7 @@ namespace Code.Internal.UserInterface.Elements
             droneDropdown.AddOptions(droneOptionData);
             droneDropdown.interactable = droneDropdown.options.Count > 1;
 
-            if (scenarioSettings.currentDrone)
+            if (scenarioSettings.currentDrone && scenarioSettings.settingType == SettingType.TaskScenario)
                 droneDropdown.value =
                     _dropdownDrones.FirstOrDefault(d => d.Value == scenarioSettings.currentDrone).Key;
             else

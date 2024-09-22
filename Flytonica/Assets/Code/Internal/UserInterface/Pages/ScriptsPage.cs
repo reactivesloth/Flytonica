@@ -21,6 +21,7 @@ namespace Code.Internal.UserInterface.Pages
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
         [SerializeField] private SceneLoadingSettings sceneSettings;
+        [SerializeField] private ScenarioSettings currentScenario;
 
         private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
@@ -86,19 +87,18 @@ namespace Code.Internal.UserInterface.Pages
             _buttonScenarioDictionary.Clear();
         }
 
-        //TODO: переписать для вариации запуска мульти\одичночный сценарий 
         private void OnStartGame()
         {
-            Debug.Log(
-                $"Scenario: {_selectedScenario.name}\n" +
-                $"Map: {infoPanel.CurrentMap.name}\n" +
-                $"Drone:{infoPanel.CurrentDrone.name}\n" +
-                $"Mode:{infoPanel.CurrentFlyMode.name}");
+            currentScenario = _isTaskInit ? GetTask() : GetScenarioList();
 
-            sceneSettings.currentScenario = _selectedScenario;
+            sceneSettings.currentScenarioCollection = currentScenario;
+            sceneSettings.isTask = _isTaskInit;
+            sceneSettings.taskId = _isTaskInit ? currentScenario.id: -1 ;
+            
+            /*sceneSettings.currentScenario = _selectedScenario;
             sceneSettings.currentMap = infoPanel.CurrentMap;
             sceneSettings.currentDrone = infoPanel.CurrentDrone;
-            sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;
+            sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;*/
 
             InstanceFinder.ServerManager.StartConnection();
 
@@ -112,24 +112,31 @@ namespace Code.Internal.UserInterface.Pages
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
         }
 
-        private void StartTask()
+        private ScenarioSettings GetTask()
         {
-            
+            return _selectedScenario;
         }
 
-        private void StartScenariosList()
+        private ScenarioSettings GetScenarioList()
         {
-            
+            var selectedScenarios =
+                _buttonScenarioDictionary.Where(s => s.Key.ToggleIsOn && s.Value.settingType == SettingType.Scenario)
+                    .Select(s => s.Value).ToList();
+
+            var scenarioList = ScriptableObject.CreateInstance<ScenarioSettings>();
+            scenarioList.settingType = SettingType.List;
+            scenarioList.nestedScenarios = selectedScenarios;
+            return scenarioList;
         }
 
         private void OnSelect(SelectScriptButton button)
         {
             if (!button)
-            {   
+            {
                 infoPanel.Close();
                 return;
             }
-            
+
             if (_isTaskInit && button.ParentButton != null)
                 return;
 
@@ -153,20 +160,16 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnToggleChanged(SelectScriptButton button)
         {
-            // Получаем корневую кнопку выбранной кнопки
             var rootButton = button.GetRootButton();
 
-            // Если выбран переключатель родительской кнопки
             if (button.ParentButton == null)
             {
-                // Устанавливаем состояние всех дочерних переключателей
                 foreach (var child in button.GetAllDescendants())
                 {
                     child.SetToggleState(button.ToggleIsOn);
                 }
             }
 
-            // Сбрасываем переключатели в других корнях
             foreach (var b in _buttonScenarioDictionary.Keys)
             {
                 if (b.GetRootButton() != rootButton)

@@ -24,7 +24,8 @@ namespace Code.Internal.Network
         {
             base.OnStartServer();
             ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
-            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentMap, OnSceneLoaded);
+            print(sceneSettings.currentScenarioCollection.nestedScenarios[0].currentMap);
+            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenarioCollection.nestedScenarios[0].currentMap, OnSceneLoaded);
         }
         
         public override void OnStopServer()
@@ -54,22 +55,20 @@ namespace Code.Internal.Network
 
         private void OnConnectedPlayer(NetworkConnection connection)
         {
-            var drone = NetworkManager.GetComponent<PlayersSpawner>().Spawn(connection, sceneSettings.currentDrone);
+            var drone = NetworkManager.GetComponent<PlayersSpawner>().Spawn(connection, sceneSettings.currentScenarioCollection.nestedScenarios[0].currentDrone);
             InvokeTargetInitializeScenario(connection);
         }
-
-
+        
         private void OnDisconnectedPlayer(NetworkConnection connection)
         {
             _pendingConnections.Remove(connection);
             NetworkManager.GetComponent<PlayersSpawner>().Despawn(connection);
         }
-
-
+        
         private void OnSceneLoaded()
         {
             _sceneLoaded = true;
-            FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenario);
+            FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenarioCollection.nestedScenarios[0]);
 
             foreach (var connection in _pendingConnections)
             {
@@ -82,7 +81,7 @@ namespace Code.Internal.Network
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
             await Task.Delay(1000);
-            TargetInitializeScenario(connection, sceneSettings.currentScenario.name);
+            TargetInitializeScenario(connection, sceneSettings.currentScenarioCollection.nestedScenarios[0].name);
             print(NetworkObject.Observers.Count);
         }
 

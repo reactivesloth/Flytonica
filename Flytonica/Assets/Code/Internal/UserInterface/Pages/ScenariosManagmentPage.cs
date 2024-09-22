@@ -40,7 +40,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
-            
+
             LoadScenariosList();
 
             if (_isEditMode)
@@ -72,7 +72,7 @@ namespace Code.Internal.UserInterface.Pages
             scenariosRoot.SelectionStateChange -= startButton.gameObject.SetActive;
         }
 
-        protected override void OnBackClick ()
+        protected override void OnBackClick()
         {
             menuPage?.Open();
         }
@@ -87,7 +87,7 @@ namespace Code.Internal.UserInterface.Pages
             PopupPanel.ShowDeleteTemplate(
                 Delete, "сценарий", scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>().name);
         }
-        
+
         private void Delete()
         {
             print(LinkConstants.MapConfigDeleteUrl(scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>()
@@ -107,10 +107,9 @@ namespace Code.Internal.UserInterface.Pages
         {
             var scenario = scenariosRoot.SelectedButton.GetSaveData<ScenarioSettings>();
 
-            sceneSettings.currentScenario = scenario;
-            sceneSettings.currentMap = scenario.currentMap;
-            sceneSettings.currentDrone = scenario.currentDrone;
-            sceneSettings.currentDrone.currentFlightMode = scenario.currentDroneMode;
+            var scenarioCollection = ScriptableObject.CreateInstance<ScenarioSettings>();
+            scenarioCollection.nestedScenarios = new List<ScenarioSettings> { scenario };
+            sceneSettings.currentScenarioCollection = scenarioCollection;
 
             InstanceFinder.ServerManager.StartConnection();
 
@@ -147,7 +146,8 @@ namespace Code.Internal.UserInterface.Pages
                             {
                                 var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
                                 print($"{loadedScenariosCount}.{settings.name}");
-                                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id, settings.name,
+                                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id,
+                                    settings.name,
                                     settings.description, settings.typeId,
                                     maps.maps[settings.mapId], drones.drones[settings.droneId],
                                     drones.drones[settings.droneId].flightModes[settings.droneModeId]);

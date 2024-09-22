@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571583e582ff4b689c7336c8dff15854, type: 3}
   m_Name: "1.1 \u0412\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435"
   m_EditorClassIdentifier: 
+  settingType: 0
+  id: 0
   name: "\u0412\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435"
   description: 
   scenarioType: 1
   availableMaps:
   - {fileID: 11400000, guid: 8c8832a3664b9a24e96d2ff61e0ff0c3, type: 2}
+  currentDrone: {fileID: 11400000, guid: 2f791b720e14e1f4f995d076f3bed167, type: 2}
+  currentDroneMode: {fileID: 11400000, guid: 69a571b385be9ae41bea071843468290, type: 2}
+  currentMap: {fileID: 11400000, guid: 8c8832a3664b9a24e96d2ff61e0ff0c3, type: 2}
   nestedScenarios: []
   nextScenario: {fileID: 11400000, guid: c5a7fe3332f58624b8a12136cbb34a3b, type: 2}

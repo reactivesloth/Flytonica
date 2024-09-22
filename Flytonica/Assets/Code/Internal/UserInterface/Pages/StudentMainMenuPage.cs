@@ -114,7 +114,7 @@ namespace Code.Internal.UserInterface.Pages
                                         if (loadedScenarioCount >= taskData.mapconfigs.data.Count)
                                         {
                                             loadedTaskCount++;
-                                            OnTaskInit(taskData.scenario.name, taskScenarios);
+                                            OnTaskInit(taskInfo.id ,taskData.scenario.name, taskScenarios);
                                             if (loadedTaskCount >= tasksInfo.data.Count)
                                                 OnAllTaskInit();
                                         }
@@ -127,12 +127,13 @@ namespace Code.Internal.UserInterface.Pages
                 Debug.LogError);
         }
 
-        private void OnTaskInit(string taskName, List<ScenarioSettings> scenarios)
+        private void OnTaskInit(int id, string taskName, List<ScenarioSettings> scenarios)
         {
             var task = ScriptableObject.CreateInstance<ScenarioSettings>();
             task.settingType = SettingType.Task;
             task.name = taskName;
             task.nestedScenarios = scenarios;
+            task.id = id;
 
             print($"Задание {task.name}, Сценариев {task.nestedScenarios.Count}");
 
