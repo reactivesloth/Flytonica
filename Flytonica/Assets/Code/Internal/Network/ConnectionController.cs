@@ -89,7 +89,7 @@ namespace Code.Internal.Network
                     drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
                     scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
             
-            if (connection.ClientId == 0 && sceneSettings.isNet)
+            if (connection.IsHost && sceneSettings.isNet)
             {
                 //TODO: действия для преаода 
             }
