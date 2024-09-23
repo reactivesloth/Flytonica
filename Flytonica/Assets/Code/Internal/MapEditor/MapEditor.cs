@@ -2,12 +2,12 @@ using Code.Internal.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Code.Internal
+namespace Code.Internal.MapEditor
 {
     public class MapEditor : MonoBehaviour
     {
         [SerializeField] private AvailableMapsSettings _mapsSettings;
-        [SerializeField] private GameObject cube;
+        [SerializeField] private GameObject currentSelectedEditorObject;
         private string _savedSceneName;
         private Camera _camera;
         private bool _isEnabled;
@@ -49,11 +49,11 @@ namespace Code.Internal
             {
                 Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
                 
-                if (UnityEngine.Input.GetMouseButtonDown(0))
+                if (UnityEngine.Input.GetMouseButtonDown(0) && currentSelectedEditorObject != null)
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        var newObject = Instantiate(cube, hit.point, Quaternion.identity);
+                        var newObject = Instantiate(currentSelectedEditorObject, hit.point, Quaternion.identity);
                         newObject.AddComponent<MapEditorAddedObject>();
                     }
                 }
@@ -69,6 +69,11 @@ namespace Code.Internal
                     }
                 }
             }
+        }
+
+        public void SelectEditorObject(GameObject obj)
+        {
+            currentSelectedEditorObject = obj;
         }
     }
 

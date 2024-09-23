@@ -473,7 +473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapsSettings: {fileID: 11400000, guid: 7aadd7c843f625c419cc326c112ef8e0, type: 2}
-  cube: {fileID: 3847547470021264952, guid: 599203a7ba01a0e4d8214df78c37a934, type: 3}
+  currentSelectedEditorObject: {fileID: 0}
 --- !u!4 &596997128
 Transform:
   m_ObjectHideFlags: 0
@@ -1185,6 +1185,7 @@ GameObject:
   - component: {fileID: 1527487341}
   - component: {fileID: 1527487343}
   - component: {fileID: 1527487342}
+  - component: {fileID: 1527487344}
   m_Layer: 0
   m_Name: MapEditorCamera
   m_TagString: Untagged
@@ -1302,6 +1303,22 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1527487344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527487340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f6ea13e68c08e4eabcaa8be83f8493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 50
+  accSprintMultiplier: 4
+  lookSensitivity: 1
+  dampingCoefficient: 5
 --- !u!1 &1625281484
 GameObject:
   m_ObjectHideFlags: 0

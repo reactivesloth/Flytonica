@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.SceneManagement
 {
@@ -10,5 +11,7 @@ namespace Code.Internal.SceneManagement
         public string loadingSceneName;
         public int windLayersCount;
         public int maxAllowedHeight = 0;
+
+        public MapEditorObjectsSettings mapEditorObjectsObjects;
     }
 }
