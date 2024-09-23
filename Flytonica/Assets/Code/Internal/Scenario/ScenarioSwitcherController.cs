@@ -20,7 +20,7 @@ namespace Code.Internal.Scenario
 
         public void NextOrEnd()
         {
-            if(sceneSettings.currentScenario.nextScenario)
+            if (sceneSettings.currentScenario.nextScenario)
                 Next();
             else
                 End();
@@ -34,20 +34,22 @@ namespace Code.Internal.Scenario
             InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
             //TODO: Переключение карты, инициализация нового сценария, спавн нового дрона 
-            
+
             //End();
         }
 
         private void OnSceneLoaded()
         {
             FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenario);
-            var drone = InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Spawn(InstanceFinder.ClientManager.Connection, sceneSettings.currentScenario.currentDrone);
+            var drone = InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Spawn(
+                InstanceFinder.ClientManager.Connection, sceneSettings.currentScenario.currentDrone,
+                sceneSettings.currentScenario.currentDroneMode);
         }
 
         private void End()
         {
             //TODO: Send log (report)
-            
+
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();

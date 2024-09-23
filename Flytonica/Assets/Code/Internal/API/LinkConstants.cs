@@ -46,6 +46,7 @@ namespace Code.Internal.API
         // Sends: Query parameters (page, itemsPerPage)
         // Receives: MultiScenarioWithFileDataResponse (List<ScenarioData>, total_count)
         private const string MapConfigMultiPath = "mapconfig/get_multi";
+        private const string MapConfigGetPath = "mapconfig/get/{0}";
 
         // Path for creating a scenario
         // Sends: ScenarioData (name, owner_id, file_id, created_at)
@@ -102,6 +103,9 @@ namespace Code.Internal.API
 
         public static string MapConfigMultiUrl(Dictionary<string, string> queryParams = null) =>
             CombineUrl(MapConfigMultiPath, queryParams);
+        
+        public static string MapConfigGetUrl(int id) =>
+            CombineUrl(string.Format(MapConfigGetPath, id));
         
         public static string MapConfigDeleteUrl(int scenarioId) => CombineUrl(string.Format(MapConfigDeletePath, scenarioId));
 

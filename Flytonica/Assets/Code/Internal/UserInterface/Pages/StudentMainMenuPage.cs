@@ -55,6 +55,7 @@ namespace Code.Internal.UserInterface.Pages
                 RequestAndSetUserData();
             else
                 SetDemo();
+
         }
 
         protected override void OnClose()
@@ -66,13 +67,7 @@ namespace Code.Internal.UserInterface.Pages
             toRoomButton.onClick.RemoveListener(OnConnect);
         }
 
-        private void OnSingleScripts()
-        {
-            scriptsPage.Init(singleScenariosSettings.scenarios);
-            scriptsPage.Open();
-        }
-
-        private void OnTaskScripts()
+        private void GetScenarios()
         {
             HttpClient.Get(
                 LinkConstants.UserScenarioUrl(HttpClient.UserData.id,
@@ -115,16 +110,30 @@ namespace Code.Internal.UserInterface.Pages
                                         {
                                             loadedTaskCount++;
                                             OnTaskInit(taskInfo.id ,taskData.scenario.name, taskScenarios);
-                                            if (loadedTaskCount >= tasksInfo.data.Count)
-                                                OnAllTaskInit();
                                         }
                                     });
                                 }
                             },
-                            error => { Debug.LogError(error); });
+                            error => { Debug.LogError(error); }, () =>
+                            {
+                                if (loadedTaskCount >= tasksInfo.data.Count)
+                                    tasksButton.interactable = true;
+                            });
                     }
                 },
                 Debug.LogError);
+        }
+
+        private void OnSingleScripts()
+        {
+            scriptsPage.Init(singleScenariosSettings.scenarios);
+            scriptsPage.Open();
+        }
+
+        private void OnTaskScripts()
+        {
+            scriptsPage.Init(taskScenariosSettings.scenarios, true);
+            scriptsPage.Open();
         }
 
         private void OnTaskInit(int id, string taskName, List<ScenarioSettings> scenarios)
@@ -135,16 +144,7 @@ namespace Code.Internal.UserInterface.Pages
             task.nestedScenarios = scenarios;
             task.id = id;
 
-            print($"Задание {task.name}, Сценариев {task.nestedScenarios.Count}");
-
             taskScenariosSettings.scenarios.Add(task);
-        }
-
-        private void OnAllTaskInit()
-        {
-            print(taskScenariosSettings.scenarios.Count);
-            scriptsPage.Init(taskScenariosSettings.scenarios, true);
-            scriptsPage.Open();
         }
 
         private void OnDeviceInfo()
@@ -170,6 +170,7 @@ namespace Code.Internal.UserInterface.Pages
                     {
                         HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
                         SetData();
+                        GetScenarios();
                     },
                     Debug.LogError);
             else

@@ -83,8 +83,8 @@ namespace Code.Internal.SceneManagement
         
         public void Replay()
         {
-            /*InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
-            UnloadSceneGlobal(CurrentGlobalScene, LoadGame);*/
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
+            UnloadScene();
         }
     }
 }
