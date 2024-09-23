@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Code.Internal.API;
 using Code.Internal.API.Wrappers;
-using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
-using Code.Internal.UserInterface;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network
 {
@@ -91,9 +88,18 @@ namespace Code.Internal.Network
                 JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
                     drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
                     scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
-
-            var drone = NetworkManager.GetComponent<PlayersSpawner>()
-                .Spawn(connection, sceneSettings.currentScenario.currentDrone);
+            
+            if (connection.IsHost && sceneSettings.isNet)
+            {
+                //TODO: действия для преаода 
+            }
+            else
+            {
+                var drone = NetworkManager.GetComponent<PlayersSpawner>()
+                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
+            }
+            
+            MovePlayer(connection);
         }
 
         [TargetRpc]
@@ -106,38 +112,29 @@ namespace Code.Internal.Network
                 drones.drones[scenarioInfo.droneId],
                 drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId]);
             InitScenario(scenario);
-            /*print("StartInit");
-            var scenario = scenarios.Find(scenarioId);
-
-            if (scenario)
-            {
-                InitScenario(scenario);
-            }
-            else
-            {
-                HttpClient.Get(LinkConstants.MapConfigGetUrl(scenarioId), response =>
-                {
-                    var responseScenario = JsonUtility.FromJson<ScenarioData>(response);
-                    HttpClient.Get(LinkConstants.GetFile(responseScenario.file_file_path), responseFile =>
-                    {
-                        var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(responseFile);
-                        scenario = ScenarioSettings.CreateDynamicTaskScenario(responseScenario.id, scenarioInfo.name,
-                            scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
-                            drones.drones[scenarioInfo.droneId],
-                            drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId]);
-                        InitScenario(scenario);
-                    });
-                }, error => { Debug.LogError(error); });
-            }*/
         }
 
         private void InitScenario(ScenarioSettings scenario)
         {
-            print($"Init");
+            print("Init");
             var scenarioInitializer = FindAnyObjectByType<ScenarioInitializer>();
             print($"Init {scenario.name}");
             scenarioInitializer.Initialize(scenario);
             scenario.currentDrone.currentFlightMode = scenario.currentDroneMode;
+        }
+
+        [TargetRpc]
+        private void MovePlayer(NetworkConnection connection)
+        {
+            var spawners = GameObject.FindGameObjectsWithTag("Player Respawn")
+                .Select(o => o.transform).ToArray();
+
+            if (spawners.Length == 0)
+                return;
+            
+            var player = GameObject.FindWithTag("Player");
+            var spawn = spawners[Random.Range(0, spawners.Length)];
+            player.transform.position = spawn.position;
         }
     }
 }

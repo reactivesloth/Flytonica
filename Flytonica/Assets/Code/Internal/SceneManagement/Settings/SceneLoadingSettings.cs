@@ -8,6 +8,7 @@ namespace Code.Internal.SceneManagement
     public class SceneLoadingSettings : ScriptableObject
     {
         public bool isTask;
+        public bool isNet;
         public int taskId;
         public MapSettings currentMap;
         public ScenarioSettings currentScenarioCollection;

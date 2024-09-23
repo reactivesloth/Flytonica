@@ -1,4 +1,7 @@
-﻿using FishNet.Object;
+﻿using System;
+using Code.Internal.Network.Teacher;
+using FishNet.Connection;
+using FishNet.Object;
 using UnityEngine;
 
 namespace Code.Internal.Drone
@@ -12,6 +15,8 @@ namespace Code.Internal.Drone
         [SerializeField] [Range(-45, 90)] private float minAngle;
         [SerializeField] [Range(0,90)] private float maxAngle = 90;
 
+        public event Action<Vector3, Quaternion> OnCameraDataUpdated;
+        
         private void Awake()
         {
             _droneInput = GetComponent<DroneInput>();
@@ -22,6 +27,8 @@ namespace Code.Internal.Drone
         {
             if(!IsOwner)
                 return;
+
+            TransmitCameraTransform(Owner);
             
             if (cameraObject.activeSelf != _droneInput.DroneCam)
                 cameraObject.SetActive(_droneInput.DroneCam);
@@ -33,6 +40,15 @@ namespace Code.Internal.Drone
             var rot = cameraObject.transform.localRotation;
             rot = Quaternion.Euler(currentAngle, rot.y, rot.z);
             cameraObject.transform.localRotation = rot;
+        }
+        
+        [ServerRpc]
+        private void TransmitCameraTransform(NetworkConnection sender)
+        {
+            var position = cameraObject.transform.position;
+            var rotation = cameraObject.transform.rotation;
+            
+            OnCameraDataUpdated?.Invoke(position, rotation);
         }
     }
 }

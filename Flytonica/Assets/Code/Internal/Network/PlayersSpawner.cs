@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
+using Code.Internal.Network.Teacher;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
@@ -24,6 +25,9 @@ namespace Code.Internal.Network
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));
             _drones.Add(drone);
+            
+            PlayerManager.Instance.AddPlayer(connection, drone);
+            
             return drone;
         }
 
@@ -33,6 +37,7 @@ namespace Code.Internal.Network
             if (drone == null)
                 return;
             _drones.Remove(drone);
+            PlayerManager.Instance.RemovePlayer(connection);
             InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
         }
 

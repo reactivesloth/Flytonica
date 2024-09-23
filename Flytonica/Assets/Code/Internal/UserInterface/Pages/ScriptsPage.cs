@@ -92,6 +92,7 @@ namespace Code.Internal.UserInterface.Pages
             currentScenario = _isTaskInit ? GetTask() : GetScenarioList();
 
             sceneSettings.currentScenarioCollection = currentScenario;
+            sceneSettings.isNet = false;
             sceneSettings.isTask = _isTaskInit;
             sceneSettings.taskId = _isTaskInit ? currentScenario.id: -1 ;
             sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];

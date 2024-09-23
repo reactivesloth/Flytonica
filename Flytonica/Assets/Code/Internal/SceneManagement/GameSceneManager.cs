@@ -67,6 +67,8 @@ namespace Code.Internal.SceneManagement
             UIController.Instance.OnMainMenu();
             UnloadScene();
             IsPlaying = false;
+            var player = GameObject.FindWithTag("Player");
+            player.transform.position = Vector3.zero;
         }
 
         private void LoadSceneLocal(string sceneName)
@@ -83,8 +85,8 @@ namespace Code.Internal.SceneManagement
         
         public void Replay()
         {
-            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
-            UnloadScene();
+            /*InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
+            UnloadScene();*/
         }
     }
 }
