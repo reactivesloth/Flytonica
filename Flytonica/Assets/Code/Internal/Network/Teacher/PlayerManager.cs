@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using FishNet.Connection;
 using FishNet.Object;
+using UnityEngine;
 
 namespace Code.Internal.Network.Teacher
 {
-    public class PlayerManager : NetworkBehaviour
+    public class PlayerManager : MonoBehaviour
     {
         public static PlayerManager Instance;
 
@@ -17,8 +18,7 @@ namespace Code.Internal.Network.Teacher
         {
             Instance = this;
         }
-
-
+        
         public void AddPlayer(NetworkConnection connection, NetworkObject drone)
         {
             if (_playerDrones.TryAdd(connection, drone))

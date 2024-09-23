@@ -12,7 +12,7 @@ namespace Code.Internal.UserInterface
         public static UIController Instance { get; private set; }
 
         [SerializeField] private Canvas canvas;
-        [SerializeField] private Page pauseMenuPage, firstPage;
+        [SerializeField] private Page pauseMenuPage, firstPage, hostControlPage;
         [SerializeField] private InputActionReference[] pauseButtons;
         [SerializeField] private GameObject drawUIPanel;
 
@@ -76,6 +76,12 @@ namespace Code.Internal.UserInterface
             canvas.gameObject.SetActive(true);
             drawUIPanel.SetActive(true);
             firstPage.Open(true);
+        }
+
+        public void SetHostControl()
+        {
+            canvas.gameObject.SetActive(true);
+            hostControlPage.Open();
         }
     }
 }

@@ -1203,8 +1203,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 1517044873}
   sceneSettings: {fileID: 11400000, guid: 56bb72999f85c1a4e81b7eef178419e1, type: 2}
   scenarios: {fileID: 11400000, guid: 57b83870e6bbfdb41b43aac65ae3abe7, type: 2}
-  maps: {fileID: 0}
-  drones: {fileID: 0}
+  maps: {fileID: 11400000, guid: 7aadd7c843f625c419cc326c112ef8e0, type: 2}
+  drones: {fileID: 11400000, guid: d7e9f8a872366814592282f0bf8cf3a3, type: 2}
 --- !u!4 &1517044875
 Transform:
   m_ObjectHideFlags: 0
@@ -1907,6 +1907,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2118453104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118453106}
+  - component: {fileID: 2118453105}
+  m_Layer: 0
+  m_Name: PlayerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2118453105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118453104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7514d057d384405a57ca4e5ec9cd6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2118453106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118453104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1209.2373, y: 646.0275, z: 6.2058434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &615710003131717290
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,3 +2290,4 @@ SceneRoots:
   - {fileID: 1625281486}
   - {fileID: 596997128}
   - {fileID: 751695673}
+  - {fileID: 2118453106}
