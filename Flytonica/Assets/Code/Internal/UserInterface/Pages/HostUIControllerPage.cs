@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
 {
-    public class HostUIControllerPage: Page
+    public class HostUIControllerPage: MonoBehaviour
     {
         [SerializeField] private Button updateButton;
         [SerializeField] private Transform playerListContainer;

@@ -16,7 +16,6 @@ namespace Code.Internal.UserInterface.Elements
 
         private void OnEnable()
         {
-            
             print("LOGOUT");
             logoutButton.onClick.AddListener(Logout);
             if (HttpClient.IsAuthorized)

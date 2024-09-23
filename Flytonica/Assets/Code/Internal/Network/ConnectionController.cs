@@ -6,6 +6,7 @@ using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Transporting;
@@ -16,6 +17,8 @@ namespace Code.Internal.Network
 {
     public class ConnectionController : NetworkBehaviour
     {
+        [SerializeField] private HostUIControllerPage hostUi;
+        
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
         [SerializeField] private AvailableMapsSettings maps;
@@ -37,6 +40,7 @@ namespace Code.Internal.Network
             base.OnStopServer();
             ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             _sceneLoaded = false;
+            hostUi.gameObject.SetActive(false);
         }
 
         private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -85,11 +89,11 @@ namespace Code.Internal.Network
         {
             await Task.Delay(1000);
             var scenario = sceneSettings.currentScenario;
-            print(scenario.name);
-            if (connection.IsHost && sceneSettings.isNet)
+            print($"{connection.ClientId == 0} && {sceneSettings.isNet}");
+            if (connection.ClientId == 0 && sceneSettings.isNet)
             {
-                //TODO: действия для преаода 
-                UIController.Instance.SetHostControl();
+                print($"{connection.ClientId == 0} && {sceneSettings.isNet}");
+                hostUi.gameObject.SetActive(true);
             }
             else
             {
@@ -108,6 +112,8 @@ namespace Code.Internal.Network
         [TargetRpc]
         private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
         {
+            //if (connection.ClientId == 0 && sceneSettings.isNet)
+                
             print(sceneSettings);
             var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(scenarioSettingsJson);
             var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,
