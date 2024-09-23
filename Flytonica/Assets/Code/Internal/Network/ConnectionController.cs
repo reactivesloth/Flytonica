@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Transporting;
@@ -84,17 +85,19 @@ namespace Code.Internal.Network
         {
             await Task.Delay(1000);
             var scenario = sceneSettings.currentScenario;
-            TargetInitializeScenario(connection,
-                JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
-                    drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
-                    scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
-            
+            print(scenario.name);
             if (connection.IsHost && sceneSettings.isNet)
             {
                 //TODO: действия для преаода 
+                UIController.Instance.SetHostControl();
             }
             else
             {
+                TargetInitializeScenario(connection,
+                    JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
+                        drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
+                        scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
+                
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
             }

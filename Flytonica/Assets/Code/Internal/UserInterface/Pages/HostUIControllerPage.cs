@@ -10,6 +10,7 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class HostUIControllerPage: Page
     {
+        [SerializeField] private Button updateButton;
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private Button playerListItemPrefab;
 
@@ -18,6 +19,7 @@ namespace Code.Internal.UserInterface.Pages
         private void Start()
         {
             UpdatePlayerList();
+            updateButton.onClick.AddListener(UpdatePlayerList);
         }
 
         private void OnEnable()
@@ -35,7 +37,6 @@ namespace Code.Internal.UserInterface.Pages
         
         public void UpdatePlayerList()
         {
-            // Очищаем список
             foreach (Transform child in playerListContainer)
             {
                 Destroy(child.gameObject);
@@ -47,11 +48,8 @@ namespace Code.Internal.UserInterface.Pages
             {
                 var listItem = Instantiate(playerListItemPrefab, playerListContainer);
                 listItem.GetComponentInChildren<TMP_Text>().text = $"Player {player.Key.ClientId}";
-
-                var button = listItem.GetComponentInChildren<Button>();
                 var connection = player.Key;
-
-                button.onClick.AddListener(() =>
+                listItem.onClick.AddListener(() =>
                 {
                     SelectPlayer(connection);
                 });
