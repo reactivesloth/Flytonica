@@ -31,6 +31,8 @@ namespace Code.Internal.UserInterface.Pages
 
             _leaveButton.onClick.RemoveListener(OnLeaveButtonClick);
             _uploadButton.onClick.RemoveListener(OnUploadButtonClick);
+            
+            MapEditor.Instance.UnloadMapEditor();
         }
 
         protected override void OnBackClick()
@@ -42,6 +44,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             _data = dataContainer;
             _title = title;
+            MapEditor.Instance.LoadMapEditor(_data.mapId);
         }
         
         private void OnLeaveButtonClick()
