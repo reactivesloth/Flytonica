@@ -53,10 +53,10 @@ namespace Code.Internal.UserInterface.Pages
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
                 var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
                 openListButton.SetParent(null);
-                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit);
+                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit, list != null && !_isTaskInit);
                 _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
-                openListButton.ToggleChanged += OnToggleChanged;
+                openListButton.ToggleChanged += OnToggleChanged;    
 
                 if (!list || nestedScenarios == null)
                     continue;
@@ -67,16 +67,16 @@ namespace Code.Internal.UserInterface.Pages
 
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
                     scenarioButton.SetParent(openListButton);
-                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit);
+                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit, isOnToggle: !_isTaskInit);
                     _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
                     scenarioButton.ToggleChanged += OnToggleChanged;
                 }
             }
 
-            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
-            OnSelect(select);
+            /*var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
             select?.Select();
+            OnSelect(select);*/
         }
 
         private void Clear()
