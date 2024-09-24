@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Code.Internal.API;
 using Code.Internal.Network;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using FishNet;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,19 +18,23 @@ namespace Code.Internal.Scenario
         [SerializeField] private SceneLoadingSettings sceneSettings;
 
         private List<Dictionary<string, string>> _results = new();
+        private int _currentStatus = 0;
 
         private void Awake()
         {
             Instance = this;
         }
 
-        private void ResetResults()
+        public void ResetResults()
         {
             _results = new List<Dictionary<string, string>>();
         }
 
-        public void NextOrEnd(Dictionary<string, string> result)
+        public void NextOrEnd(Dictionary<string, string> result, bool isFailed = false)
         {
+            if(_currentStatus != 2)
+                _currentStatus = isFailed ? 2 : 1;
+            
             if (sceneSettings.currentScenario.nextScenario)
                 Next(result);
             else
@@ -38,12 +44,17 @@ namespace Code.Internal.Scenario
         private void Next(Dictionary<string, string> result)
         {
             // Показ окна
+            
+            /*Time.timeScale = 0f;
             PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
-                Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));
+                Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));*/
+            
+            LoadNext(result);
         }
 
         private void LoadNext(Dictionary<string, string> result)
         {
+            Time.timeScale = 1f;
             _results.Add(result);
             
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
@@ -62,14 +73,20 @@ namespace Code.Internal.Scenario
 
         private void End(Dictionary<string, string> result)
         {
-            PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
-                Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));
+            /*PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
+                Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
+            
+            EndTask(result);
         }
+        
 
         private void EndTask(Dictionary<string, string> lastResult)
         {
+            Time.timeScale = 0f;
             _results.Add(lastResult);
-            SendData();
+            if(sceneSettings.isTask)
+                SendData();
+            ResetResults();
             EndSession();
         }
         
@@ -104,8 +121,21 @@ namespace Code.Internal.Scenario
             string json = BuildJsonString(flatDictionary);
             
             print(json);
+           Send(json);
+        }
+
+        private void Send(string result)
+        {
+            var settingsFile = Encoding.UTF8.GetBytes(result);
+
+            var form = new WWWForm();
+            form.AddField("user_scenario_id", sceneSettings.taskId);
+            form.AddField("device_uuid", "");
+            form.AddField("status", _currentStatus);
+            form.AddBinaryData("file", settingsFile, "Result.json");
+            form.AddBinaryData("replay", settingsFile, "Result.json");
             
-            //TODO: запрос на отправку
+            HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, Debug.LogError);
         }
 
         #region JSON Generation
