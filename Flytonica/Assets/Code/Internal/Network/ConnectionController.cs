@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
-using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
 using FishNet.Object;
@@ -17,7 +16,7 @@ namespace Code.Internal.Network
 {
     public class ConnectionController : NetworkBehaviour
     {
-        [SerializeField] private HostUIControllerPage hostUi;
+        [SerializeField] private GameObject hostControl;
         
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
@@ -40,7 +39,7 @@ namespace Code.Internal.Network
             base.OnStopServer();
             ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             _sceneLoaded = false;
-            hostUi.gameObject.SetActive(false);
+            hostControl.SetActive(false);
         }
 
         private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -89,11 +88,9 @@ namespace Code.Internal.Network
         {
             await Task.Delay(1000);
             var scenario = sceneSettings.currentScenario;
-            print($"{connection.ClientId == 0} && {sceneSettings.isNet}");
             if (connection.ClientId == 0 && sceneSettings.isNet)
             {
-                print($"{connection.ClientId == 0} && {sceneSettings.isNet}");
-                hostUi.gameObject.SetActive(true);
+                hostControl.SetActive(true);
             }
             else
             {
