@@ -32,6 +32,8 @@ namespace Code.Internal.UserInterface.Elements
         public event Action<SelectScriptButton> Selected;
         public event Action<SelectScriptButton> ToggleChanged;
 
+        public State State => @object.State;
+
         private void OnValidate()
         {
             @object = GetComponent<InteractiveObject>();
@@ -45,15 +47,14 @@ namespace Code.Internal.UserInterface.Elements
         }
 
         public void Init(ScenarioSettings settings, string number = "#", GameObject list = null,
-            bool isTaskInit = false)
+            bool isTaskInit = false, bool isOnToggle = false)
         {
             _list = list;
             selectToggle.gameObject.SetActive(!isTaskInit);
+            selectToggle.gameObject.SetActive(isOnToggle);
 
             numberText.text = number;
             titleText.text = settings.name;
-
-            UpdateArrowVisibility(list == null ? State.Non : State.Selected);
 
             if (isTaskInit && ParentButton != null)
             {
@@ -68,6 +69,7 @@ namespace Code.Internal.UserInterface.Elements
         {
             ParentButton = parent;
             parent?.ChildButtons.Add(this);
+            ParentButton?.UpdateArrowVisibility(ParentButton.State);
         }
 
         public SelectScriptButton GetRootButton()
@@ -113,6 +115,7 @@ namespace Code.Internal.UserInterface.Elements
         private void OnSelectAction()
         {
             Selected?.Invoke(this);
+            selectToggle.isOn = true;
             if (ChildButtons.Count > 0)
                 OpenList();
         }
@@ -180,11 +183,13 @@ namespace Code.Internal.UserInterface.Elements
         public void Select()
         {
             @object.Select();
+            OpenList();
         }
 
         public void UnSelected()
         {
             @object.ToNormal();
+            CloseList();
         }
     }
 }
