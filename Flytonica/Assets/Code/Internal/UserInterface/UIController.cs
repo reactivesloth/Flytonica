@@ -11,7 +11,6 @@ namespace Code.Internal.UserInterface
         public static UIController Instance { get; private set; }
 
         [SerializeField] private Canvas canvas;
-        [SerializeField] private GameObject background;
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
         [SerializeField] private GameObject drawUIPanel;
@@ -41,6 +40,7 @@ namespace Code.Internal.UserInterface
             
             var isPaused = pauseMenuPage.gameObject.activeSelf;
 
+            pauseMenuPage.Open(true);
             if (isPaused)
                 Unpause();
             else
@@ -67,7 +67,7 @@ namespace Code.Internal.UserInterface
         public void OnGameStart()
         {
             drawUIPanel.SetActive(false);
-            pauseMenuPage.Open();
+            Page.CurrentPage.Close();
             canvas.gameObject.SetActive(false);
         }
 
