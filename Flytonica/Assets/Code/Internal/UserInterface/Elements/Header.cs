@@ -16,20 +16,25 @@ namespace Code.Internal.UserInterface.Elements
 
         private void OnEnable()
         {
-            print("LOGOUT");
-            logoutButton.onClick.AddListener(Logout);
+            if (logoutButton != null)
+            {
+                logoutButton.onClick.AddListener(Logout);
+            }
+
             if (HttpClient.IsAuthorized)
                 RequestAndSetUserData();
         }
 
         private void OnDisable()
         {
-            logoutButton.onClick.RemoveListener(Logout);
+            if (logoutButton != null)
+                logoutButton.onClick.RemoveListener(Logout);
         }
 
         private void Logout()
         {
-            loginPage.Open();
+            if (loginPage != null)
+                loginPage.Open();
         }
         
         private void RequestAndSetUserData()
@@ -48,8 +53,8 @@ namespace Code.Internal.UserInterface.Elements
         private void SetData()
         {
             var data = HttpClient.UserData;
-            print(data.name);
-            nameText.text = data.name;
+            if(nameText != null)
+                nameText.text = data.name;
         }
     }
 }

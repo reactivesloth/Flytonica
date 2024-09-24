@@ -19,9 +19,7 @@ namespace Code.Internal.UserInterface.Pages
 
         [SerializeField] private Button tasksButton,
             singleScriptsButton,
-            toRoomButton,
-            deviceInfoButton,
-            selectAvatarButton;
+            toRoomButton;
 
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private AvailableScenariosSettings singleScenariosSettings;
@@ -48,7 +46,7 @@ namespace Code.Internal.UserInterface.Pages
 
             singleScriptsButton.onClick.AddListener(OnSingleScripts);
             tasksButton.onClick.AddListener(OnTaskScripts);
-            deviceInfoButton.onClick.AddListener(OnDeviceInfo);
+            //deviceInfoButton.onClick.AddListener(OnDeviceInfo);
             toRoomButton.onClick.AddListener(OnConnect);
 
             if (HttpClient.IsAuthorized)
@@ -63,7 +61,7 @@ namespace Code.Internal.UserInterface.Pages
             base.OnClose();
             singleScriptsButton.onClick.RemoveListener(OnSingleScripts);
             tasksButton.onClick.RemoveListener(OnTaskScripts);
-            deviceInfoButton.onClick.RemoveListener(OnDeviceInfo);
+            //deviceInfoButton.onClick.RemoveListener(OnDeviceInfo);
             toRoomButton.onClick.RemoveListener(OnConnect);
         }
 
