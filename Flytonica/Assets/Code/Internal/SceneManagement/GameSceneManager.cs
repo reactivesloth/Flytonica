@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Code.Internal.Drone;
 using Code.Internal.Network;
 using Code.Internal.Scenario;
@@ -17,6 +18,8 @@ namespace Code.Internal.SceneManagement
     {
         public static GameSceneManager Instance { get; private set; }
         public string CurrentGlobalScene { get; private set; }
+        public MapSettings CurrentMapSettings { get; private set; }
+        
         public bool IsPlaying { get; private set; }
 
         private void Awake()
@@ -38,6 +41,7 @@ namespace Code.Internal.SceneManagement
         
         public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
         {
+            CurrentMapSettings = sceneSettingsCurrentMap;
             var sceneName = sceneSettingsCurrentMap.loadingSceneName;
 
             if (string.IsNullOrEmpty(sceneName))
@@ -83,10 +87,25 @@ namespace Code.Internal.SceneManagement
                 UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
         }
         
-        public void Replay()
+        public async void Replay()
         {
-            /*InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
-            UnloadScene();*/
+            IsPlaying = false;
+            if (NetworkManager != null && NetworkManager.ClientManager != null)
+            {
+                NetworkManager.ClientManager.StopConnection();
+            }
+
+            await Task.Delay(500);
+
+            if (NetworkManager != null && NetworkManager.ClientManager != null)
+            {
+                NetworkManager.ClientManager.StartConnection();
+
+                await Task.Delay(500);
+
+                IsPlaying = true;
+                UIController.Instance.OnGameStart();
+            }
         }
     }
 }
