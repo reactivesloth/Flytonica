@@ -38,12 +38,15 @@ namespace Code.Internal.Scenario
         private void Next(Dictionary<string, string> result)
         {
             // Показ окна
+            
+            Time.timeScale = 0f;
             PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));
         }
 
         private void LoadNext(Dictionary<string, string> result)
         {
+            Time.timeScale = 1f;
             _results.Add(result);
             
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
@@ -68,6 +71,7 @@ namespace Code.Internal.Scenario
 
         private void EndTask(Dictionary<string, string> lastResult)
         {
+            Time.timeScale = 0f;
             _results.Add(lastResult);
             SendData();
             
