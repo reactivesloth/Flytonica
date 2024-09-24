@@ -119,7 +119,7 @@ namespace Code.Internal.UserInterface.Pages
                                         if (loadedScenarioCount >= taskData.mapconfigs.data.Count)
                                         {
                                             loadedTaskCount++;
-                                            OnTaskInit(taskInfo.id ,taskData.scenario.name, taskScenarios);
+                                            OnTaskInit(taskInfo ,taskData, taskScenarios);
                                         }
                                     });
                                 }
@@ -146,13 +146,14 @@ namespace Code.Internal.UserInterface.Pages
             scriptsPage.Open();
         }
 
-        private void OnTaskInit(int id, string taskName, List<ScenarioSettings> scenarios)
+        private void OnTaskInit(AssignedScenarioData assignedData, TaskData taskData, List<ScenarioSettings> scenarios)
         {
             var task = ScriptableObject.CreateInstance<ScenarioSettings>();
             task.settingType = SettingType.Task;
-            task.name = taskName;
+            task.scenarioType = ScenarioType.Searching;//TODO: Исправить
+            task.name = taskData.scenario.name;
             task.nestedScenarios = scenarios;
-            task.id = id;
+            task.id = assignedData.id;
 
             taskScenariosSettings.scenarios.Add(task);
         }
