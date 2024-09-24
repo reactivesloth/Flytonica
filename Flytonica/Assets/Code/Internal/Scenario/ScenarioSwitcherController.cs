@@ -74,12 +74,14 @@ namespace Code.Internal.Scenario
             Time.timeScale = 0f;
             _results.Add(lastResult);
             SendData();
-            
+            EndSession();
+        }
+        
+        public void EndSession () {
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();
             
-
             GameSceneManager.Instance.ToMenuSingle();
         }
 

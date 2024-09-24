@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Code.Internal.Scenario.Race;
+using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
@@ -11,18 +13,22 @@ namespace Code.Internal.Scenario.Searching
     {
         public string descriptionTask;
         public GameObject[] finingObjects;
+        public bool finded = false;
     }
     
     public class ScenarioSearching : MonoBehaviour
     {
         private RaceCondition _raceCondition = RaceCondition.Waiting;
-        
+
+        [SerializeField] private string collectionName;
         [SerializeField] private SearchingObject[] searchingObjects;
-        private int currentObject = 0;
-        private float _time;
+        [SerializeField] private float timer = 300f;
+        private float _timer;
+        private float _counter;
 
         private float _gazeTime;
         private float _gazeTimeNotResponceTime;
+        private int _findedCount = 0;
         
         private void Start()
         {
@@ -38,29 +44,41 @@ namespace Code.Internal.Scenario.Searching
             
             if (_raceCondition == RaceCondition.Running)
             {
-                _time += Time.deltaTime;
+                _counter += Time.deltaTime;
+                _timer -= Time.deltaTime;
+
+                if (_timer <= 0)
+                {
+                    FinishRace(false);
+                }
 
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                if (searchingObjects[currentObject] != null)
+                if (searchingObjects.Length > 0)
                 {
                     if (Physics.Raycast(ray, out var hit, 15))
                     {
-                        foreach (var finingObject in searchingObjects[currentObject].finingObjects)
+                        foreach (var searchingObject in searchingObjects)
                         {
-                            if (finingObject.GetComponent<Collider>() == hit.collider)
+                            if (!searchingObject.finded)
                             {
-                                FindObject();
-                                break;
+                                foreach (var findingObject in searchingObject.finingObjects)
+                                {
+                                    if (findingObject.GetComponent<Collider>() == hit.collider)
+                                    {
+                                        FindObject(searchingObject);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
             CancelFinding();
-            DroneHUD.Instance?.SetTime(GetResult ());
+            DroneHUD.Instance?.SetTime(GetResult (_timer));
         }
 
-        private void FindObject()
+        private void FindObject(SearchingObject o)
         {
             if (_raceCondition == RaceCondition.Running)
             {
@@ -68,9 +86,12 @@ namespace Code.Internal.Scenario.Searching
                 {
                     DroneHUD.Instance.AimElement.Flash(Color.green, 1, () =>
                     {
-                        if (currentObject + 1 >= searchingObjects.Length)
+                        o.finded = true;
+                        _findedCount += 1;
+                        
+                        if (_findedCount == searchingObjects.Length)
                         {
-                            FinishRace();
+                            FinishRace(true);
                         }
                         else
                         {
@@ -110,42 +131,50 @@ namespace Code.Internal.Scenario.Searching
         
         private void StartRace()
         {
-            _time = 0;
+            _counter = 0;
+            _timer = timer;
             _raceCondition = RaceCondition.Running;
-            var search = searchingObjects[0].descriptionTask;
             
-            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {search}." + "\nКамера работает с 15 метров.", 3);
-            DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
+            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {collectionName}." + "\nКамера работает с 15 метров.", 3);
+            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Length}]");
             
         }
 
-        private void FinishRace()
+        private void FinishRace(bool success)
         {
             _raceCondition = RaceCondition.Finished;
-            DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
+            DroneHUD.Instance.ClearMessage();
             DroneHUD.Instance.SetTask("Задание выполнено!");
             
-            ScenarioSwitcherController.Instance.NextOrEnd();
+            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты. \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount} из {searchingObjects.Length} объектов.]",
+                null, "Выйти в главное меню", Color.red, Color.white, () =>
+                {
+                    ScenarioSwitcherController.Instance.EndSession();
+                }, 
+                null, "Продолжить", Color.green, Color.black, () =>
+                {
+                    Dictionary<string, string> result = new Dictionary<string, string>();
+
+                    foreach (var searchingObject in searchingObjects)
+                    {
+                        result.Add("Время", GetResult(_counter));
+                        result.Add(searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
+                    }
+                    
+                    ScenarioSwitcherController.Instance.NextOrEnd(result);
+                });
         }
         
         private void UpdateTask()
         {
-            currentObject++;
-            var search = searchingObjects[currentObject].descriptionTask;
-            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Отличная работа! А теперь найдите {search}");
-            DroneHUD.Instance.SetTask($"Найдите и сфотографируйте объект: {search}");
+            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Length}]");
         }
         
-        public string GetResult()
+        public string GetResult(float t)
         {
-            TimeSpan time = TimeSpan.FromSeconds(GetResultInSeconds());
-            DateTime dateTime = DateTime.Today.Add(time);
+            TimeSpan timeSpan = TimeSpan.FromSeconds(t);
+            DateTime dateTime = DateTime.Today.Add(timeSpan);
             return dateTime.ToString("mm:ss");
-        }
-
-        public float GetResultInSeconds()
-        {
-            return _time;
         }
     }
 }
