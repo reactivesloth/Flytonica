@@ -158,7 +158,7 @@ namespace Code.Internal.Scenario.Searching
                         result.Add(searchingObject.finingObject.name, searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
-                    ScenarioSwitcherController.Instance.NextOrEnd();
+                    ScenarioSwitcherController.Instance.NextOrEnd(result);
                 });
         }
         
