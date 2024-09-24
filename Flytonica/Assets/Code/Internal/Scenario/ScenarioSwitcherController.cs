@@ -118,10 +118,9 @@ namespace Code.Internal.Scenario
                 }
             }
 
-            string json = BuildJsonString(flatDictionary);
-            
+            var json = BuildJsonString(flatDictionary);
             print(json);
-           Send(json);
+            Send(json);
         }
 
         private void Send(string result)
