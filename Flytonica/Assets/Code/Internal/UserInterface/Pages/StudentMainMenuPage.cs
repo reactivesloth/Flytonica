@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Code.Internal.API;
@@ -50,10 +51,14 @@ namespace Code.Internal.UserInterface.Pages
             toRoomButton.onClick.AddListener(OnConnect);
 
             if (HttpClient.IsAuthorized)
+            {
                 RequestAndSetUserData();
+                //GetScenarios();
+            }
             else
                 SetDemo();
 
+            //GetScenarios();
         }
 
         protected override void OnClose()
@@ -92,15 +97,22 @@ namespace Code.Internal.UserInterface.Pages
                                         var scenarioSettingsData =
                                             JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
 
-                                        var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenario.id,
-                                            scenarioSettingsData.name,
-                                            scenarioSettingsData.description, scenarioSettingsData.typeId,
-                                            maps.maps[scenarioSettingsData.mapId],
-                                            drones.drones[scenarioSettingsData.droneId],
-                                            drones.drones[scenarioSettingsData.droneId]
-                                                .flightModes[scenarioSettingsData.droneModeId]);
-
-                                        taskScenarios.Add(scenarioSetting);
+                                        try
+                                        {
+                                            var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(
+                                                taskInfo.id,
+                                                scenarioSettingsData.name,
+                                                scenarioSettingsData.description, scenarioSettingsData.typeId,
+                                                maps.maps[scenarioSettingsData.mapId],
+                                                drones.drones[scenarioSettingsData.droneId],
+                                                drones.drones[scenarioSettingsData.droneId]
+                                                    .flightModes[scenarioSettingsData.droneModeId]);
+                                            taskScenarios.Add(scenarioSetting);
+                                        }
+                                        catch (ArgumentOutOfRangeException e)
+                                        {
+                                            Debug.LogError(e);
+                                        }
                                     }, Debug.LogError, () =>
                                     {
                                         loadedScenarioCount++;

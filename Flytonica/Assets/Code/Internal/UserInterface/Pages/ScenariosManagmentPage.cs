@@ -148,13 +148,22 @@ namespace Code.Internal.UserInterface.Pages
                             {
                                 var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
                                 print($"{loadedScenariosCount}.{settings.name}");
-                                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id,
-                                    settings.name,
-                                    settings.description, settings.typeId,
-                                    maps.maps[settings.mapId], drones.drones[settings.droneId],
-                                    drones.drones[settings.droneId].flightModes[settings.droneModeId]);
 
-                                taskScenariosSettings.scenarios.Add(scenarioSetting);
+                                try
+                                {
+                                    var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id,
+                                        settings.name,
+                                        settings.description, settings.typeId,
+                                        maps.maps[settings.mapId], drones.drones[settings.droneId],
+                                        drones.drones[settings.droneId].flightModes[settings.droneModeId]);
+
+                                    taskScenariosSettings.scenarios.Add(scenarioSetting);
+                                }
+                                catch (ArgumentOutOfRangeException e)
+                                {
+                                    Debug.LogError(e);
+                                }
+                                
 
                                 loadedScenariosCount++;
                                 if (loadedScenariosCount >= scenarios.data.Count)
