@@ -88,6 +88,7 @@ namespace Code.Internal.Scenario.Searching
                     {
                         o.finded = true;
                         _findedCount += 1;
+                        DroneHUD.Instance.SetMessage(MessageType.Normal, $"Найден объект {o.descriptionTask}", 3);
                         
                         if (_findedCount == searchingObjects.Length)
                         {
@@ -151,7 +152,7 @@ namespace Code.Internal.Scenario.Searching
             {
                 ojbectResult += "\n" + searchingObject.descriptionTask + (success ? "Найден" : "Не найден");
             }
-
+            
             PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount} из {searchingObjects.Length} объектов: {ojbectResult}]",
                 null, "Выйти в главное меню", Color.red, Color.white, () =>
                 {
