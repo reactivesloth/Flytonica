@@ -162,9 +162,10 @@ namespace Code.Internal.Scenario.Searching
                 {
                     Dictionary<string, string> result = new Dictionary<string, string>();
 
+                    
+                    result.Add("Время", GetResult(_counter));
                     foreach (var searchingObject in searchingObjects)
                     {
-                        result.Add("Время", GetResult(_counter));
                         result.Add(searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
