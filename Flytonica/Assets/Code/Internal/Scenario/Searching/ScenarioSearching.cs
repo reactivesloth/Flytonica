@@ -12,7 +12,7 @@ namespace Code.Internal.Scenario.Searching
     public class SearchingObject
     {
         public string descriptionTask;
-        public GameObject finingObject;
+        public GameObject[] finingObjects;
         public bool finded = false;
     }
     
@@ -61,10 +61,13 @@ namespace Code.Internal.Scenario.Searching
                         {
                             if (!searchingObject.finded)
                             {
-                                if (searchingObject.finingObject.GetComponent<Collider>() == hit.collider)
+                                foreach (var findingObject in searchingObject.finingObjects)
                                 {
-                                    FindObject(searchingObject);
-                                    break;
+                                    if (findingObject.GetComponent<Collider>() == hit.collider)
+                                    {
+                                        FindObject(searchingObject);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -143,10 +146,10 @@ namespace Code.Internal.Scenario.Searching
             DroneHUD.Instance.ClearMessage();
             DroneHUD.Instance.SetTask("Задание выполнено!");
             
-            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? "Подздравляем! Вы нашли все объекты" : $"Вы нашли [{_findedCount} из {searchingObjects.Length} объектов]",
+            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты. \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount} из {searchingObjects.Length} объектов.]",
                 null, "Выйти в главное меню", Color.red, Color.white, () =>
                 {
-                    GameSceneManager.Instance.ToMenuSingle();
+                    ScenarioSwitcherController.Instance.EndSession();
                 }, 
                 null, "Продолжить", Color.green, Color.black, () =>
                 {
@@ -155,7 +158,7 @@ namespace Code.Internal.Scenario.Searching
                     foreach (var searchingObject in searchingObjects)
                     {
                         result.Add("Время", GetResult(_counter));
-                        result.Add(searchingObject.finingObject.name, searchingObject.finded ? "Найден" : "Не найден");
+                        result.Add(searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
                     ScenarioSwitcherController.Instance.NextOrEnd(result);

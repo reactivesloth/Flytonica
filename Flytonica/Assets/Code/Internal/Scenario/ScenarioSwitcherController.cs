@@ -70,12 +70,14 @@ namespace Code.Internal.Scenario
         {
             _results.Add(lastResult);
             SendData();
-            
+            EndSession();
+        }
+        
+        public void EndSession () {
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();
             
-
             GameSceneManager.Instance.ToMenuSingle();
         }
 
