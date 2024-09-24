@@ -5,6 +5,7 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Code.Internal.Scenario.Searching
 {
@@ -45,11 +46,14 @@ namespace Code.Internal.Scenario.Searching
             if (_raceCondition == RaceCondition.Running)
             {
                 _counter += Time.deltaTime;
-                _timer -= Time.deltaTime;
-
-                if (_timer <= 0)
+                if (timer > 0)
                 {
-                    FinishRace(false);
+                    _timer -= Time.deltaTime;
+
+                    if (_timer <= 0)
+                    {
+                        FinishRace(false);
+                    }
                 }
 
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
@@ -75,7 +79,11 @@ namespace Code.Internal.Scenario.Searching
                 }
             }
             CancelFinding();
-            DroneHUD.Instance?.SetTime(GetResult (_timer));
+            
+            if (timer > 0)
+                DroneHUD.Instance?.SetTime(GetResult (_timer));
+            else
+                DroneHUD.Instance?.SetTime(GetResult (_counter));
         }
 
         private void FindObject(SearchingObject o)
@@ -133,7 +141,11 @@ namespace Code.Internal.Scenario.Searching
         private void StartRace()
         {
             _counter = 0;
-            _timer = timer;
+            if (timer > 0)
+            {
+                _timer = timer;
+            }
+
             _raceCondition = RaceCondition.Running;
             
             DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {collectionName}." + "\nКамера работает с 15 метров.", 3);
@@ -150,7 +162,7 @@ namespace Code.Internal.Scenario.Searching
             string ojbectResult = string.Empty;
             foreach (var searchingObject in searchingObjects)
             {
-                ojbectResult += "\n" + searchingObject.descriptionTask + (searchingObject.finded ? "Найден" : "Не найден");
+                ojbectResult += "\n" + searchingObject.descriptionTask + (searchingObject.finded ? ": Найден" : ": Не найден");
             }
             
             PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount}/{searchingObjects.Length}] объектов: {ojbectResult}",
@@ -162,11 +174,10 @@ namespace Code.Internal.Scenario.Searching
                 {
                     Dictionary<string, string> result = new Dictionary<string, string>();
 
-                    
-                    result.Add("Время", GetResult(_counter));
+                    result.Add($"{SceneManager.GetActiveScene().name}_Время", GetResult(_counter));
                     foreach (var searchingObject in searchingObjects)
                     {
-                        result.Add(searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
+                        result.Add($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
                     ScenarioSwitcherController.Instance.NextOrEnd(result);
