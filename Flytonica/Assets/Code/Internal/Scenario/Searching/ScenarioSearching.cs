@@ -145,15 +145,15 @@ namespace Code.Internal.Scenario.Searching
         {
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance.ClearMessage();
-            DroneHUD.Instance.SetTask("Задание выполнено!");
+            DroneHUD.Instance.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
 
             string ojbectResult = string.Empty;
             foreach (var searchingObject in searchingObjects)
             {
-                ojbectResult += "\n" + searchingObject.descriptionTask + (success ? "Найден" : "Не найден");
+                ojbectResult += "\n" + searchingObject.descriptionTask + (searchingObject.finded ? "Найден" : "Не найден");
             }
             
-            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount} из {searchingObjects.Length} объектов: {ojbectResult}]",
+            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount}/{searchingObjects.Length}] объектов: {ojbectResult}",
                 null, "Выйти в главное меню", Color.red, Color.white, () =>
                 {
                     ScenarioSwitcherController.Instance.EndSession();

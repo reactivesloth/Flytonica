@@ -3,6 +3,7 @@ using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
+using Code.Internal.UserInterface.Pages;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
@@ -72,7 +73,7 @@ namespace Code.Internal.Scenario
                     DroneHUD.Instance.SetMessage(MessageType.Error, $"Вы покинули границу локации, сценарий будет перезапущен через {failTime.ToString("F2")} секунд", 0.1f);
                     if (failTime <= 0)
                     {
-                        // reset;
+                        GameSceneManager.Instance.Replay();
                     }
                     break;
             }   
