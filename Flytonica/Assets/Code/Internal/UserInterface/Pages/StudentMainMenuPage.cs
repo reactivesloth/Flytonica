@@ -55,7 +55,7 @@ namespace Code.Internal.UserInterface.Pages
                 RequestAndSetUserData();
             }
             else
-                SetDemo();  
+                SetDemo();
         }
 
         protected override void OnClose()
@@ -66,8 +66,8 @@ namespace Code.Internal.UserInterface.Pages
             toRoomButton.onClick.RemoveListener(OnConnect);
         }
 
-        
-        //Выполняет функцию Выхода
+
+        // Executes the logout function
         protected override void OnBackClick()
         {
             HttpClient.Logout();
@@ -115,12 +115,11 @@ namespace Code.Internal.UserInterface.Pages
             var tasksInfo = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response);
             var tasksData = tasksInfo.data;
 
-            var taskScenariosList = new List<ScenarioSettings>(new ScenarioSettings[tasksData.Count]);
+            var taskScenariosList = new List<ScenarioSettings>();
 
-            for (int taskIndex = 0; taskIndex < tasksData.Count; taskIndex++)
+            foreach (var taskInfo in tasksData)
             {
-                var taskInfo = tasksData[taskIndex];
-                yield return StartCoroutine(ProcessTask(taskInfo, taskIndex, taskScenariosList));
+                yield return StartCoroutine(ProcessTask(taskInfo, taskScenariosList));
             }
 
             taskScenariosSettings.scenarios = taskScenariosList;
@@ -129,8 +128,7 @@ namespace Code.Internal.UserInterface.Pages
             onComplete?.Invoke();
         }
 
-        private IEnumerator ProcessTask(AssignedScenarioData taskInfo, int taskIndex,
-            List<ScenarioSettings> taskScenariosList)
+        private IEnumerator ProcessTask(AssignedScenarioData taskInfo, List<ScenarioSettings> taskScenariosList)
         {
             string taskUrl = LinkConstants.ScenarioGetUrl(taskInfo.scenario_id);
 
@@ -158,26 +156,32 @@ namespace Code.Internal.UserInterface.Pages
             var taskData = JsonUtility.FromJson<TaskData>(taskResponse);
             var scenariosData = taskData.mapconfigs.data;
 
-            var taskScenarios = new List<ScenarioSettings>(new ScenarioSettings[scenariosData.Count]);
+            var taskScenarios = new List<ScenarioSettings>();
 
-            for (int scenarioIndex = 0; scenarioIndex < scenariosData.Count; scenarioIndex++)
+            foreach (var scenario in scenariosData)
             {
-                var scenario = scenariosData[scenarioIndex];
-                yield return StartCoroutine(ProcessScenario(scenario, taskInfo.id, scenarioIndex, taskScenarios));
+                yield return StartCoroutine(ProcessScenario(scenario, taskInfo.id, taskScenarios));
             }
 
-            var task = ScriptableObject.CreateInstance<ScenarioSettings>();
-            task.settingType = SettingType.Task;
-            task.scenarioType = ScenarioType.Searching;
-            task.name = taskData.scenario.name;
-            task.nestedScenarios = taskScenarios;
-            task.id = taskInfo.id;
+            // Check if the task has any valid scenarios
+            if (taskScenarios.Count > 0)
+            {
+                var task = ScriptableObject.CreateInstance<ScenarioSettings>();
+                task.settingType = SettingType.Task;
+                task.scenarioType = ScenarioType.Searching; // Adjust as necessary
+                task.name = taskData.scenario.name;
+                task.nestedScenarios = taskScenarios;
+                task.id = taskInfo.id;
 
-            taskScenariosList[taskIndex] = task;
+                taskScenariosList.Add(task);
+            }
+            else
+            {
+                Debug.Log($"Task '{taskData.scenario.name}' has no nested scenarios and will be skipped.");
+            }
         }
 
-        private IEnumerator ProcessScenario(ScenarioData scenario, int taskId, int scenarioIndex,
-            List<ScenarioSettings> taskScenarios)
+        private IEnumerator ProcessScenario(ScenarioData scenario, int taskId, List<ScenarioSettings> taskScenarios)
         {
             string scenarioUrl = LinkConstants.GetFile(scenario.file_file_path);
 
@@ -215,9 +219,9 @@ namespace Code.Internal.UserInterface.Pages
                     drones.drones[scenarioSettingsData.droneId],
                     drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId]);
 
-                taskScenarios[scenarioIndex] = scenarioSetting;
+                taskScenarios.Add(scenarioSetting);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (Exception e)
             {
                 Debug.LogError(e);
             }
@@ -240,18 +244,6 @@ namespace Code.Internal.UserInterface.Pages
             });
         }
 
-        private void OnTaskInit(AssignedScenarioData assignedData, TaskData taskData, List<ScenarioSettings> scenarios)
-        {
-            var task = ScriptableObject.CreateInstance<ScenarioSettings>();
-            task.settingType = SettingType.Task;
-            task.scenarioType = ScenarioType.Searching; //TODO: Исправить
-            task.name = taskData.scenario.name;
-            task.nestedScenarios = scenarios;
-            task.id = assignedData.id;
-
-            taskScenariosSettings.scenarios.Add(task);
-        }
-
         private void OnConnect()
         {
             InstanceFinder.ClientManager.StartConnection(_currentIPEndPoint.Address.ToString());
@@ -271,7 +263,7 @@ namespace Code.Internal.UserInterface.Pages
                     {
                         HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
                         SetData();
-                        GetScenarios();
+                        // GetScenarios(); // No longer needed here
                     },
                     Debug.LogError);
             else
