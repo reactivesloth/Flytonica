@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
@@ -134,51 +135,106 @@ namespace Code.Internal.UserInterface.Pages
         /// </summary>
         private void LoadScenariosList()
         {
-            HttpClient.Get(
-                LinkConstants.MapConfigMultiUrl(new Dictionary<string, string>
-                    { { "page", "1" }, { "itemsPerPage", "9999" } }), response =>
+            StartCoroutine(LoadScenariosListCoroutine());
+        }
+
+        private IEnumerator LoadScenariosListCoroutine()
+        {
+            taskScenariosSettings.scenarios.Clear();
+
+            // Build the URL for the initial request
+            string url = LinkConstants.MapConfigMultiUrl(new Dictionary<string, string>
+                { { "page", "1" }, { "itemsPerPage", "9999" } });
+
+            string response = null;
+            bool requestCompleted = false;
+
+            // Make the initial request to get the list of scenarios
+            HttpClient.Get(url,
+                onSuccess: data =>
                 {
-                    taskScenariosSettings.scenarios.Clear();
-                    var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response);
-                    var loadedScenariosCount = 0;
+                    response = data;
+                    requestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    requestCompleted = true;
+                });
 
-                    foreach (var scenarioData in scenarios.data)
-                    {
-                        HttpClient.Get(LinkConstants.GetFile(scenarioData.file_file_path), settingsJson =>
-                            {
-                                var settings = JsonUtility.FromJson<ScenarioSettingsData>(settingsJson);
-                                print($"{loadedScenariosCount}.{settings.name}");
+            // Wait for the initial request to complete
+            while (!requestCompleted)
+                yield return null;
 
-                                try
-                                {
-                                    var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id,
-                                        settings.name,
-                                        settings.description, settings.typeId,
-                                        maps.maps[settings.mapId], drones.drones[settings.droneId],
-                                        drones.drones[settings.droneId].flightModes[settings.droneModeId]);
+            if (string.IsNullOrEmpty(response))
+                yield break;
 
-                                    taskScenariosSettings.scenarios.Add(scenarioSetting);
-                                }
-                                catch (ArgumentOutOfRangeException e)
-                                {
-                                    Debug.LogError(e);
-                                }
-                                
+            var scenarios = JsonUtility.FromJson<MultiScenarioDataResponse>(response);
+            var scenariosData = scenarios.data;
+            var totalScenarios = scenariosData.Count;
 
-                                loadedScenariosCount++;
-                                if (loadedScenariosCount >= scenarios.data.Count)
-                                    InitViewList();
-                            },
-                            error =>
-                            {
-                                Debug.LogError(error);
-                                loadedScenariosCount++;
+            // Create a list with fixed size to hold ScenarioSettings
+            var scenarioSettingsList = new List<ScenarioSettings>(new ScenarioSettings[totalScenarios]);
 
-                                if (loadedScenariosCount >= scenarios.data.Count)
-                                    InitViewList();
-                            });
-                    }
-                }, Debug.LogError);
+            // Iterate over the scenarios and process each one sequentially to maintain order
+            for (int index = 0; index < totalScenarios; index++)
+            {
+                var scenarioData = scenariosData[index];
+                yield return StartCoroutine(ProcessScenario(scenarioData, index, scenarioSettingsList));
+            }
+
+            // Assign the ordered list to taskScenariosSettings.scenarios
+            taskScenariosSettings.scenarios = scenarioSettingsList;
+
+            // Now initialize the view list
+            InitViewList();
+        }
+
+        private IEnumerator ProcessScenario(ScenarioData scenarioData, int index, List<ScenarioSettings> scenarioSettingsList)
+        {
+            string scenarioUrl = LinkConstants.GetFile(scenarioData.file_file_path);
+
+            string scenarioResponse = null;
+            bool scenarioRequestCompleted = false;
+
+            // Make the request to get scenario file data
+            HttpClient.Get(scenarioUrl,
+                onSuccess: data =>
+                {
+                    scenarioResponse = data;
+                    scenarioRequestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    scenarioRequestCompleted = true;
+                });
+
+            // Wait for the scenario file request to complete
+            while (!scenarioRequestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(scenarioResponse))
+                yield break;
+
+            var settings = JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
+            print($"{index}.{settings.name}");
+
+            try
+            {
+                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(scenarioData.id,
+                    settings.name,
+                    settings.description, settings.typeId,
+                    maps.maps[settings.mapId], drones.drones[settings.droneId],
+                    drones.drones[settings.droneId].flightModes[settings.droneModeId]);
+
+                // Store in the correct index to preserve order
+                scenarioSettingsList[index] = scenarioSetting;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private void InitViewList()
@@ -189,6 +245,8 @@ namespace Code.Internal.UserInterface.Pages
 
             foreach (var scenarioSettings in scenarios)
             {
+                if(!scenarioSettings) continue;
+                
                 var display = new[]
                 {
                     scenarioSettings.name, scenarioSettings.currentMap.name, scenarioSettings.scenarioType.GetName(),

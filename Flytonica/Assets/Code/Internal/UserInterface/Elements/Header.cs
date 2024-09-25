@@ -1,4 +1,3 @@
-using System;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.UserInterface.Pages;
@@ -16,10 +15,7 @@ namespace Code.Internal.UserInterface.Elements
 
         private void OnEnable()
         {
-            if (logoutButton != null)
-            {
-                logoutButton.onClick.AddListener(Logout);
-            }
+            logoutButton?.onClick.AddListener(Logout);
 
             if (HttpClient.IsAuthorized)
                 RequestAndSetUserData();
@@ -27,16 +23,15 @@ namespace Code.Internal.UserInterface.Elements
 
         private void OnDisable()
         {
-            if (logoutButton != null)
-                logoutButton.onClick.RemoveListener(Logout);
+            logoutButton?.onClick.RemoveListener(Logout);
         }
 
         private void Logout()
         {
-            if (loginPage != null)
-                loginPage.Open();
+            HttpClient.Logout();
+            loginPage?.Open();
         }
-        
+
         private void RequestAndSetUserData()
         {
             if (HttpClient.UserData == null)
@@ -53,7 +48,7 @@ namespace Code.Internal.UserInterface.Elements
         private void SetData()
         {
             var data = HttpClient.UserData;
-            if(nameText != null)
+            if (nameText != null)
                 nameText.text = data.name;
         }
     }

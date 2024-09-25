@@ -9,14 +9,18 @@ namespace Code.Internal.API
 {
     public class HttpClient : MonoBehaviour
     {
-        private static AuthResponseData _authData;
-
+        public static AuthResponseData AuthData { get; private set; }
         public static UserData UserData { get; private set; }
-        public static bool IsAuthorized => _authData != null;
+        public static bool IsAuthorized => AuthData != null;
 
-        public static void SetAuthData(AuthResponseData authData) => _authData = authData;
+        public static void SetAuthData(AuthResponseData authData) => AuthData = authData;
         public static void SetUserData(UserData userData) => UserData = userData;
 
+        public static void Logout()
+        {
+            AuthData = null;
+            UserData = null;
+        }
 
         public static void Get(string url, Action<string> onSuccess = null, Action<string> onError = null, Action callback= null)
         {
@@ -62,7 +66,7 @@ namespace Code.Internal.API
                 request.SetRequestHeader("Content-Type", "application/json");
             }
 
-            request.SetRequestHeader("Authorization", "Bearer " + _authData?.access_token);
+            request.SetRequestHeader("Authorization", "Bearer " + AuthData?.access_token);
 
             request.downloadHandler = new DownloadHandlerBuffer();
 
@@ -86,7 +90,7 @@ namespace Code.Internal.API
         {
             using (UnityWebRequest request = UnityWebRequest.Post(url, formData))
             {
-                request.SetRequestHeader("Authorization", "Bearer " + _authData?.access_token);
+                request.SetRequestHeader("Authorization", "Bearer " + AuthData?.access_token);
 
                 yield return request.SendWebRequest();
 

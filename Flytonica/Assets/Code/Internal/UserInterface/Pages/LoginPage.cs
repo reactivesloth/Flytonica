@@ -42,6 +42,9 @@ namespace Code.Internal.UserInterface.Pages
             LoadPrefs();
             loginButton.onClick.AddListener(OnLogin);
             demoButton.onClick.AddListener(OnDemo);
+            
+            if(HttpClient.IsAuthorized)
+                Login();
         }
 
         protected override void OnClose()
@@ -68,7 +71,12 @@ namespace Code.Internal.UserInterface.Pages
             var authData = JsonUtility.FromJson<AuthResponseData>(response);
             HttpClient.SetAuthData(authData);
 
-            switch (authData.type)
+            Login();
+        }
+
+        private void Login()
+        {
+            switch (HttpClient.AuthData.type)
             {
                 case UserType.Teacher:
                     SetPrefs();
