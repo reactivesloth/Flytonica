@@ -44,7 +44,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             _data = dataContainer;
             _title = title;
-            MapEditor.MapEditor.Instance.LoadMapEditor(_data.mapId);
+            MapEditor.MapEditor.Instance.LoadMapEditor(_data.mapId, _data.typeId);
         }
         
         private void OnLeaveButtonClick()

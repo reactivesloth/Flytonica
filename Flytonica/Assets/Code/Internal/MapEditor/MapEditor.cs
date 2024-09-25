@@ -28,12 +28,13 @@ namespace Code.Internal.MapEditor
             }
         }
         
-        public void LoadMapEditor(int sceneIndex)
+        public void LoadMapEditor(int sceneIndex, ScenarioType type)
         {
             _savedSceneName = _mapsSettings.maps[sceneIndex].loadingSceneName;
             _isEnabled = true;
             _camera.gameObject.SetActive(true);
             SceneManager.LoadScene(_savedSceneName, LoadSceneMode.Additive);
+            MapEditorUI.Instance.InitializePanels(type);
         }
 
         public void UnloadMapEditor()
