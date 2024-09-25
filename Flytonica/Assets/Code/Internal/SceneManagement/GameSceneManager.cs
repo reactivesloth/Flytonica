@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Code.Internal.Drone;
-using Code.Internal.Network;
-using Code.Internal.Scenario;
 using Code.Internal.UserInterface;
 using FishNet;
-using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using UnityEngine;
@@ -100,11 +96,9 @@ namespace Code.Internal.SceneManagement
             if (NetworkManager != null && NetworkManager.ClientManager != null)
             {
                 NetworkManager.ClientManager.StartConnection();
-
                 await Task.Delay(500);
-
-                IsPlaying = true;
                 UIController.Instance.OnGameStart();
+                IsPlaying = true;
             }
         }
     }
