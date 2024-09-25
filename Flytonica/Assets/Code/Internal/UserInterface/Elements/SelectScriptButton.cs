@@ -54,6 +54,7 @@ namespace Code.Internal.UserInterface.Elements
             selectToggle.gameObject.SetActive(isOnToggle);
 
             numberText.text = number;
+            print(settings);
             titleText.text = settings.name;
 
             if (isTaskInit && ParentButton != null)

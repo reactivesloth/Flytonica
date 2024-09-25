@@ -109,8 +109,6 @@ namespace Code.Internal.Network
         [TargetRpc]
         private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
         {
-            //if (connection.ClientId == 0 && sceneSettings.isNet)
-                
             print(sceneSettings);
             var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(scenarioSettingsJson);
             var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,

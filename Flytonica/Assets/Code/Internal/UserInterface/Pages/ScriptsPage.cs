@@ -73,10 +73,6 @@ namespace Code.Internal.UserInterface.Pages
                     scenarioButton.ToggleChanged += OnToggleChanged;
                 }
             }
-
-            /*var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
-            select?.Select();
-            OnSelect(select);*/
         }
 
         private void Clear()

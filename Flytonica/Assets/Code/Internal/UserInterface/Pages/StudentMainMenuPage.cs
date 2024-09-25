@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -47,18 +48,14 @@ namespace Code.Internal.UserInterface.Pages
 
             singleScriptsButton.onClick.AddListener(OnSingleScripts);
             tasksButton.onClick.AddListener(OnTaskScripts);
-            //deviceInfoButton.onClick.AddListener(OnDeviceInfo);
             toRoomButton.onClick.AddListener(OnConnect);
 
             if (HttpClient.IsAuthorized)
             {
                 RequestAndSetUserData();
-                //GetScenarios();
             }
             else
-                SetDemo();
-
-            //GetScenarios();
+                SetDemo();  
         }
 
         protected override void OnClose()
@@ -66,73 +63,167 @@ namespace Code.Internal.UserInterface.Pages
             base.OnClose();
             singleScriptsButton.onClick.RemoveListener(OnSingleScripts);
             tasksButton.onClick.RemoveListener(OnTaskScripts);
-            //deviceInfoButton.onClick.RemoveListener(OnDeviceInfo);
             toRoomButton.onClick.RemoveListener(OnConnect);
         }
 
-        private void GetScenarios()
+        
+        //Выполняет функцию Выхода
+        protected override void OnBackClick()
         {
-            HttpClient.Get(
-                LinkConstants.UserScenarioUrl(HttpClient.UserData.id,
-                    new Dictionary<string, string> { { "status", "0" },{ "limit", "9999" }, { "page", "1" }}),
-                response =>
-                {
-                    taskScenariosSettings.scenarios.Clear();
-
-                    var tasksInfo = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response);
-                    var loadedTaskCount = 0;
-
-                    foreach (var taskInfo in tasksInfo.data)
-                    {
-                        HttpClient.Get(LinkConstants.ScenarioGetUrl(taskInfo.scenario_id), taskResponse =>
-                            {
-                                var taskData = JsonUtility.FromJson<TaskData>(taskResponse);
-
-                                var taskScenarios = new List<ScenarioSettings>(); // Список сценариев в задании
-                                var loadedScenarioCount = 0;
-                                foreach (var scenario in taskData.mapconfigs.data)
-                                {
-                                    HttpClient.Get(LinkConstants.GetFile(scenario.file_file_path), scenarioResponse =>
-                                    {
-                                        var scenarioSettingsData =
-                                            JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
-
-                                        try
-                                        {
-                                            var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(
-                                                taskInfo.id,
-                                                scenarioSettingsData.name,
-                                                scenarioSettingsData.description, scenarioSettingsData.typeId,
-                                                maps.maps[scenarioSettingsData.mapId],
-                                                drones.drones[scenarioSettingsData.droneId],
-                                                drones.drones[scenarioSettingsData.droneId]
-                                                    .flightModes[scenarioSettingsData.droneModeId]);
-                                            taskScenarios.Add(scenarioSetting);
-                                        }
-                                        catch (ArgumentOutOfRangeException e)
-                                        {
-                                            Debug.LogError(e);
-                                        }
-                                    }, Debug.LogError, () =>
-                                    {
-                                        loadedScenarioCount++;
-                                        if (loadedScenarioCount >= taskData.mapconfigs.data.Count)
-                                        {
-                                            loadedTaskCount++;
-                                            OnTaskInit(taskInfo ,taskData, taskScenarios);
-                                        }
-                                    });
-                                }
-                            },
-                            error => { Debug.LogError(error); }, () =>
-                            {
-                                if (loadedTaskCount >= tasksInfo.data.Count)
-                                    tasksButton.interactable = true;
-                            });
-                    }
-                },
-                Debug.LogError);
+            HttpClient.Logout();
+            base.OnBackClick();
         }
+
+        #region Tasks Get
+
+        private void GetScenarios(Action onComplete = null)
+        {
+            StartCoroutine(GetScenariosCoroutine(onComplete));
+        }
+
+        private IEnumerator GetScenariosCoroutine(Action onComplete)
+        {
+            taskScenariosSettings.scenarios.Clear();
+
+            string url = LinkConstants.UserScenarioUrl(HttpClient.UserData.id,
+                new Dictionary<string, string> { { "status", "0" }, { "limit", "9999" }, { "page", "1" } });
+
+            string response = null;
+            bool requestCompleted = false;
+
+            HttpClient.Get(url,
+                onSuccess: data =>
+                {
+                    response = data;
+                    requestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    requestCompleted = true;
+                });
+
+            while (!requestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(response))
+            {
+                onComplete?.Invoke();
+                yield break;
+            }
+
+            var tasksInfo = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response);
+            var tasksData = tasksInfo.data;
+
+            var taskScenariosList = new List<ScenarioSettings>(new ScenarioSettings[tasksData.Count]);
+
+            for (int taskIndex = 0; taskIndex < tasksData.Count; taskIndex++)
+            {
+                var taskInfo = tasksData[taskIndex];
+                yield return StartCoroutine(ProcessTask(taskInfo, taskIndex, taskScenariosList));
+            }
+
+            taskScenariosSettings.scenarios = taskScenariosList;
+            tasksButton.interactable = true;
+
+            onComplete?.Invoke();
+        }
+
+        private IEnumerator ProcessTask(AssignedScenarioData taskInfo, int taskIndex,
+            List<ScenarioSettings> taskScenariosList)
+        {
+            string taskUrl = LinkConstants.ScenarioGetUrl(taskInfo.scenario_id);
+
+            string taskResponse = null;
+            bool taskRequestCompleted = false;
+
+            HttpClient.Get(taskUrl,
+                onSuccess: data =>
+                {
+                    taskResponse = data;
+                    taskRequestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    taskRequestCompleted = true;
+                });
+
+            while (!taskRequestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(taskResponse))
+                yield break;
+
+            var taskData = JsonUtility.FromJson<TaskData>(taskResponse);
+            var scenariosData = taskData.mapconfigs.data;
+
+            var taskScenarios = new List<ScenarioSettings>(new ScenarioSettings[scenariosData.Count]);
+
+            for (int scenarioIndex = 0; scenarioIndex < scenariosData.Count; scenarioIndex++)
+            {
+                var scenario = scenariosData[scenarioIndex];
+                yield return StartCoroutine(ProcessScenario(scenario, taskInfo.id, scenarioIndex, taskScenarios));
+            }
+
+            var task = ScriptableObject.CreateInstance<ScenarioSettings>();
+            task.settingType = SettingType.Task;
+            task.scenarioType = ScenarioType.Searching;
+            task.name = taskData.scenario.name;
+            task.nestedScenarios = taskScenarios;
+            task.id = taskInfo.id;
+
+            taskScenariosList[taskIndex] = task;
+        }
+
+        private IEnumerator ProcessScenario(ScenarioData scenario, int taskId, int scenarioIndex,
+            List<ScenarioSettings> taskScenarios)
+        {
+            string scenarioUrl = LinkConstants.GetFile(scenario.file_file_path);
+
+            string scenarioResponse = null;
+            bool scenarioRequestCompleted = false;
+
+            HttpClient.Get(scenarioUrl,
+                onSuccess: data =>
+                {
+                    scenarioResponse = data;
+                    scenarioRequestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    scenarioRequestCompleted = true;
+                });
+
+            while (!scenarioRequestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(scenarioResponse))
+                yield break;
+
+            var scenarioSettingsData = JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
+
+            try
+            {
+                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(
+                    taskId,
+                    scenarioSettingsData.name,
+                    scenarioSettingsData.description,
+                    scenarioSettingsData.typeId,
+                    maps.maps[scenarioSettingsData.mapId],
+                    drones.drones[scenarioSettingsData.droneId],
+                    drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId]);
+
+                taskScenarios[scenarioIndex] = scenarioSetting;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
+        #endregion
 
         private void OnSingleScripts()
         {
@@ -142,24 +233,23 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnTaskScripts()
         {
-            scriptsPage.Init(taskScenariosSettings.scenarios, true);
-            scriptsPage.Open();
+            GetScenarios(() =>
+            {
+                scriptsPage.Init(taskScenariosSettings.scenarios, true);
+                scriptsPage.Open();
+            });
         }
 
         private void OnTaskInit(AssignedScenarioData assignedData, TaskData taskData, List<ScenarioSettings> scenarios)
         {
             var task = ScriptableObject.CreateInstance<ScenarioSettings>();
             task.settingType = SettingType.Task;
-            task.scenarioType = ScenarioType.Searching;//TODO: Исправить
+            task.scenarioType = ScenarioType.Searching; //TODO: Исправить
             task.name = taskData.scenario.name;
             task.nestedScenarios = scenarios;
             task.id = assignedData.id;
 
             taskScenariosSettings.scenarios.Add(task);
-        }
-
-        private void OnDeviceInfo()
-        {
         }
 
         private void OnConnect()
