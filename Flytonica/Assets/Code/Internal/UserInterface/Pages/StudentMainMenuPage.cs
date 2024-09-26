@@ -258,6 +258,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void RequestAndSetUserData()
         {
+            tasksButton.interactable = false;
+            
             if (HttpClient.UserData == null)
                 HttpClient.Get(LinkConstants.UserInfoUrl, data =>
                     {
@@ -279,6 +281,9 @@ namespace Code.Internal.UserInterface.Pages
 
         private void SetDemo()
         {
+            tasksButton.interactable = false;
+            HttpClient.SetUserData(new UserData { name = "Гость", type = UserType.Guest});
+            SetData();
         }
     }
 }
