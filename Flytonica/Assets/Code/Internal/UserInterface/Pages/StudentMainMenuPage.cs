@@ -66,7 +66,6 @@ namespace Code.Internal.UserInterface.Pages
             toRoomButton.onClick.RemoveListener(OnConnect);
         }
 
-
         // Executes the logout function
         protected override void OnBackClick()
         {

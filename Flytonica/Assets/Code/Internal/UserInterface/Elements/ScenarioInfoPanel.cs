@@ -3,7 +3,6 @@ using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using TMPro;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 
 namespace Code.Internal.UserInterface.Elements
@@ -46,7 +45,6 @@ namespace Code.Internal.UserInterface.Elements
 
         private void Init(ScenarioSettings scenarioSettings)
         {
-            print(scenarioSettings.description);
             _currentScenarioSettings = scenarioSettings;
             typeText.text = scenarioSettings.scenarioType.GetName();
             descriptionText.text = scenarioSettings.description;

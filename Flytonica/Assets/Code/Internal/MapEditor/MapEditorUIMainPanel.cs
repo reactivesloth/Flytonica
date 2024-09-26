@@ -1,3 +1,4 @@
+using System;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,10 +17,20 @@ namespace Code.Internal.MapEditor
         [SerializeField] private Button transportObjectsButton;
         [SerializeField] private Button searchingObjectsButton;
 
-        public void ShowPanel (bool enable)
+        private void Awake()
         {
-            panel.SetActive(enable);
+            defaultObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Default); });
+            spawnerPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Spawner); });
+            startPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.StartPoint); });
+            finishPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.FinishPoint); });
+            racingGatesButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Racing); });
+            transportObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Transport); });
+            searchingObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Searching); });
+        }
 
+        public void ClosePanel ()
+        {
+            panel.SetActive(false);
             defaultObjectsButton.gameObject.SetActive(false);
             spawnerPointButton.gameObject.SetActive(false);
             startPointButton.gameObject.SetActive(false);
@@ -31,7 +42,7 @@ namespace Code.Internal.MapEditor
         
         public void Setup(ScenarioType scenarioType)
         {
-            ShowPanel(false);
+            ClosePanel();
             
             panel.SetActive(true);
             defaultObjectsButton.gameObject.SetActive(true);

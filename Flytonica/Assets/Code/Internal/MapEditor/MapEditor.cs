@@ -1,5 +1,6 @@
 using Code.Internal.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Code.Internal.MapEditor
@@ -34,7 +35,7 @@ namespace Code.Internal.MapEditor
             _isEnabled = true;
             _camera.gameObject.SetActive(true);
             SceneManager.LoadScene(_savedSceneName, LoadSceneMode.Additive);
-            MapEditorUI.Instance.InitializePanels(type);
+            MapEditorUI.Instance.InitializeMainPanel(type);
         }
 
         public void UnloadMapEditor()
@@ -46,10 +47,13 @@ namespace Code.Internal.MapEditor
 
         private void Update()
         {
+            bool isOverUI = UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+            if (isOverUI) return;
+
             if (_isEnabled)
             {
                 Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
-                
+
                 if (UnityEngine.Input.GetMouseButtonDown(0) && currentSelectedEditorObject != null)
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
@@ -63,9 +67,21 @@ namespace Code.Internal.MapEditor
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        if (hit.collider.gameObject.GetComponent<MapEditorAddedObject>())
+                        var tr = hit.transform.root;
+                        if (tr.GetComponent<MapEditorAddedObject>())
                         {
-                            Destroy(hit.collider.gameObject);
+                            Destroy(tr.gameObject);
+                        }
+                        else
+                        {
+                            foreach (Transform t in tr)
+                            {
+                                if (t.GetComponent<MapEditorAddedObject>())
+                                {
+                                    Destroy(t.gameObject);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
