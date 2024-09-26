@@ -173,26 +173,27 @@ namespace Code.Internal.Drone
             if (_currentFlightSettings == null) return;
 
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
-            _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 1 ? 0.5f : 0;
+            _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 0.2f ? 0.5f : 0;
 
             controlFl = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? 0 : -_roll);
             controlFr = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? _roll : 0);
             controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
             controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
             acceleration = Mathf.Clamp(acceleration, 0, 1);
-            
+
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
-                acceleration += (_rigidBody.linearVelocity.y > 0 ? -0.5f : 0.5f) * Time.deltaTime;
-
-                if (_droneInput.Throttle > 0.2f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxAscendingSpeed)
+                switch (_droneInput.Throttle)
                 {
-                    acceleration += Time.deltaTime;
-                }
-
-                if (_droneInput.Throttle < -0.2f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxDescendingSpeed)
-                {
-                    acceleration -= Time.deltaTime;
+                    case > 0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxAscendingSpeed:
+                        acceleration += (_rigidBody.linearVelocity.y > 0 ? 0.1f : 1f) * Time.deltaTime;
+                        break;
+                    case < -0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxDescendingSpeed:
+                        acceleration -= (_rigidBody.linearVelocity.y > 0 ? 1f : 0.1f) * Time.deltaTime;
+                        break;
+                    default:
+                        acceleration += (_rigidBody.linearVelocity.y > 0 ? -1f : 1f) * Time.deltaTime;
+                        break;
                 }
             }
             else
