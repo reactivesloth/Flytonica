@@ -1,4 +1,5 @@
-﻿using Code.Internal.SceneManagement;
+﻿using System;
+using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Code.Internal.Drone
 
         public float CameraSignal => _cameraSignal;
         public float InputSignal => _inputSignal;
+
         
         private void Awake()
         {
@@ -53,7 +55,8 @@ namespace Code.Internal.Drone
                 DroneHUD.Instance.HorizonElement.SetPitch(-_transform.localRotation.eulerAngles.x);
                 DroneHUD.Instance.HorizonElement.SetRoll(transform.localEulerAngles.z);
                 
-                //TODO: передача и отображение в HUD уровней сигнала
+                DroneHUD.Instance.CameraSignalElement.SetSignal(_cameraSignal);
+                DroneHUD.Instance.InputSignalElement.SetSignal(_inputSignal);
                 
                 if (savedFlightSettings != null)
                     DroneHUD.Instance.SetMode(savedFlightSettings.modeName);

@@ -21,6 +21,7 @@ namespace Code.Internal.Drone
         public bool RestartButton = false;
         
         public bool UseInput = true;
+        public bool IsInputConnection = true;
         
         private Player _player;
         private Joystick _findJoystick;
@@ -34,12 +35,13 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if (!UseInput)
+            if (!UseInput || !IsInputConnection)
                 return;
-
+            
             if (_player.controllers.joystickCount > 0)
                 UpdateJoystick();
             
+            print(IsInputConnection);
             Throttle = _player.GetAxis("Throttle");
             Yaw = _player.GetAxis("Yaw");
             Pitch = _player.GetAxis("Pitch");

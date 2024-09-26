@@ -258,14 +258,13 @@ namespace Code.Internal.UserInterface.Pages
 
         private void RequestAndSetUserData()
         {
-            tasksButton.interactable = false;
+            tasksButton.interactable = true;
             
             if (HttpClient.UserData == null)
                 HttpClient.Get(LinkConstants.UserInfoUrl, data =>
                     {
                         HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
                         SetData();
-                        // GetScenarios(); // No longer needed here
                     },
                     Debug.LogError);
             else
