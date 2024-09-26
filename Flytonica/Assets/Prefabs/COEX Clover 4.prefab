@@ -280,6 +280,7 @@ MonoBehaviour:
   DISARM: 1
   RestartButton: 0
   UseInput: 1
+  IsInputConnection: 1
 --- !u!114 &1625880259260389076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +380,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4ae277a41a46fe9ca11238b20ab2fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cameraSignal: 1
+  _inputSignal: 1
 --- !u!114 &6872376549236773499
 MonoBehaviour:
   m_ObjectHideFlags: 0
