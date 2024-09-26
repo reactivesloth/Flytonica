@@ -34,6 +34,9 @@ namespace Code.Internal.Drone
         [Header("RC Loss Failsafe Trigger")]
         public DroneFailsafeAction rCLossFailsafeTrigger = DroneFailsafeAction.Terminate;
         public float rCLossTimeout = 2;
+
+        [Header("Signal settings")] 
+        public float maxDistanceInMetres;
     }
 
     public enum AirframeType

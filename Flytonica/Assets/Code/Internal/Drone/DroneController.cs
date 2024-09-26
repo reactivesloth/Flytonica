@@ -45,6 +45,8 @@ namespace Code.Internal.Drone
         private float batteryLevelPercent = 1;
         private float deltaSpd;
         private float throttleHold;
+        
+        public DroneSensors DroneSensors { get; private set; }
 
         protected override void OnValidate()
         {
@@ -56,6 +58,7 @@ namespace Code.Internal.Drone
             _droneInput = GetComponent<DroneInput>();
             _rigidBody = GetComponent<Rigidbody>();
             _transform = GetComponent<Transform>();
+            DroneSensors = GetComponent<DroneSensors>();
 
             InitializeDrone();
         }
