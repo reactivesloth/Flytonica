@@ -7,13 +7,17 @@ namespace Code.Internal.SceneManagement
     {
         [Header("Objects for all scenarios")]
         public GameObject[] genericObjects;
-        
+        public GameObject spawnerObject;
+
         [Header("Objects for racing scenarios")]
         public GameObject gatesStartObject;
         public GameObject gatesFinishObject;
         public GameObject[] gates;
         
-        [Header("Objects for searching scenarios")]
+        [Header("Objects for searching scenarios")] 
         public GameObject[] searchingObjects;
+
+        [Header("Objects for transport scenarios")]
+        public GameObject[] transportObjects;
     }
 }

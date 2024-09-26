@@ -1,11 +1,14 @@
 using Code.Internal.SceneManagement;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.MapEditor
 {
     public class MapEditorUI : MonoBehaviour
     {
-        [SerializeField] private MapEditorUIMainPanel _mainPanel;
+        [SerializeField] private MapEditorUIMainPanel mainPanel;
+        [SerializeField] private MapEditorUILibraryPanel libraryPanel;
 
         public static MapEditorUI Instance { get; private set; }
         
@@ -25,12 +28,17 @@ namespace Code.Internal.MapEditor
 
         public void ClosePanel()
         {
-            _mainPanel.ShowPanel(false);
+            mainPanel.ClosePanel();
+            libraryPanel.ClosePanel ();
         }
 
-        public void InitializePanels(ScenarioType type)
+        public void InitializeMainPanel(ScenarioType type)
         {
-            _mainPanel.Setup(type);
+            mainPanel.Setup(type);
+        }
+
+        public void InitializeLibraryPanel (MapEditorUILibraryPanelType libraryPanelType = MapEditorUILibraryPanelType.None) {
+            libraryPanel.Setup(libraryPanelType);
         }
     }
 }

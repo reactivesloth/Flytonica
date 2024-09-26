@@ -41,7 +41,8 @@ namespace Code.Internal.UserInterface.Elements
         private void UpdateHandlePosition(bool isOn)
         {
             handleRect.position = isOn ? onPosition.position : offPosition.position;
-            onBackGround?.SetActive(isOn);
+            if (onBackGround != null)
+                onBackGround.SetActive(isOn);
             if (handleImage != null)
                 handleImage.color = isOn ? onColor : offColor;
             
