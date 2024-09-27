@@ -153,6 +153,7 @@ namespace Code.Internal.UserInterface.Elements
         {
             _currentScenarioSettings.currentDrone = _dropdownDrones[value];
             InitModesDropdown(_currentScenarioSettings);
+            OnModeDropdownChange(0);
         }
         
         private void OnModeDropdownChange(int value)
