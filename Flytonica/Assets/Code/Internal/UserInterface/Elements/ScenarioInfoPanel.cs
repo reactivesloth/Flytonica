@@ -50,9 +50,12 @@ namespace Code.Internal.UserInterface.Elements
             InitMapsDropdown(scenarioSettings);
             InitDronesDropDown(scenarioSettings);
             
-            _currentScenarioSettings.currentMap = _dropdownLocations[0];
-            _currentScenarioSettings.currentDrone = _dropdownDrones[0];
-            _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[0];
+            if(scenarioSettings.settingType != SettingType.Task)
+            {
+                _currentScenarioSettings.currentMap = _dropdownLocations[0];
+                _currentScenarioSettings.currentDrone = _dropdownDrones[0];
+                _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[0];
+            }
         }
 
         private void InitMapsDropdown(ScenarioSettings scenarioSettings)
