@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Code.Internal.SceneManagement;
+using UnityEditor;
 using UnityEngine;
 
 namespace Code.Internal.Drone
@@ -8,24 +9,31 @@ namespace Code.Internal.Drone
     [RequireComponent(typeof(Rigidbody))]
     public class DroneHealthController : MonoBehaviour
     {
-        [SerializeField] private float damageThreshold = 2f;
-        [SerializeField] private float maxImpactForce = 100f;
         [SerializeField] private float timeOutSecs = 1f;
-
+        
         private Rigidbody _rigidbody;
+        
         private float _currentHealth = 100f;
+        private float _damageThreshold = 2f;
+        private float _maxImpactForce = 100f;
+        
         private bool _isCanDamage = true;
+
+        private DroneSettings Settings => GetComponent<DroneController>().Settings;
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _currentHealth = Settings.healthPoints;
+            _damageThreshold = Settings.damageThreshold;
+            _maxImpactForce = Settings.maxImpactForce;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             var impactForce = collision.relativeVelocity.magnitude * _rigidbody.mass;
 
-            if (impactForce > damageThreshold)
+            if (impactForce > _damageThreshold)
             {
                 var damage = CalculateDamage(impactForce);
                 ApplyDamage(damage);
@@ -34,7 +42,7 @@ namespace Code.Internal.Drone
         
         private float CalculateDamage(float impactForce)
         {
-            var normalizedForce = Mathf.Clamp01(impactForce / maxImpactForce);
+            var normalizedForce = Mathf.Clamp01(impactForce / _maxImpactForce);
             return normalizedForce * 100f;
         }
 

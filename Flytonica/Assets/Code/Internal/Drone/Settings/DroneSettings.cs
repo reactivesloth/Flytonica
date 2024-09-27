@@ -37,6 +37,11 @@ namespace Code.Internal.Drone
 
         [Header("Signal settings")] 
         public float maxDistanceInMetres;
+
+        [Header("Damage info")] public float healthPoints = 100f;
+        public float maxImpactForce = 100f;
+        public float damageThreshold = 2f;
+
     }
 
     public enum AirframeType
