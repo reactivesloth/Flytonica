@@ -19,8 +19,8 @@ namespace Code.Internal.Drone
         private DroneFlightSettings savedFlightSettings;
         private Transform _playerTransform;
 
-        private float CameraSignalModifier { get; set; } = 1f;
-        private float InputSignalModifier { get; set; } = 1f;
+        public float CameraSignalModifier { get; set; } = 1f;
+        public float InputSignalModifier { get; set; } = 1f;
 
         public float CameraSignal => _cameraSignal;
         public float InputSignal => _inputSignal;

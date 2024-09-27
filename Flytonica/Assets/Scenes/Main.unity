@@ -939,6 +939,8 @@ MonoBehaviour:
   <HorizonElement>k__BackingField: {fileID: 0}
   <BatteryElement>k__BackingField: {fileID: 0}
   <MessageBoxElement>k__BackingField: {fileID: 0}
+  <CameraSignalElement>k__BackingField: {fileID: 0}
+  <InputSignalElement>k__BackingField: {fileID: 0}
 --- !u!114 &974406804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1458,6 +1460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1415367603}
   - component: {fileID: 1415367602}
+  - component: {fileID: 1415367604}
   m_Layer: 0
   m_Name: Post Processing Volume
   m_TagString: Untagged
@@ -1497,6 +1500,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1415367604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415367601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2348441aae7d4a44283eea5a834c16d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 1415367602}
 --- !u!1 &1493255203
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Code.Internal.Scenario
 {
@@ -13,6 +14,8 @@ namespace Code.Internal.Scenario
         [SerializeField] private DroneTriggerCallback warning, danger;
         [Range(0, 1)] [SerializeField] private float cameraLostPercent = 0.5f, controlLostPercent = 0.5f;
 
+        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
+
         private void Awake()
         {
             warning.OnDroneEnter += OnWarningZoneEnter;
@@ -21,36 +24,37 @@ namespace Code.Internal.Scenario
             danger.OnDroneExit += OnDangerZoneExit;
         }
 
-        private void Update()
-        {
-            
-        }
-
         private void OnWarningZoneEnter()
         {
             DroneHUD.Instance.SetMessage(MessageType.Warning, warningText);
+            RandomEffect(0.5f);
         }
 
         private void OnWarningZoneExit()
         {
-            //TODO: HideWarning
             DroneHUD.Instance.ClearMessage();
+            CurrentDroneSensors.CameraSignalModifier = 1;
+            CurrentDroneSensors.InputSignalModifier = 1;
         }
 
         private void OnDangerZoneEnter()
         {
-            //TODO: Danger Acton
-            //DroneHUD.Instance.SetMessage();
+            DroneHUD.Instance.SetMessage(MessageType.Error, errorText);
+            RandomEffect();
         }
 
         private void OnDangerZoneExit()
         {
-            //TODO: Undanger Acton
+            OnWarningZoneEnter();
         }
 
-        private void RandomEffect()
+        private void RandomEffect(float targetValue = 0)
         {
+            if (Random.value < cameraLostPercent)
+                CurrentDroneSensors.CameraSignalModifier = targetValue;
             
+            if (Random.value < controlLostPercent)
+                CurrentDroneSensors.InputSignalModifier = targetValue;
         }
 
         private void OnDestroy()
