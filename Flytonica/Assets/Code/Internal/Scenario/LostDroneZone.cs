@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Code.Internal.Scenario
 {
-    public class DangerTrigger : MonoBehaviour
+    public class LostDroneZone : MonoBehaviour
     {
         [SerializeField] private string warningText, errorText;
 
