@@ -51,49 +51,50 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if (!UseInput || InputSignalLevel <= 0)
-                return;
+            if (UseInput && !(InputSignalLevel <= 0))
+            {
+                if (_player.controllers.joystickCount > 0)
+                    UpdateJoystick();
 
-            if (_player.controllers.joystickCount > 0)
-                UpdateJoystick();
+                var rawThrottle = _player.GetAxis("Throttle");
+                var rawYaw = _player.GetAxis("Yaw");
+                var rawPitch = _player.GetAxis("Pitch");
+                var rawRoll = _player.GetAxis("Roll");
 
-            var rawThrottle = _player.GetAxis("Throttle");
-            var rawYaw = _player.GetAxis("Yaw");
-            var rawPitch = _player.GetAxis("Pitch");
-            var rawRoll = _player.GetAxis("Roll");
+                _throttleBuffer[bufferIndex] = rawThrottle;
+                _yawBuffer[bufferIndex] = rawYaw;
+                _pitchBuffer[bufferIndex] = rawPitch;
+                _rollBuffer[bufferIndex] = rawRoll;
+                _timeBuffer[bufferIndex] = Time.time;
 
-            _throttleBuffer[bufferIndex] = rawThrottle;
-            _yawBuffer[bufferIndex] = rawYaw;
-            _pitchBuffer[bufferIndex] = rawPitch;
-            _rollBuffer[bufferIndex] = rawRoll;
-            _timeBuffer[bufferIndex] = Time.time;
+                var delayTime = (1f - Mathf.Clamp01(InputSignalLevel)) * maxDelayTime;
 
-            var delayTime = (1f - Mathf.Clamp01(InputSignalLevel)) * maxDelayTime;
+                var delaySteps = Mathf.RoundToInt(delayTime / Time.deltaTime);
+                delaySteps = Mathf.Clamp(delaySteps, 0, bufferSize - 1);
 
-            var delaySteps = Mathf.RoundToInt(delayTime / Time.deltaTime);
-            delaySteps = Mathf.Clamp(delaySteps, 0, bufferSize - 1);
+                var delayedIndex = (bufferIndex - delaySteps + bufferSize) % bufferSize;
 
-            var delayedIndex = (bufferIndex - delaySteps + bufferSize) % bufferSize;
-            
-            Throttle = _throttleBuffer[delayedIndex];
-            Yaw = _yawBuffer[delayedIndex];
-            Pitch = _pitchBuffer[delayedIndex];
-            Roll = _rollBuffer[delayedIndex];
+                Throttle = _throttleBuffer[delayedIndex];
+                Yaw = _yawBuffer[delayedIndex];
+                Pitch = _pitchBuffer[delayedIndex];
+                Roll = _rollBuffer[delayedIndex];
 
-            bufferIndex = (bufferIndex + 1) % bufferSize;
+                bufferIndex = (bufferIndex + 1) % bufferSize;
 
-            DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
+                DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
+
+                if (Throttle < -0.9f && DISARM)
+                {
+                    DISARM = false;
+                }
+
+                DISARM = !_player.GetButton("DISARM");
+            }
+
             if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
                 DroneCam = !DroneCam;
 
             RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
-
-            if (Throttle < -0.9f && DISARM)
-            {
-                DISARM = false;
-            }
-
-            DISARM = !_player.GetButton("DISARM");
         }
 
         private void UpdateJoystick()
