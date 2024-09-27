@@ -23,7 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 607cd98b3a90cb846b06ea2fb23ae64f, type: 2}
   - {fileID: 11400000, guid: 6f336bd0cf2a7a54ab665305edfec878, type: 2}
   - {fileID: 11400000, guid: 5e8d1b14af6734d488060c6f91d69aa5, type: 2}
-  currentFlightMode: {fileID: 11400000, guid: 69a571b385be9ae41bea071843468290, type: 2}
+  currentFlightMode: {fileID: 11400000, guid: 6f336bd0cf2a7a54ab665305edfec878, type: 2}
   bateteryCellCount: 4
   minBatteryCellVoltage: 2.4
   maxBatteryCellVoltage: 3
@@ -35,4 +35,7 @@ MonoBehaviour:
   batteryEmergencyLevel: 5
   rCLossFailsafeTrigger: 6
   rCLossTimeout: 2
-  maxDistanceInMetres: 100
+  maxDistanceInMetres: 600
+  healthPoints: 100
+  maxImpactForce: 100
+  damageThreshold: 2
