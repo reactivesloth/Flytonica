@@ -13,8 +13,8 @@ namespace Code.Internal.Drone
         private Rigidbody _rigidbody;
         private Transform _transform;
 
-        [SerializeField] private float _cameraSignal = 1f;
-        [SerializeField] private float _inputSignal = 1f;
+        private float _cameraSignal = 1f;
+        private float _inputSignal = 1f;
 
         private DroneFlightSettings savedFlightSettings;
         private Transform _playerTransform;

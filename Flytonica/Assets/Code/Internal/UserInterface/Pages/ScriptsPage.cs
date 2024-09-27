@@ -32,6 +32,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             base.OnOpen();
             startGameButton?.onClick.AddListener(OnStartGame);
+            infoPanel?.Close();
         }
 
         protected override void OnClose()

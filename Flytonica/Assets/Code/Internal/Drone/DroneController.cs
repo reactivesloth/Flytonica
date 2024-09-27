@@ -146,7 +146,7 @@ namespace Code.Internal.Drone
 
         private void UpdateInput()
         {
-            _droneInput.IsInputConnection = DroneSensors.InputSignal > 0;
+            _droneInput.InputSignalLevel = DroneSensors.InputSignal;
             _throttle = (_droneInput.Throttle + 1) / 2;
             _pitch = _droneInput.Pitch;
             _roll = _droneInput.Roll;
