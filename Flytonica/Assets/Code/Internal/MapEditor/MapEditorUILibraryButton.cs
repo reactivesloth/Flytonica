@@ -22,11 +22,12 @@ namespace Code.Internal.MapEditor
         private void Update()
         {
             if (_prefab == null) return;
-            
+            #if UNITY_EDITOR
             if (_texture2D == Texture2D.linearGrayTexture)
             {
                 _image.texture = AssetPreview.GetAssetPreview(_prefab);
             }
+            #endif
         }
 
         public void Setup(GameObject prefab)

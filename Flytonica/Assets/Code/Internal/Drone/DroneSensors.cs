@@ -78,8 +78,6 @@ namespace Code.Internal.Drone
                 _droneController.Settings.maxDistanceInMetres;
             _cameraSignal *= CameraSignalModifier;
             _inputSignal *= InputSignalModifier;
-            
-            //TODO: Signal effects
         }
     }
 }

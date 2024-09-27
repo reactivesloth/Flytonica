@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -8,18 +7,17 @@ namespace Code.Internal.Drone
     public class DroneCameraEffectController : MonoBehaviour
     {
         [SerializeField] private Volume volume;
-        [Header("Settings")] 
-        [SerializeField] private float minGrainIntensity = .25f, maxGrainIntensity = 1;
+        [Header("Settings")] [SerializeField] private float minGrainIntensity = .25f;
+        [SerializeField] private float maxGrainIntensity = 1;
         [SerializeField] private float minChromaticIntensity = .1f, maxChromaticIntensity = 1;
 
-        // Поля для эффектов
         private FilmGrain _filmGrain;
         private LiftGammaGain _liftGammaGain;
         private ChromaticAberration _chromaticAberration;
 
-        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
+        private DroneSensors CurrentDroneSensors => DroneController.Instance?.DroneSensors;
 
-        private void OnValidate()
+        private void Awake()
         {
             if (!volume) return;
 
@@ -32,7 +30,7 @@ namespace Code.Internal.Drone
             if (volume.profile.TryGet(out ChromaticAberration ca))
                 _chromaticAberration = ca;
         }
-
+        
         private void Update()
         {
             if (!CurrentDroneSensors) return;

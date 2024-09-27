@@ -20,9 +20,7 @@ namespace Code.Internal.UserInterface.Elements
         private Dictionary<int, DroneSettings> _dropdownDrones = new();
         private Dictionary<int, DroneFlightSettings> _dropdownFlyModes = new();
 
-        public MapSettings CurrentMap => _dropdownLocations[locationDropdown.value];
         public DroneSettings CurrentDrone => _dropdownDrones[droneDropdown.value];
-        public DroneFlightSettings CurrentFlyMode => _dropdownFlyModes[flyModeDropdown.value];
 
         public void Open(ScenarioSettings scenarioSettings)
         {
@@ -51,6 +49,10 @@ namespace Code.Internal.UserInterface.Elements
 
             InitMapsDropdown(scenarioSettings);
             InitDronesDropDown(scenarioSettings);
+            
+            _currentScenarioSettings.currentMap = _dropdownLocations[0];
+            _currentScenarioSettings.currentDrone = _dropdownDrones[0];
+            _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[0];
         }
 
         private void InitMapsDropdown(ScenarioSettings scenarioSettings)

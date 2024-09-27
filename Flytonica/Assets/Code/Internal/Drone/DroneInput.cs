@@ -27,8 +27,8 @@ namespace Code.Internal.Drone
         private Joystick _findJoystick;
         private Joystick _joystick;
 
-        [SerializeField] private float maxDelayTime = 1.0f; // Максимальная задержка в секундах
-        [SerializeField] private int bufferSize = 120; // Размер буфера (например, 120 для 120 обновлений в секунду)
+        [SerializeField] private float maxDelayTime = 1.0f;
+        [SerializeField] private int bufferSize = 120; 
 
         private float[] _throttleBuffer;
         private float[] _yawBuffer;

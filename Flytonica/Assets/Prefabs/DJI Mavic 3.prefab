@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 7794961175099019535}
   - component: {fileID: -5479848009921656366}
   - component: {fileID: 7968847895797777297}
+  - component: {fileID: 8126251185370172783}
   - component: {fileID: 4020091474735691375}
   - component: {fileID: 835091436568997191}
   m_Layer: 7
@@ -381,7 +382,9 @@ MonoBehaviour:
   DISARM: 1
   RestartButton: 0
   UseInput: 1
-  IsInputConnection: 1
+  InputSignalLevel: 1
+  maxDelayTime: 1
+  bufferSize: 120
 --- !u!114 &4973870330401012139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,8 +484,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4ae277a41a46fe9ca11238b20ab2fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraSignal: 1
-  _inputSignal: 1
+--- !u!114 &8126251185370172783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5dbeb15f3c48aeac0e1d181a630f4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageThreshold: 3
+  maxImpactForce: 100
+  timeOutSecs: 1
 --- !u!114 &4020091474735691375
 MonoBehaviour:
   m_ObjectHideFlags: 0

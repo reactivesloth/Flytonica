@@ -94,10 +94,11 @@ namespace Code.Internal.Network
             }
             else
             {
-                TargetInitializeScenario(connection,
-                    JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
-                        drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
-                        scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
+                if(sceneSettings.isNet)
+                    TargetInitializeScenario(connection,
+                        JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
+                            drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
+                            scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
                 
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
