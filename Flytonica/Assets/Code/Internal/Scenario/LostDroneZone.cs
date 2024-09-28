@@ -2,6 +2,7 @@
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
+using FishNet;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -45,7 +46,10 @@ namespace Code.Internal.Scenario
 
         private void OnDangerZoneExit()
         {
-            OnWarningZoneEnter();
+            if(warning.IsDroneInZone)
+                OnWarningZoneEnter();
+            else
+                OnWarningZoneExit();
         }
 
         private void RandomEffect(float targetValue = 0)
