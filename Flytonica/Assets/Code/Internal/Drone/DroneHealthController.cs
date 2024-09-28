@@ -12,8 +12,9 @@ namespace Code.Internal.Drone
         [SerializeField] private float timeOutSecs = 1f;
         
         private Rigidbody _rigidbody;
-        
-        private float _currentHealth = 100f;
+
+        [SerializeField] private float _damageMultiplier = 2;
+        [SerializeField] private float _currentHealth = 100f;
         private float _damageThreshold = 2f;
         private float _maxImpactForce = 100f;
         
@@ -37,7 +38,7 @@ namespace Code.Internal.Drone
             if (impactForce > _damageThreshold)
             {
                 var damage = CalculateDamage(impactForce);
-                ApplyDamage(damage);
+                ApplyDamage(damage * _damageMultiplier);
             }
         }
         
@@ -57,9 +58,12 @@ namespace Code.Internal.Drone
 
             if (_currentHealth <= 0)
             {
-                CurrentDroneSensors.CameraSignalModifier = 1;
-                CurrentDroneSensors.InputSignalModifier = 1;
-                DestroyDrone();
+                CurrentDroneSensors.CameraSignalModifier = 0;
+                CurrentDroneSensors.InputSignalModifier = 0;
+                if (!IsInvoking("DestroyDrone"))
+                {
+                    Invoke("DestroyDrone", 1);
+                }
             }
             else
                 StartCoroutine(Timer());
