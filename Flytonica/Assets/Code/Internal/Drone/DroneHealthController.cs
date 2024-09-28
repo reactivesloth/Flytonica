@@ -31,7 +31,7 @@ namespace Code.Internal.Drone
 
         private void OnCollisionEnter(Collision collision)
         {
-            var impactForce = collision.relativeVelocity.magnitude * _rigidbody.mass;
+            var impactForce = _rigidbody.linearVelocity.magnitude;
 
             if (impactForce > _damageThreshold)
             {
