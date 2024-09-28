@@ -169,6 +169,7 @@ namespace Code.Internal.UserInterface.Pages
                 task.settingType = SettingType.Task;
                 task.scenarioType = ScenarioType.Searching; // Adjust as necessary
                 task.name = taskData.scenario.name;
+                task.description = taskData.scenario.description;
                 task.nestedScenarios = taskScenarios;
                 task.id = taskInfo.id;
 

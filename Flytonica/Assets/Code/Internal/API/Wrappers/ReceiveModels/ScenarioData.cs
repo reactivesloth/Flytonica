@@ -5,6 +5,7 @@ namespace Code.Internal.API.Wrappers.ReceiveModels
     {
         public int id;
         public string name;
+        public string description;
         
         public int file_id;
         public string created_at;

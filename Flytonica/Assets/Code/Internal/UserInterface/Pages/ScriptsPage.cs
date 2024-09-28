@@ -5,6 +5,7 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
 using FishNet.Transporting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,11 +13,16 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class ScriptsPage : Page
     {
+        [SerializeField] private string tasksTitle = "Доступные задания", learnTitle = "Доступные сценарии";
+
         [Header("Conponents:")] [SerializeField]
         private Transform selectScriptParent;
+        [SerializeField] private TMP_Text pageTitle;
 
         [SerializeField] private ScenarioInfoPanel infoPanel;
         [SerializeField] private Button startGameButton;
+
+        [SerializeField] private Button updateButton, upButton, downButton;
 
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
@@ -43,6 +49,7 @@ namespace Code.Internal.UserInterface.Pages
 
         public void Init(List<ScenarioSettings> scenarios, bool isTask = false)
         {
+            pageTitle?.SetText(isTask ? tasksTitle : learnTitle);
             _isTaskInit = isTask;
             Clear();
 
@@ -54,10 +61,11 @@ namespace Code.Internal.UserInterface.Pages
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
                 var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
                 openListButton.SetParent(null);
-                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit, list != null && !_isTaskInit);
+                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit,
+                    list != null && !_isTaskInit);
                 _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
-                openListButton.ToggleChanged += OnToggleChanged;    
+                openListButton.ToggleChanged += OnToggleChanged;
 
                 if (!list || nestedScenarios == null)
                     continue;
@@ -68,7 +76,8 @@ namespace Code.Internal.UserInterface.Pages
 
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
                     scenarioButton.SetParent(openListButton);
-                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit, isOnToggle: !_isTaskInit);
+                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit,
+                        isOnToggle: !_isTaskInit);
                     _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
                     scenarioButton.ToggleChanged += OnToggleChanged;
@@ -91,7 +100,7 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentScenarioCollection = currentScenario;
             sceneSettings.isNet = false;
             sceneSettings.isTask = _isTaskInit;
-            sceneSettings.taskId = _isTaskInit ? currentScenario.id: -1 ;
+            sceneSettings.taskId = _isTaskInit ? currentScenario.id : -1;
             sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
 
             InstanceFinder.ServerManager.StartConnection();
@@ -124,7 +133,7 @@ namespace Code.Internal.UserInterface.Pages
             //Init next
             for (var i = 0; i < selectedScenarios.Count - 1; i++)
                 selectedScenarios[i].nextScenario = selectedScenarios[i + 1];
-            
+
             var scenarioList = ScriptableObject.CreateInstance<ScenarioSettings>();
             scenarioList.settingType = SettingType.List;
             scenarioList.nestedScenarios = selectedScenarios;
