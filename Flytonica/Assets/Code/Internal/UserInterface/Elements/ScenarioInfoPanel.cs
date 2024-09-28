@@ -52,9 +52,9 @@ namespace Code.Internal.UserInterface.Elements
             
             if(scenarioSettings.settingType != SettingType.Task)
             {
-                _currentScenarioSettings.currentMap = _dropdownLocations[0];
-                _currentScenarioSettings.currentDrone = _dropdownDrones[0];
-                _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[0];
+                _currentScenarioSettings.currentMap = _dropdownLocations[locationDropdown.value];
+                _currentScenarioSettings.currentDrone = _dropdownDrones[droneDropdown.value];
+                _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[flyModeDropdown.value];
             }
         }
 

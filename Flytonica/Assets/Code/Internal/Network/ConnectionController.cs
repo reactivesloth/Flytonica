@@ -17,7 +17,7 @@ namespace Code.Internal.Network
     public class ConnectionController : NetworkBehaviour
     {
         [SerializeField] private GameObject hostControl;
-        
+
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
         [SerializeField] private AvailableMapsSettings maps;
@@ -94,23 +94,21 @@ namespace Code.Internal.Network
             }
             else
             {
-                if(sceneSettings.isNet)
-                    TargetInitializeScenario(connection,
-                        JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
-                            drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
-                            scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
-                
+                TargetInitializeScenario(connection,
+                    JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
+                        drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
+                        scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
+
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
             }
-            
+
             MovePlayer(connection);
         }
 
         [TargetRpc]
         private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
         {
-            print(sceneSettings);
             var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(scenarioSettingsJson);
             var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,
                 scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
@@ -121,11 +119,14 @@ namespace Code.Internal.Network
 
         private void InitScenario(ScenarioSettings scenario)
         {
-            print("Init");
+            sceneSettings.currentScenario = scenario;
+
             var scenarioInitializer = FindAnyObjectByType<ScenarioInitializer>();
-            print($"Init {scenario.name}");
-            scenarioInitializer.Initialize(scenario);
-            scenario.currentDrone.currentFlightMode = scenario.currentDroneMode;
+            scenarioInitializer.Initialize(sceneSettings.currentScenario);
+
+            sceneSettings.currentScenario.currentDrone.currentFlightMode =
+                sceneSettings.currentScenario.currentDroneMode;
+            print(sceneSettings.currentScenario.currentDrone.currentFlightMode.name);
         }
 
         [TargetRpc]
@@ -136,7 +137,7 @@ namespace Code.Internal.Network
 
             if (spawners.Length == 0)
                 return;
-            
+
             var player = GameObject.FindWithTag("Player");
             var spawn = spawners[Random.Range(0, spawners.Length)];
             player.transform.position = spawn.position;

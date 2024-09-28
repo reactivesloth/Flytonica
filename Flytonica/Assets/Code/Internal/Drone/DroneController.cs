@@ -65,7 +65,7 @@ namespace Code.Internal.Drone
 
         private void InitializeDrone()
         {
-            UpdateFlightMode();
+            //UpdateFlightMode();
             InitializeEngines();
             InitializePhysics();
         }
@@ -123,7 +123,10 @@ namespace Code.Internal.Drone
 
             UpdateInput();
             
-            if (_droneInput.DroneMode || _currentFlightSettings == null)
+            if (_currentFlightSettings == null)
+                _currentFlightSettings = droneSettings.currentFlightMode;
+            
+            if (_droneInput.DroneMode)
             {
                 UpdateFlightMode();
             }
