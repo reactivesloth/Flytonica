@@ -35,6 +35,9 @@ namespace Code.Internal.Scenario
             if(_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
             
+            print(sceneSettings.currentScenario.name);
+            print(sceneSettings.currentScenario.nextScenario?.name);
+            
             if (sceneSettings.currentScenario.nextScenario)
                 Next(result);
             else
@@ -44,7 +47,6 @@ namespace Code.Internal.Scenario
         private void Next(Dictionary<string, string> result)
         {
             // Показ окна
-            
             /*Time.timeScale = 0f;
             PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));*/

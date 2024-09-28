@@ -36,7 +36,7 @@ namespace Code.Internal.UserInterface.Pages
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
         [SerializeField] private SceneLoadingSettings sceneSettings;
-        [SerializeField] private ScenarioSettings currentScenario;
+        [SerializeField] private ScenarioSettings currentScenarioCollection;
 
         private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
@@ -129,13 +129,14 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnStartGame()
         {
-            currentScenario = _isTaskInit ? GetTask() : GetScenarioList();
+            currentScenarioCollection = _isTaskInit ? GetTask() : GetScenarioList();
 
-            sceneSettings.currentScenarioCollection = currentScenario;
+            sceneSettings.currentScenarioCollection = currentScenarioCollection;
             sceneSettings.isNet = false;
             sceneSettings.isTask = _isTaskInit;
-            sceneSettings.taskId = _isTaskInit ? currentScenario.id : -1;
+            sceneSettings.taskId = _isTaskInit ? currentScenarioCollection.id : -1;
             sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
+            
             print(sceneSettings.currentScenario.nextScenario?.name);
 
             InstanceFinder.ServerManager.StartConnection();
