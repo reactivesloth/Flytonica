@@ -21,6 +21,14 @@ namespace Code.Internal.Scenario
         [SerializeField] private float allowedForbiddenTime = 10;
         private float failTime = 0;
         private bool droneInForbiddenZone = false;
+        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
+
+        private float savedSignal = -1;
+
+        private void Awake()
+        {
+            savedSignal = -1;
+        }
 
         private void Update()
         {
@@ -62,15 +70,26 @@ namespace Code.Internal.Scenario
             switch (type)
             {
                 case ScenarioZoneWarningType.Clear:
+                    if (savedSignal > -1)
+                    {
+                        CurrentDroneSensors.CameraSignalModifier = savedSignal;
+                        savedSignal = -1;
+                    }
                     failTime = allowedForbiddenTime;
                     break;
                 case ScenarioZoneWarningType.Warning:
+                    if (savedSignal <= -1)
+                        savedSignal = CurrentDroneSensors.CameraSignalModifier;
+                    CurrentDroneSensors.CameraSignalModifier = 0.5f;
                     failTime = allowedForbiddenTime;
                     DroneHUD.Instance.SetMessage(MessageType.Warning, $"Вы приближаетесь к границе локации, вернитесь назад!", 0.1f);
                     break;
                 case ScenarioZoneWarningType.Unallowed:
                     failTime -= Time.deltaTime;
                     DroneHUD.Instance.SetMessage(MessageType.Error, $"Вы покинули границу локации, сценарий будет перезапущен через {failTime.ToString("F2")} секунд", 0.1f);
+                    if (savedSignal <= -1)
+                        savedSignal = CurrentDroneSensors.CameraSignalModifier;
+                    CurrentDroneSensors.CameraSignalModifier = 0;
                     if (failTime <= 0)
                     {
                         GameSceneManager.Instance.Replay();

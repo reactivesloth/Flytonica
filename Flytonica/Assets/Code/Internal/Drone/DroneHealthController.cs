@@ -18,6 +18,7 @@ namespace Code.Internal.Drone
         private float _maxImpactForce = 100f;
         
         private bool _isCanDamage = true;
+        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
 
         private DroneSettings Settings => GetComponent<DroneController>().Settings;
 
@@ -55,7 +56,11 @@ namespace Code.Internal.Drone
             Debug.Log($"Drone received {damage} damage. Current health: {_currentHealth}");
 
             if (_currentHealth <= 0)
+            {
+                CurrentDroneSensors.CameraSignalModifier = 1;
+                CurrentDroneSensors.InputSignalModifier = 1;
                 DestroyDrone();
+            }
             else
                 StartCoroutine(Timer());
         }

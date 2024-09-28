@@ -7,7 +7,9 @@ namespace Code.Internal.Drone
     public class DroneCameraEffectController : MonoBehaviour
     {
         [SerializeField] private Volume volume;
-        [Header("Settings")] [SerializeField] private float minGrainIntensity = .25f;
+        [Header("Settings")] 
+        [SerializeField] private float minOffsetCamera = 0.1f;
+        [SerializeField] private float minGrainIntensity = .25f;
         [SerializeField] private float maxGrainIntensity = 1;
         [SerializeField] private float minChromaticIntensity = .1f, maxChromaticIntensity = 1;
 
@@ -36,11 +38,11 @@ namespace Code.Internal.Drone
             if (!CurrentDroneSensors) return;
 
             if (_filmGrain)
-                _filmGrain.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal, minGrainIntensity,
+                _filmGrain.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal - minOffsetCamera, minGrainIntensity,
                     maxGrainIntensity);
 
             if (_chromaticAberration)
-                _chromaticAberration.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal, minChromaticIntensity,
+                _chromaticAberration.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal - minOffsetCamera, minChromaticIntensity,
                     maxChromaticIntensity);
 
             if (_liftGammaGain)

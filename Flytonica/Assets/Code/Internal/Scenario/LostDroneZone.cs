@@ -63,6 +63,9 @@ namespace Code.Internal.Scenario
 
         private void OnDestroy()
         {
+            OnWarningZoneExit();
+            OnDangerZoneExit();
+            
             warning.OnDroneEnter -= OnWarningZoneEnter;
             warning.OnDroneExit -= OnWarningZoneExit;
             danger.OnDroneEnter -= OnDangerZoneEnter;
