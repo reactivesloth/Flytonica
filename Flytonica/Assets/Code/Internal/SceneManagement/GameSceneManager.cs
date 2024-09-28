@@ -5,6 +5,7 @@ using Code.Internal.UserInterface;
 using FishNet;
 using FishNet.Managing.Scened;
 using FishNet.Object;
+using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,7 +16,7 @@ namespace Code.Internal.SceneManagement
         public static GameSceneManager Instance { get; private set; }
         public string CurrentGlobalScene { get; private set; }
         public MapSettings CurrentMapSettings { get; private set; }
-        
+
         public bool IsPlaying { get; private set; }
 
         private void Awake()
@@ -24,17 +25,17 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-            
+
             LoadSceneLocal("UI Scene");
         }
-        
+
         public override void OnStartClient()
         {
             base.OnStartClient();
             UIController.Instance.OnGameStart();
             IsPlaying = true;
         }
-        
+
         public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
         {
             CurrentMapSettings = sceneSettingsCurrentMap;
@@ -45,13 +46,13 @@ namespace Code.Internal.SceneManagement
                 Debug.LogError("Scene name is null or empty. Please check the MapSettings.");
                 return;
             }
-            
+
             var sceneLoadData = new SceneLoadData(sceneName);
             Action<SceneLoadEndEventArgs> onSceneLoaded = null;
 
             onSceneLoaded = args =>
             {
-                if(!args.LoadedScenes.Select(s => s.name).Contains(sceneName)) 
+                if (!args.LoadedScenes.Select(s => s.name).Contains(sceneName))
                     return;
                 Debug.Log($"Scene {sceneName} loaded successfully.");
                 callback?.Invoke();
@@ -79,26 +80,34 @@ namespace Code.Internal.SceneManagement
         private void UnloadScene()
         {
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if(scene.name != "Main")
+            if (scene.name != "Main")
                 UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
         }
-        
-        public async void Replay()
+
+        public void Replay()
         {
+            if (!IsPlaying)
+                return;
+            if (NetworkManager == null || NetworkManager.ClientManager == null) 
+                return;
+
             IsPlaying = false;
-            if (NetworkManager != null && NetworkManager.ClientManager != null)
-            {
-                NetworkManager.ClientManager.StopConnection();
-            }
+            
+            NetworkManager.ClientManager.StopConnection();
+            NetworkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
+        }
 
-            await Task.Delay(500);
-
-            if (NetworkManager != null && NetworkManager.ClientManager != null)
+        private void OnClientConnectionState(ClientConnectionStateArgs args)
+        {
+            if (args.ConnectionState == LocalConnectionState.Stopped)
             {
                 NetworkManager.ClientManager.StartConnection();
-                await Task.Delay(500);
+            }
+            else if (args.ConnectionState == LocalConnectionState.Started)
+            {
                 UIController.Instance.OnGameStart();
                 IsPlaying = true;
+                NetworkManager.ClientManager.OnClientConnectionState -= OnClientConnectionState;
             }
         }
     }

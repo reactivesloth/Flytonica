@@ -39,8 +39,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void Replay()
         {
-            GameSceneManager.Instance.Replay();
             ReturnToGame();
+            GameSceneManager.Instance.Replay();
         }
     }
 }

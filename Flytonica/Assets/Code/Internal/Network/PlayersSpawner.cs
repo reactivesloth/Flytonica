@@ -17,6 +17,9 @@ namespace Code.Internal.Network
 
         public NetworkObject Spawn(NetworkConnection connection, DroneSettings settings, bool isTeacher = false)
         {
+            if (!InstanceFinder.ServerManager.Clients.ContainsValue(connection))
+                return null;
+            
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
