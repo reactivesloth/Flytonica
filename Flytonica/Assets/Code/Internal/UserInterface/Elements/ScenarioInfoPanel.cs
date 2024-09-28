@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Code.Internal.UserInterface.Elements
 {
     public class ScenarioInfoPanel : MonoBehaviour
     {
+        [SerializeField] [CanBeNull] private string lableTask = "Задание", lableScenario = "Тип сценария";
+        [SerializeField] private TMP_Text typeLableText;
         [SerializeField] private TMP_Text typeText;
         [SerializeField] private TMP_Text descriptionText;
         [SerializeField] private TMP_Dropdown locationDropdown, droneDropdown, flyModeDropdown;
@@ -27,10 +30,15 @@ namespace Code.Internal.UserInterface.Elements
             locationDropdown.onValueChanged.RemoveAllListeners();
             droneDropdown.onValueChanged.RemoveAllListeners();
             flyModeDropdown.onValueChanged.RemoveAllListeners();
-            
+
             locationDropdown.onValueChanged.AddListener(OnMapDropdownChange);
             droneDropdown.onValueChanged.AddListener(OnDroneDropdownChange);
             flyModeDropdown.onValueChanged.AddListener(OnModeDropdownChange);
+
+            var isTask = scenarioSettings.settingType == SettingType.Task;
+            typeLableText?.SetText(isTask ? lableTask : lableScenario);
+            typeText.text = isTask ? string.Empty : scenarioSettings.scenarioType.GetName();
+            descriptionText.text = scenarioSettings.description;
 
             gameObject.SetActive(true);
             Init(scenarioSettings);
@@ -44,13 +52,11 @@ namespace Code.Internal.UserInterface.Elements
         private void Init(ScenarioSettings scenarioSettings)
         {
             _currentScenarioSettings = scenarioSettings;
-            typeText.text = scenarioSettings.scenarioType.GetName();
-            descriptionText.text = scenarioSettings.description;
 
             InitMapsDropdown(scenarioSettings);
             InitDronesDropDown(scenarioSettings);
-            
-            if(scenarioSettings.settingType != SettingType.Task)
+
+            if (scenarioSettings.settingType != SettingType.Task && scenarioSettings.settingType != SettingType.List)
             {
                 _currentScenarioSettings.currentMap = _dropdownLocations[locationDropdown.value];
                 _currentScenarioSettings.currentDrone = _dropdownDrones[droneDropdown.value];
@@ -81,6 +87,7 @@ namespace Code.Internal.UserInterface.Elements
 
             locationDropdown.AddOptions(locationOptionData);
             locationDropdown.interactable = locationDropdown.options.Count > 1;
+            locationDropdown.gameObject.SetActive(locationDropdown.options.Count > 0);
 
             if (scenarioSettings.currentMap)
                 locationDropdown.value =
@@ -110,6 +117,7 @@ namespace Code.Internal.UserInterface.Elements
 
             droneDropdown.AddOptions(droneOptionData);
             droneDropdown.interactable = droneDropdown.options.Count > 1;
+            droneDropdown.gameObject.SetActive(droneDropdown.options.Count > 0);
 
             if (scenarioSettings.currentDrone && scenarioSettings.settingType == SettingType.TaskScenario)
                 droneDropdown.value =
@@ -141,7 +149,8 @@ namespace Code.Internal.UserInterface.Elements
 
             flyModeDropdown.AddOptions(droneOptionData);
             flyModeDropdown.interactable = flyModeDropdown.options.Count > 1;
-            
+            flyModeDropdown.gameObject.SetActive(flyModeDropdown.options.Count > 0);
+
             if (scenarioSettings.currentDroneMode)
                 flyModeDropdown.value =
                     _dropdownFlyModes.FirstOrDefault(m => m.Value == scenarioSettings.currentDroneMode).Key;
@@ -158,7 +167,7 @@ namespace Code.Internal.UserInterface.Elements
             InitModesDropdown(_currentScenarioSettings);
             OnModeDropdownChange(0);
         }
-        
+
         private void OnModeDropdownChange(int value)
         {
             _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[value];
