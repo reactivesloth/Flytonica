@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Code.Internal.SceneManagement;
-using UnityEditor;
 using UnityEngine;
 
 namespace Code.Internal.Drone

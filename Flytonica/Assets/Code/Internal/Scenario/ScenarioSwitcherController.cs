@@ -91,6 +91,7 @@ namespace Code.Internal.Scenario
         }
         
         public void EndSession () {
+            Time.timeScale = 1f;
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();
