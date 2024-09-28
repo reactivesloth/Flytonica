@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using Code.Internal.API.Wrappers;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface.Pages;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,6 +12,7 @@ namespace Code.Internal.MapEditor
     {
         [SerializeField] private AvailableMapsSettings _mapsSettings;
         [SerializeField] private GameObject currentSelectedEditorObject;
+        private ConstructorScenarioPage _constructor;
         private string _savedSceneName;
         private Camera _camera;
         private bool _isEnabled;
@@ -29,8 +33,9 @@ namespace Code.Internal.MapEditor
             }
         }
         
-        public void LoadMapEditor(int sceneIndex, ScenarioType type)
+        public void LoadMapEditor(int sceneIndex, ScenarioType type, ConstructorScenarioPage constructor)
         {
+            _constructor = constructor;
             _savedSceneName = _mapsSettings.maps[sceneIndex].loadingSceneName;
             _isEnabled = true;
             _camera.gameObject.SetActive(true);
@@ -58,8 +63,7 @@ namespace Code.Internal.MapEditor
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        var newObject = Instantiate(currentSelectedEditorObject, hit.point, Quaternion.identity);
-                        newObject.AddComponent<MapEditorAddedObject>();
+                        AddObject(hit.point);
                     }
                 }
 
@@ -68,9 +72,9 @@ namespace Code.Internal.MapEditor
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
                         var tr = hit.transform.root;
-                        if (tr.GetComponent<MapEditorAddedObject>())
+                        /*if (tr.GetComponent<MapEditorAddedObject>())
                         {
-                            Destroy(tr.gameObject);
+                            RemoveObject(tr);
                         }
                         else
                         {
@@ -78,11 +82,11 @@ namespace Code.Internal.MapEditor
                             {
                                 if (t.GetComponent<MapEditorAddedObject>())
                                 {
-                                    Destroy(t.gameObject);
+                                    RemoveObject(tr);
                                     break;
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -92,9 +96,15 @@ namespace Code.Internal.MapEditor
         {
             currentSelectedEditorObject = obj;
         }
-    }
 
-    public class MapEditorAddedObject : MonoBehaviour
-    {
+        public void AddObject(Vector3 position)
+        {
+            var newObject = Instantiate(currentSelectedEditorObject, position, Quaternion.identity);
+        }
+
+        public void RemoveObject(Transform t)
+        {
+            Destroy(t.gameObject);
+        }
     }
 }

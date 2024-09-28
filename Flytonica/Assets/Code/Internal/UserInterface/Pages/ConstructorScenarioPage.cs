@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
@@ -16,6 +17,8 @@ namespace Code.Internal.UserInterface.Pages
         private string _title;
         [SerializeField] private Page createScenarioPage;
         [SerializeField] private Page scenariosManagementPage;
+        
+        private List<SpawnedObject> _spawnedObjects = new List<SpawnedObject>();
         
         protected override void OnOpen()
         {
@@ -44,7 +47,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             _data = dataContainer;
             _title = title;
-            MapEditor.MapEditor.Instance.LoadMapEditor(_data.mapId, _data.typeId);
+            MapEditor.MapEditor.Instance.LoadMapEditor(_data.mapId, _data.typeId, this);
         }
         
         private void OnLeaveButtonClick()
@@ -66,7 +69,9 @@ namespace Code.Internal.UserInterface.Pages
                         Debug.LogError("Data is null");
                         return;
                     }
-            
+
+                    _data.objects = _spawnedObjects;
+                    
                     var jsonData = JsonUtility.ToJson(_data);
                     print(jsonData);
                     var settingsFile = Encoding.UTF8.GetBytes(jsonData);
@@ -79,6 +84,11 @@ namespace Code.Internal.UserInterface.Pages
             
                     scenariosManagementPage?.Open(false);
                 });
+        }
+
+        public void SetSpawnedObjects(List<SpawnedObject> spawnedObjects)
+        {
+            _spawnedObjects = spawnedObjects;
         }
     }
 }

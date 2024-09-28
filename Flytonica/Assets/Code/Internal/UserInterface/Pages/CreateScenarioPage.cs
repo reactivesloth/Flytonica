@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
@@ -28,25 +26,7 @@ namespace Code.Internal.UserInterface.Pages
                 lineMark?.gameObject.SetActive(isMark);
             }
         }
-
-        [Serializable]
-        private class TestSaveFormat
-        {
-            public MapSettings currentMap;
-            public ScenarioType currentType;
-            public DroneSettings currentDrone;
-            public DroneFlightSettings currentMode;
-
-            public TestSaveFormat(MapSettings currentMap, ScenarioType currentType, DroneSettings currentDrone,
-                DroneFlightSettings currentMode)
-            {
-                this.currentMap = currentMap;
-                this.currentType = currentType;
-                this.currentDrone = currentDrone;
-                this.currentMode = currentMode;
-            }
-        }
-
+        
         [Header("Containers: ")] [SerializeField]
         private AvailableMapsSettings availableMaps;
 
@@ -92,7 +72,7 @@ namespace Code.Internal.UserInterface.Pages
         private int _currentStep;
 
         private bool _isViewSelection;
-        private bool _isFirstView;
+        private bool _isThirdPersonMode;
 
         private MapSettings _currentMap;
         private ScenarioType _currentType;
@@ -146,7 +126,8 @@ namespace Code.Internal.UserInterface.Pages
             var dataContainer = new ScenarioSettingsData(title.text, description.text,
                 availableDrones.drones.IndexOf(_currentDrone),
                 availableMaps.maps.IndexOf(_currentMap), _currentType, _currentDrone.flightModes.IndexOf(_currentMode),
-                wind);
+                _isThirdPersonMode, _isViewSelection,
+                wind, new List<SpawnedObject>());
             
             var page = constructorPage as ConstructorScenarioPage;
             if (page != null)
@@ -173,7 +154,7 @@ namespace Code.Internal.UserInterface.Pages
                         break;
                     case 2:
                         _isViewSelection = enableViewSelection.isOn;
-                        _isFirstView = viewSelection.isOn;
+                        _isThirdPersonMode = viewSelection.isOn;
                         _currentMap = _mapToggles[mapsGroup.GetFirstActiveToggle()];
                         _currentType = _scenarioTypeToggles[typeSelectionGroup.GetFirstActiveToggle()];
                         InitStep2();

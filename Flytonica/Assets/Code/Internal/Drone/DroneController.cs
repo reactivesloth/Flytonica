@@ -53,9 +53,9 @@ namespace Code.Internal.Drone
             InitializeDrone();
         }
         
-        private void Awake()
+        private void Start()
         {
-            _droneInput = GetComponent<DroneInput>();
+            _droneInput = DroneInput.Instance;
             _rigidBody = GetComponent<Rigidbody>();
             _transform = GetComponent<Transform>();
             DroneSensors = GetComponent<DroneSensors>();

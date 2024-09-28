@@ -15,6 +15,7 @@ namespace Code.Internal.Drone
         [Range(-1, 1)] public float Pitch;
         [Range(-1, 1)] public float Roll;
 
+        public bool DroneCanSwitchCam = true;
         public bool DroneCam = false;
         public bool DroneMode = false;
         public bool DISARM = true;
@@ -38,8 +39,19 @@ namespace Code.Internal.Drone
 
         private int bufferIndex = 0;
 
+        public static DroneInput Instance { get; private set; }
+        
         private void Awake()
         {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            
             _player = ReInput.players.GetPlayer(0);
 
             _throttleBuffer = new float[bufferSize];
@@ -91,8 +103,11 @@ namespace Code.Internal.Drone
                 DISARM = !_player.GetButton("DISARM");
             }
 
-            if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
-                DroneCam = !DroneCam;
+            if (DroneCanSwitchCam)
+            {
+                if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
+                    DroneCam = !DroneCam;
+            }
 
             RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
         }

@@ -9,7 +9,6 @@ namespace Code.Internal.Drone
     public class DroneCamera : NetworkBehaviour
     {
         [SerializeField] private GameObject cameraObject;
-        private DroneInput _droneInput;
         
         [SerializeField] [Range(-45,90)] private float currentAngle;
         [SerializeField] [Range(-45, 90)] private float minAngle;
@@ -17,9 +16,8 @@ namespace Code.Internal.Drone
 
         public event Action<Vector3, Quaternion> OnCameraDataUpdated;
         
-        private void Awake()
+        private void Start()
         {
-            _droneInput = GetComponent<DroneInput>();
             cameraObject.SetActive(false);
         }
 
@@ -30,8 +28,8 @@ namespace Code.Internal.Drone
 
             TransmitCameraTransform(Owner);
             
-            if (cameraObject.activeSelf != _droneInput.DroneCam)
-                cameraObject.SetActive(_droneInput.DroneCam);
+            if (cameraObject.activeSelf != DroneInput.Instance.DroneCam)
+                cameraObject.SetActive(DroneInput.Instance.DroneCam);
 
             currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
             

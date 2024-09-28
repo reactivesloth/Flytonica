@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 
@@ -12,9 +13,24 @@ namespace Code.Internal.Scenario
         [SerializeField] private GameObject transportModeObjects;
         [SerializeField] private GameObject searchingModeObjects;
         [SerializeField] private GameObject searchingIRModeObjects;
+
+        private ScenarioSettings _settings;
+        private bool _cameraInitialized = false;
         
+        private void Update()
+        {
+            if (DroneInput.Instance != null && !_cameraInitialized)
+            {
+                DroneInput.Instance.DroneCanSwitchCam = _settings == null ? true : _settings.cameraSwitchAllowed;
+                DroneInput.Instance.DroneCam = _settings == null ? false : !_settings.cameraThirdPerson;
+                _cameraInitialized = true;
+            }
+        }
+
         public void Initialize(ScenarioSettings settings)
         {
+            _cameraInitialized = false;
+            _settings = settings;
             freeFlightObjects?.SetActive(false);
             tutorialModeObjects?.SetActive(false);
             raceModeObjects?.SetActive(false);

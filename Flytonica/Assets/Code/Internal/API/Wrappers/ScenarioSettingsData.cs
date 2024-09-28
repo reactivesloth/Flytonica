@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Code.Internal.SceneManagement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.API.Wrappers
 {
@@ -14,10 +15,12 @@ namespace Code.Internal.API.Wrappers
         public int mapId;
         public int droneModeId;
         public ScenarioType typeId;
+        public bool cameraThirdPerson;
+        public bool cameraAllowedSwitchModeId;
         public List<WindLayerSettings> windLayers;
         public List<SpawnedObject> objects;
 
-        public ScenarioSettingsData(string name, string description, int droneId, int mapId, ScenarioType typeId, int droneModeId, List<WindLayerSettings> windLayers = null, List<SpawnedObject> objects = null)
+        public ScenarioSettingsData(string name, string description, int droneId, int mapId, ScenarioType typeId, int droneModeId, bool cameraThirdPerson, bool cameraAllowedSwitchModeId, List<WindLayerSettings> windLayers = null, List<SpawnedObject> objects = null)
         {
             this.droneId = droneId;
             this.mapId = mapId;
@@ -25,6 +28,8 @@ namespace Code.Internal.API.Wrappers
             this.droneModeId = droneModeId;
             this.description = description;
             this.name = name;
+            this.cameraThirdPerson = cameraThirdPerson;
+            this.cameraAllowedSwitchModeId = cameraAllowedSwitchModeId;
             this.windLayers = windLayers;
             this.objects = objects ?? new List<SpawnedObject>();
         }

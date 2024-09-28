@@ -97,7 +97,7 @@ namespace Code.Internal.Network
                 TargetInitializeScenario(connection,
                     JsonUtility.ToJson(new ScenarioSettingsData(scenario.name, scenario.description,
                         drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
-                        scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode))));
+                        scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode), scenario.cameraThirdPerson, scenario.cameraSwitchAllowed)));
 
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
@@ -113,7 +113,7 @@ namespace Code.Internal.Network
             var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,
                 scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
                 drones.drones[scenarioInfo.droneId],
-                drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId]);
+                drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId], scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId);
             InitScenario(scenario);
         }
 
