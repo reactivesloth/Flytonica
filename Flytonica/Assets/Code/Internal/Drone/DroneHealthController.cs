@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Code.Internal.SceneManagement;
+using UnityEditor;
 using UnityEngine;
 
 namespace Code.Internal.Drone
@@ -31,11 +33,11 @@ namespace Code.Internal.Drone
 
         private void OnCollisionEnter(Collision collision)
         {
-            var impactForce = _rigidbody.linearVelocity.magnitude;
+            var impactForce = collision.relativeVelocity.magnitude * _rigidbody.mass;
 
             if (impactForce > _damageThreshold)
             {
-                var damage = CalculateDamage(impactForce);
+                var damage = CalculateDamage(_rigidbody.linearVelocity.magnitude * 3.6f);
                 ApplyDamage(damage * _damageMultiplier);
             }
         }
