@@ -57,11 +57,11 @@ namespace Code.Internal.UserInterface.Elements
             print(settings);
             titleText.text = settings.name;
 
-            if (isTaskInit && ParentButton != null)
+            /*if (isTaskInit && ParentButton != null)
             {
                 @object.Interactable = false;
                 @object.enabled = false;
-            }
+            }*/
 
             selectToggle?.onValueChanged.AddListener(OnToggleValueChanged);
         }
