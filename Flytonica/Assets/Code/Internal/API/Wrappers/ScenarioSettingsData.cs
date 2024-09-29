@@ -42,12 +42,14 @@ namespace Code.Internal.API.Wrappers
         
         public Vector3 position;
         public Quaternion rotation;
+        public Vector3 scale;
 
-        public SpawnedObject(string prefabName, Vector3 position, Quaternion rotation)
+        public SpawnedObject(string prefabName, Vector3 position, Quaternion rotation, Vector3 scale)
         {
             this.prefabName = prefabName;
             this.position = position;
             this.rotation = rotation;
+            this.scale = scale;
         }
     }
 

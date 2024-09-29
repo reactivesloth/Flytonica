@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Code.Internal.API.Wrappers;
 using Code.Internal.SceneManagement;
@@ -10,19 +11,18 @@ namespace Code.Internal.MapEditor
 {
     public class MapEditor : MonoBehaviour
     {
+        [SerializeField] private GameObject mapEditorCamera;
         [SerializeField] private AvailableMapsSettings _mapsSettings;
         [SerializeField] private GameObject currentSelectedEditorObject;
         private ConstructorScenarioPage _constructor;
         private string _savedSceneName;
-        private Camera _camera;
         private bool _isEnabled;
+        private Camera _camera;
         
         public static MapEditor Instance { get; private set; }
 
         private void Awake()
         {
-            _camera = GetComponentInChildren<Camera>(true);
-            
             if (Instance == null)
             {
                 Instance = this;
@@ -38,16 +38,23 @@ namespace Code.Internal.MapEditor
             _constructor = constructor;
             _savedSceneName = _mapsSettings.maps[sceneIndex].loadingSceneName;
             _isEnabled = true;
-            _camera.gameObject.SetActive(true);
+            _camera = Instantiate(mapEditorCamera).GetComponent<Camera>();
             SceneManager.LoadScene(_savedSceneName, LoadSceneMode.Additive);
             MapEditorUI.Instance.InitializeMainPanel(type);
         }
 
         public void UnloadMapEditor()
         {
+            var objects = FindObjectsOfType<SpawnableObject>();
+
+            foreach (var o in objects)
+            {
+                Destroy(o.gameObject);
+            }
+            
             SceneManager.UnloadSceneAsync(_savedSceneName);
             _isEnabled = false;
-            _camera.gameObject.SetActive(false);
+            Destroy(_camera.gameObject);
         }
 
         private void Update()
@@ -72,7 +79,7 @@ namespace Code.Internal.MapEditor
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
                         var tr = hit.transform.root;
-                        /*if (tr.GetComponent<MapEditorAddedObject>())
+                        if (tr.GetComponent<SpawnableObject>())
                         {
                             RemoveObject(tr);
                         }
@@ -80,13 +87,13 @@ namespace Code.Internal.MapEditor
                         {
                             foreach (Transform t in tr)
                             {
-                                if (t.GetComponent<MapEditorAddedObject>())
+                                if (t.GetComponent<SpawnableObject>())
                                 {
                                     RemoveObject(tr);
                                     break;
                                 }
                             }
-                        }*/
+                        }
                     }
                 }
             }
@@ -99,6 +106,24 @@ namespace Code.Internal.MapEditor
 
         public void AddObject(Vector3 position)
         {
+            var type = currentSelectedEditorObject.GetComponent<SpawnableObject>().Type;
+
+            var objects = FindObjectsOfType<SpawnableObject>();
+            foreach (var o in objects)
+            {
+                if (type == o.GetComponent<SpawnableObject>().Type)
+                    switch (type)
+                    {
+                        case MapEditorObjectType.SpawnPoint:
+                        case MapEditorObjectType.StartGate:
+                        case MapEditorObjectType.FinishGate:
+                            Destroy(o.gameObject);
+                            break;
+                        default:
+                            break;
+                    }
+            }
+
             var newObject = Instantiate(currentSelectedEditorObject, position, Quaternion.identity);
         }
 

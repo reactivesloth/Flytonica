@@ -37,7 +37,7 @@ namespace Code.Internal.MapEditor
             mainPanel.Setup(type);
         }
 
-        public void InitializeLibraryPanel (MapEditorUILibraryPanelType libraryPanelType = MapEditorUILibraryPanelType.None) {
+        public void InitializeLibraryPanel (MapEditorObjectType libraryPanelType) {
             libraryPanel.Setup(libraryPanelType);
         }
     }

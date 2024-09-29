@@ -70,7 +70,7 @@ namespace Code.Internal.UserInterface.Pages
                         return;
                     }
 
-                    _data.objects = _spawnedObjects;
+                    SetSpawnedObjects();
                     
                     var jsonData = JsonUtility.ToJson(_data);
                     print(jsonData);
@@ -82,13 +82,22 @@ namespace Code.Internal.UserInterface.Pages
 
                     HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
             
+                    _spawnedObjects.Clear();
                     scenariosManagementPage?.Open(false);
                 });
         }
 
-        public void SetSpawnedObjects(List<SpawnedObject> spawnedObjects)
+        private void SetSpawnedObjects()
         {
-            _spawnedObjects = spawnedObjects;
+            _spawnedObjects.Clear();
+            var objects = FindObjectsOfType<SpawnableObject>();
+
+            foreach (var o in objects)
+            {
+                _spawnedObjects.Add(new SpawnedObject(o.gameObject.name, o.transform.position, o.transform.rotation, o.transform.lossyScale));
+            }
+
+            _data.objects = _spawnedObjects;
         }
     }
 }

@@ -19,13 +19,13 @@ namespace Code.Internal.MapEditor
 
         private void Awake()
         {
-            defaultObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Default); });
-            spawnerPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Spawner); });
-            startPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.StartPoint); });
-            finishPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.FinishPoint); });
-            racingGatesButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Racing); });
-            transportObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Transport); });
-            searchingObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorUILibraryPanelType.Searching); });
+            defaultObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.Default); });
+            spawnerPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SpawnPoint); });
+            startPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.StartGate); });
+            finishPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.FinishGate); });
+            racingGatesButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate); });
+            transportObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject); });
+            searchingObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject); });
         }
 
         public void ClosePanel ()
