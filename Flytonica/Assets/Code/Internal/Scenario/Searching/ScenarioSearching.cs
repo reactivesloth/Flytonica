@@ -13,8 +13,15 @@ namespace Code.Internal.Scenario.Searching
     public class SearchingObject
     {
         public string descriptionTask;
-        public GameObject[] finingObjects;
+        public GameObject finingObject;
         public bool finded = false;
+
+        public SearchingObject(string descriptionTask, GameObject finingObject)
+        {
+            this.descriptionTask = descriptionTask;
+            this.finingObject = finingObject;
+            finded = false;
+        }
     }
     
     public class ScenarioSearching : MonoBehaviour
@@ -22,7 +29,7 @@ namespace Code.Internal.Scenario.Searching
         private RaceCondition _raceCondition = RaceCondition.Waiting;
 
         [SerializeField] private string collectionName;
-        [SerializeField] private SearchingObject[] searchingObjects;
+        [SerializeField] private List<SearchingObject> searchingObjects;
         [SerializeField] private float timer = 300f;
         private float _timer;
         private float _counter;
@@ -31,14 +38,6 @@ namespace Code.Internal.Scenario.Searching
         private float _gazeTimeNotResponceTime;
         private int _findedCount = 0;
         
-        private void Start()
-        {
-            if (_raceCondition == RaceCondition.Waiting)
-            {
-                StartRace();
-            }
-        }
-
         private void Update()
         {
             if (Camera.main == null) return;
@@ -57,7 +56,7 @@ namespace Code.Internal.Scenario.Searching
                 }
 
                 Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                if (searchingObjects.Length > 0)
+                if (searchingObjects.Count > 0)
                 {
                     if (Physics.Raycast(ray, out var hit, 15))
                     {
@@ -65,13 +64,10 @@ namespace Code.Internal.Scenario.Searching
                         {
                             if (!searchingObject.finded)
                             {
-                                foreach (var findingObject in searchingObject.finingObjects)
+                                if (searchingObject.finingObject.GetComponent<Collider>() == hit.collider)
                                 {
-                                    if (findingObject.GetComponent<Collider>() == hit.collider)
-                                    {
-                                        FindObject(searchingObject);
-                                        break;
-                                    }
+                                    FindObject(searchingObject);
+                                    break;
                                 }
                             }
                         }
@@ -98,7 +94,7 @@ namespace Code.Internal.Scenario.Searching
                         _findedCount += 1;
                         DroneHUD.Instance.SetMessage(MessageType.Normal, $"Найден объект {o.descriptionTask}", 3);
                         
-                        if (_findedCount == searchingObjects.Length)
+                        if (_findedCount == searchingObjects.Count)
                         {
                             FinishRace(true);
                         }
@@ -148,8 +144,8 @@ namespace Code.Internal.Scenario.Searching
 
             _raceCondition = RaceCondition.Running;
             
-            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Length} объектов." + $"\nНайдите {collectionName}." + "\nКамера работает с 15 метров.", 3);
-            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Length}]");
+            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Count} объектов." + $"\nНайдите {collectionName}." + "\nКамера работает с 15 метров.", 3);
+            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
             
         }
 
@@ -165,7 +161,7 @@ namespace Code.Internal.Scenario.Searching
                 ojbectResult += "\n" + searchingObject.descriptionTask + (searchingObject.finded ? ": Найден" : ": Не найден");
             }
             
-            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount}/{searchingObjects.Length}] объектов: {ojbectResult}",
+            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount}/{searchingObjects.Count}] объектов: {ojbectResult}",
                 null, "Выйти в главное меню", Color.red, Color.white, () =>
                 {
                     ScenarioSwitcherController.Instance.EndSession();
@@ -177,7 +173,7 @@ namespace Code.Internal.Scenario.Searching
                     result.Add($"{SceneManager.GetActiveScene().name}_Время", GetResult(_counter));
                     foreach (var searchingObject in searchingObjects)
                     {
-                        result.Add($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObjects[0].name, searchingObject.finded ? "Найден" : "Не найден");
+                        result.Add($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObject.name.Replace("(Clone)", ""), searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
                     ScenarioSwitcherController.Instance.NextOrEnd(result);
@@ -186,7 +182,7 @@ namespace Code.Internal.Scenario.Searching
         
         private void UpdateTask()
         {
-            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Length}]");
+            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
         }
         
         public string GetResult(float t)
@@ -194,6 +190,20 @@ namespace Code.Internal.Scenario.Searching
             TimeSpan timeSpan = TimeSpan.FromSeconds(t);
             DateTime dateTime = DateTime.Today.Add(timeSpan);
             return dateTime.ToString("mm:ss");
+        }
+
+        public void Initialize()
+        {
+            searchingObjects = new List<SearchingObject>();
+            var objects = FindObjectsOfType<SpawnableObject>();
+            foreach (var o in objects)
+            {
+                searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
+            }
+            if (_raceCondition == RaceCondition.Waiting)
+            {
+                StartRace();
+            }
         }
     }
 }

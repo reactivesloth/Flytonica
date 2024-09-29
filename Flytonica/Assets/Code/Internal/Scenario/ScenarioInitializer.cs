@@ -1,5 +1,7 @@
 ﻿using System;
 using Code.Internal.Drone;
+using Code.Internal.Scenario.Race;
+using Code.Internal.Scenario.Searching;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 
@@ -62,7 +64,7 @@ namespace Code.Internal.Scenario
                     throw new ArgumentOutOfRangeException();
             }
 
-            /*var objectsToClean = FindObjectsOfType<SpawnableObject>();
+            var objectsToClean = FindObjectsOfType<SpawnableObject>();
             foreach (var o in objectsToClean)
             {
                 if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
@@ -74,8 +76,11 @@ namespace Code.Internal.Scenario
             
             foreach (var spawnedObject in objects)
             {
-                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject, spawnedObject.position, spawnedObject.rotation).transform;
-
+                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject).transform;
+                sObj.position = spawnedObject.position;
+                sObj.rotation = spawnedObject.rotation;
+                sObj.transform.localScale = spawnedObject.scale;
+                
                 if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
                 {
                     foreach (var o in objectsToClean)
@@ -95,20 +100,23 @@ namespace Code.Internal.Scenario
                         break;
                     case ScenarioType.Race:
                         sObj.SetParent(raceModeObjects.transform);
+                        FindAnyObjectByType<ScenarioRace>().Initialize();
                         break;
                     case ScenarioType.Transport:
                         sObj.SetParent(raceModeObjects.transform);
                         break;
                     case ScenarioType.Searching:
                         sObj.SetParent(searchingModeObjects.transform);
+                        FindAnyObjectByType<ScenarioSearching>().Initialize();
                         break;
                     case ScenarioType.SearchingWithIR:
                         sObj.SetParent(searchingIRModeObjects.transform);
+                        FindAnyObjectByType<ScenarioSearching>().Initialize();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }*/
+            }
         }
     }
 }
