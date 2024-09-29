@@ -1,5 +1,7 @@
 ﻿using System;
 using Code.Internal.Drone;
+using Code.Internal.Scenario.Race;
+using Code.Internal.Scenario.Searching;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 
@@ -38,50 +40,31 @@ namespace Code.Internal.Scenario
             searchingModeObjects?.SetActive(false);
             searchingIRModeObjects?.SetActive(false);
 
-            switch (_settings.scenarioType)
-            {
-                case ScenarioType.FreeFlight:
-                    freeFlightObjects.SetActive(true);
-                    break;
-                case ScenarioType.Tutorial:
-                    tutorialModeObjects?.SetActive(true);
-                    break;
-                case ScenarioType.Race:
-                    raceModeObjects?.SetActive(true);
-                    break;
-                case ScenarioType.Transport:
-                    transportModeObjects?.SetActive(true);
-                    break;
-                case ScenarioType.Searching:
-                    searchingModeObjects?.SetActive(true);
-                    break;
-                case ScenarioType.SearchingWithIR:
-                    searchingIRModeObjects?.SetActive(true);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            /*var objectsToClean = FindObjectsOfType<SpawnableObject>();
+            var objectsToClean = FindObjectsOfType<SpawnableObject>(true);
             foreach (var o in objectsToClean)
             {
-                if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
-                    continue;
-                Destroy(o.gameObject);
+                if (o.GetComponent<SpawnableObject>().Type != MapEditorObjectType.SpawnPoint)
+                {
+                    DestroyImmediate(o.gameObject);
+                }
             }
             
+            objectsToClean = FindObjectsOfType<SpawnableObject>(true);
             var objects = _settings.objects;
             
             foreach (var spawnedObject in objects)
             {
-                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject, spawnedObject.position, spawnedObject.rotation).transform;
-
+                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject).transform;
+                sObj.position = spawnedObject.position;
+                sObj.rotation = spawnedObject.rotation;
+                sObj.transform.localScale = spawnedObject.scale;
+                
                 if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
                 {
                     foreach (var o in objectsToClean)
                     {
                         if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
-                            Destroy(o.gameObject);
+                            DestroyImmediate(o.gameObject);
                     }    
                 }
                 
@@ -95,6 +78,7 @@ namespace Code.Internal.Scenario
                         break;
                     case ScenarioType.Race:
                         sObj.SetParent(raceModeObjects.transform);
+                        FindAnyObjectByType<ScenarioRace>().Initialize();
                         break;
                     case ScenarioType.Transport:
                         sObj.SetParent(raceModeObjects.transform);
@@ -108,7 +92,34 @@ namespace Code.Internal.Scenario
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }*/
+            }
+            
+            switch (_settings.scenarioType)
+            {
+                case ScenarioType.FreeFlight:
+                    freeFlightObjects.SetActive(true);
+                    break;
+                case ScenarioType.Tutorial:
+                    tutorialModeObjects?.SetActive(true);
+                    break;
+                case ScenarioType.Race:
+                    raceModeObjects?.SetActive(true);
+                    FindAnyObjectByType<ScenarioRace>().Initialize();
+                    break;
+                case ScenarioType.Transport:
+                    transportModeObjects?.SetActive(true);
+                    break;
+                case ScenarioType.Searching:
+                    searchingModeObjects?.SetActive(true);
+                    FindAnyObjectByType<ScenarioSearching>().Initialize();
+                    break;
+                case ScenarioType.SearchingWithIR:
+                    searchingIRModeObjects?.SetActive(true);
+                    FindAnyObjectByType<ScenarioSearching>().Initialize();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

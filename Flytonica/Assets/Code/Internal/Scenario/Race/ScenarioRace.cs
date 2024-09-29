@@ -135,5 +135,10 @@ namespace Code.Internal.Scenario.Race
                     Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up, checkpoints[i+1].transform.position + Vector3.up);
             }
         }
+
+        public void Initialize()
+        {
+            Debug.LogError("Scenario initializing");
+        }
     }
 }
