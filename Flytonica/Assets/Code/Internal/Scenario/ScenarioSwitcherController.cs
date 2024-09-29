@@ -58,6 +58,7 @@ namespace Code.Internal.Scenario
         {
             _results.Add(result);
             
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn(InstanceFinder.ClientManager.Connection);
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
@@ -68,7 +69,7 @@ namespace Code.Internal.Scenario
         private void OnSceneLoaded()
         {
             FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenario);
-            var drone = InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Spawn(
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Spawn(
                 InstanceFinder.ClientManager.Connection, sceneSettings.currentScenario.currentDrone,
                 sceneSettings.currentScenario.currentDroneMode);
         }

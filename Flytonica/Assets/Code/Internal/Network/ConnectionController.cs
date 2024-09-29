@@ -27,22 +27,6 @@ namespace Code.Internal.Network
         private bool _sceneLoaded;
         private readonly List<NetworkConnection> _pendingConnections = new();
 
-        private void OnEnable()
-        {
-            NetworkManager.ServerManager.OnClientKick += ServerManagerOnOnClientKick;
-        }
-
-        private void OnDisable()
-        {
-            NetworkManager.ServerManager.OnClientKick -= ServerManagerOnOnClientKick;
-        }
-        
-        private void ServerManagerOnOnClientKick(NetworkConnection connection, int id, KickReason kickReason)
-        {
-            Debug.LogWarning($"Client {id} was kicked");
-            OnDisconnectedPlayer(connection);
-        }
-
         public override void OnStartServer()
         {
             base.OnStartServer();

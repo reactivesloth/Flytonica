@@ -20,6 +20,7 @@ namespace Code.Internal.Network
             if (!InstanceFinder.ServerManager.Clients.ContainsValue(connection))
                 return null;
             
+            print($"Spawn {settings.name}");
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
@@ -53,7 +54,7 @@ namespace Code.Internal.Network
             Destroy(drone.gameObject);
         }
 
-        /*public void DespawnAll(NetworkConnection connection)
+        public void DespawnAll(NetworkConnection connection)
         {
             foreach (var networkObject in _drones.ToList())
             {
@@ -61,6 +62,6 @@ namespace Code.Internal.Network
                 PlayerManager.Instance.RemovePlayer(connection);
                 InstanceFinder.ServerManager.Despawn(networkObject, DespawnType.Destroy);
             }
-        }*/
+        }
     }
 }
