@@ -37,8 +37,8 @@ namespace Code.Internal.Scenario
             transportModeObjects?.SetActive(false);
             searchingModeObjects?.SetActive(false);
             searchingIRModeObjects?.SetActive(false);
-            
-            switch (settings.scenarioType)
+
+            switch (_settings.scenarioType)
             {
                 case ScenarioType.FreeFlight:
                     freeFlightObjects.SetActive(true);
@@ -61,6 +61,54 @@ namespace Code.Internal.Scenario
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            /*var objectsToClean = FindObjectsOfType<SpawnableObject>();
+            foreach (var o in objectsToClean)
+            {
+                if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
+                    continue;
+                Destroy(o.gameObject);
+            }
+            
+            var objects = _settings.objects;
+            
+            foreach (var spawnedObject in objects)
+            {
+                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject, spawnedObject.position, spawnedObject.rotation).transform;
+
+                if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
+                {
+                    foreach (var o in objectsToClean)
+                    {
+                        if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
+                            Destroy(o.gameObject);
+                    }    
+                }
+                
+                switch (_settings.scenarioType)
+                {
+                    case ScenarioType.FreeFlight:
+                        sObj.SetParent(freeFlightObjects.transform);
+                        break;
+                    case ScenarioType.Tutorial:
+                        sObj.SetParent(tutorialModeObjects.transform);
+                        break;
+                    case ScenarioType.Race:
+                        sObj.SetParent(raceModeObjects.transform);
+                        break;
+                    case ScenarioType.Transport:
+                        sObj.SetParent(raceModeObjects.transform);
+                        break;
+                    case ScenarioType.Searching:
+                        sObj.SetParent(searchingModeObjects.transform);
+                        break;
+                    case ScenarioType.SearchingWithIR:
+                        sObj.SetParent(searchingIRModeObjects.transform);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }*/
         }
     }
 }
