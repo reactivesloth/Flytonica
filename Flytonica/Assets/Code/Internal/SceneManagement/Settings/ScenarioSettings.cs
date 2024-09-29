@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,12 +23,13 @@ namespace Code.Internal.SceneManagement
 
         [CanBeNull] public List<ScenarioSettings> nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
-
+        
         public bool cameraThirdPerson = false;
         public bool cameraSwitchAllowed = true;
-
+        public List<SpawnedObject> objects;
+        
         public static ScenarioSettings CreateDynamicTaskScenario(int id, string name, string description, ScenarioType scenarioType,
-            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraFPV, bool cameraSwitchAllowed)
+            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraFPV, bool cameraSwitchAllowed, List<SpawnedObject> objects = null)
         {
             var instance = CreateInstance<ScenarioSettings>();
 
@@ -41,6 +43,7 @@ namespace Code.Internal.SceneManagement
             instance.currentDroneMode = mode;
             instance.cameraThirdPerson = cameraFPV;
             instance.cameraSwitchAllowed = cameraSwitchAllowed;
+            instance.objects = objects;
             return instance;
         }
     }

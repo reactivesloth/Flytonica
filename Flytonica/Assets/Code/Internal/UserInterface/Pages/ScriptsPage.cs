@@ -394,7 +394,8 @@ namespace Code.Internal.UserInterface.Pages
                     drones.drones[scenarioSettingsData.droneId],
                     drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId],
                     scenarioSettingsData.cameraThirdPerson,
-                    scenarioSettingsData.cameraAllowedSwitchModeId);
+                    scenarioSettingsData.cameraAllowedSwitchModeId,
+                    scenarioSettingsData.objects);
 
                 taskScenarios.Add(scenarioSetting);
             }
