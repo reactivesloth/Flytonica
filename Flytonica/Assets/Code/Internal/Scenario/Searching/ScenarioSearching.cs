@@ -194,12 +194,15 @@ namespace Code.Internal.Scenario.Searching
 
         public void Initialize()
         {
+            var objects = GetComponentsInChildren<SpawnableObject>();
             searchingObjects = new List<SearchingObject>();
-            var objects = FindObjectsOfType<SpawnableObject>();
+
             foreach (var o in objects)
             {
-                searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
+                 if (o.Type == MapEditorObjectType.SearchingObject)
+                     searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
             }
+            
             if (_raceCondition == RaceCondition.Waiting)
             {
                 StartRace();
