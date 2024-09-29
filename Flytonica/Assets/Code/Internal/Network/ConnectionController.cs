@@ -7,6 +7,7 @@ using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
+using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
@@ -25,6 +26,22 @@ namespace Code.Internal.Network
 
         private bool _sceneLoaded;
         private readonly List<NetworkConnection> _pendingConnections = new();
+
+        private void OnEnable()
+        {
+            NetworkManager.ServerManager.OnClientKick += ServerManagerOnOnClientKick;
+        }
+
+        private void OnDisable()
+        {
+            NetworkManager.ServerManager.OnClientKick -= ServerManagerOnOnClientKick;
+        }
+        
+        private void ServerManagerOnOnClientKick(NetworkConnection connection, int id, KickReason kickReason)
+        {
+            Debug.LogWarning($"Client {id} was kicked");
+            OnDisconnectedPlayer(connection);
+        }
 
         public override void OnStartServer()
         {

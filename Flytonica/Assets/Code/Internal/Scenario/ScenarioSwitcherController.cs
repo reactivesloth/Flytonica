@@ -56,13 +56,13 @@ namespace Code.Internal.Scenario
 
         private void LoadNext(Dictionary<string, string> result)
         {
-            Time.timeScale = 1f;
             _results.Add(result);
             
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().DespawnAll();
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
+            
+            Time.timeScale = 1f;
         }
 
         private void OnSceneLoaded()

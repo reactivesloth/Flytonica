@@ -93,8 +93,8 @@ namespace Code.Internal.SceneManagement
 
             IsPlaying = false;
             
-            NetworkManager.ClientManager.StopConnection();
             NetworkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
+            NetworkManager.ClientManager.StopConnection();
         }
 
         private void OnClientConnectionState(ClientConnectionStateArgs args)

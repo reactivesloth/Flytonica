@@ -23,9 +23,9 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if(!IsOwner)
+            if(!IsOwner || !IsSpawned)
                 return;
-
+            
             TransmitCameraTransform(Owner);
             
             if (cameraObject.activeSelf != DroneInput.Instance.DroneCam)

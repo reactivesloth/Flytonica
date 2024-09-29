@@ -36,21 +36,31 @@ namespace Code.Internal.Network
 
         public void Despawn(NetworkConnection connection)
         {
-            var drone = _drones.FirstOrDefault(d => d.GetComponent<NetworkObject>().Owner == connection);
+            print(connection);
+            var drone = _drones.FirstOrDefault(d =>
+            {
+                if(d)
+                    return d.Owner == connection;
+                return false;
+            });
+            
             if (drone == null)
                 return;
+            
             _drones.Remove(drone);
             PlayerManager.Instance.RemovePlayer(connection);
             InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
+            Destroy(drone.gameObject);
         }
 
-        public void DespawnAll()
+        /*public void DespawnAll(NetworkConnection connection)
         {
             foreach (var networkObject in _drones.ToList())
             {
                 _drones.Remove(networkObject);
+                PlayerManager.Instance.RemovePlayer(connection);
                 InstanceFinder.ServerManager.Despawn(networkObject, DespawnType.Destroy);
             }
-        }
+        }*/
     }
 }
