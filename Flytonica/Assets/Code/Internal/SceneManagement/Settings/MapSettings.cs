@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Code.Internal.SceneManagement
 {
@@ -8,5 +7,7 @@ namespace Code.Internal.SceneManagement
     {
         public new string name;
         public string loadingSceneName;
+        public int windLayersCount;
+        public int maxAllowedHeight = 0;
     }
 }

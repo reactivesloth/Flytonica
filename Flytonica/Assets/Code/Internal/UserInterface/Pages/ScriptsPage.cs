@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
+using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
-using FishNet.Discovery;
 using FishNet.Transporting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,65 +17,106 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class ScriptsPage : Page
     {
+        [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
+        [SerializeField] private AvailableMapsSettings maps;
+        [SerializeField] private AvailableDronesSettings drones;
+        [SerializeField] private string tasksTitle = "Доступные задания", learnTitle = "Доступные сценарии";
+
         [Header("Conponents:")] [SerializeField]
+        private ScrollRect pageScroll;
+        [SerializeField]
         private Transform selectScriptParent;
+        [SerializeField] private TMP_Text pageTitle;
 
         [SerializeField] private ScenarioInfoPanel infoPanel;
         [SerializeField] private Button startGameButton;
 
+        [SerializeField] private Button updateButton, upButton, downButton;
+
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
         [SerializeField] private SceneLoadingSettings sceneSettings;
+        [SerializeField] private ScenarioSettings currentScenarioCollection;
 
         private readonly Dictionary<SelectScriptButton, ScenarioSettings> _buttonScenarioDictionary = new();
         private ScenarioSettings _selectedScenario;
-        private bool _isNetGame;
+
+        private bool _isTaskInit;
 
         protected override void OnOpen()
         {
             base.OnOpen();
+            
             startGameButton?.onClick.AddListener(OnStartGame);
+            
+            updateButton?.onClick.AddListener(InitTasks);
+            
+            upButton?.onClick.AddListener(MoveUp);
+            downButton?.onClick.AddListener(MoveDown);
+            
+            infoPanel?.Close();
         }
 
         protected override void OnClose()
         {
             base.OnClose();
+            
             startGameButton?.onClick.RemoveListener(OnStartGame);
+            
+            updateButton?.onClick.RemoveListener(InitTasks);
+            
+            upButton?.onClick.RemoveListener(MoveUp);
+            downButton?.onClick.RemoveListener(MoveDown);
         }
 
-        public void Init(ScenarioSettings[] scenarios, bool isNet = false)
+        public void InitTasks()
         {
-            _isNetGame = isNet;
+            Clear();
+            GetScenarios(() =>
+            {
+                Init(taskScenariosSettings.scenarios, true);
+            });
+        }
+
+        public void Init(List<ScenarioSettings> scenarios, bool isTask = false)
+        {
+            _isTaskInit = isTask;
+            
+            updateButton?.gameObject.SetActive(_isTaskInit);
+            pageTitle?.SetText(isTask ? tasksTitle : learnTitle);
+            
             Clear();
 
-            for (var i = 0; i < scenarios.Length; i++)
+            for (var rootsCounter = 0; rootsCounter < scenarios.Count; rootsCounter++)
             {
-                var scenario = scenarios[i];
+                var scenarioRoot = scenarios[rootsCounter];
 
-                var nestedScenarios = scenario.nestedScenarios;
+                var nestedScenarios = scenarioRoot.nestedScenarios;
                 var openListButton = Instantiate(buttonPrefab, selectScriptParent);
-                var list = nestedScenarios is { Length: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
-                openListButton.Init(scenario, (i + 1).ToString(), list);
-                _buttonScenarioDictionary.Add(openListButton, scenario);
+                var list = nestedScenarios is { Count: 0 } ? null : Instantiate(listPrefab, selectScriptParent);
+                openListButton.SetParent(null);
+                openListButton.Init(scenarioRoot, (rootsCounter + 1).ToString(), list, _isTaskInit,
+                    list != null && !_isTaskInit);
+                _buttonScenarioDictionary.Add(openListButton, scenarioRoot);
                 openListButton.Selected += OnSelect;
+                openListButton.ToggleChanged += OnToggleChanged;
 
                 if (!list || nestedScenarios == null)
                     continue;
 
-                for (var j = 0; j < nestedScenarios.Length; j++)
+                for (var nestedCounter = 0; nestedCounter < nestedScenarios.Count; nestedCounter++)
                 {
-                    var scenario2 = nestedScenarios[j];
+                    var scenario = nestedScenarios[nestedCounter];
 
                     var scenarioButton = Instantiate(buttonPrefab, list.transform);
-                    scenarioButton.Init(scenario2, $"{i + 1}.{j + 1}");
-                    _buttonScenarioDictionary.Add(scenarioButton, scenario2);
+                    scenarioButton.SetParent(openListButton);
+                    scenarioButton.Init(scenario, $"{rootsCounter + 1}.{nestedCounter + 1}", isTaskInit: _isTaskInit,
+                        isOnToggle: !_isTaskInit);
+                    _buttonScenarioDictionary.Add(scenarioButton, scenario);
                     scenarioButton.Selected += OnSelect;
+                    scenarioButton.ToggleChanged += OnToggleChanged;
                 }
             }
-
-            var select = _buttonScenarioDictionary.Keys.FirstOrDefault();
-            OnSelect(select);
-            select.OnButtonPress();
         }
 
         private void Clear()
@@ -84,46 +129,281 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnStartGame()
         {
-                Debug.Log(
-                    $"Scenario: {_selectedScenario.name}\n" +
-                    $"Map: {infoPanel.CurrentMap.name}\n" +
-                    $"Drone:{infoPanel.CurrentDrone.name}\n" +
-                    $"Mode:{infoPanel.CurrentFlyMode.name}");
+            currentScenarioCollection = _isTaskInit ? GetTask() : GetScenarioList();
 
-            sceneSettings.currentScenario = _selectedScenario;
-            sceneSettings.currentMap = infoPanel.CurrentMap;
-            sceneSettings.currentDrone = infoPanel.CurrentDrone;
-            sceneSettings.currentDrone.currentFlightMode = infoPanel.CurrentFlyMode;
+            sceneSettings.currentScenarioCollection = currentScenarioCollection;
+            sceneSettings.isNet = false;
+            sceneSettings.isTask = _isTaskInit;
+            sceneSettings.taskId = _isTaskInit ? currentScenarioCollection.id : -1;
+            sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
+            
+            print(sceneSettings.currentScenario.nextScenario?.name);
 
             InstanceFinder.ServerManager.StartConnection();
-            
+
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
-                if (args.ConnectionState == LocalConnectionState.Started)
-                {
-                    InstanceFinder.ClientManager.StartConnection();
-                    InstanceFinder.ServerManager.OnServerConnectionState -= callback;
-                }
+                if (args.ConnectionState != LocalConnectionState.Started) return;
+                InstanceFinder.ClientManager.StartConnection();
+                InstanceFinder.ServerManager.OnServerConnectionState -= callback;
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
-            
-            if (_isNetGame)
-                InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().AdvertiseServer();
         }
 
+        private ScenarioSettings GetTask()
+        {
+            //Init next
+            if (_selectedScenario.nestedScenarios == null) return _selectedScenario;
+            for (var i = 0; i < _selectedScenario.nestedScenarios.Count - 1; i++)
+                _selectedScenario.nestedScenarios[i].nextScenario = _selectedScenario.nestedScenarios[i + 1];
+            return _selectedScenario;
+        }
+
+        private ScenarioSettings GetScenarioList()
+        {
+            var selectedScenarios =
+                _buttonScenarioDictionary.Where(s => s.Key.ToggleIsOn && s.Value.settingType == SettingType.Scenario)
+                    .Select(s => s.Value).ToList();
+
+            //Init next
+            for (var i = 0; i < selectedScenarios.Count - 1; i++)
+                selectedScenarios[i].nextScenario = selectedScenarios[i + 1];
+
+            var scenarioList = ScriptableObject.CreateInstance<ScenarioSettings>();
+            scenarioList.settingType = SettingType.List;
+            scenarioList.nestedScenarios = selectedScenarios;
+            return scenarioList;
+        }
+        
         private void OnSelect(SelectScriptButton button)
         {
-            print($"select {_buttonScenarioDictionary[button].name}");
-            foreach (var b in _buttonScenarioDictionary.Keys.Where(b => b != button))
-                b.UnSelected();
+            if (!button)
+            {
+                infoPanel.Close();
+                return;
+            }
 
             var scenarioInfo = _buttonScenarioDictionary[button];
             if (!scenarioInfo)
                 return;
 
+            foreach (var b in _buttonScenarioDictionary.Keys)
+            {
+                if (b != button && b.ParentButton != button && b != button.ParentButton)
+                {
+                    b.UnSelected();
+                }
+            }
+            
+            button.SelectWithoutNotify();
+            
+            if (_isTaskInit && button.ParentButton != null)
+            {
+                // Open infoPanel without modifying _selectedScenario
+                infoPanel?.Open(scenarioInfo);
+                return;
+            }
+
+            
+
             _selectedScenario = scenarioInfo;
             infoPanel?.Open(_selectedScenario);
         }
+
+
+        private void OnToggleChanged(SelectScriptButton button)
+        {
+            var rootButton = button.GetRootButton();
+
+            if (button.ParentButton == null)
+            {
+                foreach (var child in button.GetAllDescendants())
+                {
+                    child.SetToggleState(button.ToggleIsOn);
+                }
+            }
+
+            foreach (var b in _buttonScenarioDictionary.Keys)
+            {
+                if (b.GetRootButton() != rootButton)
+                {
+                    b.SetToggleState(false);
+                    foreach (var child in b.GetAllDescendants())
+                    {
+                        child.SetToggleState(false);
+                    }
+                }
+            }
+        }
+
+        private void MoveUp()
+        {
+            var scrollStep = 0.1f; // Adjust the scroll speed as needed
+            pageScroll.verticalNormalizedPosition = Mathf.Clamp01(pageScroll.verticalNormalizedPosition + scrollStep);
+        }
+
+        private void MoveDown()
+        {
+            var scrollStep = 0.1f; // Adjust the scroll speed as needed
+            pageScroll.verticalNormalizedPosition = Mathf.Clamp01(pageScroll.verticalNormalizedPosition - scrollStep);
+        }
+        
+        #region Tasks Get
+
+        private void GetScenarios(Action onComplete = null)
+        {
+            StartCoroutine(GetScenariosCoroutine(onComplete));
+        }
+
+        private IEnumerator GetScenariosCoroutine(Action onComplete)
+        {
+            taskScenariosSettings.scenarios.Clear();
+
+            string url = LinkConstants.UserScenarioUrl(HttpClient.UserData.id,
+                new Dictionary<string, string> { { "status", "0" }, { "limit", "9999" }, { "page", "1" } });
+
+            string response = null;
+            bool requestCompleted = false;
+
+            HttpClient.Get(url,
+                onSuccess: data =>
+                {
+                    response = data;
+                    requestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    requestCompleted = true;
+                });
+
+            while (!requestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(response))
+            {
+                onComplete?.Invoke();
+                yield break;
+            }
+
+            var tasksInfo = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response);
+            var tasksData = tasksInfo.data;
+
+            var taskScenariosList = new List<ScenarioSettings>();
+
+            foreach (var taskInfo in tasksData)
+            {
+                yield return StartCoroutine(ProcessTask(taskInfo, taskScenariosList));
+            }
+
+            taskScenariosSettings.scenarios = taskScenariosList;
+
+            onComplete?.Invoke();
+        }
+
+        private IEnumerator ProcessTask(AssignedScenarioData taskInfo, List<ScenarioSettings> taskScenariosList)
+        {
+            string taskUrl = LinkConstants.ScenarioGetUrl(taskInfo.scenario_id);
+
+            string taskResponse = null;
+            bool taskRequestCompleted = false;
+
+            HttpClient.Get(taskUrl,
+                onSuccess: data =>
+                {
+                    taskResponse = data;
+                    taskRequestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    taskRequestCompleted = true;
+                });
+
+            while (!taskRequestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(taskResponse))
+                yield break;
+
+            var taskData = JsonUtility.FromJson<TaskData>(taskResponse);
+            var scenariosData = taskData.mapconfigs.data;
+
+            var taskScenarios = new List<ScenarioSettings>();
+
+            foreach (var scenario in scenariosData)
+            {
+                yield return StartCoroutine(ProcessScenario(scenario, taskInfo.id, taskScenarios));
+            }
+
+            // Check if the task has any valid scenarios
+            if (taskScenarios.Count > 0)
+            {
+                var task = ScriptableObject.CreateInstance<ScenarioSettings>();
+                task.settingType = SettingType.Task;
+                task.scenarioType = ScenarioType.Searching; // Adjust as necessary
+                task.name = taskData.scenario.name;
+                task.description = taskData.scenario.description;
+                task.nestedScenarios = taskScenarios;
+                task.id = taskInfo.id;
+
+                taskScenariosList.Add(task);
+            }
+            else
+            {
+                Debug.Log($"Task '{taskData.scenario.name}' has no nested scenarios and will be skipped.");
+            }
+        }
+
+        private IEnumerator ProcessScenario(ScenarioData scenario, int taskId, List<ScenarioSettings> taskScenarios)
+        {
+            string scenarioUrl = LinkConstants.GetFile(scenario.file_file_path);
+
+            string scenarioResponse = null;
+            bool scenarioRequestCompleted = false;
+
+            HttpClient.Get(scenarioUrl,
+                onSuccess: data =>
+                {
+                    scenarioResponse = data;
+                    scenarioRequestCompleted = true;
+                },
+                onError: error =>
+                {
+                    Debug.LogError(error);
+                    scenarioRequestCompleted = true;
+                });
+
+            while (!scenarioRequestCompleted)
+                yield return null;
+
+            if (string.IsNullOrEmpty(scenarioResponse))
+                yield break;
+
+            var scenarioSettingsData = JsonUtility.FromJson<ScenarioSettingsData>(scenarioResponse);
+
+            try
+            {
+                var scenarioSetting = ScenarioSettings.CreateDynamicTaskScenario(
+                    taskId,
+                    scenarioSettingsData.name,
+                    scenarioSettingsData.description,
+                    scenarioSettingsData.typeId,
+                    maps.maps[scenarioSettingsData.mapId],
+                    drones.drones[scenarioSettingsData.droneId],
+                    drones.drones[scenarioSettingsData.droneId].flightModes[scenarioSettingsData.droneModeId],
+                    scenarioSettingsData.cameraThirdPerson,
+                    scenarioSettingsData.cameraAllowedSwitchModeId);
+
+                taskScenarios.Add(scenarioSetting);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
+        #endregion
     }
 }

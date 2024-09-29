@@ -152,14 +152,14 @@ GameObject:
   - component: {fileID: 7943750329588308043}
   - component: {fileID: 1664149388969179879}
   - component: {fileID: 6844157008723873181}
-  - component: {fileID: 5605338558957389092}
   - component: {fileID: 1625880259260389076}
   - component: {fileID: 6410941242121581068}
   - component: {fileID: -4865640583975626111}
   - component: {fileID: 1716966041475679048}
+  - component: {fileID: 2669200438095210834}
   - component: {fileID: 6872376549236773499}
   - component: {fileID: 2037224341869948750}
-  - component: {fileID: -5261982587443950276}
+  - component: {fileID: 2140942841614781970}
   m_Layer: 7
   m_Name: COEX Clover 4
   m_TagString: Untagged
@@ -217,7 +217,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_CenterOfMass: {x: -0.000000007450581, y: 0, z: -0.000000011175871}
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 0, y: 0, z: 0}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -253,34 +253,7 @@ MonoBehaviour:
   engineFR: {fileID: 220187889536851688}
   engineRL: {fileID: 2096257427621933019}
   engineRR: {fileID: 6174103017748528795}
-  targetHeight: 0
---- !u!114 &5605338558957389092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 541629917646721985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e7d22756cb54df9b7d1fda9984fc3f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 6410941242121581068}
-  _networkObjectCache: {fileID: 6410941242121581068}
-  changeModeAction: {fileID: 7671190069710442087, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  changeCameraAction: {fileID: 371060709161916009, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  restartAction: {fileID: 4172158005511023874, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  Throttle: 0
-  Yaw: 0
-  Pitch: 0
-  Roll: 0
-  DroneCam: 0
-  DroneMode: 0
-  DISARM: 1
-  RestartButton: 0
-  UseInput: 1
+  currentVoltage: 3
 --- !u!114 &1625880259260389076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,10 +266,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208dd41dfd4b40b7940598850ff621ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 6410941242121581068}
   _networkObjectCache: {fileID: 6410941242121581068}
   cameraObject: {fileID: 5753573371405482055}
+  currentAngle: 0
+  minAngle: -45
+  maxAngle: 90
 --- !u!114 &6410941242121581068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,9 +290,9 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
   - {fileID: 6844157008723873181}
-  - {fileID: 5605338558957389092}
   - {fileID: 1625880259260389076}
   - {fileID: 2037224341869948750}
+  - {fileID: 2140942841614781970}
   - {fileID: -8188918118421788108}
   - {fileID: -221304252494100637}
   - {fileID: -3482821694420630919}
@@ -333,12 +309,12 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
+  _enablePrediction: 0
+  _predictionType: 0
   _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 1
-  _enableStateForwarding: 0
-  _networkTransform: {fileID: 2037224341869948750}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
   _ownerSmoothedProperties: 255
   _adaptiveInterpolation: 3
@@ -377,6 +353,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4ae277a41a46fe9ca11238b20ab2fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2669200438095210834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5dbeb15f3c48aeac0e1d181a630f4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeOutSecs: 1
+  _damageMultiplier: 3
+  _currentHealth: 100
 --- !u!114 &6872376549236773499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,17 +392,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 6410941242121581068}
   _networkObjectCache: {fileID: 6410941242121581068}
-  _componentConfiguration: 2
+  _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
     Position: 1
     Rotation: 1
     Scale: 0
-  _interpolation: 3
-  _extrapolation: 0
+  _interpolation: 2
+  _extrapolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
   _scaleThreshold: 1
@@ -434,7 +425,7 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!114 &-5261982587443950276
+--- !u!114 &2140942841614781970
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -443,11 +434,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 541629917646721985}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b749f90d4c9961c4991179db1130fa4d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e7d22756cb54df9b7d1fda9984fc3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbodyType: 0
-  _getInChildren: 1
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 7794961175099019535, guid: 1af7a6f635f67fa4ebe4e513645f07f6, type: 3}
+  _networkObjectCache: {fileID: 6410941242121581068}
+  changeModeAction: {fileID: 7671190069710442087, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  changeCameraAction: {fileID: 371060709161916009, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  restartAction: {fileID: 4172158005511023874, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  Throttle: 0
+  Yaw: 0
+  Pitch: 0
+  Roll: 0
+  DroneCanSwitchCam: 1
+  DroneCam: 0
+  DroneMode: 0
+  DISARM: 1
+  RestartButton: 0
+  UseInput: 1
+  InputSignalLevel: 1
+  maxDelayTime: 1
+  bufferSize: 120
 --- !u!1 &1022046699937227879
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +484,7 @@ Transform:
   m_GameObject: {fileID: 1022046699937227879}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.08327818, y: -0.08261694, z: 0.028763752}
+  m_LocalPosition: {x: -0.083, y: -0.083, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1151,7 +1159,7 @@ Transform:
   m_GameObject: {fileID: 4628699933838216341}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.08261691, y: -0.0832782, z: 0.028763745}
+  m_LocalPosition: {x: 0.083, y: -0.083, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1264,7 +1272,7 @@ Transform:
   m_GameObject: {fileID: 4964814277706452976}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.08261694, y: 0.08327821, z: 0.028763749}
+  m_LocalPosition: {x: -0.083, y: 0.083, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1559,7 +1567,7 @@ Transform:
   m_GameObject: {fileID: 8046520356448586769}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.08327818, y: 0.08261697, z: 0.028763749}
+  m_LocalPosition: {x: 0.083, y: 0.083, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2212,9 +2220,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8112261754518527535}
     m_Modifications:
-    - target: {fileID: 1021987828876290121, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 183
+    - target: {fileID: 2117281578685865741, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3063956669541261683, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2256,25 +2264,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3265104555839065635, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 5797242781445422106, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
       propertyPath: m_Name
       value: FPVCamera
       objectReference: {fileID: 0}
-    - target: {fileID: 5797242781445422106, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6389476928370501633, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
-      propertyPath: m_CameraType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8266812811258087292, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
-      propertyPath: m_Layer
-      value: 7
+    - target: {fileID: 6621631294702329077, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

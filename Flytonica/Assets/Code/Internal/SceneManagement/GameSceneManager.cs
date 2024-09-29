@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Code.Internal.Drone;
-using Code.Internal.Network;
-using Code.Internal.Scenario;
+using System.Threading.Tasks;
 using Code.Internal.UserInterface;
 using FishNet;
-using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
+using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +15,8 @@ namespace Code.Internal.SceneManagement
     {
         public static GameSceneManager Instance { get; private set; }
         public string CurrentGlobalScene { get; private set; }
+        public MapSettings CurrentMapSettings { get; private set; }
+
         public bool IsPlaying { get; private set; }
 
         private void Awake()
@@ -25,19 +25,20 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-            
+
             LoadSceneLocal("UI Scene");
         }
-        
+
         public override void OnStartClient()
         {
             base.OnStartClient();
             UIController.Instance.OnGameStart();
             IsPlaying = true;
         }
-        
+
         public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
         {
+            CurrentMapSettings = sceneSettingsCurrentMap;
             var sceneName = sceneSettingsCurrentMap.loadingSceneName;
 
             if (string.IsNullOrEmpty(sceneName))
@@ -45,13 +46,13 @@ namespace Code.Internal.SceneManagement
                 Debug.LogError("Scene name is null or empty. Please check the MapSettings.");
                 return;
             }
-            
+
             var sceneLoadData = new SceneLoadData(sceneName);
             Action<SceneLoadEndEventArgs> onSceneLoaded = null;
 
             onSceneLoaded = args =>
             {
-                if(!args.LoadedScenes.Select(s => s.name).Contains(sceneName)) 
+                if (!args.LoadedScenes.Select(s => s.name).Contains(sceneName))
                     return;
                 Debug.Log($"Scene {sceneName} loaded successfully.");
                 callback?.Invoke();
@@ -67,6 +68,8 @@ namespace Code.Internal.SceneManagement
             UIController.Instance.OnMainMenu();
             UnloadScene();
             IsPlaying = false;
+            var player = GameObject.FindWithTag("Player");
+            player.transform.position = Vector3.zero;
         }
 
         private void LoadSceneLocal(string sceneName)
@@ -77,14 +80,35 @@ namespace Code.Internal.SceneManagement
         private void UnloadScene()
         {
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if(scene.name != "Main")
+            if (scene.name != "Main")
                 UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
         }
-        
+
         public void Replay()
         {
-            /*InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn();
-            UnloadSceneGlobal(CurrentGlobalScene, LoadGame);*/
+            if (!IsPlaying)
+                return;
+            if (NetworkManager == null || NetworkManager.ClientManager == null) 
+                return;
+
+            IsPlaying = false;
+            
+            NetworkManager.ClientManager.StopConnection();
+            NetworkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
+        }
+
+        private void OnClientConnectionState(ClientConnectionStateArgs args)
+        {
+            if (args.ConnectionState == LocalConnectionState.Stopped)
+            {
+                NetworkManager.ClientManager.StartConnection();
+            }
+            else if (args.ConnectionState == LocalConnectionState.Started)
+            {
+                UIController.Instance.OnGameStart();
+                IsPlaying = true;
+                NetworkManager.ClientManager.OnClientConnectionState -= OnClientConnectionState;
+            }
         }
     }
 }

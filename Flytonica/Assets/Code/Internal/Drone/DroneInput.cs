@@ -9,60 +9,113 @@ namespace Code.Internal.Drone
     public class DroneInput : NetworkBehaviour
     {
         [SerializeField] private InputActionReference changeModeAction, changeCameraAction, restartAction;
-        
+
         [Range(-1, 1)] public float Throttle;
         [Range(-1, 1)] public float Yaw;
         [Range(-1, 1)] public float Pitch;
         [Range(-1, 1)] public float Roll;
 
+        public bool DroneCanSwitchCam = true;
         public bool DroneCam = false;
         public bool DroneMode = false;
         public bool DISARM = true;
         public bool RestartButton = false;
-        
+
         public bool UseInput = true;
-        
+        public float InputSignalLevel = 1f;
+
         private Player _player;
         private Joystick _findJoystick;
         private Joystick _joystick;
 
+        [SerializeField] private float maxDelayTime = 1.0f;
+        [SerializeField] private int bufferSize = 120; 
+
+        private float[] _throttleBuffer;
+        private float[] _yawBuffer;
+        private float[] _pitchBuffer;
+        private float[] _rollBuffer;
+        private float[] _timeBuffer;
+
+        private int bufferIndex = 0;
+
+        public static DroneInput Instance { get; private set; }
+        
         private void Awake()
         {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            
             _player = ReInput.players.GetPlayer(0);
-            print(_player);
+
+            _throttleBuffer = new float[bufferSize];
+            _yawBuffer = new float[bufferSize];
+            _pitchBuffer = new float[bufferSize];
+            _rollBuffer = new float[bufferSize];
+            _timeBuffer = new float[bufferSize];
         }
 
         private void Update()
         {
-            if (!UseInput)
-                return;
-
-            if (_player.controllers.joystickCount > 0)
-                UpdateJoystick();
-            
-            Throttle = _player.GetAxis("Throttle");
-            Yaw = _player.GetAxis("Yaw");
-            Pitch = _player.GetAxis("Pitch");
-            Roll = _player.GetAxis("Roll");
-            
-            DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
-            if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
-                DroneCam = !DroneCam;
-
-            RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
-            
-            if (Throttle < -0.9f && DISARM)
+            if (UseInput && !(InputSignalLevel <= 0))
             {
-                DISARM = false;
+                if (_player.controllers.joystickCount > 0)
+                    UpdateJoystick();
+
+                var rawThrottle = _player.GetAxis("Throttle");
+                var rawYaw = _player.GetAxis("Yaw");
+                var rawPitch = _player.GetAxis("Pitch");
+                var rawRoll = _player.GetAxis("Roll");
+
+                _throttleBuffer[bufferIndex] = rawThrottle;
+                _yawBuffer[bufferIndex] = rawYaw;
+                _pitchBuffer[bufferIndex] = rawPitch;
+                _rollBuffer[bufferIndex] = rawRoll;
+                _timeBuffer[bufferIndex] = Time.time;
+
+                var delayTime = (1f - Mathf.Clamp01(InputSignalLevel)) * maxDelayTime;
+
+                var delaySteps = Mathf.RoundToInt(delayTime / Time.deltaTime);
+                delaySteps = Mathf.Clamp(delaySteps, 0, bufferSize - 1);
+
+                var delayedIndex = (bufferIndex - delaySteps + bufferSize) % bufferSize;
+
+                Throttle = _throttleBuffer[delayedIndex];
+                Yaw = _yawBuffer[delayedIndex];
+                Pitch = _pitchBuffer[delayedIndex];
+                Roll = _rollBuffer[delayedIndex];
+
+                bufferIndex = (bufferIndex + 1) % bufferSize;
+
+                DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
+
+                if (Throttle < -0.9f && DISARM)
+                {
+                    DISARM = false;
+                }
+
+                DISARM = !_player.GetButton("DISARM");
             }
 
-            DISARM = !_player.GetButton("DISARM");
+            if (DroneCanSwitchCam)
+            {
+                if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
+                    DroneCam = !DroneCam;
+            }
+
+            RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
         }
-        
+
         private void UpdateJoystick()
         {
             _findJoystick = null;
-            
+
             foreach (var joystick in ReInput.controllers.Joysticks)
             {
                 if (joystick.hardwareName.ToLower().Contains("flysky"))
@@ -81,8 +134,6 @@ namespace Code.Internal.Drone
                 _player.controllers.Joysticks.Clear();
                 _player.controllers.Joysticks.Add(_joystick);
             }
-
-            print(_joystick.hardwareName + " " + _joystick.name);
         }
     }
 }

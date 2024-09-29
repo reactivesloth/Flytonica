@@ -1,18 +1,12 @@
 ﻿using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Elements
 {
-
     public class Table : MonoBehaviour
     {
         [SerializeField] private bool isShowHeaders = true;
-        
-        [SerializeField] private RectTransform numbers;
-        [SerializeField] private RectTransform content;
         
         [SerializeField] private GameObject headerCellPrefab;
         [SerializeField] private GameObject cellPrefab;
@@ -36,18 +30,14 @@ namespace Code.Internal.UserInterface.Elements
             if(!isShowHeaders)
                 return;
             
-            var headerRowContent = Instantiate(contentRow, content.transform);
-            headerRowContent.transform.SetParent(content);
+            var headerRowContent = Instantiate(contentRow, transform);
+            headerRowContent.transform.SetParent(transform);
             headerRowContent.transform.localScale = Vector3.one;
 
-            var hLayout = headerRowContent.AddComponent<HorizontalLayoutGroup>();
-            hLayout.childControlWidth = true;
-            hLayout.childForceExpandWidth = true;
-
-            AddCell(headerCellPrefab, "№", numbers.gameObject);
+            AddCell(headerCellPrefab, "№", headerRowContent, fixedColumnWidth, true);
 
             foreach (var title in titles)
-                AddCell(headerCellPrefab, title, headerRowContent);
+                AddCell(headerCellPrefab, title, headerRowContent, 0, false);
         }
 
         public void AddRow(params string[] data)
@@ -58,25 +48,22 @@ namespace Code.Internal.UserInterface.Elements
                 return;
             }
 
-            var rowContent = Instantiate(contentRow, content.transform);
-            rowContent.transform.SetParent(content);    
+            var rowContent = Instantiate(contentRow, transform);
+            rowContent.transform.SetParent(transform);    
             rowContent.transform.localScale = Vector3.one;
-
-            var hLayout = rowContent.AddComponent<HorizontalLayoutGroup>();
-            hLayout.childControlWidth = true;
-            hLayout.childForceExpandWidth = true;
             
-            AddCell(cellPrefab, (_rows.Count + 1).ToString(), numbers.gameObject);
+            AddCell(cellPrefab, (_rows.Count + 1).ToString(), rowContent, fixedColumnWidth, true);
             
             foreach (var cellData in data)
-                AddCell(cellPrefab, cellData, rowContent);
+                AddCell(cellPrefab, cellData, rowContent, 0, false);
             
             _rows.Add(rowContent);
         }
 
-        private void AddCell(GameObject prefab, string data, GameObject row)
+        private void AddCell(GameObject prefab, string data, GameObject row, float width, bool isFixedWidth)
         {
             var cell = Instantiate(prefab, row.transform);
+            
             cell.GetComponentInChildren<TMP_Text>().text = data;
         }
     }

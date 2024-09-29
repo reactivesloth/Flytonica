@@ -1,9 +1,12 @@
 ﻿using System;
 using Code.Internal.API;
-using Code.Internal.API.Wrappers;
+using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.API.Wrappers.SendModels;
+using Code.Internal.UserInterface.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UserType = Code.Internal.API.Wrappers.UserType;
 
 namespace Code.Internal.UserInterface.Pages
 {
@@ -12,17 +15,35 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_InputField loginField, passwordField;
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
+        [SerializeField] private Header teacherHeader;
 
         private void Start()
         {
             Open();
         }
 
+        private void LoadPrefs()
+        {
+            loginField.text = PlayerPrefs.GetString("Login");
+            passwordField.text = PlayerPrefs.GetString("Password");
+        }
+
+        private void SetPrefs()
+        {
+            PlayerPrefs.SetString("Login", loginField.text);
+            PlayerPrefs.SetString("Password", passwordField.text);
+        }
+
         protected override void OnOpen()
         {
             base.OnOpen();
+            teacherHeader.gameObject.SetActive(false);
+            LoadPrefs();
             loginButton.onClick.AddListener(OnLogin);
             demoButton.onClick.AddListener(OnDemo);
+            
+            if(HttpClient.IsAuthorized)
+                Login();
         }
 
         protected override void OnClose()
@@ -34,13 +55,12 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLogin()
         {
-            var jsonData = JsonUtility.ToJson(new AuthData(loginField.text, passwordField.text));
+            var jsonData = JsonUtility.ToJson(new UserAuthData(loginField.text, passwordField.text));
             HttpClient.Post(LinkConstants.AuthUrl, jsonData, OnResponseLogin, OnErrorLogin);
         }
 
         private void OnDemo()
         {
-            //TODO: Go to demo logic
             studentMainMenu.Open();
         }
 
@@ -48,13 +68,21 @@ namespace Code.Internal.UserInterface.Pages
         {
             var authData = JsonUtility.FromJson<AuthResponseData>(response);
             HttpClient.SetAuthData(authData);
-            
-            switch (authData.type)
+
+            Login();
+        }
+
+        private void Login()
+        {
+            switch (HttpClient.AuthData.type)
             {
                 case UserType.Teacher:
+                    SetPrefs();
                     teacherMainMenu.Open();
+                    teacherHeader.gameObject.SetActive(true);
                     break;
                 case UserType.Student:
+                    SetPrefs();
                     studentMainMenu.Open();
                     break;
                 case UserType.SuperAdmin:

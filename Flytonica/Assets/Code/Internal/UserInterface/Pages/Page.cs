@@ -14,7 +14,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] [CanBeNull] private Page forcePrevPage;
         [SerializeField] [CanBeNull] private Button backButton;
         
-        protected void Awake()
+        protected virtual void Awake()
         {
             backButton?.onClick.AddListener(OnBackClick);
         }

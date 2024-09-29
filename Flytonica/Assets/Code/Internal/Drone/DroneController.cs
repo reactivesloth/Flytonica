@@ -33,29 +33,39 @@ namespace Code.Internal.Drone
         private float _roll = 0;
         private float _yaw = 0;
 
-        public float targetHeight = 1;
-
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
+
+        [Range(2.4f, 3.8f)]
+        public float currentVoltage = 3.8f;
 
         public DroneSettings Settings => droneSettings;
         
+        public static DroneController Instance { get; private set; }
+
+        private float batteryLevelPercent = 1;
+        private float deltaSpd;
+        private float throttleHold;
+        
+        public DroneSensors DroneSensors { get; private set; }
+
         protected override void OnValidate()
         {
             InitializeDrone();
         }
         
-        private void Awake()
+        private void Start()
         {
-            _droneInput = GetComponent<DroneInput>();
+            _droneInput = DroneInput.Instance;
             _rigidBody = GetComponent<Rigidbody>();
             _transform = GetComponent<Transform>();
+            DroneSensors = GetComponent<DroneSensors>();
 
             InitializeDrone();
         }
 
         private void InitializeDrone()
         {
-            UpdateFlightMode();
+            //UpdateFlightMode();
             InitializeEngines();
             InitializePhysics();
         }
@@ -102,12 +112,21 @@ namespace Code.Internal.Drone
         {
             if(!_droneInput.IsOwner)
                 return;
-            if (Calibration.Instance.IsCalibrating)
-                return;
+            
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            
+            // if (Calibration.Instance.IsCalibrating)
+            //     return;
 
             UpdateInput();
             
-            if (_droneInput.DroneMode || _currentFlightSettings == null)
+            if (_currentFlightSettings == null)
+                _currentFlightSettings = droneSettings.currentFlightMode;
+            
+            if (_droneInput.DroneMode)
             {
                 UpdateFlightMode();
             }
@@ -118,7 +137,6 @@ namespace Code.Internal.Drone
                 _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
                 _rigidBody.linearVelocity = Vector3.zero;
                 _rigidBody.angularVelocity = Vector3.zero;
-                targetHeight = _transform.position.y;
             }
             
             UpdateRotation();
@@ -131,6 +149,7 @@ namespace Code.Internal.Drone
 
         private void UpdateInput()
         {
+            _droneInput.InputSignalLevel = DroneSensors.InputSignal;
             _throttle = (_droneInput.Throttle + 1) / 2;
             _pitch = _droneInput.Pitch;
             _roll = _droneInput.Roll;
@@ -144,7 +163,7 @@ namespace Code.Internal.Drone
             else
             {
                 _currentFlightMode++;
-                if (_currentFlightMode >= droneSettings.flightModes.Length)
+                if (_currentFlightMode >= droneSettings.flightModes.Count)
                     _currentFlightMode = 0;
 
                 _currentFlightSettings = droneSettings.flightModes[_currentFlightMode];
@@ -155,48 +174,53 @@ namespace Code.Internal.Drone
         private void UpdateEngines()
         {
             if (_currentFlightSettings == null) return;
-            
+
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
-            _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 1 ? 0.5f : 0;
+            _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 0.2f ? 0.5f : 0;
 
             controlFl = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? 0 : -_roll);
             controlFr = (_pitch > 0 ? _pitch : 0) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? _roll : 0);
             controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
             controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
-            acceleration = 0.0f;
+            acceleration = Mathf.Clamp(acceleration, 0, 1);
 
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
-                if (Mathf.Abs(targetHeight - transform.position.y) < 1.5f)
+                switch (_droneInput.Throttle)
                 {
-                    targetHeight += _droneInput.Throttle * (_droneInput.Throttle > 0 ? _currentFlightSettings.maxAscendingSpeed : _currentFlightSettings.maxDescendingSpeed) * Time.deltaTime;
-                    targetHeight = Mathf.Clamp(targetHeight, 0, _currentFlightSettings.maxHeight);
-                }
-                
-                var speed = (targetHeight > _transform.position.y) ? 0.1f : -0.1f;
-                acceleration = _currentFlightSettings.accelerationCurve.Evaluate(0.5f + speed);
-
-                switch (targetHeight - transform.position.y)
-                {
-                    case > 0 when _droneInput.Throttle < 0.44f:
-                    case < 0 when _droneInput.Throttle > 0.56f:
-                        //targetHeight = _transform.position.y;
-                        _rigidBody.linearVelocity = Vector3.Lerp(_rigidBody.linearVelocity, new Vector3(_rigidBody.linearVelocity.x, Random.Range(-0.2f, 0.2f), _rigidBody.linearVelocity.z), Time.deltaTime * 5);
+                    case > 0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxAscendingSpeed:
+                        acceleration += (_rigidBody.linearVelocity.y > 0 ? 0.1f : 1f) * Time.deltaTime;
+                        break;
+                    case < -0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxDescendingSpeed:
+                        acceleration -= (_rigidBody.linearVelocity.y > 0 ? 1f : 0.1f) * Time.deltaTime;
+                        break;
+                    default:
+                        acceleration += (_rigidBody.linearVelocity.y > 0 ? -1f : 1f) * Time.deltaTime;
                         break;
                 }
             }
             else
             {
                 acceleration = _currentFlightSettings.accelerationCurve.Evaluate(_throttle);
-                targetHeight = _transform.position.y;
             }
 
-            engineFL.UpdateEngine(_rigidBody, acceleration, controlFl);
-            engineFR.UpdateEngine(_rigidBody, acceleration, controlFr);
-            engineRR.UpdateEngine(_rigidBody, acceleration, controlRl);
-            engineRL.UpdateEngine(_rigidBody, acceleration, controlRr);
+            CalculateBattery();
+
+            engineFL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFl);
+            engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
+            engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
+            engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
         }
 
+        private void CalculateBattery()
+        {
+            currentVoltage -= droneSettings.batteryEnergyWh / 3600 / droneSettings.bateteryCellCount * Math.Min(0.1f, acceleration)* Time.deltaTime;
+            float batteryLevel = droneSettings.bateteryCellCount * currentVoltage;
+            float minBatteryLevel = droneSettings.bateteryCellCount * droneSettings.minBatteryCellVoltage;
+            float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
+            batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);
+        }
+        
         private void UpdateRotation()
         {
             if (_currentFlightSettings == null) return;
@@ -215,24 +239,23 @@ namespace Code.Internal.Drone
                         rotationMagnitude < _currentFlightSettings.axisModeChangeValue:
                     {
                         rotation = rotationMagnitude > 0.1f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
                         _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
                         break;
                     }
                     case ControlType.HOLD:
-                        if (rotationMagnitude > 0.1f)
+                        if (rotationMagnitude > 0.1f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed)
                         {
                             rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle);
                         }
                         else
                         {
                             rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime * 2f);
+                            _rigidBody.linearVelocity = Vector3.Lerp(linearVelocity, new Vector3(Random.Range(-0.2f, 0.2f), linearVelocity.y, Random.Range(-0.2f, 0.2f)), Time.deltaTime);
                         }
 
                         _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
-                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 2f);
+                        _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime);
                         break;
                     default:
                         _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);

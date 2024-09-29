@@ -276,7 +276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0415\u043B\u0438\u0437\u0430\u0432\u0435\u0442\u0430 \u0413\u0430\u043B\u043A\u043E\u0432\u0441\u043A\u0430\u044F"
+  m_text: "\u0418\u043C\u044F \u0424\u0430\u043C\u0438\u043B\u0438\u044F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
   m_sharedMaterial: {fileID: 6180909801603300319, guid: 163f2c7e81430c2438bf4aa267a20120, type: 2}
@@ -471,6 +471,7 @@ GameObject:
   - component: {fileID: 6949014907144562473}
   - component: {fileID: 8398600906888147443}
   - component: {fileID: 8018612751140155582}
+  - component: {fileID: 5858294172238683850}
   m_Layer: 5
   m_Name: TopBarPanel
   m_TagString: Untagged
@@ -538,6 +539,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5858294172238683850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5721127054913784727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98dbdd11abe3ecd4c9e9d2de120bd896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loginPage: {fileID: 0}
+  nameText: {fileID: 7254301880522343525}
+  logoutButton: {fileID: 0}
 --- !u!1 &5730346791431883628
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,7 +709,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 25b1dd43d048f094aaaec87987fd76d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6e28cfc9c9e04a843aa9f22ee0dc8189, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

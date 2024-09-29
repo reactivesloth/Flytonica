@@ -1,7 +1,6 @@
-using System;
+
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,6 +40,7 @@ namespace Code.Internal.UserInterface
             
             var isPaused = pauseMenuPage.gameObject.activeSelf;
 
+            pauseMenuPage.Open(true);
             if (isPaused)
                 Unpause();
             else
@@ -67,7 +67,7 @@ namespace Code.Internal.UserInterface
         public void OnGameStart()
         {
             drawUIPanel.SetActive(false);
-            pauseMenuPage.Open();
+            Page.CurrentPage.Close();
             canvas.gameObject.SetActive(false);
         }
 

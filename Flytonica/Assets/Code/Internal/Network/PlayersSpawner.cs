@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
+using Code.Internal.Network.Teacher;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
@@ -16,6 +17,9 @@ namespace Code.Internal.Network
 
         public NetworkObject Spawn(NetworkConnection connection, DroneSettings settings, bool isTeacher = false)
         {
+            if (!InstanceFinder.ServerManager.Clients.ContainsValue(connection))
+                return null;
+            
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
@@ -24,6 +28,9 @@ namespace Code.Internal.Network
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));
             _drones.Add(drone);
+            
+            PlayerManager.Instance.AddPlayer(connection, drone);
+            
             return drone;
         }
 
@@ -33,7 +40,17 @@ namespace Code.Internal.Network
             if (drone == null)
                 return;
             _drones.Remove(drone);
-            InstanceFinder.ServerManager.Despawn(drone.GetComponent<NetworkObject>(), DespawnType.Destroy);
+            PlayerManager.Instance.RemovePlayer(connection);
+            InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
+        }
+
+        public void DespawnAll()
+        {
+            foreach (var networkObject in _drones.ToList())
+            {
+                _drones.Remove(networkObject);
+                InstanceFinder.ServerManager.Despawn(networkObject, DespawnType.Destroy);
+            }
         }
     }
 }

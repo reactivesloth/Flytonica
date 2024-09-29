@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network
 {
     public class ConnectionController : NetworkBehaviour
     {
+        [SerializeField] private GameObject hostControl;
+
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
+        [SerializeField] private AvailableMapsSettings maps;
         [SerializeField] private AvailableDronesSettings drones;
 
         private bool _sceneLoaded;
@@ -24,14 +30,16 @@ namespace Code.Internal.Network
         {
             base.OnStartServer();
             ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
-            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentMap, OnSceneLoaded);
+            print(sceneSettings.currentScenario.currentMap);
+            GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
         }
-        
+
         public override void OnStopServer()
         {
             base.OnStopServer();
             ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             _sceneLoaded = false;
+            hostControl.SetActive(false);
         }
 
         private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -54,17 +62,14 @@ namespace Code.Internal.Network
 
         private void OnConnectedPlayer(NetworkConnection connection)
         {
-            var drone = NetworkManager.GetComponent<PlayersSpawner>().Spawn(connection, sceneSettings.currentDrone);
             InvokeTargetInitializeScenario(connection);
         }
-
 
         private void OnDisconnectedPlayer(NetworkConnection connection)
         {
             _pendingConnections.Remove(connection);
             NetworkManager.GetComponent<PlayersSpawner>().Despawn(connection);
         }
-
 
         private void OnSceneLoaded()
         {
@@ -82,24 +87,65 @@ namespace Code.Internal.Network
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
             await Task.Delay(1000);
-            TargetInitializeScenario(connection, sceneSettings.currentScenario.name);
-            print(NetworkObject.Observers.Count);
-        }
-
-        [TargetRpc]
-        private void TargetInitializeScenario(NetworkConnection connection, string scenarioName)
-        {
-            Debug.Log($"Init scenario for connection {connection.ClientId}");
-            var scenarioSettings = scenarios.scenarios.First(s => s.name == scenarioName);
-            var scenarioInitializer = FindAnyObjectByType<ScenarioInitializer>();
-            if (scenarioInitializer != null && scenarioSettings != null)
+            var scenario = sceneSettings.currentScenario;
+            if (connection.ClientId == 0 && sceneSettings.isNet)
             {
-                scenarioInitializer.Initialize(scenarioSettings);
+                hostControl.SetActive(true);
             }
             else
             {
-                Debug.LogError("ScenarioInitializer not found on the client.");
+                var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
+                    drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
+                    scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode),
+                    scenario.cameraThirdPerson, scenario.cameraSwitchAllowed);
+
+                if (sceneSettings.isNet)
+                    TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
+
+                var drone = NetworkManager.GetComponent<PlayersSpawner>()
+                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
             }
+
+            MovePlayer(connection);
+        }
+
+        [TargetRpc]
+        private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
+        {
+            var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(scenarioSettingsJson);
+            var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,
+                scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
+                drones.drones[scenarioInfo.droneId],
+                drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId],
+                scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId);
+            
+            InitScenario(scenario);
+        }
+
+        private void InitScenario(ScenarioSettings scenario)
+        {
+            sceneSettings.currentScenario = scenario;
+
+            var scenarioInitializer = FindAnyObjectByType<ScenarioInitializer>();
+            scenarioInitializer.Initialize(sceneSettings.currentScenario);
+
+            sceneSettings.currentScenario.currentDrone.currentFlightMode =
+                sceneSettings.currentScenario.currentDroneMode;
+            print(sceneSettings.currentScenario.currentDrone.currentFlightMode.name);
+        }
+
+        [TargetRpc]
+        private void MovePlayer(NetworkConnection connection)
+        {
+            var spawners = GameObject.FindGameObjectsWithTag("Player Respawn")
+                .Select(o => o.transform).ToArray();
+
+            if (spawners.Length == 0)
+                return;
+
+            var player = GameObject.FindWithTag("Player");
+            var spawn = spawners[Random.Range(0, spawners.Length)];
+            player.transform.position = spawn.position;
         }
     }
 }

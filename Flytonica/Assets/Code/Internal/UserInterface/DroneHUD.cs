@@ -20,8 +20,10 @@ namespace Code.Internal.UserInterface
         [field: SerializeField] public ValueElement SpeedValueElement { get; private set; }
         [field: SerializeField] public AimElement AimElement { get; private set; }
         [field: SerializeField] public HorizonElement HorizonElement { get; private set; }
-        [field: SerializeField] public ErrorElement ErrorElement { get; private set; }
         [field: SerializeField] public BatteryElement BatteryElement { get; private set; }
+        [field: SerializeField] public MessageBox MessageBoxElement { get; private set; }
+        [field: SerializeField] public SignalElement CameraSignalElement { get; private set; }
+        [field: SerializeField] public SignalElement InputSignalElement { get; private set; }
 
         private void Awake()
         {
@@ -37,5 +39,8 @@ namespace Code.Internal.UserInterface
         public void SetTime(string text) => timeText.text = $"SEC {text}";
 
         public bool IsShowing() => HUDPanel.activeSelf;
+
+        public void ClearMessage() => MessageBoxElement.ClearMessage();
+        public void SetMessage( MessageType type,string text, float duration = 0) => MessageBoxElement.DrawMessage(type, text, duration);
     }
 }
