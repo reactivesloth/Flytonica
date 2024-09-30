@@ -33,6 +33,7 @@ namespace Code.Internal.Scenario
         {
             _cameraInitialized = false;
             _settings = settings;
+            _settings.currentDrone.currentFlightMode = _settings.currentDroneMode;
             freeFlightObjects?.SetActive(false);
             tutorialModeObjects?.SetActive(false);
             raceModeObjects?.SetActive(false);

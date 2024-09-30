@@ -29,7 +29,7 @@ namespace Code.Internal.SceneManagement
         public List<SpawnedObject> objects;
         
         public static ScenarioSettings CreateDynamicTaskScenario(int id, string name, string description, ScenarioType scenarioType,
-            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraFPV, bool cameraSwitchAllowed, List<SpawnedObject> objects = null)
+            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraThirdPerson, bool cameraSwitchAllowed, List<SpawnedObject> objects = null)
         {
             var instance = CreateInstance<ScenarioSettings>();
 
@@ -41,7 +41,7 @@ namespace Code.Internal.SceneManagement
             instance.currentDrone = drone;
             instance.currentMap = mapSettings;
             instance.currentDroneMode = mode;
-            instance.cameraThirdPerson = cameraFPV;
+            instance.cameraThirdPerson = cameraThirdPerson;
             instance.cameraSwitchAllowed = cameraSwitchAllowed;
             instance.objects = objects;
             return instance;
