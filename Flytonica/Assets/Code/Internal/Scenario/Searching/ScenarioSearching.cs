@@ -40,6 +40,13 @@ namespace Code.Internal.Scenario.Searching
         
         private void Update()
         {
+            #if UNITY_EDITOR
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
+            {
+                FinishRace(true);
+            }
+            #endif
+            
             if (Camera.main == null) return;
             
             if (_raceCondition == RaceCondition.Running)

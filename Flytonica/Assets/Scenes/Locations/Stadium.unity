@@ -1044,11 +1044,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 274046177649460532, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.172
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 274046177649460532, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 274046177649460532, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1082,46 +1082,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scenario Initializer
       objectReference: {fileID: 0}
-    - target: {fileID: 6023197090695324669, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.389
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.0446061
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 2.7493706
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7574811189198522945, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7959107766471384747, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2262816352662347192, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7472430146721782210, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 548852371469969036, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4687482329790306811, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7497590432466798571, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4775514850069773353, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
 --- !u!33 &1510409732509793070
 MeshFilter:

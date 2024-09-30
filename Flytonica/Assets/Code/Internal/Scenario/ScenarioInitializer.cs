@@ -51,49 +51,54 @@ namespace Code.Internal.Scenario
             
             objectsToClean = FindObjectsOfType<SpawnableObject>(true);
             var objects = _settings.objects;
-            
+
             foreach (var spawnedObject in objects)
             {
-                var sObj = Instantiate(Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject).transform;
-                sObj.position = spawnedObject.position;
-                sObj.rotation = spawnedObject.rotation;
-                sObj.transform.localScale = spawnedObject.scale;
-                
-                if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
+                if (spawnedObject != null)
                 {
-                    foreach (var o in objectsToClean)
+                    var sObj = Instantiate(
+                        Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject).transform;
+
+                    if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
                     {
-                        if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
-                            DestroyImmediate(o.gameObject);
-                    }    
-                }
-                
-                switch (_settings.scenarioType)
-                {
-                    case ScenarioType.FreeFlight:
-                        sObj.SetParent(freeFlightObjects.transform);
-                        break;
-                    case ScenarioType.Tutorial:
-                        sObj.SetParent(tutorialModeObjects.transform);
-                        break;
-                    case ScenarioType.Race:
-                        sObj.SetParent(raceModeObjects.transform);
-                        FindAnyObjectByType<ScenarioRace>().Initialize();
-                        break;
-                    case ScenarioType.Transport:
-                        sObj.SetParent(raceModeObjects.transform);
-                        break;
-                    case ScenarioType.Searching:
-                        sObj.SetParent(searchingModeObjects.transform);
-                        break;
-                    case ScenarioType.SearchingWithIR:
-                        sObj.SetParent(searchingIRModeObjects.transform);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        foreach (var o in objectsToClean)
+                        {
+                            if (o.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
+                                DestroyImmediate(o.gameObject);
+                        }
+                    }
+
+                    switch (_settings.scenarioType)
+                    {
+                        case ScenarioType.FreeFlight:
+                            sObj.SetParent(freeFlightObjects.transform);
+                            break;
+                        case ScenarioType.Tutorial:
+                            sObj.SetParent(tutorialModeObjects.transform);
+                            break;
+                        case ScenarioType.Race:
+                            sObj.SetParent(raceModeObjects.transform);
+                            FindAnyObjectByType<ScenarioRace>().Initialize();
+                            break;
+                        case ScenarioType.Transport:
+                            sObj.SetParent(raceModeObjects.transform);
+                            break;
+                        case ScenarioType.Searching:
+                            sObj.SetParent(searchingModeObjects.transform);
+                            break;
+                        case ScenarioType.SearchingWithIR:
+                            sObj.SetParent(searchingIRModeObjects.transform);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    sObj.transform.position = spawnedObject.position;
+                    sObj.transform.rotation = spawnedObject.rotation;
+                    sObj.transform.localScale = spawnedObject.scale;
                 }
             }
-            
+
             switch (_settings.scenarioType)
             {
                 case ScenarioType.FreeFlight:
