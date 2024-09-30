@@ -1,5 +1,4 @@
 ﻿using System;
-using Code.Internal.Network.Teacher;
 using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;

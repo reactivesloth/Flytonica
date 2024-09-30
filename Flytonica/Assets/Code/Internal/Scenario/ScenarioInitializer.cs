@@ -21,8 +21,16 @@ namespace Code.Internal.Scenario
         
         private void Update()
         {
+            if (DroneController.Instance == null)
+            {
+                _cameraInitialized = false;
+            }
+
             if (DroneInput.Instance != null && !_cameraInitialized)
             {
+                if (_settings.currentDrone != null)
+                    _settings.currentDrone.currentFlightMode = _settings.currentDroneMode;
+             
                 DroneInput.Instance.DroneCanSwitchCam = _settings == null ? true : _settings.cameraSwitchAllowed;
                 DroneInput.Instance.DroneCam = _settings == null ? false : !_settings.cameraThirdPerson;
                 _cameraInitialized = true;
