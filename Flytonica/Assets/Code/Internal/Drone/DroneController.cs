@@ -237,7 +237,6 @@ namespace Code.Internal.Drone
             var rotationMagnitude = new Vector2(_pitch, _roll).magnitude;
             
             var linearVelocity = _rigidBody.linearVelocity;
-//            if (!(linearVelocity.magnitude > 0.01f)) return;
             
             switch (_currentFlightSettings.rotatingType)
             {
@@ -245,9 +244,18 @@ namespace Code.Internal.Drone
                 case ControlType.MIXED when
                     rotationMagnitude < _currentFlightSettings.axisModeChangeValue:
                 {
-                    rotation = rotationMagnitude > 0.1f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
+                    rotation = rotationMagnitude > 0.01f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(0, eulerAngles.y, 0);
                     _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
                     _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
+                    if (Mathf.Approximately(Math.Abs(_transform.rotation.eulerAngles.z), 180))
+                    {
+                        _transform.Rotate(0, 0, 180 * Time.deltaTime);
+                    }
+                    if (Mathf.Approximately(Math.Abs(_transform.rotation.eulerAngles.x), 180))
+                    {
+                        _transform.Rotate(180 * Time.deltaTime, 0, 0);
+                    }
+                    
                     break;
                 }
                 case ControlType.HOLD:
