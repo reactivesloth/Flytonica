@@ -88,14 +88,14 @@ namespace Code.Internal.Drone
             _rigidBody = GetComponent<Rigidbody>();
             _rigidBody.mass = droneSettings.weight;
 
-            var com = Vector3.zero;
-            com += engineFL.transform.position;
-            com += engineFR.transform.position;
-            com += engineRL.transform.position;
-            com += engineRR.transform.position;
-            com /= 4;
-            com.y = 0;
-            _rigidBody.centerOfMass = com;
+            // var com = Vector3.zero;
+            // com += engineFL.transform.position;
+            // com += engineFR.transform.position;
+            // com += engineRL.transform.position;
+            // com += engineRR.transform.position;
+            // com /= 4;
+            // com.y = 0;
+            // _rigidBody.centerOfMass = com;
 
             if (!engineFL.GetComponent<NetworkTransform>())
                 engineFL.AddComponent<NetworkTransform>();
@@ -235,9 +235,7 @@ namespace Code.Internal.Drone
             Quaternion rotation;
             var eulerAngles = _transform.eulerAngles;
             var rotationMagnitude = new Vector2(_pitch, _roll).magnitude;
-            
-            var linearVelocity = _rigidBody.linearVelocity;
-            
+
             switch (_currentFlightSettings.rotatingType)
             {
                 case ControlType.STABILIZED:
