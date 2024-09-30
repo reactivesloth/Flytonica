@@ -31,7 +31,7 @@ namespace Code.Internal.Scenario.Race
         private void Start()
         {
             DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
-            DroneHUD.Instance.SetMessage(MessageType.Normal,"Пролетите через стартовое кольцо чтобы начать гонку", 3);
+            DroneHUD.Instance?.SetMessage(MessageType.Normal,"Пролетите через стартовое кольцо чтобы начать гонку", 3);
         }
 
         private void Update()

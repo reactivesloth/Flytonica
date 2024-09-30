@@ -23,6 +23,7 @@ namespace Code.Internal.UserInterface.Pages
             singleScriptsButton,
             toRoomButton;
 
+        [SerializeField] private Page loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private AvailableScenariosSettings singleScenariosSettings;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
@@ -70,7 +71,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnBackClick()
         {
             HttpClient.Logout();
-            base.OnBackClick();
+            loginPage?.Open();
         }
 
         private void OnSingleScripts()

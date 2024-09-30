@@ -20,7 +20,6 @@ namespace Code.Internal.Network
             if (!InstanceFinder.ServerManager.Clients.ContainsValue(connection))
                 return null;
             
-            print($"Spawn {settings.name}");
             var spawners = GameObject.FindGameObjectsWithTag("Respawn")
                 .Select(o => o.transform).ToArray();
 
@@ -37,7 +36,6 @@ namespace Code.Internal.Network
 
         public void Despawn(NetworkConnection connection)
         {
-            print(connection);
             var drone = _drones.FirstOrDefault(d =>
             {
                 if(d)

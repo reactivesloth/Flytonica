@@ -50,17 +50,22 @@ namespace Code.Internal.Drone
 
         protected override void OnValidate()
         {
+            _rigidBody = GetComponent<Rigidbody>();
             InitializeDrone();
         }
         
-        private void Start()
+        private void Awake()
         {
-            _droneInput = DroneInput.Instance;
             _rigidBody = GetComponent<Rigidbody>();
             _transform = GetComponent<Transform>();
             DroneSensors = GetComponent<DroneSensors>();
 
             InitializeDrone();
+        }
+
+        private void Start()
+        {
+            _droneInput = DroneInput.Instance;
         }
 
         private void InitializeDrone()
@@ -105,6 +110,7 @@ namespace Code.Internal.Drone
         public override void OnOwnershipClient(NetworkConnection prevOwner)
         {
             base.OnOwnershipClient(prevOwner);
+            print(_rigidBody);
             _rigidBody.isKinematic = !IsOwner;
         }
 

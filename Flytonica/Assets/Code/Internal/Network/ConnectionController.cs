@@ -98,7 +98,7 @@ namespace Code.Internal.Network
                 var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
                     drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
                     scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode),
-                    scenario.cameraThirdPerson, scenario.cameraSwitchAllowed);
+                    scenario.cameraThirdPerson, scenario.cameraSwitchAllowed, objects: scenario.objects);
 
                 if (sceneSettings.isNet)
                     TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));

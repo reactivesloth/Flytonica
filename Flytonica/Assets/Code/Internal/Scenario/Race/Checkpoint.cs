@@ -17,8 +17,8 @@ namespace Code.Internal.Scenario.Race
         Current,
         Next
     }
-    
-    
+
+
     public class Checkpoint : MonoBehaviour
     {
         public CheckpointType checkpointType = CheckpointType.Checkpoint;
@@ -27,19 +27,19 @@ namespace Code.Internal.Scenario.Race
         [SerializeField] private Material currentCheckpointMaterial;
         [SerializeField] private Material nextCheckpointMaterial;
         [SerializeField] private Material otherCheckpointMaterial;
-        
+
         public void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<DroneController>())
+            if (other.TryGetComponent(out DroneController drone) && drone == DroneController.Instance)
             {
                 FindAnyObjectByType<ScenarioRace>().CheckpointUpdate(this);
             }
         }
 
-        public void ChangeColor (CheckpointFlashType type)
+        public void ChangeColor(CheckpointFlashType type)
         {
             if (renderer == null) return;
-            
+
             switch (type)
             {
                 case CheckpointFlashType.None:
