@@ -43,14 +43,6 @@ namespace Code.Internal.Drone
         
         private void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
             
             _player = ReInput.players.GetPlayer(0);
 
@@ -63,6 +55,12 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
+            if(!IsOwner)
+                return;
+            
+            if (Instance == null)
+                Instance = this;
+            
             if (UseInput && !(InputSignalLevel <= 0))
             {
                 if (_player.controllers.joystickCount > 0)

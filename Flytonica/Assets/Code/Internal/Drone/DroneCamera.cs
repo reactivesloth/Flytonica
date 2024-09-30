@@ -15,11 +15,6 @@ namespace Code.Internal.Drone
 
         public event Action<Vector3, Quaternion> OnCameraDataUpdated;
         
-        private void Start()
-        {
-            cameraObject.SetActive(false);
-        }
-
         private void Update()
         {
             if(!IsOwner || !IsSpawned)
@@ -27,9 +22,11 @@ namespace Code.Internal.Drone
             
             TransmitCameraTransform(Owner);
             
-            if (cameraObject.activeSelf != DroneInput.Instance.DroneCam)
+            if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
                 cameraObject.SetActive(DroneInput.Instance.DroneCam);
 
+            print(DroneInput.Instance.DroneCam);
+            
             currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
             
             currentAngle += Time.deltaTime * UnityEngine.Input.GetAxis("Mouse ScrollWheel") * 1000;

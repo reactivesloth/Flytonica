@@ -63,11 +63,6 @@ namespace Code.Internal.Drone
             InitializeDrone();
         }
 
-        private void Start()
-        {
-            _droneInput = DroneInput.Instance;
-        }
-
         private void InitializeDrone()
         {
             //UpdateFlightMode();
@@ -116,13 +111,14 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if(!_droneInput.IsOwner)
+            if(!_droneInput)
+                _droneInput = DroneInput.Instance;
+            
+            if(!_droneInput || !_droneInput.IsOwner)
                 return;
             
             if (Instance == null)
-            {
                 Instance = this;
-            }
             
             // if (Calibration.Instance.IsCalibrating)
             //     return;

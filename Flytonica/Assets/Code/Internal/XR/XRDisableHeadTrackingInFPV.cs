@@ -24,7 +24,7 @@ namespace Code.Internal.XR
             if (_droneInput == null)
             {
                 _camera.SetActive(!shouldBeEnabledInFPV);
-                _droneInput = FindAnyObjectByType<DroneInput>();
+                _droneInput = DroneInput.Instance;
                 return;
             }
 

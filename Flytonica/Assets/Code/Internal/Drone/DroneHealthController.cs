@@ -60,9 +60,9 @@ namespace Code.Internal.Drone
             {
                 CurrentDroneSensors.CameraSignalModifier = 0;
                 CurrentDroneSensors.InputSignalModifier = 0;
-                if (!IsInvoking("DestroyDrone"))
+                if (!IsInvoking(nameof(DestroyDrone)))
                 {
-                    Invoke("DestroyDrone", 1);
+                    Invoke(nameof(DestroyDrone), 1);
                 }
             }
             else
