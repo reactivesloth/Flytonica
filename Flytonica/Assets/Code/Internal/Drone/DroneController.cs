@@ -139,13 +139,18 @@ namespace Code.Internal.Drone
 
             if (_droneInput.RestartButton)
             {
-                var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
-                _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
-                _rigidBody.linearVelocity = Vector3.zero;
-                _rigidBody.angularVelocity = Vector3.zero;
+                ResetDrone();
             }
             
             UpdateRotation();
+        }
+
+        public void ResetDrone()
+        {
+            var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
+            _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+            _rigidBody.linearVelocity = Vector3.zero;
+            _rigidBody.angularVelocity = Vector3.zero;
         }
 
         private void FixedUpdate()

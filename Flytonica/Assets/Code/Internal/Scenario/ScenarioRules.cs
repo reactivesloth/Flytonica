@@ -92,7 +92,11 @@ namespace Code.Internal.Scenario
                     CurrentDroneSensors.CameraSignalModifier = 0;
                     if (failTime <= 0)
                     {
-                        GameSceneManager.Instance.Replay();
+                        DroneController.Instance.ResetDrone();
+                        savedSignal = -1;
+                        CurrentDroneSensors.CameraSignalModifier = 1;
+                        CurrentDroneSensors.InputSignalModifier = 1;
+                        //GameSceneManager.Instance.Replay();
                     }
                     break;
             }   

@@ -71,8 +71,13 @@ namespace Code.Internal.Drone
 
         private void DestroyDrone()
         {
-            Debug.Log("Drone destroyed!");
-            GameSceneManager.Instance.Replay();
+            DroneController.Instance.ResetDrone();
+            _currentHealth = Settings.healthPoints;
+            CurrentDroneSensors.CameraSignalModifier = 1;
+            CurrentDroneSensors.InputSignalModifier = 1;
+            
+            //Debug.Log("Drone destroyed!");
+            //GameSceneManager.Instance.Replay();
         }
 
         private IEnumerator Timer()
