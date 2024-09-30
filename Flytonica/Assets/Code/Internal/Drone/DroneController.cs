@@ -194,21 +194,17 @@ namespace Code.Internal.Drone
             controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
             controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
             acceleration = Mathf.Clamp(acceleration, 0, 1);
-
+            
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
-            {
-                switch (_droneInput.Throttle)
+            { 
+                var landingGear = Physics.Raycast(_transform.position, Vector3.down, out _, 1);
+                acceleration += _droneInput.Throttle switch
                 {
-                    case > 0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxAscendingSpeed:
-                        acceleration += (_rigidBody.linearVelocity.y > 0 ? 0.1f : 1f) * Time.deltaTime;
-                        break;
-                    case < -0.2f when _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxDescendingSpeed:
-                        acceleration -= (_rigidBody.linearVelocity.y > 0 ? 1f : 0.1f) * Time.deltaTime;
-                        break;
-                    default:
-                        acceleration += (_rigidBody.linearVelocity.y > 0 ? -1f : 1f) * Time.deltaTime;
-                        break;
-                }
+                    > 0.2f when _rigidBody.linearVelocity.y < _currentFlightSettings.maxAscendingSpeed => 0.1f,
+                    < -0.2f when _rigidBody.linearVelocity.y > (landingGear ? -1 : -_currentFlightSettings.maxDescendingSpeed) => -0.1f,
+                    _ => _rigidBody.linearVelocity.y > 0 ? -0.1f : 0.1f
+                };
+                acceleration = Mathf.Clamp(acceleration, 0, 1);
             }
             else
             {
