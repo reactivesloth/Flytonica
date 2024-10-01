@@ -69,23 +69,23 @@ namespace Code.Internal.API.Wrappers
             this.windDirectionId = windDirectionId;
         }
 
-        // Метод для получения силы ветра по ID
-        public float GetWindForce()
+        public (float minForce, float maxForce) GetWindForce()
         {
-            float[] windForces =
-                { 0.0f, 0.3f, 1.6f, 3.4f, 5.5f, 8.0f, 10.8f, 13.9f, 17.2f, 20.8f, 24.5f, 28.5f, 32.6f };
+            float[] windForces = { 0.0f, 0.3f, 1.6f, 3.4f, 5.5f, 8.0f, 10.8f, 13.9f, 17.2f, 20.8f, 24.5f, 28.5f, 32.6f };
+
             if (windForceId >= 0 && windForceId < windForces.Length)
             {
-                return windForces[windForceId];
+                var minForce = windForces[windForceId];
+                var maxForce = windForceId + 1 < windForces.Length ? windForces[windForceId + 1] : float.MaxValue;
+                return (minForce, maxForce);
             }
             else
             {
                 Debug.LogError("Invalid windForceId");
-                return 0f;
+                return (0f, 0f); // Возвращаем 0 как минимальное и максимальное значение в случае ошибки
             }
         }
-
-        // Метод для получения направления ветра в виде Vector3 по ID
+        
         public Vector3 GetWindDirection()
         {
             Vector3[] windDirections =

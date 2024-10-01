@@ -14,7 +14,7 @@ namespace Code.Internal.Scenario
 
         [SerializeField] private List<WindLayerHeights> layersHeights; // for settings height of layers
 
-        private readonly List<LayerSettings> currentLayerSettings = new();
+        private readonly List<LayerSettings> _currentLayerSettings = new();
 
         private void Awake()
         {
@@ -26,30 +26,28 @@ namespace Code.Internal.Scenario
 
         public void Init(List<WindLayerSettings> windSettings)
         {
-            currentLayerSettings.Clear();
+            _currentLayerSettings.Clear();
 
             for (var i = 0; i < windSettings.Count; i++)
             {
                 var windLayer = windSettings[i];
 
-                var minForce = windLayer.GetWindForce();
-                var maxForce = (i + 1 < windSettings.Count)
-                    ? windSettings[i + 1].GetWindForce()
-                    : WindLayerSettings.MaxForce;
+                var (minForce, maxForce) = windLayer.GetWindForce();
+
                 var layerSettings =
                     new LayerSettings(layersHeights[i], minForce, maxForce, windLayer.GetWindDirection());
-                currentLayerSettings.Add(layerSettings);
+                _currentLayerSettings.Add(layerSettings);
             }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!DroneController.Instance || !GameSceneManager.Instance.IsPlaying)
                 return;
 
             var droneHeight = DroneController.Instance.transform.position.y;
 
-            var layer = currentLayerSettings.FirstOrDefault(l =>
+            var layer = _currentLayerSettings.FirstOrDefault(l =>
                 droneHeight >= l.heights.startHeight && droneHeight <= l.heights.finishHeight);
 
             if (layer.Equals(default(LayerSettings)))

@@ -275,13 +275,31 @@ namespace Code.Internal.Drone
             return (engineFL.MaxRPM + engineFR.MaxRPM + engineRL.MaxRPM + engineRR.MaxRPM) / 4;
         }
 
-        public void WindEffect(Vector3 direction, float force)
+        public void WindEffect(Vector3 direction, float windSpeed)
         {
             if (_rigidBody == null) return;
-            
-            Vector3 windForce = direction.normalized * force;
-            print(windForce);
+    
+            // Плотность воздуха при нормальных условиях (кг/м³)
+            const float airDensity = 1.225f;
+
+            // Площадь поперечного сечения дрона (м²), можно настроить под реальные данные дрона
+            float crossSectionalArea = 0.3f; // Примерное значение, нужно уточнить для вашего дрона
+
+            // Коэффициент аэродинамического сопротивления (для объекта вроде дрона, это может быть в пределах 0.3 - 0.8)
+            float dragCoefficient = 0.5f;
+
+            // Вычисляем силу ветра по аэродинамической формуле
+            float windForceMagnitude = 0.5f * airDensity * windSpeed * windSpeed * crossSectionalArea * dragCoefficient;
+
+            // Применяем направление ветра
+            Vector3 windForce = direction.normalized * windForceMagnitude;
+
+            // Логгируем силу ветра для отладки
+            print($"Wind Force: {windForce}, Wind Speed: {windSpeed}");
+
+            // Применяем силу ветра к Rigidbody дрона
             _rigidBody.AddForce(windForce, ForceMode.Force);
         }
+
     }
 }
