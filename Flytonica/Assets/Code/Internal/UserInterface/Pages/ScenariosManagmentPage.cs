@@ -226,7 +226,7 @@ namespace Code.Internal.UserInterface.Pages
                     settings.name,
                     settings.description, settings.typeId,
                     maps.maps[settings.mapId], drones.drones[settings.droneId],
-                    drones.drones[settings.droneId].flightModes[settings.droneModeId], settings.cameraThirdPerson, settings.cameraAllowedSwitchModeId, settings.objects);
+                    drones.drones[settings.droneId].flightModes[settings.droneModeId], settings.cameraThirdPerson, settings.cameraAllowedSwitchModeId, settings.objects, settings.windLayers);
 
                 // Store in the correct index to preserve order
                 scenarioSettingsList[index] = scenarioSetting;

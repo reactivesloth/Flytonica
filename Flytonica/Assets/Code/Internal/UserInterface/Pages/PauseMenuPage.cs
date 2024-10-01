@@ -1,3 +1,4 @@
+using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using FishNet;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Code.Internal.UserInterface.Pages
         private void Replay()
         {
             ReturnToGame();
-            GameSceneManager.Instance.Replay();
+            DroneController.Instance.ResetDrone();
         }
     }
 }

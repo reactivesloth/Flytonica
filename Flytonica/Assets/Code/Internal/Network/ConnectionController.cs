@@ -118,8 +118,8 @@ namespace Code.Internal.Network
                 scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
                 drones.drones[scenarioInfo.droneId],
                 drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId],
-                scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId, scenarioInfo.objects);
-            
+                scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId, scenarioInfo.objects, scenarioInfo.windLayers);
+
             InitScenario(scenario);
         }
 

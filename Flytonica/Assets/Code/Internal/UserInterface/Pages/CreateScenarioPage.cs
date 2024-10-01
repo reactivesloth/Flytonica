@@ -119,7 +119,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             var wind = new List<WindLayerSettings>();
             for (var i = 0; i < _currentMap.windLayersCount; i++)
-                wind.Add(!isAllLayersEqualToggle
+                wind.Add(!isAllLayersEqualToggle.isOn
                     ? new WindLayerSettings(forces[i].value, directions[i].value)
                     : new WindLayerSettings(overlayForce.value, overlayDirection.value));
 

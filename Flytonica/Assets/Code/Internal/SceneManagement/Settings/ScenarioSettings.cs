@@ -23,13 +23,16 @@ namespace Code.Internal.SceneManagement
 
         [CanBeNull] public List<ScenarioSettings> nestedScenarios;
         [CanBeNull] public ScenarioSettings nextScenario;
-        
+
         public bool cameraThirdPerson = false;
         public bool cameraSwitchAllowed = true;
         public List<SpawnedObject> objects;
-        
-        public static ScenarioSettings CreateDynamicTaskScenario(int id, string name, string description, ScenarioType scenarioType,
-            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraThirdPerson, bool cameraSwitchAllowed, List<SpawnedObject> objects = null)
+        public List<WindLayerSettings> windSettings;
+
+        public static ScenarioSettings CreateDynamicTaskScenario(int id, string name, string description,
+            ScenarioType scenarioType,
+            MapSettings mapSettings, DroneSettings drone, DroneFlightSettings mode, bool cameraThirdPerson,
+            bool cameraSwitchAllowed, List<SpawnedObject> objects = null, List<WindLayerSettings> windSettings = null)
         {
             var instance = CreateInstance<ScenarioSettings>();
 
@@ -44,6 +47,7 @@ namespace Code.Internal.SceneManagement
             instance.cameraThirdPerson = cameraThirdPerson;
             instance.cameraSwitchAllowed = cameraSwitchAllowed;
             instance.objects = objects;
+            instance.windSettings = windSettings;
             return instance;
         }
     }

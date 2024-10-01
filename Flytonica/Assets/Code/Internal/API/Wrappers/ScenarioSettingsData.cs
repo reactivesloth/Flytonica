@@ -10,7 +10,7 @@ namespace Code.Internal.API.Wrappers
     {
         public string name;
         public string description;
-        
+
         public int droneId;
         public int mapId;
         public int droneModeId;
@@ -20,7 +20,9 @@ namespace Code.Internal.API.Wrappers
         public List<WindLayerSettings> windLayers;
         public List<SpawnedObject> objects;
 
-        public ScenarioSettingsData(string name, string description, int droneId, int mapId, ScenarioType typeId, int droneModeId, bool cameraThirdPerson, bool cameraAllowedSwitchModeId, List<WindLayerSettings> windLayers = null, List<SpawnedObject> objects = null)
+        public ScenarioSettingsData(string name, string description, int droneId, int mapId, ScenarioType typeId,
+            int droneModeId, bool cameraThirdPerson, bool cameraAllowedSwitchModeId,
+            List<WindLayerSettings> windLayers = null, List<SpawnedObject> objects = null)
         {
             this.droneId = droneId;
             this.mapId = mapId;
@@ -39,7 +41,7 @@ namespace Code.Internal.API.Wrappers
     public class SpawnedObject
     {
         public string prefabName;
-        
+
         public Vector3 position;
         public Quaternion rotation;
         public Vector3 scale;
@@ -56,13 +58,53 @@ namespace Code.Internal.API.Wrappers
     [System.Serializable]
     public class WindLayerSettings
     {
-        public int windForceId;
-        public int windDirectionId;
+        public const float MaxForce = 37;
+        
+        public int windForceId; // ID силы ветра (0-12 из таблицы)
+        public int windDirectionId; // ID направления ветра (0-7, 0 - север, 1 - северо-восток и т.д.)
 
         public WindLayerSettings(int windForceId, int windDirectionId)
         {
             this.windForceId = windForceId;
             this.windDirectionId = windDirectionId;
+        }
+
+        // Метод для получения силы ветра по ID
+        public float GetWindForce()
+        {
+            float[] windForces =
+                { 0.0f, 0.3f, 1.6f, 3.4f, 5.5f, 8.0f, 10.8f, 13.9f, 17.2f, 20.8f, 24.5f, 28.5f, 32.6f };
+            if (windForceId >= 0 && windForceId < windForces.Length)
+            {
+                return windForces[windForceId];
+            }
+            else
+            {
+                Debug.LogError("Invalid windForceId");
+                return 0f;
+            }
+        }
+
+        // Метод для получения направления ветра в виде Vector3 по ID
+        public Vector3 GetWindDirection()
+        {
+            Vector3[] windDirections =
+            {
+                new(0, 0, 1), // Север (0°)
+                new(1, 0, 1), // Северо-восток (45°)
+                new(1, 0, 0), // Восток (90°)
+                new(1, 0, -1), // Юго-восток (135°)
+                new(0, 0, -1), // Юг (180°)
+                new(-1, 0, -1), // Юго-запад (225°)
+                new(-1, 0, 0), // Запад (270°)
+                new(-1, 0, 1) // Северо-запад (315°)
+            };
+
+            if (windDirectionId >= 0 && windDirectionId < windDirections.Length)
+                return windDirections[windDirectionId].normalized;
+            
+            Debug.LogError("Invalid windDirectionId");
+            return Vector3.zero;
         }
     }
 }

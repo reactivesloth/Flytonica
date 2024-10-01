@@ -134,6 +134,8 @@ namespace Code.Internal.Scenario
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            Wind.Instance.Init(_settings.windSettings);
         }
     }
 }

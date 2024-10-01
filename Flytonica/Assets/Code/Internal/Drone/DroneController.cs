@@ -40,6 +40,9 @@ namespace Code.Internal.Drone
 
         public DroneSettings Settings => droneSettings;
         
+        /// <summary>
+        /// The drone of a local player
+        /// </summary>
         public static DroneController Instance { get; private set; }
 
         private float batteryLevelPercent = 1;
@@ -270,6 +273,15 @@ namespace Code.Internal.Drone
         public float GetMaxRPM()
         {
             return (engineFL.MaxRPM + engineFR.MaxRPM + engineRL.MaxRPM + engineRR.MaxRPM) / 4;
+        }
+
+        public void WindEffect(Vector3 direction, float force)
+        {
+            if (_rigidBody == null) return;
+            
+            Vector3 windForce = direction.normalized * force;
+            print(windForce);
+            _rigidBody.AddForce(windForce, ForceMode.Force);
         }
     }
 }
