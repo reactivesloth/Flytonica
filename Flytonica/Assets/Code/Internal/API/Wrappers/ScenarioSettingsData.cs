@@ -59,7 +59,7 @@ namespace Code.Internal.API.Wrappers
     public class WindLayerSettings
     {
         public const float MaxForce = 37;
-        
+
         public int windForceId; // ID силы ветра (0-12 из таблицы)
         public int windDirectionId; // ID направления ветра (0-7, 0 - север, 1 - северо-восток и т.д.)
 
@@ -69,9 +69,10 @@ namespace Code.Internal.API.Wrappers
             this.windDirectionId = windDirectionId;
         }
 
-        public (float minForce, float maxForce) GetWindForce()
+        public (float minForce, float maxForce) GetWindSpeeds()
         {
-            float[] windForces = { 0.0f, 0.3f, 1.6f, 3.4f, 5.5f, 8.0f, 10.8f, 13.9f, 17.2f, 20.8f, 24.5f, 28.5f, 32.6f };
+            float[] windForces =
+                { 0.0f, 0.3f, 1.6f, 3.4f, 5.5f, 8.0f, 10.8f, 13.9f, 17.2f, 20.8f, 24.5f, 28.5f, 32.6f };
 
             if (windForceId >= 0 && windForceId < windForces.Length)
             {
@@ -85,8 +86,8 @@ namespace Code.Internal.API.Wrappers
                 return (0f, 0f); // Возвращаем 0 как минимальное и максимальное значение в случае ошибки
             }
         }
-        
-        public Vector3 GetWindDirection()
+
+        public (Vector3 direction, string directionName) GetWindDirection()
         {
             Vector3[] windDirections =
             {
@@ -100,11 +101,25 @@ namespace Code.Internal.API.Wrappers
                 new(-1, 0, 1) // Северо-запад (315°)
             };
 
+            string[] directionNames =
+            {
+                "С", // Север
+                "СВ", // Северо-восток
+                "В", // Восток
+                "ЮВ", // Юго-восток
+                "Ю", // Юг
+                "ЮЗ", // Юго-запад
+                "З", // Запад
+                "СЗ" // Северо-запад
+            };
+
             if (windDirectionId >= 0 && windDirectionId < windDirections.Length)
-                return windDirections[windDirectionId].normalized;
-            
+            {
+                return (windDirections[windDirectionId].normalized, directionNames[windDirectionId]);
+            }
+
             Debug.LogError("Invalid windDirectionId");
-            return Vector3.zero;
+            return (Vector3.zero, "Invalid");
         }
     }
 }

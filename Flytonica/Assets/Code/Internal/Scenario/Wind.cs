@@ -4,6 +4,7 @@ using System.Linq;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
@@ -32,10 +33,11 @@ namespace Code.Internal.Scenario
             {
                 var windLayer = windSettings[i];
 
-                var (minForce, maxForce) = windLayer.GetWindForce();
+                var (minSpeed, maxSpeed) = windLayer.GetWindSpeeds();
+                var (direction, directionName) = windLayer.GetWindDirection();
 
                 var layerSettings =
-                    new LayerSettings(layersHeights[i], minForce, maxForce, windLayer.GetWindDirection());
+                    new LayerSettings(layersHeights[i], minSpeed, maxSpeed, direction, directionName);
                 _currentLayerSettings.Add(layerSettings);
             }
         }
@@ -50,13 +52,12 @@ namespace Code.Internal.Scenario
             var layer = _currentLayerSettings.FirstOrDefault(l =>
                 droneHeight >= l.heights.startHeight && droneHeight <= l.heights.finishHeight);
 
-            if (layer.Equals(default(LayerSettings)))
-                return;
-
             var direction = layer.direction;
-            var force = layer.AverageForce;
+            var speed = layer.AverageForce;
+            
+            DroneHUD.Instance.SetWind(speed, layer.directionName);
 
-            DroneController.Instance.WindEffect(direction, force);
+            DroneController.Instance.WindEffect(direction, speed);
         }
     }
 
@@ -70,17 +71,19 @@ namespace Code.Internal.Scenario
     public struct LayerSettings
     {
         public WindLayerHeights heights;
-        public float minForce, maxForce;
+        public float minSpeed, maxSpeed;
         public Vector3 direction;
+        public string directionName;
 
-        public LayerSettings(WindLayerHeights heights, float minForce, float maxForce, Vector3 direction)
+        public LayerSettings(WindLayerHeights heights, float minSpeed, float maxSpeed, Vector3 direction, string directionName)
         {
             this.heights = heights;
-            this.minForce = minForce;
-            this.maxForce = maxForce;
+            this.minSpeed = minSpeed;
+            this.maxSpeed = maxSpeed;
             this.direction = direction;
+            this.directionName = directionName;
         }
 
-        public float AverageForce => (minForce + maxForce) / 2;
+        public float AverageForce => (minSpeed + maxSpeed) / 2;
     }
 }

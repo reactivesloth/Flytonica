@@ -9,9 +9,9 @@ namespace Code.Internal.UserInterface
         public static DroneHUD Instance { get; private set; }
         
         [SerializeField] private GameObject HUDPanel;
-        
+
         [Header("UI element")] 
-        
+        [SerializeField] private TMP_Text windText;
         [SerializeField] private TMP_Text modeText;
         [SerializeField] private TMP_Text taskText;
         [SerializeField] private TMP_Text timeText;
@@ -31,6 +31,8 @@ namespace Code.Internal.UserInterface
         }
 
         public void ShowHUD(bool value) => HUDPanel.SetActive(value);
+
+        public void SetWind(float speed, string direction) => windText?.SetText($"Ветер {direction} {speed:F1} м/с");
         
         public void SetTask(string text) => taskText.text = text;
         
