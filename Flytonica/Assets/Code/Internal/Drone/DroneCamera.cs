@@ -29,7 +29,7 @@ namespace Code.Internal.Drone
             
             currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
             
-            currentAngle += Time.deltaTime * UnityEngine.Input.GetAxis("Mouse ScrollWheel") * 1000;
+            currentAngle -= Time.deltaTime * UnityEngine.Input.GetAxis("Mouse ScrollWheel") * 1000;
             
             var rot = cameraObject.transform.localRotation;
             rot = Quaternion.Euler(currentAngle, rot.y, rot.z);
