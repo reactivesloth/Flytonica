@@ -5,6 +5,7 @@ using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.API.Wrappers.SendModels;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
@@ -43,7 +44,6 @@ namespace Code.Internal.UserInterface.Pages
                 },
                 (_, code) =>
                 {
-                    print(code);
                     if (code == 404)
                         OnLicenceInvalid();
                     else
@@ -63,22 +63,24 @@ namespace Code.Internal.UserInterface.Pages
                 {
                     var data = JsonUtility.FromJson<DeviceData>(response);
                     SaveCheckActivationDate(DateTime.Today);
-                    Debug.Log(response);
+                    
+                    ToLogin();
                 }, (response, code) =>
                 {
                     var errorData = JsonUtility.FromJson<ErrorData>(response);
                     Debug.LogError(response);
+                    MakeError(errorData.detail, OnActivate);
                 });
         }
 
         private void OnLicenceValid()
         {
-            print("Valid");
             ToLogin();
         }
 
         private void OnLicenceInvalid()
         {
+            
         }
 
         private void ErrorGetLicence()
@@ -86,7 +88,15 @@ namespace Code.Internal.UserInterface.Pages
             if (!IsMoreThanFiveDays)
                 ToLogin();
             else
-                ; //TODO: Error Нужно подключение к интернету
+                MakeError("Для обновление вашей лицензии требуется подключение к интернету", OnOpen);
+        }
+
+        private void MakeError(string error, UnityAction action)
+        {
+            PopupPanel.ConfigurePopup("Ошибка",
+                error, 
+                leftButtonAction: action, leftButtonText:"Повторить",
+                rightButtonText:"Закрыть");
         }
 
         private void ToLogin() => loginPage?.Open();
