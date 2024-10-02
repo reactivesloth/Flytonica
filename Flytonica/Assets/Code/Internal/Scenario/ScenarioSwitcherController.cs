@@ -138,7 +138,7 @@ namespace Code.Internal.Scenario
             form.AddBinaryData("file", settingsFile, "Result.json");
             form.AddBinaryData("replay", settingsFile, "Result.json");
             
-            HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, Debug.LogError);
+            HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, (s, l) => Debug.LogError(s));
         }
 
         #region JSON Generation

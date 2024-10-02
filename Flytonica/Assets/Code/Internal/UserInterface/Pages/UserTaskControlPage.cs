@@ -64,7 +64,7 @@ namespace Code.Internal.UserInterface.Pages
                     }
 
                     currentUserTasksRoot.Generate(generateData);
-                }, Debug.LogError);
+                }, (s, l) => Debug.LogError(s));
         }
 
         private void InitAvailableTasks()
@@ -82,7 +82,7 @@ namespace Code.Internal.UserInterface.Pages
                 }
 
                 availableTasksRoot.Generate(generateData);
-            }, Debug.LogError);
+            }, (s, l) => Debug.LogError(s));
         }
 
         private void Delete()
@@ -92,7 +92,7 @@ namespace Code.Internal.UserInterface.Pages
             {
                 Debug.Log(response);
                 InitCurrentTasks();
-            }, Debug.LogError);
+            }, (s, l) => Debug.LogError(s));
         }
 
         private void Add()
@@ -108,7 +108,7 @@ namespace Code.Internal.UserInterface.Pages
                 {
                     Debug.Log(response);
                     InitCurrentTasks();
-                }, Debug.LogError);
+                }, (s, l) => Debug.LogError(s));
         }
 
         private void OnSelectStateCurrentTask(bool isSelect)

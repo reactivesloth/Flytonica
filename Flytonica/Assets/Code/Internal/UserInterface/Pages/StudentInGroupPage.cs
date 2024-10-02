@@ -54,7 +54,7 @@ namespace Code.Internal.UserInterface.Pages
 
                 studentsRoot.Generate(generateData);
                 titleText.text = _currentGroupData.name;
-            }, Debug.LogError);
+            }, (s, l) => Debug.LogError(s));
         }
 
         private void ShowReplays()

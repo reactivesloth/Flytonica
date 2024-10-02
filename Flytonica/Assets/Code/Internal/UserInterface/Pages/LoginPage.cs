@@ -17,11 +17,6 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
         [SerializeField] private Header teacherHeader;
 
-        private void Start()
-        {
-            Open();
-        }
-
         private void LoadPrefs()
         {
             loginField.text = PlayerPrefs.GetString("Login");
@@ -94,7 +89,7 @@ namespace Code.Internal.UserInterface.Pages
             }
         }
 
-        private void OnErrorLogin(string response)
+        private void OnErrorLogin(string response, long code)
         {
             Debug.LogError(response);
         }

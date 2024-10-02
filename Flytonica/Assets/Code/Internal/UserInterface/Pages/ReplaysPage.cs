@@ -67,7 +67,7 @@ namespace Code.Internal.UserInterface.Pages
                 }
 
                 replaysRoot.Generate(generateData);
-            }, Debug.LogError);
+            }, (error, code) => Debug.LogError(error));
         }
 
         private void Delete()

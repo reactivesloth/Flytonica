@@ -22,7 +22,7 @@ namespace Code.Internal.API
             UserData = null;
         }
 
-        public static void Get(string url, Action<string> onSuccess = null, Action<string> onError = null, Action callback= null)
+        public static void Get(string url, Action<string> onSuccess = null, Action<string, long> onError = null, Action callback= null)
         {
             var instance = CreateInstance(url);
             instance.StartCoroutine(instance
@@ -30,7 +30,7 @@ namespace Code.Internal.API
         }
 
         public static void Post(string url, string jsonData, Action<string> onSuccess = null,
-            Action<string> onError = null, Action callback= null)
+            Action<string, long> onError = null, Action callback= null)
         {
             var instance = CreateInstance(url);
             instance.StartCoroutine(instance
@@ -38,14 +38,14 @@ namespace Code.Internal.API
         }
 
         public static void PostFormData(string url, WWWForm formData, Action<string> onSuccess = null,
-            Action<string> onError = null)
+            Action<string, long> onError = null)
         {
             var instance = CreateInstance(url);
             instance.StartCoroutine(instance
                 .SendFormDataRequestProcess(url, formData, onSuccess, onError));
         }
 
-        public static void Delete(string url, Action<string> onSuccess = null, Action<string> onError = null, Action callback= null)
+        public static void Delete(string url, Action<string> onSuccess = null, Action<string, long> onError = null, Action callback= null)
         {
             var instance = CreateInstance(url);
             instance.StartCoroutine(instance
@@ -53,7 +53,7 @@ namespace Code.Internal.API
         }
 
         private IEnumerator SendRequestProcess(string url, string method, string jsonData, Action<string> onSuccess,
-            Action<string> onError, Action callback)
+            Action<string, long> onError, Action callback)
         {
             var request = new UnityWebRequest(url, method);
 
@@ -75,10 +75,7 @@ namespace Code.Internal.API
             if (request.result == UnityWebRequest.Result.Success)
                 onSuccess?.Invoke(request.downloadHandler.text);
             else
-            {
-                Debug.LogError(request.error);
-                onError?.Invoke(request.downloadHandler.text);
-            }
+                onError?.Invoke(request.downloadHandler.text, request.responseCode);
             
             callback?.Invoke();
 
@@ -86,7 +83,7 @@ namespace Code.Internal.API
         }
 
         private IEnumerator SendFormDataRequestProcess(string url, WWWForm formData, Action<string> onSuccess,
-            Action<string> onError)
+            Action<string, long> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Post(url, formData))
             {
@@ -97,7 +94,7 @@ namespace Code.Internal.API
                 if (request.result == UnityWebRequest.Result.Success)
                     onSuccess?.Invoke(request.downloadHandler.text);
                 else
-                    onError?.Invoke(request.downloadHandler.text);
+                    onError?.Invoke(request.downloadHandler.text, request.responseCode);
 
                 Destroy(gameObject);
             }

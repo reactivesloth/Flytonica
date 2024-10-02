@@ -272,7 +272,7 @@ namespace Code.Internal.UserInterface.Pages
                     response = data;
                     requestCompleted = true;
                 },
-                onError: error =>
+                onError: (error, code) =>
                 {
                     Debug.LogError(error);
                     requestCompleted = true;
@@ -315,7 +315,7 @@ namespace Code.Internal.UserInterface.Pages
                     taskResponse = data;
                     taskRequestCompleted = true;
                 },
-                onError: error =>
+                onError: (error, code) =>
                 {
                     Debug.LogError(error);
                     taskRequestCompleted = true;
@@ -369,7 +369,7 @@ namespace Code.Internal.UserInterface.Pages
                     scenarioResponse = data;
                     scenarioRequestCompleted = true;
                 },
-                onError: error =>
+                onError: (error, code) =>
                 {
                     Debug.LogError(error);
                     scenarioRequestCompleted = true;

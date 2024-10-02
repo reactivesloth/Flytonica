@@ -108,7 +108,7 @@ namespace Code.Internal.UserInterface.Pages
                         HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
                         SetData();
                     },
-                    Debug.LogError);
+                    (s, l) => Debug.LogError(s));
             else
                 SetData();
         }

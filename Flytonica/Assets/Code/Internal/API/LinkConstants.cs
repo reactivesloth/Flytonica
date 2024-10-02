@@ -69,6 +69,8 @@ namespace Code.Internal.API
         // Receives: DeviceData (id, uuid, created_at, user_id)
         private const string DeviceCreatePath = "device/create";
 
+        private const string CheckDevicePath = "device/get/uuid/{0}";
+
         // Path for fetching multiple devices with pagination
         // Sends: Query parameters (page, itemsPerPage)
         // Receives: MultiDeviceDataResponse (List<DeviceData>, total_count)
@@ -121,6 +123,8 @@ namespace Code.Internal.API
         public static string DeviceMultiUrl(Dictionary<string, string> queryParams = null) =>
             CombineUrl(DeviceMultiPath, queryParams);
 
+        public static string DeviceCheckUrl(string id) => CombineUrl(string.Format(CheckDevicePath, id));
+
         public static string LogCreateUrl => CombineUrl(LogCreatePath);
 
         public static string LogsMultiUrl(Dictionary<string, string> queryParams = null) =>
@@ -140,19 +144,22 @@ namespace Code.Internal.API
             if (isVersion)
                 url.Append($"{Version}/");
             url.Append($"{path}");
-            
+
             if (queryParams != null && queryParams.Count > 0)
             {
-                var query = HttpUtility.ParseQueryString(string.Empty);
+                var queryString = new List<string>();
                 foreach (var param in queryParams)
                 {
-                    query[param.Key] = param.Value;
+                    // Формируем строку запроса вручную без замены символов
+                    queryString.Add($"{param.Key}={param.Value}");
                 }
 
-                url.Append($"?{query.ToString()}");
+                // Присоединяем сформированные параметры к URL
+                url.Append($"?{string.Join("&", queryString)}");
             }
 
             return url.ToString();
         }
+
     }
 }

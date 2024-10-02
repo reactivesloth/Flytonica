@@ -52,7 +52,7 @@ namespace Code.Internal.UserInterface.Pages
                     }
 
                     groupsRoot.Generate(generateData);
-                }, Debug.LogError);
+                }, (error, code) => Debug.LogError(error));
         }
 
         private void ShowStudent()

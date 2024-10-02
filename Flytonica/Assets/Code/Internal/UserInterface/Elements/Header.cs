@@ -40,7 +40,7 @@ namespace Code.Internal.UserInterface.Elements
                         HttpClient.SetUserData(JsonUtility.FromJson<UserData>(data));
                         SetData();
                     },
-                    Debug.LogError);
+                    (error, code) => Debug.LogError(error));
             else
                 SetData();
         }

@@ -101,7 +101,7 @@ namespace Code.Internal.UserInterface.Pages
                     taskScenariosSettings.scenarios.Remove(scenariosRoot.SelectedButton
                         .GetSaveData<ScenarioSettings>());
                     InitViewList();
-                }, Debug.LogError);
+                }, (error, code) => Debug.LogError(error));
         }
 
         private void OnStart()
@@ -156,7 +156,7 @@ namespace Code.Internal.UserInterface.Pages
                     response = data;
                     requestCompleted = true;
                 },
-                onError: error =>
+                onError: (error, code) =>
                 {
                     Debug.LogError(error);
                     requestCompleted = true;
@@ -204,7 +204,7 @@ namespace Code.Internal.UserInterface.Pages
                     scenarioResponse = data;
                     scenarioRequestCompleted = true;
                 },
-                onError: error =>
+                onError: (error, code) =>
                 {
                     Debug.LogError(error);
                     scenarioRequestCompleted = true;
