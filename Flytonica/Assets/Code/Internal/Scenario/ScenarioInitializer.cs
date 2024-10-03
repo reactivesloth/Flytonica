@@ -87,7 +87,6 @@ namespace Code.Internal.Scenario
                             break;
                         case ScenarioType.Race:
                             sObj.SetParent(raceModeObjects.transform);
-                            FindAnyObjectByType<ScenarioRace>().Initialize();
                             break;
                         case ScenarioType.Transport:
                             sObj.SetParent(raceModeObjects.transform);
