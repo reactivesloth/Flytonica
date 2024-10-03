@@ -226,7 +226,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -249,6 +249,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 6410941242121581068}
   droneSettings: {fileID: 11400000, guid: 2f791b720e14e1f4f995d076f3bed167, type: 2}
+  droneCamera: {fileID: 1625880259260389076}
   engineFL: {fileID: 1771281082741106923}
   engineFR: {fileID: 220187889536851688}
   engineRL: {fileID: 2096257427621933019}
@@ -270,6 +271,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 6410941242121581068}
   _networkObjectCache: {fileID: 6410941242121581068}
   cameraObject: {fileID: 5753573371405482055}
+  irCameraObject: {fileID: 254754135720576795}
   currentAngle: 0
   minAngle: -45
   maxAngle: 90
@@ -438,7 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 3
-  _addedNetworkObject: {fileID: 7794961175099019535, guid: 1af7a6f635f67fa4ebe4e513645f07f6, type: 3}
+  _addedNetworkObject: {fileID: 6410941242121581068}
   _networkObjectCache: {fileID: 6410941242121581068}
   changeModeAction: {fileID: 7671190069710442087, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   changeCameraAction: {fileID: 371060709161916009, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -448,7 +450,9 @@ MonoBehaviour:
   Pitch: 0
   Roll: 0
   DroneCanSwitchCam: 1
+  DroneCanIrMode: 1
   DroneCam: 0
+  DroneIrMode: 0
   DroneMode: 0
   DISARM: 1
   RestartButton: 0
@@ -2277,6 +2281,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+--- !u!1 &254754135720576795 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2027231633289675590, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+  m_PrefabInstance: {fileID: 2281985700268426333}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3832107793426900270 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3063956669541261683, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
