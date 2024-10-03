@@ -26,7 +26,8 @@ namespace Code.Internal.Drone
             if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
                 cameraObject.SetActive(DroneInput.Instance.DroneCam);
 
-            print(DroneInput.Instance.DroneCam);
+            if(!DroneInput.Instance)
+                return;
 
             currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
 
