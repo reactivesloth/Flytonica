@@ -57,7 +57,7 @@ namespace TransformGizmos
             m_translation.SetGizmoSize(m_gizmoSize);
             m_scaling.SetGizmoSize(m_gizmoSize);
 
-            if (Input.GetMouseButtonDown(1)) return;
+            if (Input.GetMouseButton(1)) return;
             if (Input.GetKeyDown(KeyCode.W))
                 ChangeTransformationState(Transformation.Translation);
             if (Input.GetKeyDown(KeyCode.E))
@@ -78,39 +78,18 @@ namespace TransformGizmos
                     break;
 
                 case Transformation.Rotation:
-                    if (m_transformation == Transformation.Rotation)
-                    {
-                        m_transformation = Transformation.None;
-                    }
-                    else
-                    {
-                        m_rotation.gameObject.SetActive(true);
-                        m_transformation = transformation;
-                    }
+                    m_rotation.gameObject.SetActive(true);
+                    m_transformation = transformation;
                     break;
 
                 case Transformation.Translation:
-                    if (m_transformation == Transformation.Translation)
-                    {
-                        m_transformation = Transformation.None;
-                    }
-                    else
-                    {
-                        m_translation.gameObject.SetActive(true);
-                        m_transformation = transformation;
-                    }
+                    m_translation.gameObject.SetActive(true);
+                    m_transformation = transformation;
                     break;
 
                 case Transformation.Scale:
-                    if (m_transformation == Transformation.Scale)
-                    {
-                        m_transformation = Transformation.None;
-                    }
-                    else
-                    {
-                        m_scaling.gameObject.SetActive(true);
-                        m_transformation = transformation;
-                    }
+                    m_scaling.gameObject.SetActive(true);
+                    m_transformation = transformation;
                     break;
             }
         }

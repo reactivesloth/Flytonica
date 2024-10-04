@@ -12,6 +12,7 @@ namespace Code.Internal.MapEditor
         [SerializeField] private GameObject mapEditorCamera;
         [SerializeField] private AvailableMapsSettings _mapsSettings;
         [SerializeField] private GameObject currentSelectedEditorObject;
+        [SerializeField] private GameObject currentObjectToSpawn;
         private ConstructorScenarioPage _constructor;
         private string _savedSceneName;
         private bool _isEnabled;
@@ -65,20 +66,21 @@ namespace Code.Internal.MapEditor
             {
                 Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
 
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Tab) && currentSelectedEditorObject != null && !UnityEngine.Input.GetMouseButton(1))
+                if (UnityEngine.Input.GetMouseButtonDown(0) && currentObjectToSpawn != null && !UnityEngine.Input.GetMouseButton(1))
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        var tr = hit.transform.root;
-                        if (tr.GetComponent<SpawnableObject>())
+                        if (currentSelectedEditorObject == null)
                         {
-                            if (_gizmo != null) Destroy(_gizmo);
-                            _gizmo = Instantiate(mapEditorGizmo);
-                            GizmoController.Instance.SelectTarget(tr.gameObject);
-                        }
-                        else
-                        {
-                            AddObject(hit.point);
+                            var tr = hit.transform.root;
+                            if (tr.GetComponent<SpawnableObject>())
+                            {
+                                currentSelectedEditorObject = tr.gameObject;
+                            }
+                            else
+                            {
+                                AddObject(hit.point);
+                            }
                         }
                     }
                 }
@@ -105,17 +107,46 @@ namespace Code.Internal.MapEditor
                         }
                     }
                 }
+
+                if (currentSelectedEditorObject != null)
+                {
+                    MapEditorUI.Instance.CloseLibraryPanel();
+                    if (_gizmo == null)
+                    {
+                        if (_gizmo != null) Destroy(_gizmo);
+                        _gizmo = Instantiate(mapEditorGizmo);
+                        GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
+                    }
+
+                    if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        currentSelectedEditorObject = null;
+                    }
+                }
+
+                else
+                {
+                    if (_gizmo != null) 
+                        Destroy(_gizmo);
+                }
             }
         }
 
         public void SelectEditorObject(GameObject obj)
         {
-            currentSelectedEditorObject = obj;
+            if (obj == null)
+            {
+                currentObjectToSpawn = null;
+                currentSelectedEditorObject = null;
+                return;
+            }
+            
+            currentObjectToSpawn = obj;
         }
 
         public void AddObject(Vector3 position)
         {
-            var type = currentSelectedEditorObject.GetComponent<SpawnableObject>().Type;
+            var type = currentObjectToSpawn.GetComponent<SpawnableObject>().Type;
 
             var objects = FindObjectsOfType<SpawnableObject>();
             foreach (var o in objects)
@@ -133,11 +164,8 @@ namespace Code.Internal.MapEditor
                     }
             }
 
-            var newObject = Instantiate(currentSelectedEditorObject, position, Quaternion.identity);
-            if (_gizmo != null) Destroy(_gizmo);
-            _gizmo = Instantiate(mapEditorGizmo);
-            GizmoController.Instance.SelectTarget(newObject);
-
+            var newObject = Instantiate(currentObjectToSpawn, position, Quaternion.identity);
+            currentSelectedEditorObject = newObject;
         }
 
         public void RemoveObject(Transform t)

@@ -18,25 +18,17 @@ namespace Code.Internal.MapEditor
 
         private void Awake()
         {
-            defaultObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.Default); defaultObjectsButton.interactable = false; });
-            spawnerPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SpawnPoint); spawnerPointButton.interactable = false; });
-            startPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.StartGate); startPointButton.interactable = false; });
-            finishPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.FinishGate); finishPointButton.interactable = false; });
-            racingGatesButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate); racingGatesButton.interactable = false; });
-            transportObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject); transportObjectsButton.interactable = false; });
-            searchingObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject); searchingObjectsButton.interactable = false; });
+            defaultObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.Default);});
+            spawnerPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SpawnPoint);});
+            startPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.StartGate);});
+            finishPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.FinishGate);});
+            racingGatesButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate);});
+            transportObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject);});
+            searchingObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject);});
         }
 
         public void ClosePanel ()
         {
-            defaultObjectsButton.interactable = true;
-            spawnerPointButton.interactable = true;
-            startPointButton.interactable = true;
-            finishPointButton.interactable = true;
-            searchingObjectsButton.interactable = true;
-            racingGatesButton.interactable = true;
-            transportObjectsButton.interactable = true;
-            
             panel.SetActive(false);
             defaultObjectsButton.gameObject.SetActive(false);
             spawnerPointButton.gameObject.SetActive(false);
