@@ -6,6 +6,8 @@ namespace Code.Internal.Drone
 {
     public class DroneCameraEffectController : MonoBehaviour
     {
+        public static DroneCameraEffectController Instance { get; private set; }
+        
         [SerializeField] private Volume volume;
         [Header("Settings")] 
         [SerializeField] private float minOffsetCamera = 0.1f;
@@ -16,11 +18,14 @@ namespace Code.Internal.Drone
         private FilmGrain _filmGrain;
         private LiftGammaGain _liftGammaGain;
         private ChromaticAberration _chromaticAberration;
+        private ColorAdjustments _colorAdjustments;
 
         private DroneSensors CurrentDroneSensors => DroneController.Instance?.DroneSensors;
 
         private void Awake()
         {
+            Instance = this;
+            
             if (!volume) return;
 
             if (volume.profile.TryGet(out FilmGrain fg))
@@ -31,6 +36,9 @@ namespace Code.Internal.Drone
 
             if (volume.profile.TryGet(out ChromaticAberration ca))
                 _chromaticAberration = ca;
+            
+            if (volume.profile.TryGet(out ColorAdjustments component))
+                _colorAdjustments = component;
         }
         
         private void Update()
@@ -52,5 +60,7 @@ namespace Code.Internal.Drone
                 _liftGammaGain.lift.value = value;
             }
         }
+
+        public void SetIrMode(bool value) => _colorAdjustments.active = value;
     }
 }

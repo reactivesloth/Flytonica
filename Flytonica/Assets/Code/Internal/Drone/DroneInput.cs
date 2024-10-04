@@ -16,7 +16,9 @@ namespace Code.Internal.Drone
         [Range(-1, 1)] public float Roll;
 
         public bool DroneCanSwitchCam = true;
+        public bool DroneCanIrMode = true;
         public bool DroneCam = false;
+        public bool DroneIrMode = false;
         public bool DroneMode = false;
         public bool DISARM = true;
         public bool RestartButton = false;
@@ -105,6 +107,11 @@ namespace Code.Internal.Drone
             {
                 if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
                     DroneCam = !DroneCam;
+            }
+
+            if (DroneCanIrMode)
+            {
+                DroneIrMode = _player.GetButtonDown("IR Mode");
             }
 
             RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();

@@ -15,6 +15,8 @@ namespace Code.Internal.Drone
     public class DroneController : NetworkBehaviour
     {
         [SerializeField] private DroneSettings droneSettings;
+
+        [SerializeField] private DroneCamera droneCamera;
         
         [SerializeField] private DroneEngine engineFL;
         [SerializeField] private DroneEngine engineFR;
@@ -53,6 +55,7 @@ namespace Code.Internal.Drone
 
         protected override void OnValidate()
         {
+            droneCamera = GetComponent<DroneCamera>();
             _rigidBody = GetComponent<Rigidbody>();
             InitializeDrone();
         }
@@ -135,6 +138,9 @@ namespace Code.Internal.Drone
             {
                 UpdateFlightMode();
             }
+            
+            if(_droneInput.DroneIrMode)
+                droneCamera.SetIrMode();
 
             if (_droneInput.RestartButton)
             {
