@@ -111,7 +111,7 @@ namespace Code.Internal.Drone
 
             if (DroneCanIrMode)
             {
-                DroneIrMode = _player.GetButtonDown("IR Mode") || changeModeAction.action.WasPressedThisFrame();
+                DroneIrMode = _player.GetButtonDown("IR Mode");
             }
 
             RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
