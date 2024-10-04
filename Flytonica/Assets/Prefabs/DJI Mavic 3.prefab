@@ -350,6 +350,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 7794961175099019535}
   droneSettings: {fileID: 11400000, guid: 83c2bb145beb017469ee1de591e147f0, type: 2}
+  droneCamera: {fileID: 4973870330401012139}
   engineFL: {fileID: 5498201892723543587}
   engineFR: {fileID: 6996990822719045157}
   engineRL: {fileID: 7683294162799265470}
@@ -371,6 +372,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   cameraObject: {fileID: 2666126503352247847}
+  irCameraObject: {fileID: 7543008327290739067}
   currentAngle: 0
   minAngle: 0
   maxAngle: 90
@@ -549,7 +551,9 @@ MonoBehaviour:
   Pitch: 0
   Roll: 0
   DroneCanSwitchCam: 1
+  DroneCanIrMode: 1
   DroneCam: 0
+  DroneIrMode: 0
   DroneMode: 0
   DISARM: 1
   RestartButton: 0
@@ -2527,5 +2531,10 @@ GameObject:
 --- !u!4 &6776041872363289422 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3063956669541261683, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+  m_PrefabInstance: {fileID: 8398098906764859965}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7543008327290739067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2027231633289675590, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
   m_PrefabInstance: {fileID: 8398098906764859965}
   m_PrefabAsset: {fileID: 0}
