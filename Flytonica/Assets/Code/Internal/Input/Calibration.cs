@@ -12,7 +12,7 @@ namespace Code.Internal.Input
         public Player _player;
         private bool _isCalibrating;
 
-        public int _throttleAxisId, _yawAxisId, _pitchAxisId, _rollAxisId, _cameraButtonId, _modeButtonId, _restartButtonId;
+        public int _throttleAxisId, _yawAxisId, _pitchAxisId, _rollAxisId, _cameraButtonId, _modeButtonId, _restartButtonId, _irButtonId;
 
         public static Calibration Instance;
         
@@ -153,6 +153,10 @@ namespace Code.Internal.Input
             calibrationText?.SetText("Кнопка рестарта дрона");
             //yield return StartCoroutine(WaitZeros());
             yield return StartCoroutine(CheckButton (i => _restartButtonId = i));
+            yield return new WaitForSeconds(1);
+            calibrationText?.SetText("Кнопка переключения тепловизора");
+            //yield return StartCoroutine(WaitZeros());
+            yield return StartCoroutine(CheckButton (i => _irButtonId = i));
             
             BindAxes();
 
@@ -280,6 +284,7 @@ namespace Code.Internal.Input
             BindAxis(ElementAssignmentType.Button, AxisRange.Positive, _cameraButtonId, "DroneCamera");
             BindAxis(ElementAssignmentType.Button, AxisRange.Positive, _modeButtonId, "DroneMode");
             BindAxis(ElementAssignmentType.Button, AxisRange.Positive, _restartButtonId, "DroneRestart");
+            BindAxis(ElementAssignmentType.Button, AxisRange.Positive, _irButtonId, "IR Mode");
         }
 
         private void BindAxis(ElementAssignmentType assignmentType, AxisRange axisRange, int axisId, string actionName)

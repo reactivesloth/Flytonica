@@ -25,7 +25,6 @@ namespace Code.Internal.Scenario.Race
         private void Awake()
         {
             _raceCondition = RaceCondition.Waiting;
-            UpdateCheckpointColors();
         }
 
         private void Start()
@@ -43,14 +42,9 @@ namespace Code.Internal.Scenario.Race
             DroneHUD.Instance?.SetTime(GetResult ());
         }
 
-        private void OnValidate()
-        {
-            checkpoints = gameObject.GetComponentsInChildren<Checkpoint>(false).ToList();
-        }
-
         public void CheckpointUpdate(Checkpoint checkpoint)
         {
-            if (_raceCondition == RaceCondition.Finished) return;
+            if (_raceCondition != RaceCondition.Running) return;
             
             if (checkpoints.IndexOf(checkpoint) == _nextCheckpoint)
             {
@@ -138,7 +132,38 @@ namespace Code.Internal.Scenario.Race
 
         public void Initialize()
         {
-            Debug.LogError("Scenario initializing");
+            var objects = GetComponentsInChildren<SpawnableObject>();
+            checkpoints = new List<Checkpoint>();
+
+            foreach (var o in objects)
+            {
+                if (o.Type == MapEditorObjectType.RacingGate)
+                {
+                    var gatePoints = o.GetComponentsInChildren<Checkpoint>();
+                    foreach (var c in gatePoints)
+                    {
+                        checkpoints.Add(c);
+                    }
+                }
+            }
+            
+            foreach (var o in objects)
+            {
+                if (o.Type == MapEditorObjectType.StartGate)
+                {
+                    checkpoints.Insert(0, o.GetComponentInChildren<Checkpoint>());
+                }
+
+                if (o.Type == MapEditorObjectType.FinishGate)
+                {
+                    checkpoints.Insert(checkpoints.Count, o.GetComponentInChildren<Checkpoint>());
+                }
+            }
+            
+            if (_raceCondition == RaceCondition.Waiting)
+            {
+                StartRace();
+            }
         }
     }
 }
