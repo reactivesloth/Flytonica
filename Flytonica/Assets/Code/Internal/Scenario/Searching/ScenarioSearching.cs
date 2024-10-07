@@ -175,15 +175,15 @@ namespace Code.Internal.Scenario.Searching
                 }, 
                 null, "Продолжить", Color.green, Color.black, () =>
                 {
-                    Dictionary<string, string> result = new Dictionary<string, string>();
+                    var resultBuilder = ReportBuilder.Instance;
 
-                    result.Add($"{SceneManager.GetActiveScene().name}_Время", GetResult(_counter));
+                    resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_Время", GetResult(_counter));
                     foreach (var searchingObject in searchingObjects)
                     {
-                        result.Add($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObject.name.Replace("(Clone)", ""), searchingObject.finded ? "Найден" : "Не найден");
+                        resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObject.name.Replace("(Clone)", ""), searchingObject.finded ? "Найден" : "Не найден");
                     }
                     
-                    ScenarioSwitcherController.Instance.NextOrEnd(result);
+                    ScenarioSwitcherController.Instance.NextOrEnd();
                 });
         }
         
