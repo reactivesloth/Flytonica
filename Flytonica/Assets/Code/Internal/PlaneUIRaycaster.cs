@@ -14,7 +14,12 @@ namespace Code.Internal
 
         private GameObject _lastHoveredObject;
 
-        private void Awake()
+        private void Start()
+        {
+            Invoke("Initialize", 1);
+        }
+        
+        private void Initialize ()
         {
             ui.gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled
                 ? RenderMode.ScreenSpaceCamera
