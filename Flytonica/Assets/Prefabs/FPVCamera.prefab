@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 379874999427977154}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.099, y: -0.055818, z: 0.1}
-  m_LocalScale: {x: 0.19846621, y: 0.11163726, z: 0.0012404139}
+  m_LocalPosition: {x: -0.21875, y: -0.12318, z: 0.4254}
+  m_LocalScale: {x: 0.43797183, y: 0.24635917, z: 0.002737324}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3063956669541261683}
@@ -426,7 +426,6 @@ GameObject:
   - component: {fileID: 7316224952322898147}
   - component: {fileID: 4924220754451960512}
   - component: {fileID: 6389476928370501633}
-  - component: {fileID: 1214410817781871683}
   m_Layer: 0
   m_Name: PanelCameraCamera
   m_TagString: Untagged
@@ -523,7 +522,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -544,18 +543,3 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1214410817781871683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8266812811258087292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shouldBeEnabledInFPV: 1
-  enabledInFPVObjects: []
-  disabledInFPVObjects: []
