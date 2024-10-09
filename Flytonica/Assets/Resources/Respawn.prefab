@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 154557428264042823}
   - component: {fileID: 8756516871853859291}
+  - component: {fileID: -5980506559034033550}
+  - component: {fileID: -1603929690357946949}
   m_Layer: 0
   m_Name: Respawn
   m_TagString: Respawn
@@ -45,3 +47,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
+--- !u!114 &-5980506559034033550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357259279653320239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 26735
+  replayObject:
+    reference: {fileID: -1603929690357946949}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &-1603929690357946949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357259279653320239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 27949
+  prefabIdentity:
+    id: 36745
+  observedComponents:
+  - {fileID: -5980506559034033550}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0

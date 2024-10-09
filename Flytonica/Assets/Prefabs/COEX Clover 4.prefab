@@ -160,6 +160,8 @@ GameObject:
   - component: {fileID: 6872376549236773499}
   - component: {fileID: 2037224341869948750}
   - component: {fileID: 2140942841614781970}
+  - component: {fileID: -3365251737495109800}
+  - component: {fileID: -3053347562455769648}
   m_Layer: 7
   m_Name: COEX Clover 4
   m_TagString: Untagged
@@ -460,6 +462,52 @@ MonoBehaviour:
   InputSignalLevel: 1
   maxDelayTime: 1
   bufferSize: 120
+--- !u!114 &-3365251737495109800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 57655
+  prefabIdentity:
+    id: 3985
+  observedComponents:
+  - {fileID: -3053347562455769648}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
+--- !u!114 &-3053347562455769648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 52720
+  replayObject:
+    reference: {fileID: -3365251737495109800}
+  replayPosition: -1
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: -1
+  rotationPrecision: 0
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
 --- !u!1 &1022046699937227879
 GameObject:
   m_ObjectHideFlags: 0

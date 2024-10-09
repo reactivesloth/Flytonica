@@ -653,6 +653,8 @@ GameObject:
   - component: {fileID: 33552785850132010}
   - component: {fileID: 23969416486990606}
   - component: {fileID: -7130710082548355951}
+  - component: {fileID: 4776512417004068736}
+  - component: {fileID: 7356483286231237578}
   m_Layer: 0
   m_Name: GATE_MTL_SQR_Hanging
   m_TagString: Untagged
@@ -744,6 +746,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 4
+--- !u!114 &4776512417004068736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852081648750160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 50012
+  replayObject:
+    reference: {fileID: 7356483286231237578}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &7356483286231237578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852081648750160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 46671
+  prefabIdentity:
+    id: 16012
+  observedComponents:
+  - {fileID: 4776512417004068736}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
 --- !u!1 &1519233227863067726
 GameObject:
   m_ObjectHideFlags: 0

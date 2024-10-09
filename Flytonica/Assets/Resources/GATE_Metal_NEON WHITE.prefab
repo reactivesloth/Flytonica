@@ -357,6 +357,8 @@ GameObject:
   - component: {fileID: 23690711513641800}
   - component: {fileID: 65563563112420032}
   - component: {fileID: 5651658368473443867}
+  - component: {fileID: -5597763013555338551}
+  - component: {fileID: -8100545711529413550}
   m_Layer: 0
   m_Name: GATE_Metal_NEON WHITE
   m_TagString: Untagged
@@ -470,3 +472,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
+--- !u!114 &-5597763013555338551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984035739163714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 15422
+  replayObject:
+    reference: {fileID: -8100545711529413550}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &-8100545711529413550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984035739163714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 58350
+  prefabIdentity:
+    id: 4158
+  observedComponents:
+  - {fileID: -5597763013555338551}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0

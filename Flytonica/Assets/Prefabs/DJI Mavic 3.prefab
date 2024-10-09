@@ -258,6 +258,8 @@ GameObject:
   - component: {fileID: 4020091474735691375}
   - component: {fileID: 835091436568997191}
   - component: {fileID: -6028051076763233206}
+  - component: {fileID: 3075687188663273017}
+  - component: {fileID: 4353708161759591684}
   m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -561,6 +563,52 @@ MonoBehaviour:
   InputSignalLevel: 1
   maxDelayTime: 1
   bufferSize: 120
+--- !u!114 &3075687188663273017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 56949
+  prefabIdentity:
+    id: 62698
+  observedComponents:
+  - {fileID: 4353708161759591684}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
+--- !u!114 &4353708161759591684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 33394
+  replayObject:
+    reference: {fileID: 3075687188663273017}
+  replayPosition: -1
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: -1
+  rotationPrecision: 0
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0

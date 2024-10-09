@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 33557563678723426}
   - component: {fileID: 23927209933419410}
   - component: {fileID: 4598634022109370749}
+  - component: {fileID: 5598314145347859593}
+  - component: {fileID: 1547327441516019158}
   m_Layer: 0
   m_Name: GATE_ PLSTC_Square45
   m_TagString: Untagged
@@ -102,6 +104,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 4
+--- !u!114 &5598314145347859593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184813441853266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 31642
+  replayObject:
+    reference: {fileID: 1547327441516019158}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &1547327441516019158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184813441853266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 26274
+  prefabIdentity:
+    id: 53689
+  observedComponents:
+  - {fileID: 5598314145347859593}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
 --- !u!1 &1228652992290082
 GameObject:
   m_ObjectHideFlags: 0

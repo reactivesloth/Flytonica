@@ -19,6 +19,7 @@ namespace Code.Internal.Scenario
 
         private void Awake()
         {
+            print(Application.persistentDataPath);
             if (Instance == null)
                 Instance = this;
             else

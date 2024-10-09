@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 65973382123533276}
   - component: {fileID: 65057181073087760}
   - component: {fileID: 1820054553998481507}
+  - component: {fileID: -1764656321092025321}
+  - component: {fileID: 4183747819025045210}
   m_Layer: 0
   m_Name: Starting Gate BLUE
   m_TagString: Untagged
@@ -200,6 +202,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
+--- !u!114 &-1764656321092025321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341432315180272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 6903
+  replayObject:
+    reference: {fileID: 4183747819025045210}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &4183747819025045210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341432315180272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 37393
+  prefabIdentity:
+    id: 1071
+  observedComponents:
+  - {fileID: -1764656321092025321}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
 --- !u!1 &1637626436240492
 GameObject:
   m_ObjectHideFlags: 0

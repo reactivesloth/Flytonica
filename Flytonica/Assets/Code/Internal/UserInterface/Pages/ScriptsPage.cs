@@ -5,6 +5,7 @@ using System.Linq;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Elements;
 using FishNet;
@@ -138,6 +139,9 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
             
             print(sceneSettings.currentScenario.nextScenario?.name);
+            
+            if(_isTaskInit)
+                ScenarioSwitcherController.Instance.StartTask();
 
             InstanceFinder.ServerManager.StartConnection();
 

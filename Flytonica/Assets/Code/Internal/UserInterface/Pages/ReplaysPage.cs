@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.Replays;
 using Code.Internal.UserInterface.Elements.TableElements;
+using FishNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +17,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_Text title;
         [SerializeField] private SelectionCollectionManager replaysRoot;
         [SerializeField] private Button delete, view;
+        [SerializeField] private ViewReplayPage viewReplayPage;
 
         private int _currentUserId;
 
@@ -78,6 +81,18 @@ namespace Code.Internal.UserInterface.Pages
         private void View()
         {
             //TODO: Init and show ReplayViewPage
+            var replayData = replaysRoot.SelectedButton.GetSaveData<LogData>();
+            /*HttpClient.GetBinary(LinkConstants.GetFile(replayData.replay_file_path), onSuccess: bytes =>
+            {
+                var fileName = $"{replayData.user_scenario_id}.replay"; 
+                var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
+
+                System.IO.File.WriteAllBytes(filePath, bytes);
+                
+                ReplayRecorder.Instance.StartPlayback(replayData.user_scenario_id);
+            });*/
+            ReplayController.Instance.StartPlayback(replayData.user_scenario_id);
+            viewReplayPage?.Open();
         }
 
         private void SetButtons(bool isSelect)

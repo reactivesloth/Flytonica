@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 100834650883699308}
   - component: {fileID: 2971856593125422801}
   - component: {fileID: 6760981228498341030}
+  - component: {fileID: -7236604878116468081}
+  - component: {fileID: 1574147098973144548}
   m_Layer: 0
   m_Name: ANKentER
   m_TagString: Untagged
@@ -212,3 +214,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 6
+--- !u!114 &-7236604878116468081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6933454026159461718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 12513
+  replayObject:
+    reference: {fileID: 1574147098973144548}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &1574147098973144548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6933454026159461718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 20573
+  prefabIdentity:
+    id: 59827
+  observedComponents:
+  - {fileID: -7236604878116468081}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
