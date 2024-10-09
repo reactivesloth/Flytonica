@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -1082,34 +1083,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scenario Initializer
       objectReference: {fileID: 0}
+    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.264
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7574811189198522945, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 7959107766471384747, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2262816352662347192, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 7472430146721782210, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 548852371469969036, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4687482329790306811, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 7497590432466798571, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4775514850069773353, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
 --- !u!33 &1510409732509793070
 MeshFilter:

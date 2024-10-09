@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -728,6 +729,10 @@ PrefabInstance:
     - target: {fileID: 282199168816122625, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_Name
       value: Scenario Initializer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6359725930303483046, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.505
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
