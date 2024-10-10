@@ -28,16 +28,27 @@ namespace Code.Internal.MapEditor
 
         public void ClosePanel()
         {
-            mainPanel.ClosePanel();
-            libraryPanel.ClosePanel ();
+            CloseMainPanel();
+            CloseLibraryPanel();
         }
 
+        public void CloseMainPanel()
+        {
+            mainPanel.ClosePanel();
+        }
+        
+        public void CloseLibraryPanel()
+        {
+            libraryPanel.ClosePanel();
+        }
+        
         public void InitializeMainPanel(ScenarioType type)
         {
             mainPanel.Setup(type);
         }
 
         public void InitializeLibraryPanel (MapEditorObjectType libraryPanelType) {
+            MapEditor.Instance.SelectEditorObject(null);
             libraryPanel.Setup(libraryPanelType);
         }
     }

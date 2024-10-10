@@ -1,23 +1,23 @@
-using System;
-using System.Collections.Generic;
-using Code.Internal.API.Wrappers;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
+using TransformGizmos;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Code.Internal.MapEditor
 {
     public class MapEditor : MonoBehaviour
     {
+        [SerializeField] private GameObject mapEditorGizmo;
         [SerializeField] private GameObject mapEditorCamera;
         [SerializeField] private AvailableMapsSettings _mapsSettings;
         [SerializeField] private GameObject currentSelectedEditorObject;
+        [SerializeField] private GameObject currentObjectToSpawn;
         private ConstructorScenarioPage _constructor;
         private string _savedSceneName;
         private bool _isEnabled;
         private Camera _camera;
+        private GameObject _gizmo;
         
         public static MapEditor Instance { get; private set; }
 
@@ -66,15 +66,26 @@ namespace Code.Internal.MapEditor
             {
                 Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
 
-                if (UnityEngine.Input.GetMouseButtonDown(0) && currentSelectedEditorObject != null)
+                if (UnityEngine.Input.GetMouseButtonDown(0) && currentObjectToSpawn != null && !UnityEngine.Input.GetMouseButton(1))
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        AddObject(hit.point);
+                        if (currentSelectedEditorObject == null)
+                        {
+                            var tr = hit.transform.root;
+                            if (tr.GetComponent<SpawnableObject>())
+                            {
+                                currentSelectedEditorObject = tr.gameObject;
+                            }
+                            else
+                            {
+                                AddObject(hit.point);
+                            }
+                        }
                     }
                 }
 
-                else if (UnityEngine.Input.GetMouseButtonDown(1))
+                else if (UnityEngine.Input.GetKeyDown(KeyCode.Delete))
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
@@ -96,17 +107,46 @@ namespace Code.Internal.MapEditor
                         }
                     }
                 }
+
+                if (currentSelectedEditorObject != null)
+                {
+                    MapEditorUI.Instance.CloseLibraryPanel();
+                    if (_gizmo == null)
+                    {
+                        if (_gizmo != null) Destroy(_gizmo);
+                        _gizmo = Instantiate(mapEditorGizmo);
+                        GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
+                    }
+
+                    if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        currentSelectedEditorObject = null;
+                    }
+                }
+
+                else
+                {
+                    if (_gizmo != null) 
+                        Destroy(_gizmo);
+                }
             }
         }
 
         public void SelectEditorObject(GameObject obj)
         {
-            currentSelectedEditorObject = obj;
+            if (obj == null)
+            {
+                currentObjectToSpawn = null;
+                currentSelectedEditorObject = null;
+                return;
+            }
+            
+            currentObjectToSpawn = obj;
         }
 
         public void AddObject(Vector3 position)
         {
-            var type = currentSelectedEditorObject.GetComponent<SpawnableObject>().Type;
+            var type = currentObjectToSpawn.GetComponent<SpawnableObject>().Type;
 
             var objects = FindObjectsOfType<SpawnableObject>();
             foreach (var o in objects)
@@ -124,7 +164,8 @@ namespace Code.Internal.MapEditor
                     }
             }
 
-            var newObject = Instantiate(currentSelectedEditorObject, position, Quaternion.identity);
+            var newObject = Instantiate(currentObjectToSpawn, position, Quaternion.identity);
+            currentSelectedEditorObject = newObject;
         }
 
         public void RemoveObject(Transform t)

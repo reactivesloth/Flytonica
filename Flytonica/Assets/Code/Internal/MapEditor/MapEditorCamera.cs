@@ -23,12 +23,13 @@ namespace Code.Internal.MapEditor
 
 		void UpdateInput()
 		{
-			// Position
-			velocity += GetAccelerationVector() * Time.deltaTime;
-
-			// Rotation
 			if (UnityEngine.Input.GetMouseButton(1))
 			{
+				// Position
+				velocity += GetAccelerationVector() * Time.deltaTime;
+
+				// Rotation
+			
 				Vector2 mouseDelta = lookSensitivity * new Vector2(UnityEngine.Input.GetAxis("Mouse X"), -UnityEngine.Input.GetAxis("Mouse Y"));
 				Quaternion rotation = transform.rotation;
 				Quaternion horiz = Quaternion.AngleAxis(mouseDelta.x, Vector3.up);
@@ -36,11 +37,11 @@ namespace Code.Internal.MapEditor
 				transform.rotation = horiz * rotation * vert;
 			}
 
-			if (UnityEngine.Input.GetKeyDown(KeyCode.R))
-			{
-				transform.position = new Vector3(0, 45, 0);
-				transform.eulerAngles = new Vector3(90, 0, 0);
-			}
+			// if (UnityEngine.Input.GetKeyDown(KeyCode.R))
+			// {
+			// 	transform.position = new Vector3(0, 45, 0);
+			// 	transform.eulerAngles = new Vector3(90, 0, 0);
+			// }
 		}
 
 		Vector3 GetAccelerationVector()

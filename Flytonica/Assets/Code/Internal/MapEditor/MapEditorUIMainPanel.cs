@@ -1,4 +1,3 @@
-using System;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,13 +18,13 @@ namespace Code.Internal.MapEditor
 
         private void Awake()
         {
-            defaultObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.Default); });
-            spawnerPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SpawnPoint); });
-            startPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.StartGate); });
-            finishPointButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.FinishGate); });
-            racingGatesButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate); });
-            transportObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject); });
-            searchingObjectsButton.onClick.AddListener(()=> { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject); });
+            defaultObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.Default);});
+            spawnerPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SpawnPoint);});
+            startPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.StartGate);});
+            finishPointButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.FinishGate);});
+            racingGatesButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate);});
+            transportObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject);});
+            searchingObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject);});
         }
 
         public void ClosePanel ()

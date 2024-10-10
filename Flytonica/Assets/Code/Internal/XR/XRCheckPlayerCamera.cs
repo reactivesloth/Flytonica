@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
 
 namespace Code.Internal.XR
@@ -8,8 +7,13 @@ namespace Code.Internal.XR
     {
         [SerializeField] private GameObject desktopPlayer;
         [SerializeField] private GameObject XRPlayer;
-        
+
         private void Start()
+        {
+            Invoke("Initialize", 1);
+        }
+        
+        private void Initialize ()
         {
             if (XRSettings.isDeviceActive && XRSettings.enabled)
             {

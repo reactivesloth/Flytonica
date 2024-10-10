@@ -36,7 +36,7 @@ namespace Code.Internal.MapEditor
             _prefab = prefab;
             
             _button.onClick.RemoveAllListeners();
-            _button.onClick.AddListener(() => { MapEditor.Instance.SelectEditorObject(prefab); });
+            _button.onClick.AddListener(() => { MapEditor.Instance.SelectEditorObject(prefab);});
         }
     }
 }
