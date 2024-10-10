@@ -19,21 +19,17 @@ namespace Code.Internal.MapEditor
             _button = GetComponent<Button>();
         }
 
-        private void Update()
-        {
-            if (_prefab == null) return;
-            #if UNITY_EDITOR
-            if (_texture2D == Texture2D.linearGrayTexture)
-            {
-                _image.texture = AssetPreview.GetAssetPreview(_prefab);
-            }
-            #endif
-        }
-
         public void Setup(GameObject prefab)
         {
             _texture2D = Texture2D.linearGrayTexture;
             _prefab = prefab;
+
+            if (prefab.GetComponent<SpawnableObject>() != null)
+            {
+                _texture2D = prefab.GetComponent<SpawnableObject>().icon;
+            }
+            
+            _image.texture = _texture2D;
             
             _button.onClick.RemoveAllListeners();
             _button.onClick.AddListener(() => { MapEditor.Instance.SelectEditorObject(prefab);});
