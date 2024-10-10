@@ -32,7 +32,12 @@ namespace Code.Internal.Input
         
         public event Action<int> StepDone; 
         
-        private void Awake()
+        private void Start()
+        {
+            Invoke("Initialize", 1);
+        }
+                
+        private void Initialize ()
         {
             if (Instance == null)
                 Instance = this;

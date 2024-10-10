@@ -8,7 +8,12 @@ namespace Code.Internal.XR
         [SerializeField] private Camera uiCamera;
         [SerializeField] private GameObject panelRTUI;
 
-        void Start()
+        private void Start()
+        {
+            Invoke("Initialize", 1);
+        }
+        
+        private void Initialize ()
         {
             var canvas = gameObject.GetComponent<Canvas>();
             canvas.renderMode = XRSettings.isDeviceActive && XRSettings.enabled
