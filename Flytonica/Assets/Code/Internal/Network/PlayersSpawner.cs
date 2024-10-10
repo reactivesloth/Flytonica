@@ -5,6 +5,7 @@ using Code.Internal.Network.Teacher;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
+using UltimateReplay;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
@@ -30,6 +31,9 @@ namespace Code.Internal.Network
             _drones.Add(drone);
             
             PlayerManager.Instance.AddPlayer(connection, drone);
+            
+            if(drone.TryGetComponent(out ReplayObject replayObject))
+                ReplayManager.AddReplayObjectToRecordScenes(replayObject);
             
             return drone;
         }

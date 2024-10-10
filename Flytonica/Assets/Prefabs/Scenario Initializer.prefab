@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 274046177649460532}
   - component: {fileID: 4139166411179568071}
   - component: {fileID: 4454506770096933095}
-  - component: {fileID: 8774723927873736415}
+  - component: {fileID: 1149822380574648717}
   m_Layer: 0
   m_Name: Scenario Initializer
   m_TagString: Untagged
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sceneLoadingSettings: {fileID: 11400000, guid: 56bb72999f85c1a4e81b7eef178419e1, type: 2}
   allowedForbiddenTime: 10
---- !u!114 &8774723927873736415
+--- !u!114 &1149822380574648717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,16 +87,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiateIdentity: 1
   replayIdentity:
-    id: 9013
+    id: 63425
   prefabIdentity:
-    id: 20035
+    id: 5985
   observedComponents:
-  - {fileID: 5545721188082001916}
-  - {fileID: 5626725717745566195}
-  - {fileID: 8696331268418406424}
-  - {fileID: 6373532667757042901}
-  - {fileID: 7400405401226420742}
-  - {fileID: 2268588630156141912}
+  - {fileID: 1115167305224916217}
+  - {fileID: 6003263280257963630}
+  - {fileID: 5846337953986735101}
+  - {fileID: 8368240165647208852}
+  - {fileID: 5153355044625310354}
+  - {fileID: 9165182821571045684}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6279259883449033592}
-  - component: {fileID: 5545721188082001916}
+  - component: {fileID: 1115167305224916217}
   m_Layer: 0
   m_Name: FreeFlight
   m_TagString: Untagged
@@ -132,7 +132,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5545721188082001916
+--- !u!114 &1115167305224916217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,9 +145,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 6026
+    id: 7493
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1 &2661550932784029582
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8587795426742671669}
-  - component: {fileID: 2268588630156141912}
+  - component: {fileID: 9165182821571045684}
   m_Layer: 0
   m_Name: SearhingIR
   m_TagString: Untagged
@@ -180,7 +180,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2268588630156141912
+--- !u!114 &9165182821571045684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,9 +193,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 51990
+    id: 29825
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1 &5698275271113696638
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6461628768773411193}
   - component: {fileID: 7542913969204022256}
-  - component: {fileID: 7400405401226420742}
+  - component: {fileID: 5153355044625310354}
   m_Layer: 0
   m_Name: Searching
   m_TagString: Untagged
@@ -276,7 +276,7 @@ MonoBehaviour:
     finingObject: {fileID: 4775514850069773353}
     finded: 0
   timer: 0
---- !u!114 &7400405401226420742
+--- !u!114 &5153355044625310354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,9 +289,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 13214
+    id: 65386
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1 &6023197090695324669
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 775862963012453992}
   - component: {fileID: 6620620307800333944}
-  - component: {fileID: 8696331268418406424}
+  - component: {fileID: 5846337953986735101}
   m_Layer: 0
   m_Name: Race
   m_TagString: Untagged
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpoints: []
---- !u!114 &8696331268418406424
+--- !u!114 &5846337953986735101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,9 +351,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 51531
+    id: 48550
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1 &6586777364904685921
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,7 +363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5356888411411758910}
-  - component: {fileID: 5626725717745566195}
+  - component: {fileID: 6003263280257963630}
   m_Layer: 0
   m_Name: Tutorial
   m_TagString: Untagged
@@ -386,7 +386,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5626725717745566195
+--- !u!114 &6003263280257963630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -399,9 +399,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 61816
+    id: 51555
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1 &8557777868805177551
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +411,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6440978662011859125}
-  - component: {fileID: 6373532667757042901}
+  - component: {fileID: 8368240165647208852}
   m_Layer: 0
   m_Name: Transport
   m_TagString: Untagged
@@ -434,7 +434,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6373532667757042901
+--- !u!114 &8368240165647208852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -447,9 +447,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 13518
+    id: 54759
   replayObject:
-    reference: {fileID: 8774723927873736415}
+    reference: {fileID: 1149822380574648717}
 --- !u!1001 &620456818368269101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -894,6 +894,18 @@ PrefabInstance:
       propertyPath: observedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1603929690357946949, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1603929690357946949, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
+      propertyPath: replayIdentity.id
+      value: 2009
+      objectReference: {fileID: 0}
+    - target: {fileID: -1603929690357946949, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
+      propertyPath: 'observedComponents.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 154557428264042823, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -941,6 +953,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -5980506559034033550, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
     - {fileID: -2130807959344109981, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
+    - {fileID: -1603929690357946949, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

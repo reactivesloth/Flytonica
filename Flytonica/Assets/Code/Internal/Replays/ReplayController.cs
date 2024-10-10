@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UltimateReplay;
 using UltimateReplay.Storage;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Code.Internal.Replays
     public class ReplayController : MonoBehaviour
     {
         private static ReplayController _instance;
+
         public static ReplayController Instance
         {
             get
@@ -26,6 +28,22 @@ namespace Code.Internal.Replays
         private ReplayPlaybackOperation _playbackOperation;
         private ReplayFileStorage _replayFileStorage;
         private string _replayFilePath;
+        private Scene _currentReplayScene;
+
+        public float CurrentPlaybackTime => _playbackOperation?.PlaybackTime ?? 0f;
+        public float TotalPlaybackTime => _playbackOperation?.Duration ?? 0f;
+
+        protected void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
+
+        protected void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        }
 
         private void Awake()
         {
@@ -96,9 +114,13 @@ namespace Code.Internal.Replays
                 _playbackOperation.StopPlayback();
                 Debug.Log("Остановлено воспроизведение реплея");
 
+                if (_currentReplayScene.IsValid())
+                    SceneManager.UnloadSceneAsync(_currentReplayScene);
+
                 _replayFileStorage.Dispose();
                 _replayFileStorage = null;
                 _playbackOperation = null;
+                _currentReplayScene = default;
             }
             else
             {
@@ -110,6 +132,57 @@ namespace Code.Internal.Replays
         {
             Debug.Log("Воспроизведение реплея завершено");
             StopPlayback();
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (_playbackOperation != null)
+                _currentReplayScene = scene;
+
+            if (_recordOperation == null)
+                return;
+
+            var replayObjects =
+                new List<ReplayObject>(FindObjectsByType<ReplayObject>(FindObjectsInactive.Include,
+                    FindObjectsSortMode.None));
+
+            foreach (var replayObject in replayObjects.Where(o => o.gameObject.scene.name == scene.name))
+            {
+                ReplayManager.AddReplayObjectToRecordOperation(_recordOperation, replayObject);
+                Debug.Log($"Объект {replayObject.name} добавлен в запись");
+            }
+        }
+
+        private void OnSceneUnloaded(Scene scene)
+        {
+            print($"UNLOAD {scene.name}");
+        }
+
+        public void PlayReplay()
+        {
+            if (_playbackOperation is not { IsPlaybackPaused: true })
+                return;
+
+            _playbackOperation.ResumePlayback();
+        }
+
+        public void Pause()
+        {
+            if (_playbackOperation is not { IsPlaybackPaused: false })
+                return;
+
+            _playbackOperation.PausePlayback();
+        }
+
+        public void Seek(float normalizedTime)
+        {
+            _playbackOperation?.SeekPlaybackNormalized(normalizedTime);
+        }
+
+        public void SetPlaybackSpeed(float speed)
+        {
+            if (_playbackOperation == null) return;
+                _playbackOperation.PlaybackTimeScale = Mathf.Max(0, speed);
         }
     }
 }

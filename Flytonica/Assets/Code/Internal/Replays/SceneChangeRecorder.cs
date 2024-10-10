@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -73,12 +75,13 @@ namespace Code.Internal.Replays
         private IEnumerator LoadSceneCoroutine(string sceneName)
         {
             var asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            while (!asyncLoad.isDone)
-            {
+            while (asyncLoad is { isDone: false })
                 yield return null;
-            }
-
-            // После загрузки сцены можно убедиться, что объекты имеют правильные ReplayIdentity
+            
+            var loadedScene = SceneManager.GetSceneByName(sceneName);
+            if (loadedScene.IsValid())
+                SceneManager.SetActiveScene(loadedScene);
+            
             Debug.Log($"Сцена {sceneName} загружена во время воспроизведения");
         }
     }
