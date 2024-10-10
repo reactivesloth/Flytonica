@@ -80,18 +80,23 @@ namespace Code.Internal.UserInterface.Pages
 
         private void View()
         {
-            //TODO: Init and show ReplayViewPage
             var replayData = replaysRoot.SelectedButton.GetSaveData<LogData>();
-            /*HttpClient.GetBinary(LinkConstants.GetFile(replayData.replay_file_path), onSuccess: bytes =>
-            {
-                var fileName = $"{replayData.user_scenario_id}.replay"; 
-                var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
+            var fileName = $"{replayData.user_scenario_id}.replay";
+            var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
 
-                System.IO.File.WriteAllBytes(filePath, bytes);
-                
-                ReplayRecorder.Instance.StartPlayback(replayData.user_scenario_id);
-            });*/
-            ReplayController.Instance.StartPlayback(replayData.user_scenario_id);
+            if (System.IO.File.Exists(filePath))
+            {
+                ReplayController.Instance.StartPlayback(replayData.user_scenario_id);
+            }
+            else
+            {
+                HttpClient.GetBinary(LinkConstants.GetFile(replayData.replay_file_path), onSuccess: bytes =>
+                {
+                    System.IO.File.WriteAllBytes(filePath, bytes);
+                    ReplayController.Instance.StartPlayback(replayData.user_scenario_id);
+                });
+            }
+
             viewReplayPage?.Open();
         }
 

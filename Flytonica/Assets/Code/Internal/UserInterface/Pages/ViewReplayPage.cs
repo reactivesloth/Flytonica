@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Code.Internal.Replays;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace Code.Internal.UserInterface.Pages
         
         [SerializeField] private float[] playbackSpeeds = { 0.5f, 1f, 1.5f, 2f };
         [SerializeField] private int currentSpeedIndex = 1;
+        
+        private bool _isUpdatingSlider;
 
         private void OnEnable()
         {
@@ -27,6 +30,8 @@ namespace Code.Internal.UserInterface.Pages
 
             UpdatePlayPauseButtons(true);
             UpdateSpeedButtonLabel();
+            
+            StartCoroutine(UpdateSliderCoroutine());
         }
 
         private void OnDisable()
@@ -35,6 +40,8 @@ namespace Code.Internal.UserInterface.Pages
             pauseButton.onClick.RemoveListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.RemoveListener(OnSeekSliderChanged);
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
+            
+            StopCoroutine(UpdateSliderCoroutine());
         }
 
         protected override void OnClose()
@@ -80,6 +87,20 @@ namespace Code.Internal.UserInterface.Pages
             var selectedSpeed = playbackSpeeds[currentSpeedIndex];
             speedButton.GetComponentInChildren<TMP_Text>().text = $"{selectedSpeed}x";
         }
-    }
+        
+        private IEnumerator UpdateSliderCoroutine()
+        {
+            while (true)
+            {
+                if (ReplayController.Instance.TotalPlaybackTime > 0)
+                {
+                    _isUpdatingSlider = true;
+                    float progress = ReplayController.Instance.CurrentPlaybackTime / ReplayController.Instance.TotalPlaybackTime;
+                    seekSlider.value = progress;
+                    _isUpdatingSlider = false;
+                }
+                yield return null;
+            }
+        }
     }
 }
