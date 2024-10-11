@@ -64,7 +64,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnSeekSliderChanged(float value)
         {
-            ReplayController.Instance.Seek(value);
+            if(!_isUpdatingSlider)
+                ReplayController.Instance.Seek(value);
         }
 
         private void OnSpeedButtonPressed()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UltimateReplay;
+using UltimateReplay.Formatters;
 using UltimateReplay.Storage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -96,17 +97,38 @@ namespace Code.Internal.Replays
                 return;
             }
 
-            var isReplayFile = ReplayFileStorage.IsReplayFile(_replayFilePath);
-            Debug.Log("IsReplayFile = " + isReplayFile);
-
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
+            
 
             _playbackOperation = ReplayManager.BeginPlayback(_replayFileStorage);
             Debug.Log("Начато воспроизведение реплея");
 
             _playbackOperation.OnPlaybackStop.AddListener(OnReplayFinished);
-        }
+            
+            for(int i = 1; i <= _replayFileStorage.SnapshotSize; i++)
+            {
+                // Get the snapshot for sequence id 'i'
+                ReplaySnapshot snapshot = _replayFileStorage.FetchSnapshot(i);
+                
+                foreach(ReplayIdentity id in snapshot.Identities)
+                {
+                    ReplayState objectStateData = snapshot.RestoreSnapshot(id);
+                    
+                    ReplayObjectFormatter objectFormatter = ReplayFormatter.GetFormatterOfType<ReplayObjectFormatter>();
 
+                    if(objectStateData == null) continue;
+                    
+                    objectStateData.PrepareForRead();
+
+                    objectFormatter.OnReplayDeserialize(objectStateData);
+                    
+                    Debug.Log("Component Count: " + objectFormatter.ComponentStates.Count);
+                    Debug.Log("Event Count: " + objectFormatter.EventStates.Count);
+                    Debug.Log("Method Count: " + objectFormatter.MethodStates.Count);
+                    Debug.Log("Variable Count: " + objectFormatter.VariableStates.Count);
+                }
+            }
+        }
         public void StopPlayback()
         {
             if (_playbackOperation != null)

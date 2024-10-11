@@ -1,88 +1,90 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UltimateReplay;
+﻿using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Code.Internal.Replays
 {
-    public class SceneChangeRecorder : ReplayBehaviour
+    public class SceneChangeRecorder : ReplayRecordableBehaviour
     {
-        private const ushort SceneChangeEventID = 1;
-        private const ushort SceneUnloadEventID = 2;
+        private string _activeSceneName = string.Empty;
+        private string _loadedSceneName = string.Empty;
 
         protected override void Awake()
         {
             base.Awake();
             SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (!IsRecording) return;
 
-            var eventData = ReplayState.pool.GetReusable();
-            eventData.Write(scene.name);
-
-            RecordEvent(SceneChangeEventID, eventData);
-
+            _activeSceneName = scene.name;
             Debug.Log($"Смена сцены записана: {scene.name}");
         }
 
-        private void OnSceneUnloaded(Scene scene)
+        public override void OnReplaySerialize(ReplayState state)
         {
-            if (!IsRecording) return;
-
-            var eventData = ReplayState.pool.GetReusable();
-            eventData.Write(scene.name);
-
-            RecordEvent(SceneUnloadEventID, eventData);
-
-            Debug.Log($"Выгрузка сцены записана: {scene.name}");
+            state.Write(_activeSceneName);
         }
 
-        protected override void OnReplayEvent(ushort eventID, ReplayState eventData)
+        public override void OnReplayDeserialize(ReplayState state)
         {
-            var sceneName = eventData.ReadString();
-
-            if (eventID == SceneChangeEventID)
-            {
-                if (IsReplaying)
-                {
-                    // Загружаем сцену и ждем, пока она загрузится
-                    StartCoroutine(LoadSceneCoroutine(sceneName));
-                }
-            }
-            else if (eventID == SceneUnloadEventID)
-            {
-                if (IsReplaying)
-                {
-                    SceneManager.UnloadSceneAsync(sceneName);
-                    Debug.Log($"Сцена {sceneName} выгружена во время воспроизведения");
-                }
-            }
+            _activeSceneName = state.ReadString();
         }
 
-        private IEnumerator LoadSceneCoroutine(string sceneName)
+        protected override void OnReplayUpdate(float t)
         {
-            var asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            while (asyncLoad is { isDone: false })
-                yield return null;
-            
-            var loadedScene = SceneManager.GetSceneByName(sceneName);
+            base.OnReplayUpdate(t);
+            if (!IsReplaying)
+                return;
+
+            if (_loadedSceneName == _activeSceneName || string.IsNullOrEmpty(_activeSceneName))
+                return;
+
+            ReloadScenesAsync();
+            _loadedSceneName = _activeSceneName;
+        }
+
+        protected override void OnReplayEnd()
+        {
+            base.OnReplayEnd();
+            if (!IsReplaying)
+                return;
+
+            _loadedSceneName = null;
+            UnloadLoadedScene();
+        }
+
+        private async void ReloadScenesAsync()
+        {
+            if (string.IsNullOrEmpty(_activeSceneName))
+                return;
+
+            UnloadLoadedScene();
+
+            await SceneManager.LoadSceneAsync(_activeSceneName, LoadSceneMode.Additive);
+            var loadedScene = SceneManager.GetSceneByName(_activeSceneName);
             if (loadedScene.IsValid())
                 SceneManager.SetActiveScene(loadedScene);
-            
-            Debug.Log($"Сцена {sceneName} загружена во время воспроизведения");
+
+            Debug.Log($"Сцена {_activeSceneName} загружена во время воспроизведения");
+        }
+
+        private void UnloadLoadedScene()
+        {
+            if (string.IsNullOrEmpty(_loadedSceneName))
+                return;
+
+            var unloadedScene = SceneManager.GetSceneByName(_loadedSceneName);
+            if (unloadedScene.IsValid())
+                SceneManager.UnloadSceneAsync(_loadedSceneName);
         }
     }
 }
