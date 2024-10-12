@@ -28,6 +28,13 @@ namespace Code.Internal.API
             instance.StartCoroutine(instance
                 .SendRequestProcess(url, UnityWebRequest.kHttpVerbGET, null, onSuccess, onError, callback));
         }
+        
+        public static void GetBinary(string url, Action<byte[]> onSuccess = null, Action<string, long> onError = null, Action callback = null)
+        {
+            var instance = CreateInstance(url);
+            instance.StartCoroutine(instance
+                .SendBinaryRequestProcess(url, UnityWebRequest.kHttpVerbGET, onSuccess, onError, callback));
+        }
 
         public static void Post(string url, string jsonData, Action<string> onSuccess = null,
             Action<string, long> onError = null, Action callback= null)
@@ -98,6 +105,29 @@ namespace Code.Internal.API
 
                 Destroy(gameObject);
             }
+        }
+        
+        private IEnumerator SendBinaryRequestProcess(string url, string method, Action<byte[]> onSuccess,
+            Action<string, long> onError, Action callback)
+        {
+            var request = new UnityWebRequest(url, method);
+
+            print(url);
+
+            request.SetRequestHeader("Authorization", "Bearer " + AuthData?.access_token);
+
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+                onSuccess?.Invoke(request.downloadHandler.data);
+            else
+                onError?.Invoke(request.downloadHandler.error, request.responseCode);
+
+            callback?.Invoke();
+
+            Destroy(gameObject);
         }
 
         private static HttpClient CreateInstance(string url)

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 23247537387373782}
   - component: {fileID: 65847546340659536}
   - component: {fileID: 2162827580917834076}
+  - component: {fileID: -1588051584930050439}
+  - component: {fileID: -2910651933881006005}
   m_Layer: 0
   m_Name: NEON BLUE
   m_TagString: Untagged
@@ -122,4 +124,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  icon: {fileID: 2800000, guid: 17d565bb4a7744b41b7e4dc7e3a09e35, type: 3}
+--- !u!114 &-1588051584930050439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694986680001594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 53727
+  replayObject:
+    reference: {fileID: -2910651933881006005}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 0
+  scalePrecision: 0
+--- !u!114 &-2910651933881006005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694986680001594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instantiateIdentity: 1
+  replayIdentity:
+    id: 47753
+  prefabIdentity:
+    id: 49603
+  observedComponents:
+  - {fileID: -1588051584930050439}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 0
