@@ -27,20 +27,23 @@ namespace Code.Internal.Scenario
 
         private void OnWarningZoneEnter()
         {
-            DroneHUD.Instance.SetMessage(MessageType.Warning, warningText);
+            if (DroneHUD.Instance != null)
+                DroneHUD.Instance.SetMessage(MessageType.Warning, warningText);
             RandomEffect(0.5f);
         }
 
         private void OnWarningZoneExit()
         {
-            DroneHUD.Instance.ClearMessage();
+            if (DroneHUD.Instance != null)
+                DroneHUD.Instance.ClearMessage();
             CurrentDroneSensors.CameraSignalModifier = 1;
             CurrentDroneSensors.InputSignalModifier = 1;
         }
 
         private void OnDangerZoneEnter()
         {
-            DroneHUD.Instance.SetMessage(MessageType.Error, errorText);
+            if (DroneHUD.Instance != null)
+                DroneHUD.Instance.SetMessage(MessageType.Error, errorText);
             RandomEffect();
         }
 
