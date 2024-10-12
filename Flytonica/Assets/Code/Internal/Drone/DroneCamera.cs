@@ -16,6 +16,11 @@ namespace Code.Internal.Drone
 
         public event Action<Vector3, Quaternion> OnCameraDataUpdated;
 
+        private void Awake()
+        {
+            irCameraObject.SetActive(false);
+        }
+
         private void Update()
         {
             if (!IsOwner || !IsSpawned)

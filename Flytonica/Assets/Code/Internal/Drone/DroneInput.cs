@@ -102,6 +102,8 @@ namespace Code.Internal.Drone
 
                 DISARM = !_player.GetButton("DISARM");
             }
+            
+            if (!Application.isFocused) return;
 
             if (DroneCanSwitchCam)
             {
