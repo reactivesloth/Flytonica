@@ -38,7 +38,7 @@ namespace Code.Internal.UserInterface.Elements
             toggle.onValueChanged.RemoveListener(UpdateHandlePosition);
         }
 
-        private void UpdateHandlePosition(bool isOn)
+        public void UpdateHandlePosition(bool isOn)
         {
             handleRect.position = isOn ? onPosition.position : offPosition.position;
             if (onBackGround != null)

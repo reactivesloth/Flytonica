@@ -16,17 +16,23 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button loginButton, demoButton;
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
         [SerializeField] private Header teacherHeader;
-
+        [SerializeField] private Toggle rememberMeToggleSwitcher;
+        
         private void LoadPrefs()
         {
             loginField.text = PlayerPrefs.GetString("Login");
             passwordField.text = PlayerPrefs.GetString("Password");
+            rememberMeToggleSwitcher.isOn = (PlayerPrefs.GetInt("RememberMe", 0) == 1);
         }
 
         private void SetPrefs()
         {
-            PlayerPrefs.SetString("Login", loginField.text);
-            PlayerPrefs.SetString("Password", passwordField.text);
+            PlayerPrefs.SetString("RememberMe", rememberMeToggleSwitcher.isOn ? "1" : "0");
+            if (rememberMeToggleSwitcher.isOn)
+            {
+                PlayerPrefs.SetString("Login", loginField.text);
+                PlayerPrefs.SetString("Password", passwordField.text);
+            }
         }
 
         protected override void OnOpen()
