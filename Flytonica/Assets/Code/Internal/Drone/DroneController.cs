@@ -301,7 +301,7 @@ namespace Code.Internal.Drone
             Vector3 windForce = direction.normalized * windForceMagnitude;
 
             // Логгируем силу ветра для отладки
-            print($"Wind Force: {windForce}, Wind Speed: {windSpeed}");
+            //print($"Wind Force: {windForce}, Wind Speed: {windSpeed}");
 
             // Применяем силу ветра к Rigidbody дрона
             _rigidBody.AddForce(windForce, ForceMode.Force);

@@ -1865,6 +1865,11 @@ MonoBehaviour:
     id: 43853
   replayObject:
     reference: {fileID: 1893796308}
+  trackedScenesNames:
+  - Coast
+  - Factory
+  - Stadium
+  - Warehouse
 --- !u!114 &1893796308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1885,7 +1890,7 @@ MonoBehaviour:
   observedComponents:
   - {fileID: 1893796307}
   runtimeComponents:
-  - {fileID: 0}
+  - {fileID: 1893796307}
   isPrefab: 0
   prefabType: 1
 --- !u!4 &1893796309

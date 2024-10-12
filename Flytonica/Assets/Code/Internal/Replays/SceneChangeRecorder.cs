@@ -1,4 +1,5 @@
-﻿using UltimateReplay;
+﻿using System.Linq;
+using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,24 +7,26 @@ namespace Code.Internal.Replays
 {
     public class SceneChangeRecorder : ReplayRecordableBehaviour
     {
+        [SerializeField] private string[] trackedScenesNames;
+        
         private string _activeSceneName = string.Empty;
         private string _loadedSceneName = string.Empty;
 
         protected override void Awake()
         {
-            base.Awake();
             SceneManager.sceneLoaded += OnSceneLoaded;
+            base.Awake();
         }
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            base.OnDestroy();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!IsRecording) return;
+            if (!IsRecording || !trackedScenesNames.Contains(scene.name)) return;
 
             _activeSceneName = scene.name;
             Debug.Log($"Смена сцены записана: {scene.name}");
@@ -58,7 +61,7 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
-            _loadedSceneName = null;
+            _loadedSceneName = string.Empty;
             UnloadLoadedScene();
         }
 

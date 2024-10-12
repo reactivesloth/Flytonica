@@ -50,20 +50,12 @@ namespace Code.Internal.Network
             if (drone == null)
                 return;
             
+            if(drone.TryGetComponent(out ReplayObject replayObject))
+                ReplayManager.RemoveReplayObjectFromRecordScenes(replayObject);
             _drones.Remove(drone);
             PlayerManager.Instance.RemovePlayer(connection);
             InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
             Destroy(drone.gameObject);
-        }
-
-        public void DespawnAll(NetworkConnection connection)
-        {
-            foreach (var networkObject in _drones.ToList())
-            {
-                _drones.Remove(networkObject);
-                PlayerManager.Instance.RemovePlayer(connection);
-                InstanceFinder.ServerManager.Despawn(networkObject, DespawnType.Destroy);
-            }
         }
     }
 }

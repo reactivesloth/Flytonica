@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Code.Internal.Drone;
 using UltimateReplay;
 using UltimateReplay.Formatters;
 using UltimateReplay.Storage;
@@ -99,35 +100,10 @@ namespace Code.Internal.Replays
 
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
             
-
             _playbackOperation = ReplayManager.BeginPlayback(_replayFileStorage);
             Debug.Log("Начато воспроизведение реплея");
-
-            _playbackOperation.OnPlaybackStop.AddListener(OnReplayFinished);
             
-            for(int i = 1; i <= _replayFileStorage.SnapshotSize; i++)
-            {
-                // Get the snapshot for sequence id 'i'
-                ReplaySnapshot snapshot = _replayFileStorage.FetchSnapshot(i);
-                
-                foreach(ReplayIdentity id in snapshot.Identities)
-                {
-                    ReplayState objectStateData = snapshot.RestoreSnapshot(id);
-                    
-                    ReplayObjectFormatter objectFormatter = ReplayFormatter.GetFormatterOfType<ReplayObjectFormatter>();
-
-                    if(objectStateData == null) continue;
-                    
-                    objectStateData.PrepareForRead();
-
-                    objectFormatter.OnReplayDeserialize(objectStateData);
-                    
-                    Debug.Log("Component Count: " + objectFormatter.ComponentStates.Count);
-                    Debug.Log("Event Count: " + objectFormatter.EventStates.Count);
-                    Debug.Log("Method Count: " + objectFormatter.MethodStates.Count);
-                    Debug.Log("Variable Count: " + objectFormatter.VariableStates.Count);
-                }
-            }
+            _playbackOperation.OnPlaybackStop.AddListener(OnReplayFinished);
         }
         public void StopPlayback()
         {
@@ -150,6 +126,20 @@ namespace Code.Internal.Replays
             }
         }
 
+        private void OnReplayObjectSpawned(ReplayObject spawnedObject)
+        {
+            // Проверяем, что это дрон, который нужно переместить в сцену "Main"
+            if (spawnedObject.TryGetComponent(out DroneController drone)) // замените на ваш компонент дрона
+            {
+                var mainScene = SceneManager.GetSceneByName("Main");
+                if (mainScene.IsValid())
+                {
+                    SceneManager.MoveGameObjectToScene(spawnedObject.gameObject, mainScene);
+                    Debug.Log($"Дрон {spawnedObject.name} перемещён в сцену Main при воспроизведении");
+                }
+            }
+        }
+        
         private void OnReplayFinished()
         {
             Debug.Log("Воспроизведение реплея завершено");
@@ -170,8 +160,16 @@ namespace Code.Internal.Replays
 
             foreach (var replayObject in replayObjects.Where(o => o.gameObject.scene.name == scene.name))
             {
-                ReplayManager.AddReplayObjectToRecordOperation(_recordOperation, replayObject);
-                Debug.Log($"Объект {replayObject.name} добавлен в запись");
+                try
+                {
+                    ReplayManager.AddReplayObjectToRecordScenes(replayObject);
+                    Debug.Log($"Объект {replayObject.name} добавлен в запись");
+                }
+                catch (ArgumentException e)
+                {
+                    Debug.LogError(e);
+                }
+                
             }
         }
 
