@@ -1,6 +1,7 @@
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using TransformGizmos;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,6 @@ namespace Code.Internal.MapEditor
     public class MapEditor : MonoBehaviour
     {
         [SerializeField] private GameObject mapEditorGizmo;
-        [SerializeField] private GameObject mapEditorCamera;
         [SerializeField] private AvailableMapsSettings _mapsSettings;
         [SerializeField] private GameObject currentSelectedEditorObject;
         [SerializeField] private GameObject currentObjectToSpawn;
@@ -38,7 +38,13 @@ namespace Code.Internal.MapEditor
             _constructor = constructor;
             _savedSceneName = _mapsSettings.maps[sceneIndex].loadingSceneName;
             _isEnabled = true;
-            _camera = Instantiate(mapEditorCamera).GetComponent<Camera>();
+            _camera = Camera.main;
+            if (_camera != null)
+            {
+                _camera.transform.SetPositionAndRotation(new Vector3(0, 45, 0), Quaternion.Euler(90, 0, 0));
+                _camera.gameObject.AddComponent<MapEditorCamera>();
+            }
+
             SceneManager.LoadScene(_savedSceneName, LoadSceneMode.Additive);
             MapEditorUI.Instance.InitializeMainPanel(type);
         }
@@ -54,7 +60,9 @@ namespace Code.Internal.MapEditor
             
             SceneManager.UnloadSceneAsync(_savedSceneName);
             _isEnabled = false;
-            Destroy(_camera.gameObject);
+            if (_camera.gameObject.GetComponent<MapEditorCamera>() != null)
+                Destroy(_camera.GetComponent<MapEditorCamera>());
+            _camera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         private void Update()
@@ -80,6 +88,25 @@ namespace Code.Internal.MapEditor
                             else
                             {
                                 AddObject(hit.point);
+                            }
+                        }
+                        else
+                        {
+                            var tr = hit.transform.root;
+
+                            if (currentSelectedEditorObject != tr.gameObject)
+                            {
+                                if (tr.GetComponent<SpawnableObject>())
+                                {
+                                    if (_gizmo != null)
+                                        Destroy(_gizmo);
+
+                                    currentSelectedEditorObject = tr.gameObject;
+                                }
+                                // else
+                                // {
+                                //     currentSelectedEditorObject = null;
+                                // }
                             }
                         }
                     }

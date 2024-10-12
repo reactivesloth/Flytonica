@@ -41,11 +41,6 @@ namespace TransformGizmos
                 Destroy(this);
         }
 
-        private void Start()
-        {
-            DeselectTarget();
-        }
-
         private void Update()
         {
             if (m_targetObject == null) return;
