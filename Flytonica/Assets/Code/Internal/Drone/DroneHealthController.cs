@@ -69,6 +69,12 @@ namespace Code.Internal.Drone
                 StartCoroutine(Timer());
         }
 
+        private void Update()
+        {
+            if (CurrentDroneSensors == null) return;
+            CurrentDroneSensors.Health = _currentHealth;
+        }
+
         private void DestroyDrone()
         {
             DroneController.Instance.ResetDrone();

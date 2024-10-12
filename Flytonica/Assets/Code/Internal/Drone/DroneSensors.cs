@@ -24,6 +24,8 @@ namespace Code.Internal.Drone
 
         public float CameraSignal => _cameraSignal;
         public float InputSignal => _inputSignal;
+        
+        public float Health { get; set; }
 
         
         private void Awake()
@@ -34,6 +36,9 @@ namespace Code.Internal.Drone
             _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             if (savedFlightSettings != null)
                 DroneHUD.Instance.AltValueElement.MaxValue = (int)savedFlightSettings.maxHeight;
+            
+            if (savedFlightSettings != null)
+                DroneHUD.Instance.SpeedValueElement.MaxValue = (int)savedFlightSettings.maxSpeed;
         }
 
         private void Update()
@@ -57,6 +62,8 @@ namespace Code.Internal.Drone
                 
                 DroneHUD.Instance.CameraSignalElement.SetSignal(_cameraSignal);
                 DroneHUD.Instance.InputSignalElement.SetSignal(_inputSignal);
+                
+                DroneHUD.Instance.HealthValueElement.Set(Health);
                 
                 if (savedFlightSettings != null)
                     DroneHUD.Instance.SetMode(savedFlightSettings.modeName);

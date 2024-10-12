@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +6,15 @@ namespace Code.Internal.UserInterface.DroneHudElements
 {
     public class ValueElement : MonoBehaviour
     {
+        [SerializeField] private bool invert;
+        
         [Header("Values: ")] [SerializeField] private int maxValue = 100;
         [SerializeField] private Color normalColor, warningColor, extremeColor;
         [Range(0, 1)] [SerializeField] private float warningPercent, extremePersent;
 
         [Header("Elements: ")] [SerializeField]
         private TMP_Text valueText;
-
+        [SerializeField] private Image graphicsIcon;
         [SerializeField] private Slider slider;
 
         private Graphic _sliderFill;
@@ -34,18 +34,41 @@ namespace Code.Internal.UserInterface.DroneHudElements
         {
             var percent = value / maxValue;
             SetColor(percent);
+            
             slider.value = percent;
-            valueText.text = value.ToString("F0");
+            if (valueText != null)
+                valueText.text = value.ToString("F0");
         }
 
         private void SetColor(float percent)
         {
-            if (percent >= extremePersent)
-                valueText.color = _sliderFill.color = extremeColor;
-            else if (percent >= warningPercent)
-                valueText.color = _sliderFill.color = warningColor;
+            if (invert ? percent < 1 - extremePersent :percent >= extremePersent)
+            {
+                if (valueText != null)
+                    valueText.color = extremeColor;
+                if (graphicsIcon != null)
+                    graphicsIcon.color = extremeColor;
+                if (_sliderFill != null)
+                    _sliderFill.color = extremeColor;
+            }
+            else if (invert ? percent < 1 - warningPercent :percent >= warningPercent)
+            {
+                if (valueText != null)
+                    valueText.color = warningColor;
+                if (graphicsIcon != null)
+                    graphicsIcon.color = warningColor;
+                if (_sliderFill != null)
+                    _sliderFill.color = warningColor;
+            }
             else
-                valueText.color = _sliderFill.color = normalColor;
+            {
+                if (valueText != null)
+                    valueText.color = normalColor;
+                if (graphicsIcon != null)
+                    graphicsIcon.color = normalColor;
+                if (_sliderFill != null)
+                    _sliderFill.color = normalColor;
+            }
         }
     }
 }

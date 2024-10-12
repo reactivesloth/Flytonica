@@ -8,6 +8,8 @@ namespace Code.Internal.Drone
     {
         public string modeName = "Flight Mode";
 
+        public float maxSpeed = 150;
+        
         [Header("Throttle")] 
         public ControlType throttleType = ControlType.HOLD;
         [ShowIf("throttleType", ControlType.HOLD)] public float maxAscendingSpeed = 1;

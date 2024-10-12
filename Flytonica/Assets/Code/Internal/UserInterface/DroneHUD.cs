@@ -25,6 +25,8 @@ namespace Code.Internal.UserInterface
         [field: SerializeField] public SignalElement CameraSignalElement { get; private set; }
         [field: SerializeField] public SignalElement InputSignalElement { get; private set; }
 
+        [field: SerializeField] public ValueElement HealthValueElement { get; private set; }
+        
         private void Awake()
         {
             Instance = this;
