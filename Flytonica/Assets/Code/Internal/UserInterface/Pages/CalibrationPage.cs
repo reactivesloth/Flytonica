@@ -29,7 +29,7 @@ namespace Code.Internal.UserInterface.Pages
             base.OnOpen();
             
             _currentStep = 0;
-            //SetCurrentStep();
+            SetCurrentStep();
 
             calibrating.SetActive(true);
             endCalibration.SetActive(false);
@@ -43,7 +43,7 @@ namespace Code.Internal.UserInterface.Pages
         private void NextStep(int doneStep)
         {
             _currentStep = doneStep + 1;
-            //SetCurrentStep();
+            SetCurrentStep();
         }
 
         private void SetCurrentStep()
@@ -68,12 +68,14 @@ namespace Code.Internal.UserInterface.Pages
 
         public void Show()
         {
-            help?.SetActive(true);
+            if (help != null)
+                help.SetActive(true);
         }
 
         public void Hide()
         {
-            help?.SetActive(false);
+            if (help != null)
+                help.SetActive(false);
         }
     }
 }
