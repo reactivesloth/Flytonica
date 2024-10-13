@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Internal.Input;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,21 +16,21 @@ namespace Code.Internal.UserInterface.Pages
 
         private void Update()
         {
-            var calibration = Calibration.Instance;
-            gasSlider.value = calibration._player.GetAxis("Throttle");
-            rotateSlider.value = calibration._player.GetAxis("Yaw");
-            pitchSlider.value = calibration._player.GetAxis("Pitch");
-            rollSlider.value = calibration._player.GetAxis("Roll");
+            //var player = ReInput.players.GetPlayer(0);
+
+            // gasSlider.value = player.GetAxis("Throttle");
+            // rotateSlider.value = player.GetAxis("Yaw");
+            // pitchSlider.value = player.GetAxis("Pitch");
+            // rollSlider.value = player.GetAxis("Roll");
         }
 
         protected override void OnOpen()
         {
             base.OnOpen();
-            Calibration.Instance.StepDone += NextStep;
             
             _currentStep = 0;
-            SetCurrentStep();
-            Calibration.Instance.StartCalibration();
+            //SetCurrentStep();
+
             calibrating.SetActive(true);
             endCalibration.SetActive(false);
         }
@@ -39,13 +38,12 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnClose()
         {
             base.OnClose();
-            Calibration.Instance.StepDone -= NextStep;
         }
 
         private void NextStep(int doneStep)
         {
             _currentStep = doneStep + 1;
-            SetCurrentStep();
+            //SetCurrentStep();
         }
 
         private void SetCurrentStep()
@@ -76,7 +74,6 @@ namespace Code.Internal.UserInterface.Pages
         public void Hide()
         {
             help?.SetActive(false);
-            Calibration.Instance.StopCalibration();
         }
     }
 }

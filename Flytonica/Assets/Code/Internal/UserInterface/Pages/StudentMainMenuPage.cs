@@ -21,10 +21,12 @@ namespace Code.Internal.UserInterface.Pages
 
         [SerializeField] private Button tasksButton,
             singleScriptsButton,
-            toRoomButton;
+            toRoomButton,
+            settingsButton;
 
         [SerializeField] private Page loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
+        [SerializeField] private Page settingsPage;
         [SerializeField] private AvailableScenariosSettings singleScenariosSettings;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
         [SerializeField] private AvailableMapsSettings maps;
@@ -50,6 +52,7 @@ namespace Code.Internal.UserInterface.Pages
             singleScriptsButton.onClick.AddListener(OnSingleScripts);
             tasksButton.onClick.AddListener(OnTaskScripts);
             toRoomButton.onClick.AddListener(OnConnect);
+            settingsButton.onClick.AddListener(OnSettings);
 
             if (HttpClient.IsAuthorized)
             {
@@ -65,6 +68,7 @@ namespace Code.Internal.UserInterface.Pages
             singleScriptsButton.onClick.RemoveListener(OnSingleScripts);
             tasksButton.onClick.RemoveListener(OnTaskScripts);
             toRoomButton.onClick.RemoveListener(OnConnect);
+            settingsButton.onClick.RemoveListener(OnSettings);
         }
 
         // Executes the logout function
@@ -84,6 +88,11 @@ namespace Code.Internal.UserInterface.Pages
         {
             scriptsPage.Open();
             scriptsPage.InitTasks();
+        }
+
+        private void OnSettings()
+        {
+            settingsPage.Open();
         }
 
         private void OnConnect()
