@@ -52,6 +52,8 @@ namespace Code.Internal.UserInterface.Pages
             var fileName = $"{logData.user_scenario_id}.replay";
             var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
 
+            nameText.text = logData.scenario_name;
+            
             if (System.IO.File.Exists(filePath))
             {
                 ReplayController.Instance.StartPlayback(logData.user_scenario_id);
@@ -118,7 +120,22 @@ namespace Code.Internal.UserInterface.Pages
                 if (ReplayController.Instance.TotalPlaybackTime > 0)
                 {
                     _isUpdatingSlider = true;
-                    float progress = ReplayController.Instance.CurrentPlaybackTime / ReplayController.Instance.TotalPlaybackTime;
+                    
+                    // Преобразование текущего времени воспроизведения
+                    float currentPlaybackTime = ReplayController.Instance.CurrentPlaybackTime;
+                    int currentMinutes = (int)(currentPlaybackTime / 60);
+                    int currentSeconds = (int)(currentPlaybackTime % 60);
+                    string currentTimeString = $"{currentMinutes:D2}:{currentSeconds:D2}";
+                    currentTimeText.text = currentTimeString;
+
+                    // Преобразование общего времени воспроизведения
+                    float totalPlaybackTime = ReplayController.Instance.TotalPlaybackTime;
+                    int totalMinutes = (int)(totalPlaybackTime / 60);
+                    int totalSeconds = (int)(totalPlaybackTime % 60);
+                    string totalTimeString = $"{totalMinutes:D2}:{totalSeconds:D2}";
+                    allTimeText.text = totalTimeString;
+                    
+                    var progress = ReplayController.Instance.CurrentPlaybackTime / ReplayController.Instance.TotalPlaybackTime;
                     seekSlider.value = progress;
                     _isUpdatingSlider = false;
                 }
