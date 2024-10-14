@@ -15,6 +15,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button pauseButton;
         [SerializeField] private Slider seekSlider;
         [SerializeField] private Button speedButton;
+        [SerializeField] private TMP_Text currentTimeText, allTimeText, nameText;
         
         [SerializeField] private float[] playbackSpeeds = { 0.5f, 1f, 1.5f, 2f };
         [SerializeField] private int currentSpeedIndex = 1;
