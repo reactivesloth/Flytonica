@@ -28,6 +28,7 @@ namespace Code.Internal.SceneManagement
             else
                 Destroy(this);
             
+            QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("QualitySettingsLevel", 1), false);
             LoadSceneLocal("UI Scene");
         }
 
