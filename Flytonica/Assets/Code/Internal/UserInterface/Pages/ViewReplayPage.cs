@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.Replays;
 using TMPro;
 using UnityEngine;
@@ -43,6 +45,25 @@ namespace Code.Internal.UserInterface.Pages
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
             
             StopCoroutine(UpdateSliderCoroutine());
+        }
+
+        public void Init(LogData logData)
+        {
+            var fileName = $"{logData.user_scenario_id}.replay";
+            var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                ReplayController.Instance.StartPlayback(logData.user_scenario_id);
+            }
+            else
+            {
+                HttpClient.GetBinary(LinkConstants.GetFile(logData.replay_file_path), onSuccess: bytes =>
+                {
+                    System.IO.File.WriteAllBytes(filePath, bytes);
+                    ReplayController.Instance.StartPlayback(logData.user_scenario_id);
+                });
+            }
         }
 
         protected override void OnClose()
