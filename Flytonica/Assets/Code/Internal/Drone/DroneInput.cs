@@ -62,7 +62,7 @@ namespace Code.Internal.Drone
             
             if (Instance == null)
                 Instance = this;
-            
+
             if (UseInput && !(InputSignalLevel <= 0))
             {
                 if (_player.controllers.joystickCount > 0)
@@ -86,15 +86,20 @@ namespace Code.Internal.Drone
 
                 var delayedIndex = (bufferIndex - delaySteps + bufferSize) % bufferSize;
 
-                //Throttle = _throttleBuffer[delayedIndex];
-                //Yaw = _yawBuffer[delayedIndex];
-                //Pitch = _pitchBuffer[delayedIndex];
-                //Roll = _rollBuffer[delayedIndex];
-
-                Throttle = rawThrottle;
-                Yaw = rawYaw;
-                Pitch = rawPitch;
-                Roll = rawRoll;
+                if (InputSignalLevel < 0.5f)
+                {
+                    Throttle = _throttleBuffer[delayedIndex];
+                    Yaw = _yawBuffer[delayedIndex];
+                    Pitch = _pitchBuffer[delayedIndex];
+                    Roll = _rollBuffer[delayedIndex];
+                }
+                else
+                {
+                    Throttle = rawThrottle;
+                    Yaw = rawYaw;
+                    Pitch = rawPitch;
+                    Roll = rawRoll;
+                }
 
                 bufferIndex = (bufferIndex + 1) % bufferSize;
 
