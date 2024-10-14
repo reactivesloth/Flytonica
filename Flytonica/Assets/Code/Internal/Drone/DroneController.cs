@@ -126,9 +126,6 @@ namespace Code.Internal.Drone
             if (Instance == null)
                 Instance = this;
             
-            // if (Calibration.Instance.IsCalibrating)
-            //     return;
-
             UpdateInput();
             
             if (_currentFlightSettings == null)
@@ -146,8 +143,6 @@ namespace Code.Internal.Drone
             {
                 ResetDrone();
             }
-            
-            UpdateRotation();
         }
 
         public void ResetDrone()
@@ -161,6 +156,7 @@ namespace Code.Internal.Drone
         private void FixedUpdate()
         {
             UpdateEngines();
+            UpdateRotation();
         }
 
         private void UpdateInput()
