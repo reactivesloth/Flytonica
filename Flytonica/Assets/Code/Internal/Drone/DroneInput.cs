@@ -86,10 +86,15 @@ namespace Code.Internal.Drone
 
                 var delayedIndex = (bufferIndex - delaySteps + bufferSize) % bufferSize;
 
-                Throttle = _throttleBuffer[delayedIndex];
-                Yaw = _yawBuffer[delayedIndex];
-                Pitch = _pitchBuffer[delayedIndex];
-                Roll = _rollBuffer[delayedIndex];
+                //Throttle = _throttleBuffer[delayedIndex];
+                //Yaw = _yawBuffer[delayedIndex];
+                //Pitch = _pitchBuffer[delayedIndex];
+                //Roll = _rollBuffer[delayedIndex];
+
+                Throttle = rawThrottle;
+                Yaw = rawYaw;
+                Pitch = rawPitch;
+                Roll = rawRoll;
 
                 bufferIndex = (bufferIndex + 1) % bufferSize;
 
