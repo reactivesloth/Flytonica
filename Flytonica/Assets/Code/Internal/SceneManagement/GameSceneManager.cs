@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Code.Internal.Replays;
 using Code.Internal.UserInterface;
 using FishNet;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using FishNet.Transporting;
+using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +27,7 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-
+            
             LoadSceneLocal("UI Scene");
         }
 
@@ -65,6 +67,7 @@ namespace Code.Internal.SceneManagement
 
         public void ToMenuSingle()
         {
+            ReplayController.Instance.StopRecording();
             UIController.Instance.OnMainMenu();
             UnloadScene();
             IsPlaying = false;

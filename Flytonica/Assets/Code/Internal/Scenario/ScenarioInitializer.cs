@@ -3,6 +3,7 @@ using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.SceneManagement;
+using UltimateReplay;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
@@ -67,6 +68,8 @@ namespace Code.Internal.Scenario
                 {
                     var sObj = Instantiate(
                         Resources.Load(spawnedObject.prefabName.Replace("(Clone)", "")) as GameObject).transform;
+                    
+                    ReplayManager.AddReplayObjectToRecordScenes(sObj.gameObject);
 
                     if (sObj.GetComponent<SpawnableObject>().Type == MapEditorObjectType.SpawnPoint)
                     {
