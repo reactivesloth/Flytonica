@@ -1,5 +1,6 @@
 ﻿using System;
 using Rewired;
+using Rewired.UI.ControlMapper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +11,13 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button nextButton, recolibrateButton, saveButton;
         [SerializeField] private GameObject calibrating;
         [SerializeField] private Slider gasSlider, rotateSlider, pitchSlider, rollSlider;
+        [SerializeField] private ControlMapper controlrMapper;
         private Player _player;
 
         private void Start()
         {
             _player = ReInput.players.GetPlayer(0);
+            controlrMapper = FindAnyObjectByType<ControlMapper>();
         }
 
         private void Update()
@@ -31,6 +34,8 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
+            if (controlrMapper != null)
+                controlrMapper.Open();
             
             if (calibrating != null)
                 calibrating.SetActive(true);
@@ -39,6 +44,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnClose()
         {
             base.OnClose();
+            controlrMapper.Close(true);
         }
     }
 }
