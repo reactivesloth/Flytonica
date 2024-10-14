@@ -6,7 +6,6 @@ namespace Code.Internal.XR
     public class XRPlayerCamera : MonoBehaviour
     {
         private Transform _myTransform;
-        private Transform target;
         
         private void Awake()
         {
@@ -15,11 +14,9 @@ namespace Code.Internal.XR
 
         private void LateUpdate()
         {
-            if (target == null)
-                target = FindAnyObjectByType<DroneController>().transform;
-            if (target != null)
+            if (DroneController.Instance!= null)
             {
-                var rotation = Quaternion.LookRotation (target.position - _myTransform.position);
+                var rotation = Quaternion.LookRotation (DroneController.Instance.transform.position - _myTransform.position);
                 _myTransform.rotation = Quaternion.Slerp (transform.rotation, rotation, Time.deltaTime * 5);
             }
         }
