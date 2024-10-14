@@ -33,18 +33,16 @@ namespace Code.Internal.Replays
         private Scene _currentReplayScene;
 
         public float CurrentPlaybackTime => _playbackOperation?.PlaybackTime ?? 0f;
-        public float TotalPlaybackTime => _playbackOperation?.Duration ?? 0f;
+        public float TotalPlaybackTime => !_playbackOperation.IsDisposed ? _playbackOperation.Duration : 0f;
 
         protected void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
         }
 
         protected void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
 
         private void Awake()
@@ -99,12 +97,14 @@ namespace Code.Internal.Replays
             }
 
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
-            
+
             _playbackOperation = ReplayManager.BeginPlayback(_replayFileStorage);
+            _playbackOperation.Options.PlaybackEndBehaviour = PlaybackEndBehaviour.StopPlayback;
             Debug.Log("Начато воспроизведение реплея");
-            
+
             _playbackOperation.OnPlaybackStop.AddListener(OnReplayFinished);
         }
+
         public void StopPlayback()
         {
             if (_playbackOperation != null)
@@ -126,56 +126,16 @@ namespace Code.Internal.Replays
             }
         }
 
-        private void OnReplayObjectSpawned(ReplayObject spawnedObject)
-        {
-            // Проверяем, что это дрон, который нужно переместить в сцену "Main"
-            if (spawnedObject.TryGetComponent(out DroneController drone)) // замените на ваш компонент дрона
-            {
-                var mainScene = SceneManager.GetSceneByName("Main");
-                if (mainScene.IsValid())
-                {
-                    SceneManager.MoveGameObjectToScene(spawnedObject.gameObject, mainScene);
-                    Debug.Log($"Дрон {spawnedObject.name} перемещён в сцену Main при воспроизведении");
-                }
-            }
-        }
-        
         private void OnReplayFinished()
         {
             Debug.Log("Воспроизведение реплея завершено");
-            StopPlayback();
+            Pause();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (_playbackOperation != null)
                 _currentReplayScene = scene;
-
-            if (_recordOperation == null)
-                return;
-
-            var replayObjects =
-                new List<ReplayObject>(FindObjectsByType<ReplayObject>(FindObjectsInactive.Include,
-                    FindObjectsSortMode.None));
-
-            foreach (var replayObject in replayObjects.Where(o => o.gameObject.scene.name == scene.name))
-            {
-                try
-                {
-                    ReplayManager.AddReplayObjectToRecordScenes(replayObject);
-                    Debug.Log($"Объект {replayObject.name} добавлен в запись");
-                }
-                catch (ArgumentException e)
-                {
-                    Debug.LogError(e);
-                }
-                
-            }
-        }
-
-        private void OnSceneUnloaded(Scene scene)
-        {
-            print($"UNLOAD {scene.name}");
         }
 
         public void PlayReplay()
@@ -196,13 +156,14 @@ namespace Code.Internal.Replays
 
         public void Seek(float normalizedTime)
         {
+            
             _playbackOperation?.SeekPlaybackNormalized(normalizedTime);
         }
 
         public void SetPlaybackSpeed(float speed)
         {
             if (_playbackOperation == null) return;
-                _playbackOperation.PlaybackTimeScale = Mathf.Max(0, speed);
+            _playbackOperation.PlaybackTimeScale = Mathf.Max(0, speed);
         }
     }
 }

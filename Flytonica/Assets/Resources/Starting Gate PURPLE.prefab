@@ -155,8 +155,9 @@ GameObject:
   - component: {fileID: 65212797541433928}
   - component: {fileID: 65064581640807652}
   - component: {fileID: 6085867034418427820}
-  - component: {fileID: 1202671052547894602}
-  - component: {fileID: 673162927897539264}
+  - component: {fileID: -6011314944522933079}
+  - component: {fileID: 5131484177171166732}
+  - component: {fileID: -3970194363869581017}
   m_Layer: 0
   m_Name: Starting Gate PURPLE
   m_TagString: Untagged
@@ -310,31 +311,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
---- !u!114 &1202671052547894602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1376686663028510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  replayIdentity:
-    id: 22470
-  replayObject:
-    reference: {fileID: 673162927897539264}
-  replayPosition: 23
-  positionSpace: 1
-  positionPrecision: 0
-  replayRotation: 23
-  rotationPrecision: 1
-  rotationSpace: 1
-  replayScale: 0
-  scalePrecision: 0
---- !u!114 &673162927897539264
+  icon: {fileID: 0}
+--- !u!114 &-6011314944522933079
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -348,14 +326,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instantiateIdentity: 1
   replayIdentity:
-    id: 64088
+    id: 53610
   prefabIdentity:
-    id: 24611
+    id: 48645
   observedComponents:
-  - {fileID: 1202671052547894602}
+  - {fileID: 5131484177171166732}
+  - {fileID: -3970194363869581017}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
+--- !u!114 &5131484177171166732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376686663028510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e217b129e477c1b45bcb5e4396dd7680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 3650
+  replayObject:
+    reference: {fileID: -6011314944522933079}
+  replayPosition: 23
+  positionSpace: 1
+  positionPrecision: 0
+  replayRotation: 23
+  rotationPrecision: 1
+  rotationSpace: 1
+  replayScale: 7
+  scalePrecision: 1
+--- !u!114 &-3970194363869581017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376686663028510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 15464
+  replayObject:
+    reference: {fileID: -6011314944522933079}
 --- !u!1 &1935992757734674
 GameObject:
   m_ObjectHideFlags: 0
