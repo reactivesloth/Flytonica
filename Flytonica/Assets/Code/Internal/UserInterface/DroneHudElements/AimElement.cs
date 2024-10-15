@@ -16,12 +16,16 @@ namespace Code.Internal.UserInterface.DroneHudElements
 
         private Coroutine _currentAnim;
 
+        public event Action<Color, float> OnFlash;
+
+        public float Progress => progressImage.fillAmount;
+
         private void Awake()
         {
             _startColor = progressImage.color;
         }
 
-        public void SetProgressValue(float value)
+        public void SetProgressValue(float value)   
         {
             value = Mathf.Clamp(value, 0f, 1f);
 
@@ -39,6 +43,7 @@ namespace Code.Internal.UserInterface.DroneHudElements
             if(_currentAnim != null)
                 return;
 
+            OnFlash?.Invoke(color, animTime);
             _currentAnim = StartCoroutine(AnimFlash(color, animTime, callback));
         }
 
