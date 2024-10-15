@@ -1,5 +1,4 @@
 ﻿using System;
-using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
@@ -10,8 +9,8 @@ namespace Code.Internal.Drone
     public class DroneSensors : MonoBehaviour
     {
         private DroneController _droneController;
-        private Rigidbody _rigidbody;
-        private Transform _transform;
+        [SerializeField] private Rigidbody _rigidbody;
+        //private Transform _transform;
 
         private float _cameraSignal = 1f;
         private float _inputSignal = 1f;
@@ -24,67 +23,97 @@ namespace Code.Internal.Drone
 
         public float CameraSignal => _cameraSignal;
         public float InputSignal => _inputSignal;
-        
+        public float Speed => _rigidbody.linearVelocity.magnitude * 3.6f;
+        public float Altitude => transform.position.y;
         public float Health { get; set; }
 
-        
+        public float BatteryVoltage => _droneController.Settings.bateteryCellCount * _droneController.currentVoltage;
+        public float BatteryLevel
+        {
+            get
+            {
+                float minBatteryLevel = _droneController.Settings.bateteryCellCount * _droneController.Settings.minBatteryCellVoltage;
+                float maxBatteryLevel = _droneController.Settings.bateteryCellCount * _droneController.Settings.maxBatteryCellVoltage;
+                return ((BatteryVoltage - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel) / 100;
+            }
+        }
+
+        public float Pitch
+        {
+            get
+            {
+                float pitch = -transform.localEulerAngles.x;
+                if (pitch > 180)
+                    pitch -= 360;
+                if (pitch < -180)
+                    pitch += 360;
+                return pitch;
+            }
+        }
+
+        public float Roll => transform.localEulerAngles.z;
+
+        public string ModeName => savedFlightSettings?.modeName ?? "";
+
+        private void OnValidate()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
+
         private void Awake()
         {
-            _droneController = gameObject.GetComponent<DroneController>();
-            _rigidbody = gameObject.GetComponent<Rigidbody>();
-            _transform = transform;
+            _droneController = GetComponent<DroneController>();
+            _rigidbody ??= GetComponent<Rigidbody>();
             _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+            savedFlightSettings = _droneController.Settings.currentFlightMode;
+
             if (savedFlightSettings != null)
+            {
                 DroneHUD.Instance.AltValueElement.MaxValue = (int)savedFlightSettings.maxHeight;
-            
-            if (savedFlightSettings != null)
                 DroneHUD.Instance.SpeedValueElement.MaxValue = (int)savedFlightSettings.maxSpeed;
+            }
         }
 
         private void Update()
         {
-            if (DroneHUD.Instance.IsShowing())
+            if (DroneHUD.Instance != null && DroneHUD.Instance.IsShowing())
             {
-                DroneHUD.Instance.AltValueElement.Set(_transform.position.y);
-                DroneHUD.Instance.SpeedValueElement.Set(_rigidbody.linearVelocity.magnitude * 3.6f);
+                DroneHUD.Instance.AltValueElement.Set(Altitude);
+                DroneHUD.Instance.SpeedValueElement.Set(Speed);
 
-                float batteryLevel = _droneController.Settings.bateteryCellCount * _droneController.currentVoltage;
-                float minBatteryLevel = _droneController.Settings.bateteryCellCount *
-                                        _droneController.Settings.minBatteryCellVoltage;
-                float maxBatteryLevel = _droneController.Settings.bateteryCellCount *
-                                        _droneController.Settings.maxBatteryCellVoltage;
-                var bLevel = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel) / 100;
+                DroneHUD.Instance.BatteryElement.SetVoltage(BatteryVoltage);
+                DroneHUD.Instance.BatteryElement.SetСharge(BatteryLevel);
 
-                DroneHUD.Instance.BatteryElement.SetVoltage(batteryLevel);
-                DroneHUD.Instance.BatteryElement.SetСharge(bLevel);
-                DroneHUD.Instance.HorizonElement.SetPitch(-_transform.localRotation.eulerAngles.x);
-                DroneHUD.Instance.HorizonElement.SetRoll(transform.localEulerAngles.z);
-                
-                DroneHUD.Instance.CameraSignalElement.SetSignal(_cameraSignal);
-                DroneHUD.Instance.InputSignalElement.SetSignal(_inputSignal);
-                
+                DroneHUD.Instance.HorizonElement.SetPitch(Pitch);
+                DroneHUD.Instance.HorizonElement.SetRoll(Roll);
+
+                DroneHUD.Instance.CameraSignalElement.SetSignal(CameraSignal);
+                DroneHUD.Instance.InputSignalElement.SetSignal(InputSignal);
+
                 DroneHUD.Instance.HealthValueElement.Set(Health);
-                
-                if (savedFlightSettings != null)
-                    DroneHUD.Instance.SetMode(savedFlightSettings.modeName);
+
+                if (!string.IsNullOrEmpty(ModeName))
+                    DroneHUD.Instance.SetMode(ModeName);
             }
 
             if (savedFlightSettings != _droneController.Settings.currentFlightMode)
             {
                 savedFlightSettings = _droneController.Settings.currentFlightMode;
-                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {savedFlightSettings.modeName}",
-                    2);
+                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {ModeName}", 2);
             }
-            
+
             UpdateSignals();
         }
 
         private void UpdateSignals()
         {
-            _cameraSignal = _inputSignal = 1f - Vector3.Distance(transform.position, _playerTransform.position) /
-                _droneController.Settings.maxDistanceInMetres;
-            _cameraSignal *= CameraSignalModifier;
-            _inputSignal *= InputSignalModifier;
+            float distance = Vector3.Distance(transform.position, _playerTransform.position);
+            float maxDistance = _droneController.Settings.maxDistanceInMetres;
+            float signalStrength = 1f - distance / maxDistance;
+
+            _cameraSignal = signalStrength * CameraSignalModifier;
+            _inputSignal = signalStrength * InputSignalModifier;
         }
     }
 }
