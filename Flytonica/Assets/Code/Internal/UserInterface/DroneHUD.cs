@@ -26,6 +26,10 @@ namespace Code.Internal.UserInterface
         [field: SerializeField] public SignalElement InputSignalElement { get; private set; }
 
         [field: SerializeField] public ValueElement HealthValueElement { get; private set; }
+
+        public string CurrentWindText => windText.text;
+        public string CurrentTaskText => taskText.text;
+        public string CurrentTimeText => timeText.text;
         
         private void Awake()
         {
@@ -35,6 +39,8 @@ namespace Code.Internal.UserInterface
         public void ShowHUD(bool value) => HUDPanel.SetActive(value);
 
         public void SetWind(float speed, string direction) => windText?.SetText($"Ветер {direction} {speed:F1} м/с");
+        
+        public void SetWind(string value) => windText?.SetText(value);
         
         public void SetTask(string text) => taskText.text = text;
         

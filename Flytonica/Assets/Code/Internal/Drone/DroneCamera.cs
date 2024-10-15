@@ -1,10 +1,12 @@
 ﻿using System;
 using FishNet.Connection;
 using FishNet.Object;
+using UltimateReplay;
 using UnityEngine;
 
 namespace Code.Internal.Drone
 {
+    [ReplayPreparerIgnore]
     public class DroneCamera : NetworkBehaviour
     {
         [SerializeField] private GameObject cameraObject;
@@ -13,6 +15,8 @@ namespace Code.Internal.Drone
         [SerializeField] [Range(-45, 90)] private float currentAngle;
         [SerializeField] [Range(-45, 90)] private float minAngle;
         [SerializeField] [Range(0, 90)] private float maxAngle = 90;
+
+        public float CurrentAngle => currentAngle;
 
         public event Action<Vector3, Quaternion> OnCameraDataUpdated;
 
@@ -29,7 +33,7 @@ namespace Code.Internal.Drone
             TransmitCameraTransform(Owner);
 
             if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
-                cameraObject.SetActive(DroneInput.Instance.DroneCam);
+                SetCamera(DroneInput.Instance.DroneCam);
 
             if(!DroneInput.Instance)
                 return;
@@ -49,6 +53,16 @@ namespace Code.Internal.Drone
             irCameraObject.SetActive(!isIrModeNow);
             DroneCameraEffectController.Instance.SetIrMode(!isIrModeNow);
         }
+
+        public void SetCamera(bool value) => cameraObject.SetActive(value);
+
+        public void SetCameraAngle(float value)
+        {
+            var rot = cameraObject.transform.localRotation;
+            rot = Quaternion.Euler(value, rot.y, rot.z);
+            cameraObject.transform.localRotation = rot;
+        }
+        
 
         [ServerRpc]
         private void TransmitCameraTransform(NetworkConnection sender)
