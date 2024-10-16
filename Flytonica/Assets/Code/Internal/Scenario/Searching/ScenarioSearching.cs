@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
@@ -161,6 +162,7 @@ namespace Code.Internal.Scenario.Searching
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance.ClearMessage();
             DroneHUD.Instance.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
+            DroneInput.Instance.MenuCameraHandle(true);
 
             string ojbectResult = string.Empty;
             foreach (var searchingObject in searchingObjects)

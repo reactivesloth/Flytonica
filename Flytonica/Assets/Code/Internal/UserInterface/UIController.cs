@@ -1,4 +1,5 @@
 
+using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using UnityEngine;
@@ -53,6 +54,7 @@ namespace Code.Internal.UserInterface
             canvas.gameObject.SetActive(true);
             drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
+            DroneInput.Instance.MenuCameraHandle(true);
             Time.timeScale = 0;
         }
 
@@ -62,6 +64,7 @@ namespace Code.Internal.UserInterface
             drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
+            DroneInput.Instance.MenuCameraHandle(false);
         }
 
         public void OnGameStart()

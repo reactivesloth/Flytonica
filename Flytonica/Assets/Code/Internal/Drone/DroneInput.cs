@@ -31,7 +31,7 @@ namespace Code.Internal.Drone
         private Joystick _joystick;
 
         [SerializeField] private float maxDelayTime = 1.0f;
-        [SerializeField] private int bufferSize = 120; 
+        [SerializeField] private int bufferSize = 120;
 
         private float[] _throttleBuffer;
         private float[] _yawBuffer;
@@ -41,11 +41,12 @@ namespace Code.Internal.Drone
 
         private int bufferIndex = 0;
 
+        private bool _afterMenuDroneCamValue;
+
         public static DroneInput Instance { get; private set; }
-        
+
         private void Awake()
         {
-            
             _player = ReInput.players.GetPlayer(0);
 
             _throttleBuffer = new float[bufferSize];
@@ -57,9 +58,9 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if(!IsOwner)
+            if (!IsOwner)
                 return;
-            
+
             if (Instance == null)
                 Instance = this;
 
@@ -112,7 +113,7 @@ namespace Code.Internal.Drone
 
                 DISARM = !_player.GetButton("DISARM");
             }
-            
+
             if (!Application.isFocused) return;
 
             if (DroneCanSwitchCam)
@@ -151,6 +152,13 @@ namespace Code.Internal.Drone
                 _player.controllers.Joysticks.Clear();
                 _player.controllers.Joysticks.Add(_joystick);
             }
+        }
+
+        public void MenuCameraHandle(bool isMenu)
+        {
+            if (isMenu)
+                _afterMenuDroneCamValue = DroneCam;
+            DroneCam = !isMenu && _afterMenuDroneCamValue;
         }
     }
 }

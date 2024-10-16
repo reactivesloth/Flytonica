@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
@@ -106,6 +107,7 @@ namespace Code.Internal.Scenario.Race
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance?.SetTask("Задание выполнено!");
             DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
+            DroneInput.Instance.MenuCameraHandle(true);
             
             foreach (var cp in checkpoints)
             {
