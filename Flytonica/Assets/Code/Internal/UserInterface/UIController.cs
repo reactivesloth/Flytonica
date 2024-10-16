@@ -15,7 +15,7 @@ namespace Code.Internal.UserInterface
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
-        [SerializeField] private GameObject drawUIPanel;
+        //[SerializeField] private GameObject drawUIPanel;
 
         private void Awake()
         {
@@ -53,7 +53,7 @@ namespace Code.Internal.UserInterface
         {
             print("Pause");
             mainPanel.gameObject.SetActive(true);
-            drawUIPanel.SetActive(true);
+            //drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
             DroneInput.Instance.MenuCameraHandle(true);
             Time.timeScale = 0;
@@ -62,7 +62,7 @@ namespace Code.Internal.UserInterface
         public void Unpause()
         {
             mainPanel.gameObject.SetActive(false);
-            drawUIPanel.SetActive(false);
+            //drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
             DroneInput.Instance.MenuCameraHandle(false);
@@ -70,7 +70,7 @@ namespace Code.Internal.UserInterface
 
         public void OnGameStart()
         {
-            drawUIPanel.SetActive(false);
+            //drawUIPanel.SetActive(false);
             Page.CurrentPage.Close();
             mainPanel.gameObject.SetActive(false);
         }
@@ -78,7 +78,7 @@ namespace Code.Internal.UserInterface
         public void OnMainMenu()
         {
             mainPanel.gameObject.SetActive(true);
-            drawUIPanel.SetActive(true);
+            //drawUIPanel.SetActive(true);
             firstPage.Open(true);
         }
     }
