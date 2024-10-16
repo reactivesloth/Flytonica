@@ -14,6 +14,7 @@ namespace Code.Internal.UserInterface.Pages
     {
         [SerializeField] private Button mainMenuButton, toStudentsButton, mapButton;
 
+        [SerializeField] private RectTransform playZone;
         [SerializeField] private Button playButton;
         [SerializeField] private Button pauseButton;
         [SerializeField] private Slider seekSlider;
@@ -24,6 +25,8 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private int currentSpeedIndex = 1;
 
         private bool _isUpdatingSlider;
+        private Vector2 originalAnchoredPosition;
+        private Vector2 originalSizeDelta;
 
         private void OnEnable()
         {
@@ -36,6 +39,17 @@ namespace Code.Internal.UserInterface.Pages
             UpdateSpeedButtonLabel();
 
             ReplayController.Instance.PlaybackFinished += OnPauseButtonPressed;
+            
+            if (DroneHUD.Instance != null)
+            {
+                RectTransform gameUi = DroneHUD.Instance.gameUi;
+
+                originalAnchoredPosition = gameUi.anchoredPosition;
+                originalSizeDelta = gameUi.sizeDelta;
+
+                gameUi.anchoredPosition = playZone.anchoredPosition;
+                gameUi.sizeDelta = playZone.sizeDelta;
+            }
         }
 
         private void Update()
@@ -74,6 +88,13 @@ namespace Code.Internal.UserInterface.Pages
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
             
             ReplayController.Instance.PlaybackFinished -= OnPauseButtonPressed;
+            
+            if (DroneHUD.Instance != null)
+            {
+                RectTransform gameUi = DroneHUD.Instance.gameUi;
+                gameUi.anchoredPosition = originalAnchoredPosition;
+                gameUi.sizeDelta = originalSizeDelta;
+            }
         }
 
         public void Init(LogData logData)
