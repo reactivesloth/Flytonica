@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.DroneHudElements
@@ -23,6 +24,23 @@ namespace Code.Internal.UserInterface.DroneHudElements
         private void Awake()
         {
             _startColor = progressImage.color;
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += SceneChanged;
+        }
+
+        private void SceneChanged(Scene arg0, LoadSceneMode arg1)
+        {
+            CancelInvoke();
+            StopAllCoroutines();
+            SetProgressValue(0);
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= SceneChanged;
         }
 
         public void SetProgressValue(float value)   
