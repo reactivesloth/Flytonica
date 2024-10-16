@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Code.Internal.Scenario.Race
 {
@@ -35,6 +35,13 @@ namespace Code.Internal.Scenario.Race
 
         private void Update()
         {
+            
+#if UNITY_EDITOR
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
+            {
+                FinishRace();
+            }
+#endif
             if (_raceCondition == RaceCondition.Running)
             {
                 _time += Time.deltaTime;
@@ -44,7 +51,7 @@ namespace Code.Internal.Scenario.Race
 
         public void CheckpointUpdate(Checkpoint checkpoint)
         {
-            if (_raceCondition != RaceCondition.Running) return;
+            //if (_raceCondition != RaceCondition.Running) return;
             
             if (checkpoints.IndexOf(checkpoint) == _nextCheckpoint)
             {
@@ -104,8 +111,24 @@ namespace Code.Internal.Scenario.Race
             {
                 cp.ChangeColor(CheckpointFlashType.Current);
             }
-            
-            //ScenarioSwitcherController.Instance.NextOrEnd();
+
+            PopupPanel.ConfigurePopup("Задание выполнено!", $"Подздравляем! Время выполнения: {GetResult()}",
+                null, "Выйти в главное меню", Color.red, Color.white, () =>
+                {
+                    ScenarioSwitcherController.Instance.EndSession();
+                }, 
+                null, "Продолжить", Color.green, Color.black, () =>
+                {
+                    var resultBuilder = ReportBuilder.Instance;
+
+                    resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_Время", GetResult());
+                    // foreach (отклонения от центров колец в процентах)
+                    // {
+                    //     resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_" + "gateName"), "Отклонение от центра: " + "percent");
+                    // }
+                    
+                    ScenarioSwitcherController.Instance.NextOrEnd();
+                });
         }
 
         public string GetResult()
@@ -158,11 +181,6 @@ namespace Code.Internal.Scenario.Race
                 {
                     checkpoints.Insert(checkpoints.Count, o.GetComponentInChildren<Checkpoint>());
                 }
-            }
-            
-            if (_raceCondition == RaceCondition.Waiting)
-            {
-                StartRace();
             }
         }
     }
