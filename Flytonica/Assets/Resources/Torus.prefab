@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -3142363592766135175}
   - component: {fileID: -1710920177614975430}
   - component: {fileID: 4781887089620985341}
+  - component: {fileID: 4117998086248226915}
   m_Layer: 0
   m_Name: Torus
   m_TagString: Untagged
@@ -125,7 +126,10 @@ MonoBehaviour:
   observedComponents:
   - {fileID: -1710920177614975430}
   - {fileID: 4781887089620985341}
-  runtimeComponents: []
+  - {fileID: 4117998086248226915}
+  runtimeComponents:
+  - {fileID: -1710920177614975430}
+  - {fileID: 4781887089620985341}
   isPrefab: 1
   prefabType: 0
 --- !u!114 &-1710920177614975430
@@ -168,6 +172,30 @@ MonoBehaviour:
     id: 46586
   replayObject:
     reference: {fileID: -3142363592766135175}
+--- !u!114 &4117998086248226915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3202828895375793172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 3980
+  replayObject:
+    reference: {fileID: -3142363592766135175}
+  observedRenderer: {fileID: 7121356291656020447}
+  defaultMaterial: {fileID: 2100000, guid: bf080a57de8f1394c9784d3a60663cac, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: bf080a57de8f1394c9784d3a60663cac, type: 2}
+  - {fileID: 2100000, guid: e1fa753e4b33c894ab08b93626de47ed, type: 2}
+  - {fileID: 2100000, guid: 7e61a84c7ad5d6e40affcbfc79099f34, type: 2}
+  - {fileID: 2100000, guid: c6d90dd6990819c4fb6f1c5fa24add15, type: 2}
+  recordFlags: 3
 --- !u!1001 &7438528959232485726
 PrefabInstance:
   m_ObjectHideFlags: 0

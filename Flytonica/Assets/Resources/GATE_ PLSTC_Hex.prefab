@@ -591,6 +591,7 @@ GameObject:
   - component: {fileID: -3060043755190156762}
   - component: {fileID: -989422246493069101}
   - component: {fileID: -9219051071657072872}
+  - component: {fileID: 8320625069685618472}
   m_Layer: 0
   m_Name: GATE_ PLSTC_Hex
   m_TagString: Untagged
@@ -702,7 +703,10 @@ MonoBehaviour:
   observedComponents:
   - {fileID: -989422246493069101}
   - {fileID: -9219051071657072872}
-  runtimeComponents: []
+  - {fileID: 8320625069685618472}
+  runtimeComponents:
+  - {fileID: -989422246493069101}
+  - {fileID: -9219051071657072872}
   isPrefab: 1
   prefabType: 0
 --- !u!114 &-989422246493069101
@@ -745,6 +749,29 @@ MonoBehaviour:
     id: 56508
   replayObject:
     reference: {fileID: -3060043755190156762}
+--- !u!114 &8320625069685618472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780121308876936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 14836
+  replayObject:
+    reference: {fileID: -3060043755190156762}
+  observedRenderer: {fileID: 23075832836850130}
+  defaultMaterial: {fileID: 2100000, guid: 584463e90b5f3374c8cea53a39e75433, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 584463e90b5f3374c8cea53a39e75433, type: 2}
+  - {fileID: 2100000, guid: 041b66a412c6f0e46a9f4125730cbde4, type: 2}
+  - {fileID: 2100000, guid: 8d2190072ce741b4d8a3813473657418, type: 2}
+  recordFlags: 3
 --- !u!1 &6867126123026542888
 GameObject:
   m_ObjectHideFlags: 0

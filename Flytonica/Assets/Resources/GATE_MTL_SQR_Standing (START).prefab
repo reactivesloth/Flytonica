@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7818323753017773429}
   - component: {fileID: 2343654048167263137}
   - component: {fileID: 7468295256981207891}
+  - component: {fileID: 4398834264064318897}
   m_Layer: 0
   m_Name: NEON_2
   m_TagString: Untagged
@@ -87,6 +88,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4398834264064318897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032287442460214975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 33176
+  replayObject:
+    reference: {fileID: -7190403425570718225}
+  observedRenderer: {fileID: 7468295256981207891}
+  defaultMaterial: {fileID: 2100000, guid: 1c15df654dbe0394f8f7465dead03c99, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 37af0754e7b3ad444b53810324fd0139, type: 2}
+  - {fileID: 2100000, guid: b888b025858bbf54ea5c1e53962dcc24, type: 2}
+  - {fileID: 2100000, guid: 927fca54791953f43953e76c685b88bf, type: 2}
+  - {fileID: 2100000, guid: 1c15df654dbe0394f8f7465dead03c99, type: 2}
+  - {fileID: 2100000, guid: 84edc50cff0ae1446b99b270e4bd5899, type: 2}
+  - {fileID: 2100000, guid: 2b074b0d5fa6b2546ab6a967e2b1eb99, type: 2}
+  recordFlags: 3
 --- !u!1 &2315549246273061700
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +781,11 @@ MonoBehaviour:
   observedComponents:
   - {fileID: -3373841232267972105}
   - {fileID: -1496175545505626063}
-  runtimeComponents: []
+  - {fileID: 5087071992187051622}
+  - {fileID: 4398834264064318897}
+  runtimeComponents:
+  - {fileID: -3373841232267972105}
+  - {fileID: -1496175545505626063}
   isPrefab: 1
   prefabType: 0
 --- !u!114 &-3373841232267972105
@@ -808,6 +839,7 @@ GameObject:
   - component: {fileID: 6055375637918002332}
   - component: {fileID: 5265130472069898652}
   - component: {fileID: 2844836348855117609}
+  - component: {fileID: 5087071992187051622}
   m_Layer: 0
   m_Name: NEON_1
   m_TagString: Untagged
@@ -884,6 +916,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5087071992187051622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7903361240599885054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 47039
+  replayObject:
+    reference: {fileID: -7190403425570718225}
+  observedRenderer: {fileID: 2844836348855117609}
+  defaultMaterial: {fileID: 2100000, guid: 37af0754e7b3ad444b53810324fd0139, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 37af0754e7b3ad444b53810324fd0139, type: 2}
+  - {fileID: 2100000, guid: b888b025858bbf54ea5c1e53962dcc24, type: 2}
+  - {fileID: 2100000, guid: 927fca54791953f43953e76c685b88bf, type: 2}
+  - {fileID: 2100000, guid: 1c15df654dbe0394f8f7465dead03c99, type: 2}
+  - {fileID: 2100000, guid: 84edc50cff0ae1446b99b270e4bd5899, type: 2}
+  - {fileID: 2100000, guid: 2b074b0d5fa6b2546ab6a967e2b1eb99, type: 2}
+  recordFlags: 3
 --- !u!1 &8391986185898282666
 GameObject:
   m_ObjectHideFlags: 0
