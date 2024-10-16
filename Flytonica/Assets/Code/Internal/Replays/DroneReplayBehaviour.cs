@@ -142,22 +142,16 @@ namespace Code.Internal.Replays
             _aimProgressNext = state.ReadSingle();
         }
 
-        protected override void OnReplayStart()
+        protected override void Awake()
         {
-            base.OnReplayStart();
-            if (IsRecording)
-            {
-                DroneHUD.Instance.AimElement.OnFlash += HandleFlashEvent;
-            }
+            base.Awake();
+            DroneHUD.Instance.AimElement.OnFlash += HandleFlashEvent;
         }
 
-        protected override void OnReplayEnd()
+        protected override void OnDestroy()
         {
-            base.OnReplayEnd();
-            if (IsRecording)
-            {
-                DroneHUD.Instance.AimElement.OnFlash -= HandleFlashEvent;
-            }
+            base.OnDestroy();
+            DroneHUD.Instance.AimElement.OnFlash -= HandleFlashEvent;
         }
 
         protected override void OnReplayReset()
@@ -224,11 +218,14 @@ namespace Code.Internal.Replays
 
         private void RecordUpdate(float t)
         {
-            // Здесь можно добавить дополнительную логику при записи, если необходимо
+            
         }
 
         private void HandleFlashEvent(Color color, float animTime)
         {
+            if(!IsRecording) 
+                return;
+            
             var data = ReplayState.pool.GetReusable();
             data.Write(color);
             data.Write(animTime);

@@ -9,6 +9,7 @@ namespace Code.Internal.UserInterface
         public static DroneHUD Instance { get; private set; }
         
         [SerializeField] private GameObject HUDPanel;
+        [field: SerializeField] public RectTransform gameUi;
 
         [Header("UI element")] 
         [SerializeField] private TMP_Text windText;
