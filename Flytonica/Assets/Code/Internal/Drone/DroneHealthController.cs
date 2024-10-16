@@ -19,7 +19,7 @@ namespace Code.Internal.Drone
         private float _maxImpactForce = 100f;
         
         private bool _isCanDamage = true;
-        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
+        private DroneSensors CurrentDroneSensors => DroneController.Instance != null ? DroneController.Instance.DroneSensors : null;
 
         private DroneSettings Settings => GetComponent<DroneController>().Settings;
 
@@ -71,8 +71,8 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if (CurrentDroneSensors == null) return;
-            CurrentDroneSensors.Health = _currentHealth;
+            if (CurrentDroneSensors== null) return;
+                CurrentDroneSensors.Health = _currentHealth;
         }
 
         private void DestroyDrone()
@@ -81,9 +81,6 @@ namespace Code.Internal.Drone
             _currentHealth = Settings.healthPoints;
             CurrentDroneSensors.CameraSignalModifier = 1;
             CurrentDroneSensors.InputSignalModifier = 1;
-            
-            //Debug.Log("Drone destroyed!");
-            //GameSceneManager.Instance.Replay();
         }
 
         private IEnumerator Timer()
