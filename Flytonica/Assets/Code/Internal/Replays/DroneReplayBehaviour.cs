@@ -142,23 +142,16 @@ namespace Code.Internal.Replays
             _aimProgressNext = state.ReadSingle();
         }
 
-        protected override void OnReplayStart()
+        protected override void Awake()
         {
-            base.OnReplayStart();
-            if (IsRecording)
-            {
-                print("Sub");
-                DroneHUD.Instance.AimElement.OnFlash += HandleFlashEvent;
-            }
+            base.Awake();
+            DroneHUD.Instance.AimElement.OnFlash += HandleFlashEvent;
         }
 
-        protected override void OnReplayEnd()
+        protected override void OnDestroy()
         {
-            base.OnReplayEnd();
-            if (IsRecording)
-            {
-                DroneHUD.Instance.AimElement.OnFlash -= HandleFlashEvent;
-            }
+            base.OnDestroy();
+            DroneHUD.Instance.AimElement.OnFlash -= HandleFlashEvent;
         }
 
         protected override void OnReplayReset()
@@ -187,7 +180,6 @@ namespace Code.Internal.Replays
 
             if (eventID == AimFlashEventID)
             {
-                print("Flash Event play");
                 var color = eventData.ReadColor();
                 var aimTime = eventData.ReadSingle();
                 DroneHUD.Instance.AimElement.Flash(color, aimTime);
@@ -231,7 +223,9 @@ namespace Code.Internal.Replays
 
         private void HandleFlashEvent(Color color, float animTime)
         {
-            print("Flash Event record");
+            if(!IsRecording) 
+                return;
+            
             var data = ReplayState.pool.GetReusable();
             data.Write(color);
             data.Write(animTime);
