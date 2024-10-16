@@ -4,6 +4,7 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.UserInterface
 {
@@ -11,7 +12,7 @@ namespace Code.Internal.UserInterface
     {
         public static UIController Instance { get; private set; }
 
-        [SerializeField] private Canvas canvas;
+        [SerializeField] private GameObject mainPanel;
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
         [SerializeField] private GameObject drawUIPanel;
@@ -51,7 +52,7 @@ namespace Code.Internal.UserInterface
         public void Pause()
         {
             print("Pause");
-            canvas.gameObject.SetActive(true);
+            mainPanel.gameObject.SetActive(true);
             drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
             DroneInput.Instance.MenuCameraHandle(true);
@@ -60,7 +61,7 @@ namespace Code.Internal.UserInterface
 
         public void Unpause()
         {
-            canvas.gameObject.SetActive(false);
+            mainPanel.gameObject.SetActive(false);
             drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
@@ -71,12 +72,12 @@ namespace Code.Internal.UserInterface
         {
             drawUIPanel.SetActive(false);
             Page.CurrentPage.Close();
-            canvas.gameObject.SetActive(false);
+            mainPanel.gameObject.SetActive(false);
         }
 
         public void OnMainMenu()
         {
-            canvas.gameObject.SetActive(true);
+            mainPanel.gameObject.SetActive(true);
             drawUIPanel.SetActive(true);
             firstPage.Open(true);
         }

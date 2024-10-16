@@ -33,6 +33,8 @@ namespace Code.Internal.Scenario
         
         public void NextOrEnd(bool isFailed = false)
         {
+            UIController.Instance.Unpause();
+            
             if(_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
             
