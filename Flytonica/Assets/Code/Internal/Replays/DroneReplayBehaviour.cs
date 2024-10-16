@@ -147,6 +147,7 @@ namespace Code.Internal.Replays
             base.OnReplayStart();
             if (IsRecording)
             {
+                print("Sub");
                 DroneHUD.Instance.AimElement.OnFlash += HandleFlashEvent;
             }
         }
@@ -186,6 +187,7 @@ namespace Code.Internal.Replays
 
             if (eventID == AimFlashEventID)
             {
+                print("Flash Event play");
                 var color = eventData.ReadColor();
                 var aimTime = eventData.ReadSingle();
                 DroneHUD.Instance.AimElement.Flash(color, aimTime);
@@ -224,11 +226,12 @@ namespace Code.Internal.Replays
 
         private void RecordUpdate(float t)
         {
-            // Здесь можно добавить дополнительную логику при записи, если необходимо
+            
         }
 
         private void HandleFlashEvent(Color color, float animTime)
         {
+            print("Flash Event record");
             var data = ReplayState.pool.GetReusable();
             data.Write(color);
             data.Write(animTime);

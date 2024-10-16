@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Code.Internal.Drone;
 using UltimateReplay;
-using UltimateReplay.Formatters;
 using UltimateReplay.Storage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,9 +27,11 @@ namespace Code.Internal.Replays
         private string _replayFilePath;
         private Scene _currentReplayScene;
 
+        public event Action PlaybackFinished;
+        
         public float CurrentPlaybackTime => _playbackOperation?.PlaybackTime ?? 0f;
         public float TotalPlaybackTime => !_playbackOperation.IsDisposed ? _playbackOperation.Duration : 0f;
-
+        
         protected void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -111,6 +108,7 @@ namespace Code.Internal.Replays
             {
                 _playbackOperation.StopPlayback();
                 Debug.Log("Остановлено воспроизведение реплея");
+                
 
                 if (_currentReplayScene.IsValid())
                     SceneManager.UnloadSceneAsync(_currentReplayScene);
@@ -129,7 +127,9 @@ namespace Code.Internal.Replays
         private void OnReplayFinished()
         {
             Debug.Log("Воспроизведение реплея завершено");
+            PlaybackFinished?.Invoke();
             Pause();
+            Seek(0);
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

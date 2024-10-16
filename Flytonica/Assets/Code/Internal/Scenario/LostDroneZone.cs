@@ -1,8 +1,6 @@
-﻿using System;
-using Code.Internal.Drone;
+﻿using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
-using FishNet;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
