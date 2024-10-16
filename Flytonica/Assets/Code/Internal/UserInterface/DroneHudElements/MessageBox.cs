@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.DroneHudElements
@@ -27,6 +28,21 @@ namespace Code.Internal.UserInterface.DroneHudElements
         private void Awake()
         {
             if (Instance == null) Instance = this;
+        }
+        
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += SceneChanged;
+        }
+
+        private void SceneChanged(Scene arg0, LoadSceneMode arg1)
+        {
+            ClearMessage();
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= SceneChanged;
         }
         
         public void DrawMessage (MessageType type, string message, float duration = 0)
