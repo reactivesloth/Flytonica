@@ -58,13 +58,9 @@ namespace Code.Internal.UserInterface.Elements
 
             if (scenarioSettings.settingType != SettingType.Task && scenarioSettings.settingType != SettingType.List)
             {
-                if(scenarioSettings.settingType == SettingType.Task)
-                {
-
-                    _currentScenarioSettings.currentMap = _dropdownLocations[locationDropdown.value];
-                    _currentScenarioSettings.currentDrone = _dropdownDrones[droneDropdown.value];
-                    _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[flyModeDropdown.value];
-                }
+                _currentScenarioSettings.currentMap = _dropdownLocations[locationDropdown.value];
+                _currentScenarioSettings.currentDrone = _dropdownDrones[droneDropdown.value];
+                _currentScenarioSettings.currentDroneMode = _dropdownFlyModes[flyModeDropdown.value];
             }
         }
 
@@ -127,16 +123,16 @@ namespace Code.Internal.UserInterface.Elements
                 droneDropdown.value =
                     _dropdownDrones.FirstOrDefault(d => d.Value == scenarioSettings.currentDrone).Key;
             else*/
-                InitModesDropdown(scenarioSettings);
+            InitModesDropdown(scenarioSettings);
         }
 
         private void InitModesDropdown(ScenarioSettings scenarioSettings)
         {
             flyModeDropdown.ClearOptions();
             _dropdownFlyModes.Clear();
-            
+
             var droneOptionData = new List<string>();
-            if (scenarioSettings.currentDroneMode!=null && scenarioSettings.settingType == SettingType.TaskScenario)
+            if (scenarioSettings.currentDroneMode != null && scenarioSettings.settingType == SettingType.TaskScenario)
             {
                 _dropdownFlyModes.Add(0, scenarioSettings.currentDroneMode);
                 droneOptionData.Add(scenarioSettings.currentDroneMode.modeName);
