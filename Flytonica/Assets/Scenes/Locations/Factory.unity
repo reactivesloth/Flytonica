@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -102550,6 +102551,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 2130928713047529796, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a1143ee683302f4aa628c052723efc1, type: 2}
     - target: {fileID: 2144060098829719951, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -102980,31 +102985,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.8
+      value: -12.510289
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 7.9560966
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 34.5
+      value: 26.343874
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.18069166
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.04815872
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.9493969
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.2523428
       objectReference: {fileID: 0}
     - target: {fileID: 5392578570236577269, guid: 9e9087f15d8f2004aa1d21e3ebdeb18d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
