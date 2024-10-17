@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Code.Internal.Drone;
+using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
@@ -14,15 +15,15 @@ namespace Code.Internal.Scenario.Race
         Running,
         Finished
     }
-    
-    public class ScenarioRace : MonoBehaviour
+
+    public class ScenarioRace : ScenarioBase
     {
         [SerializeField] private List<Checkpoint> checkpoints;
 
         private int _nextCheckpoint = 0;
         private RaceCondition _raceCondition;
         private float _time;
-        
+
         private void Awake()
         {
             _raceCondition = RaceCondition.Waiting;
@@ -31,12 +32,12 @@ namespace Code.Internal.Scenario.Race
         private void Start()
         {
             DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
-            DroneHUD.Instance?.SetMessage(MessageType.Normal,"Пролетите через стартовое кольцо чтобы начать гонку", 3);
+            DroneHUD.Instance?.SetMessage(MessageType.Normal, "Пролетите через стартовое кольцо чтобы начать гонку", 3);
         }
 
-        private void Update()
+        protected override void Update()
         {
-            
+            base.Update();
 #if UNITY_EDITOR
             if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
             {
@@ -47,17 +48,18 @@ namespace Code.Internal.Scenario.Race
             {
                 _time += Time.deltaTime;
             }
-            DroneHUD.Instance?.SetTime(GetResult ());
+
+            DroneHUD.Instance?.SetTime(GetResult());
         }
 
         public void CheckpointUpdate(Checkpoint checkpoint)
         {
             //if (_raceCondition != RaceCondition.Running) return;
-            
+
             if (checkpoints.IndexOf(checkpoint) == _nextCheckpoint)
             {
                 _nextCheckpoint++;
-                
+
                 if (_raceCondition == RaceCondition.Waiting)
                 {
                     StartRace();
@@ -88,37 +90,38 @@ namespace Code.Internal.Scenario.Race
             {
                 cp.ChangeColor(CheckpointFlashType.None);
             }
+
             checkpoints[_nextCheckpoint].ChangeColor(CheckpointFlashType.Current);
             if (_nextCheckpoint + 1 < checkpoints.Count)
                 checkpoints[_nextCheckpoint + 1].ChangeColor(CheckpointFlashType.Next);
         }
 
-        private void StartRace()
+        protected override void StartRace()
         {
+            base.StartRace();
             _time = 0;
             _raceCondition = RaceCondition.Running;
             DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
-            
+
             UpdateCheckpointColors();
         }
 
-        private void FinishRace ()
+        protected override void FinishRace(bool success = true)
         {
+            base.FinishRace(success);
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance?.SetTask("Задание выполнено!");
-            DroneHUD.Instance.SetMessage(MessageType.Normal,"Поздравляем! Ваше время: " + GetResult());
+            DroneHUD.Instance.SetMessage(MessageType.Normal, "Поздравляем! Ваше время: " + GetResult());
             DroneInput.Instance.MenuCameraHandle(true);
-            
+
             foreach (var cp in checkpoints)
             {
                 cp.ChangeColor(CheckpointFlashType.Current);
             }
 
             PopupPanel.ConfigurePopup("Задание выполнено!", $"Подздравляем! Время выполнения: {GetResult()}",
-                null, "Выйти в главное меню", Color.red, Color.white, () =>
-                {
-                    ScenarioSwitcherController.Instance.EndSession();
-                }, 
+                null, "Выйти в главное меню", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.EndSession(); },
                 null, "Продолжить", Color.green, Color.black, () =>
                 {
                     var resultBuilder = ReportBuilder.Instance;
@@ -128,7 +131,7 @@ namespace Code.Internal.Scenario.Race
                     // {
                     //     resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_" + "gateName"), "Отклонение от центра: " + "percent");
                     // }
-                    
+
                     ScenarioSwitcherController.Instance.NextOrEnd();
                 });
         }
@@ -151,12 +154,14 @@ namespace Code.Internal.Scenario.Race
             {
                 Gizmos.color = Color.yellow;
                 if (i < checkpoints.Count - 1)
-                    Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up, checkpoints[i+1].transform.position + Vector3.up);
+                    Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up,
+                        checkpoints[i + 1].transform.position + Vector3.up);
             }
         }
 
-        public void Initialize()
+        public override void Initialize(ScenarioSettings scenario)
         {
+            base.Initialize(scenario);
             var objects = GetComponentsInChildren<SpawnableObject>();
             checkpoints = new List<Checkpoint>();
 
@@ -171,7 +176,7 @@ namespace Code.Internal.Scenario.Race
                     }
                 }
             }
-            
+
             foreach (var o in objects)
             {
                 if (o.Type == MapEditorObjectType.StartGate)

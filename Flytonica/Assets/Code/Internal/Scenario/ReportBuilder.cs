@@ -28,9 +28,10 @@ namespace Code.Internal.Scenario
             }
         }
 
+        private int _prefixNumber = 1;
+        
+        // Единый список для всех параметров
         private readonly List<Parameter<string>> _parameters = new();
-        private readonly List<Parameter<float>> _floatParameters = new();
-        private readonly List<Parameter<int>> _intParameters = new();
 
         private void Awake()
         {
@@ -44,39 +45,85 @@ namespace Code.Internal.Scenario
             }
         }
 
+        // Очистка всех параметров
         public void Clear()
         {
+            _prefixNumber = 1;
             _parameters.Clear();
-            _floatParameters.Clear();
-            _intParameters.Clear();
         }
 
-        // Методы для строковых параметров
-        public void AddParameter(string key, string value)
+        public void AddPrefix() => _prefixNumber++;
+
+        #region Методы для параметров
+
+        public void AddParameter(string key, string value, bool isPrefix = true)
         {
-            var param = _parameters.Find(p => p.Key == key);
-            if (param != null)
-            {
-                param.Values.Add(value);
-            }
-            else
-            {
-                _parameters.Add(new Parameter<string>(key, value));
-            }
+            key = isPrefix ? $"({_prefixNumber}) {key}" : key;
+            _parameters.Add(new Parameter<string>(key, value));
+        }
+
+        public void AddParameter(string key, float value)
+        {
+            AddParameter(key, value.ToString());
+        }
+
+        public void AddParameter(string key, int value)
+        {
+            AddParameter(key, value.ToString());
         }
 
         public void UpdateParameter(string key, string value)
         {
-            var param = _parameters.Find(p => p.Key == key);
+            var param = FindLastParameter(key);
             if (param != null)
             {
-                if (param.Values.Count > 0)
+                param.Value = value;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Parameter with key '{key}' not found.");
+            }
+        }
+
+        public void UpdateParameter(string key, float value)
+        {
+            var param = FindLastParameter(key);
+            if (param != null)
+            {
+                param.Value = value.ToString();
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Parameter with key '{key}' not found.");
+            }
+        }
+
+        public void UpdateParameter(string key, int value)
+        {
+            var param = FindLastParameter(key);
+            if (param != null)
+            {
+                param.Value = value.ToString();
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Parameter with key '{key}' not found.");
+            }
+        }
+
+        public void IncrementNumericParameter(string key, float incrementValue)
+        {
+            var param = FindLastParameter(key);
+            if (param != null)
+            {
+                if (float.TryParse(param.Value, out float currentValue))
                 {
-                    param.Values[param.Values.Count - 1] = value;
+                    currentValue += incrementValue;
+                    param.Value = currentValue.ToString();
                 }
                 else
                 {
-                    param.Values.Add(value);
+                    throw new InvalidOperationException($"Parameter with key '{key}' is not a numeric value.");
                 }
             }
             else
@@ -85,122 +132,56 @@ namespace Code.Internal.Scenario
             }
         }
 
-        // Методы для параметров типа float
-        public void AddParameter(string key, float value)
-        {
-            var param = _floatParameters.Find(p => p.Key == key);
-            if (param != null)
-            {
-                param.Values.Add(value);
-            }
-            else
-            {
-                _floatParameters.Add(new Parameter<float>(key, value));
-            }
-        }
-
-        public void UpdateParameter(string key, float value)
-        {
-            var param = _floatParameters.Find(p => p.Key == key);
-            if (param != null)
-            {
-                if (param.Values.Count > 0)
-                {
-                    param.Values[param.Values.Count - 1] = value;
-                }
-                else
-                {
-                    param.Values.Add(value);
-                }
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Numeric parameter with key '{key}' not found.");
-            }
-        }
-
-        public void IncrementNumericParameter(string key, float incrementValue)
-        {
-            var param = _floatParameters.Find(p => p.Key == key);
-            if (param != null)
-            {
-                if (param.Values.Count > 0)
-                {
-                    param.Values[param.Values.Count - 1] += incrementValue;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"No value to increment for key '{key}'.");
-                }
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Numeric parameter with key '{key}' not found.");
-            }
-        }
-
         public float GetNumericParameter(string key)
         {
-            var param = _floatParameters.Find(p => p.Key == key);
+            var param = FindLastParameter(key);
             if (param != null)
             {
-                if (param.Values.Count > 0)
+                if (float.TryParse(param.Value, out float value))
                 {
-                    return param.Values[param.Values.Count - 1];
+                    return value;
                 }
                 else
                 {
-                    throw new InvalidOperationException($"No value to get for key '{key}'.");
+                    throw new InvalidOperationException($"Parameter with key '{key}' is not a numeric value.");
                 }
             }
             else
             {
-                throw new KeyNotFoundException($"Numeric parameter with key '{key}' not found.");
+                throw new KeyNotFoundException($"Parameter with key '{key}' not found.");
             }
         }
 
-        // Методы для параметров типа int
-        public void AddParameter(string key, int value)
-        {
-            var param = _intParameters.Find(p => p.Key == key);
-            if (param != null)
-            {
-                param.Values.Add(value);
-            }
-            else
-            {
-                _intParameters.Add(new Parameter<int>(key, value));
-            }
-        }
+        #endregion
 
+        // Генерация JSON отчёта
         public string GenerateJsonReport()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
             bool first = true;
 
-            foreach (var param in _parameters)
+            // Группируем параметры по ключам
+            var groupedParameters = GroupParametersByKey(_parameters);
+            foreach (var group in groupedParameters)
             {
-                if (!first) sb.Append(",");
-                sb.Append($"\"{EscapeString(param.Key)}\":");
-                sb.Append(BuildJsonArray(param.Values));
-                first = false;
-            }
+                foreach (var value in group.Value)
+                {
+                    if (!first) sb.Append(",");
+                    sb.Append($"\"{EscapeString(group.Key)}\":");
 
-            foreach (var param in _floatParameters)
-            {
-                if (!first) sb.Append(",");
-                sb.Append($"\"{EscapeString(param.Key)}\":");
-                sb.Append(BuildJsonArray(param.Values));
-                first = false;
-            }
+                    // Проверяем, является ли значение числовым
+                    if (float.TryParse(value, out float numericValue))
+                    {
+                        sb.Append(numericValue);
+                    }
+                    else
+                    {
+                        sb.Append($"\"{EscapeString(value)}\"");
+                    }
 
-            foreach (var param in _intParameters)
-            {
-                if (!first) sb.Append(",");
-                sb.Append($"\"{EscapeString(param.Key)}\":");
-                sb.Append(BuildJsonArray(param.Values));
-                first = false;
+                    first = false;
+                }
             }
 
             sb.Append("}");
@@ -209,43 +190,25 @@ namespace Code.Internal.Scenario
 
         #region Вспомогательные методы
 
-        private string BuildJsonArray<T>(List<T> values)
+        // Группировка параметров по ключу
+        private Dictionary<string, List<string>> GroupParametersByKey(List<Parameter<string>> parameters)
         {
-            if (values.Count == 1)
+            var grouped = new Dictionary<string, List<string>>();
+            foreach (var param in parameters)
             {
-                return FormatJsonValue(values[0]);
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("[");
-                for (int i = 0; i < values.Count; i++)
+                if (grouped.ContainsKey(param.Key))
                 {
-                    if (i > 0) sb.Append(",");
-                    sb.Append(FormatJsonValue(values[i]));
+                    grouped[param.Key].Add(param.Value);
                 }
-                sb.Append("]");
-                return sb.ToString();
+                else
+                {
+                    grouped[param.Key] = new List<string> { param.Value };
+                }
             }
+            return grouped;
         }
 
-        private string FormatJsonValue<T>(T value)
-        {
-            if (value is string)
-            {
-                return $"\"{EscapeString(value.ToString())}\"";
-            }
-            else if (value is float || value is double || value is int || value is long || value is decimal)
-            {
-                return value.ToString();
-            }
-            else
-            {
-                // Для других типов данных сериализуем как строку
-                return $"\"{EscapeString(value.ToString())}\"";
-            }
-        }
-
+        // Экранирование строк для JSON
         private string EscapeString(string str)
         {
             StringBuilder sb = new StringBuilder();
@@ -283,36 +246,69 @@ namespace Code.Internal.Scenario
                         {
                             sb.Append(c);
                         }
-
                         break;
                 }
             }
-
             return sb.ToString();
+        }
+
+        // Поиск последнего параметра с заданным ключом
+        private Parameter<string> FindLastParameter(string key)
+        {
+            for (int i = _parameters.Count - 1; i >= 0; i--)
+            {
+                if (_parameters[i].Key.Equals(key, StringComparison.Ordinal))
+                {
+                    return _parameters[i];
+                }
+            }
+            return null;
         }
 
         #endregion
 
-        // Класс Parameter
+        // Внутренний класс для представления параметра
         private class Parameter<T>
         {
             public string Key { get; }
-            public List<T> Values { get; }
+            public T Value { get; set; }
 
             public Parameter(string key, T value)
             {
                 Key = key;
-                Values = new List<T> { value };
+                Value = value;
             }
         }
     }
-}
 
-// КАК использовать
-// ReportBuilder.Instance.AddParameter("Количество участников", 5f);
-// ReportBuilder.Instance.AddParameter("Количество участников", 10f);
-// ReportBuilder.Instance.IncrementNumericParameter("Количество участников", 2.5f);
-// float value = ReportBuilder.Instance.GetNumericParameter("Количество участников");
-// Console.WriteLine(value);
-// string jsonReport = ReportBuilder.Instance.GenerateJsonReport();
-// Console.WriteLine(jsonReport);
+    // Пример использования
+    /*
+    // Добавление строковых параметров
+    ReportBuilder.Instance.AddParameter("Имя игрока", "Алексей");
+    ReportBuilder.Instance.AddParameter("Имя игрока", "Ирина"); // Будет добавлено как "Имя игрока_2"
+
+    // Добавление числовых параметров
+    ReportBuilder.Instance.AddParameter("Время игры", 15.5f);
+    ReportBuilder.Instance.IncrementNumericParameter("Время игры", 2.5f); // Обновит последнее значение до 18.0f
+
+    ReportBuilder.Instance.AddParameter("Уровень", 3);
+    ReportBuilder.Instance.AddParameter("Уровень", 4); // Будет добавлено как "Уровень_2"
+
+    // Получение значения числового параметра
+    float времяИгры = ReportBuilder.Instance.GetNumericParameter("Время игры");
+    Console.WriteLine(времяИгры); // Выведет 18.0
+
+    // Генерация JSON отчёта
+    string jsonReport = ReportBuilder.Instance.GenerateJsonReport();
+    Console.WriteLine(jsonReport);
+    // Выведет:
+    // {
+    //   "Имя игрока_1":"Алексей",
+    //   "Имя игрока_2":"Ирина",
+    //   "Время игры_1":15.5,
+    //   "Время игры_2":18.0,
+    //   "Уровень_1":3,
+    //   "Уровень_2":4
+    // }
+    */
+}

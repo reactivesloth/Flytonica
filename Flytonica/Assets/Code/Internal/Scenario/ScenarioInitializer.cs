@@ -120,18 +120,18 @@ namespace Code.Internal.Scenario
                     break;
                 case ScenarioType.Race:
                     raceModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioRace>().Initialize();
+                    FindAnyObjectByType<ScenarioRace>().Initialize(_settings);
                     break;
                 case ScenarioType.Transport:
                     transportModeObjects?.SetActive(true);
                     break;
                 case ScenarioType.Searching:
                     searchingModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioSearching>().Initialize();
+                    FindAnyObjectByType<ScenarioSearching>().Initialize(_settings);
                     break;
                 case ScenarioType.SearchingWithIR:
                     searchingIRModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioSearching>().Initialize();
+                    FindAnyObjectByType<ScenarioSearching>().Initialize(_settings);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -27,20 +27,23 @@ namespace Code.Internal.Scenario
 
         public void StartTask()
         {
-            if(sceneSettings.isTask)
-                ReplayController.Instance.StartRecording(sceneSettings.taskId);
+            if (!sceneSettings.isTask) return;
+            ReplayController.Instance.StartRecording(sceneSettings.taskId);
+            ReportBuilder.Instance.Clear();
+            
+            ReportBuilder.Instance.AddParameter("Количество участников", "1", false);;
         }
-        
+
         public void NextOrEnd(bool isFailed = false)
         {
             UIController.Instance.Unpause();
-            
-            if(_currentStatus != 2)
+
+            if (_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
-            
+
             print(sceneSettings.currentScenario.name);
             print(sceneSettings.currentScenario.nextScenario?.name);
-            
+
             if (sceneSettings.currentScenario.nextScenario)
                 Next();
             else
@@ -53,18 +56,19 @@ namespace Code.Internal.Scenario
             /*Time.timeScale = 0f;
             PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));*/
-            
+
+            ReportBuilder.Instance.AddPrefix();
             LoadNext();
         }
 
         private void LoadNext()
         {
-            
-            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Despawn(InstanceFinder.ClientManager.Connection);
+            InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>()
+                .Despawn(InstanceFinder.ClientManager.Connection);
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
-            
+
             Time.timeScale = 1f;
         }
 
@@ -80,26 +84,27 @@ namespace Code.Internal.Scenario
         {
             /*PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
-            
+
             EndTask();
         }
-        
+
 
         private void EndTask()
         {
             Time.timeScale = 0f;
             var replay = ReplayController.Instance.StopRecording();
-            if(sceneSettings.isTask)
+            if (sceneSettings.isTask)
                 SendData(replay);
             EndSession();
         }
-        
-        public void EndSession () {
+
+        public void EndSession()
+        {
             Time.timeScale = 1f;
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();
-            
+
             GameSceneManager.Instance.ToMenuSingle();
         }
 
@@ -111,14 +116,14 @@ namespace Code.Internal.Scenario
         private void Send(string result, string replayPath)
         {
             var settingsFile = Encoding.UTF8.GetBytes(result);
-            
+
             if (!System.IO.File.Exists(replayPath))
             {
                 Debug.LogError($"Файл реплея не найден по пути: {replayPath}");
                 return;
             }
 
-            
+
             var replayData = System.IO.File.ReadAllBytes(replayPath);
 
             var form = new WWWForm();
@@ -127,7 +132,7 @@ namespace Code.Internal.Scenario
             form.AddField("status", _currentStatus);
             form.AddBinaryData("file", settingsFile, "Result.json", "application/json");
             form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");
-            
+
             HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, (s, l) => Debug.LogError(s));
         }
     }

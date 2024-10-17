@@ -25,7 +25,7 @@ namespace Code.Internal.Scenario.Searching
         }
     }
     
-    public class ScenarioSearching : MonoBehaviour
+    public class ScenarioSearching : ScenarioBase
     {
         private RaceCondition _raceCondition = RaceCondition.Waiting;
 
@@ -38,9 +38,10 @@ namespace Code.Internal.Scenario.Searching
         private float _gazeTime;
         private float _gazeTimeNotResponceTime;
         private int _findedCount = 0;
-        
-        private void Update()
+
+        protected override void Update()
         {
+            base.Update();
             #if UNITY_EDITOR
             if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
             {
@@ -141,9 +142,11 @@ namespace Code.Internal.Scenario.Searching
                 _gazeTime = 0;
             });
         }
-        
-        private void StartRace()
+
+        protected override void StartRace()
         {
+            base.StartRace();
+            
             _counter = 0;
             if (timer > 0)
             {
@@ -157,8 +160,10 @@ namespace Code.Internal.Scenario.Searching
             
         }
 
-        private void FinishRace(bool success)
+        protected override void FinishRace(bool success = true)
         {
+            base.FinishRace(success);
+            
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance.ClearMessage();
             DroneHUD.Instance.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
@@ -201,8 +206,9 @@ namespace Code.Internal.Scenario.Searching
             return dateTime.ToString("mm:ss");
         }
 
-        public void Initialize()
+        public override void Initialize(ScenarioSettings scenario)
         {
+            base.Initialize(scenario);
             var objects = GetComponentsInChildren<SpawnableObject>();
             searchingObjects = new List<SearchingObject>();
 
