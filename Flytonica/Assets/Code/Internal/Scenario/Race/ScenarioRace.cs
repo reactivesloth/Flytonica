@@ -109,7 +109,11 @@ namespace Code.Internal.Scenario.Race
             DroneHUD.Instance?.SetTask("Задание выполнено!");
             DroneHUD.Instance.SetMessage(MessageType.Normal, "Поздравляем! Ваше время: " + GetResult());
             DroneInput.Instance.MenuCameraHandle(true);
-
+            foreach (var cp in checkpoints)
+            {
+                cp.SetEndColor(cp.checkpointStatus == CheckpointStatus.Passed);
+            }
+            
             PopupPanel.ConfigurePopup("Задание выполнено!", $"Подздравляем! Время выполнения: {GetResult()}",
                 null, "Выйти в главное меню", Color.red, Color.white,
                 () => { ScenarioSwitcherController.Instance.EndSession(); },
@@ -128,11 +132,6 @@ namespace Code.Internal.Scenario.Race
 
                     ScenarioSwitcherController.Instance.NextOrEnd();
                 });
-            
-            /*foreach (var cp in checkpoints)
-            {
-                cp.ChangeStatus(CheckpointStatusType.Current);
-            }*/
         }
 
         public string GetResult()

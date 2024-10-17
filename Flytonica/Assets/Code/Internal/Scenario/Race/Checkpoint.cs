@@ -44,7 +44,38 @@ namespace Code.Internal.Scenario.Race
                 print($"Status = {checkpointStatus}, deviationFromCentre = {deviationFromCentre}");
             }
         }
+        
+        public void ChangeStatus(CheckpointStatus type)
+        {
+            if (renderer == null) return;
 
+            checkpointStatus = type;
+
+            switch (type)
+            {
+                case CheckpointStatus.None:
+                case CheckpointStatus.Passed:
+                    if (otherCheckpointMaterial != null)
+                        renderer.sharedMaterial = otherCheckpointMaterial;
+                    break;
+                case CheckpointStatus.Current:
+                    if (currentCheckpointMaterial != null)
+                        renderer.sharedMaterial = currentCheckpointMaterial;
+                    break;
+                case CheckpointStatus.Next:
+                    if (nextCheckpointMaterial != null)
+                        renderer.sharedMaterial = nextCheckpointMaterial;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        public void SetEndColor(bool isPassed)
+        {
+            renderer.sharedMaterial = isPassed ? currentCheckpointMaterial : otherCheckpointMaterial;
+        }
+        
         private float CalculateDeviationFromCentre(Vector3 targetPosition)
         {
             BoxCollider boxCollider = GetComponent<BoxCollider>();
@@ -86,32 +117,6 @@ namespace Code.Internal.Scenario.Race
             }
 
             return -1;
-        }
-        
-        public void ChangeStatus(CheckpointStatus type)
-        {
-            if (renderer == null) return;
-
-            checkpointStatus = type;
-
-            switch (type)
-            {
-                case CheckpointStatus.None:
-                case CheckpointStatus.Passed:
-                    if (otherCheckpointMaterial != null)
-                        renderer.sharedMaterial = otherCheckpointMaterial;
-                    break;
-                case CheckpointStatus.Current:
-                    if (currentCheckpointMaterial != null)
-                        renderer.sharedMaterial = currentCheckpointMaterial;
-                    break;
-                case CheckpointStatus.Next:
-                    if (nextCheckpointMaterial != null)
-                        renderer.sharedMaterial = nextCheckpointMaterial;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
         }
     }
 }
