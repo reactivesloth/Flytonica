@@ -9,6 +9,7 @@ namespace Code.Internal.MapEditor
     {
         [SerializeField] private MapEditorUIMainPanel mainPanel;
         [SerializeField] private MapEditorUILibraryPanel libraryPanel;
+        [SerializeField] private MapEditorUISpawnedObjectsPanel spawnedObjectsPanel;
 
         public static MapEditorUI Instance { get; private set; }
         
@@ -30,6 +31,7 @@ namespace Code.Internal.MapEditor
         {
             CloseMainPanel();
             CloseLibraryPanel();
+            CloseSpawnedObjectPanel ();
         }
 
         public void CloseMainPanel()
@@ -41,6 +43,10 @@ namespace Code.Internal.MapEditor
         {
             libraryPanel.ClosePanel();
         }
+
+        public void CloseSpawnedObjectPanel () {
+            spawnedObjectsPanel.ClosePanel ();
+        }
         
         public void InitializeMainPanel(ScenarioType type)
         {
@@ -50,6 +56,10 @@ namespace Code.Internal.MapEditor
         public void InitializeLibraryPanel (MapEditorObjectType libraryPanelType) {
             MapEditor.Instance.SelectEditorObject(null);
             libraryPanel.Setup(libraryPanelType);
+        }
+
+        public void InitializeSpawnedObjectsPanel () {
+            spawnedObjectsPanel.Setup ();
         }
     }
 }
