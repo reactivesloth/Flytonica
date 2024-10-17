@@ -42,8 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  serializedVersion: 12
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -93,7 +92,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: e31c81a85873048f78da9fe425fae616, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: fdc25f9f4061a76478c4ea41272a93ec, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 847a36b6e299fa144aedac739e2f4fdd, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -3686,7 +3685,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -3725,7 +3724,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -5832,6 +5831,22 @@ PrefabInstance:
       propertyPath: replayIdentity.id
       value: 19868
       objectReference: {fileID: 0}
+    - target: {fileID: 1812721950238525426, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1812721950238525426, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 13601
+      objectReference: {fileID: 0}
+    - target: {fileID: 1978239557974854626, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1978239557974854626, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 65374
+      objectReference: {fileID: 0}
     - target: {fileID: 1987358032097005081, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: prefabType
       value: 1
@@ -5851,6 +5866,22 @@ PrefabInstance:
     - target: {fileID: 2402449244026636431, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: replayIdentity.id
       value: 37911
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414088150265234541, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2414088150265234541, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 44287
+      objectReference: {fileID: 0}
+    - target: {fileID: 3064080413658207686, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3064080413658207686, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 39471
       objectReference: {fileID: 0}
     - target: {fileID: 3091491149170067395, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: prefabType
@@ -5875,6 +5906,14 @@ PrefabInstance:
     - target: {fileID: 3377395109077401833, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3666544248616072690, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3666544248616072690, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 57402
       objectReference: {fileID: 0}
     - target: {fileID: 4096905330527820158, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6031,6 +6070,22 @@ PrefabInstance:
     - target: {fileID: 7517251163605751879, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799732312603464012, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799732312603464012, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 55883
+      objectReference: {fileID: 0}
+    - target: {fileID: 7807210591301167809, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7807210591301167809, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 57216
       objectReference: {fileID: 0}
     - target: {fileID: 7814371261551696844, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: prefabType
@@ -6199,6 +6254,14 @@ PrefabInstance:
     - target: {fileID: 8897157098822505966, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9165947399102516396, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9165947399102516396, guid: 195fc14209b05fc4eba1102f9678bee9, type: 3}
+      propertyPath: replayIdentity.id
+      value: 49577
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6513,6 +6576,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 447257851}
     m_Modifications:
+    - target: {fileID: -3142363592766135175, guid: 3a46c63183a9c014fb9d3b217826fa5e, type: 3}
+      propertyPath: prefabType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3142363592766135175, guid: 3a46c63183a9c014fb9d3b217826fa5e, type: 3}
+      propertyPath: replayIdentity.id
+      value: 26822
+      objectReference: {fileID: 0}
     - target: {fileID: 1099741050654393625, guid: 3a46c63183a9c014fb9d3b217826fa5e, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
