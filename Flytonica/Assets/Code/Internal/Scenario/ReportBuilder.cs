@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -27,8 +28,9 @@ namespace Code.Internal.Scenario
             }
         }
 
-        private readonly Dictionary<string, string> _parameters = new();
-        private readonly Dictionary<string, float> _numericParameters = new();
+        private readonly List<Parameter<string>> _parameters = new();
+        private readonly List<Parameter<float>> _floatParameters = new();
+        private readonly List<Parameter<int>> _intParameters = new();
 
         private void Awake()
         {
@@ -45,38 +47,37 @@ namespace Code.Internal.Scenario
         public void Clear()
         {
             _parameters.Clear();
-            _numericParameters.Clear();
+            _floatParameters.Clear();
+            _intParameters.Clear();
         }
 
+        // Методы для строковых параметров
         public void AddParameter(string key, string value)
         {
-            if (_parameters.ContainsKey(key))
+            var param = _parameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                _parameters[key] = value;
+                param.Values.Add(value);
             }
             else
             {
-                _parameters.Add(key, value);
-            }
-        }
-
-        public void AddParameter(string key, float numericValue)
-        {
-            if (_numericParameters.ContainsKey(key))
-            {
-                _numericParameters[key] = numericValue;
-            }
-            else
-            {
-                _numericParameters.Add(key, numericValue);
+                _parameters.Add(new Parameter<string>(key, value));
             }
         }
 
         public void UpdateParameter(string key, string value)
         {
-            if (_parameters.ContainsKey(key))
+            var param = _parameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                _parameters[key] = value;
+                if (param.Values.Count > 0)
+                {
+                    param.Values[param.Values.Count - 1] = value;
+                }
+                else
+                {
+                    param.Values.Add(value);
+                }
             }
             else
             {
@@ -84,11 +85,33 @@ namespace Code.Internal.Scenario
             }
         }
 
-        public void UpdateParameter(string key, float numericValue)
+        // Методы для параметров типа float
+        public void AddParameter(string key, float value)
         {
-            if (_numericParameters.ContainsKey(key))
+            var param = _floatParameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                _numericParameters[key] = numericValue;
+                param.Values.Add(value);
+            }
+            else
+            {
+                _floatParameters.Add(new Parameter<float>(key, value));
+            }
+        }
+
+        public void UpdateParameter(string key, float value)
+        {
+            var param = _floatParameters.Find(p => p.Key == key);
+            if (param != null)
+            {
+                if (param.Values.Count > 0)
+                {
+                    param.Values[param.Values.Count - 1] = value;
+                }
+                else
+                {
+                    param.Values.Add(value);
+                }
             }
             else
             {
@@ -98,9 +121,17 @@ namespace Code.Internal.Scenario
 
         public void IncrementNumericParameter(string key, float incrementValue)
         {
-            if (_numericParameters.ContainsKey(key))
+            var param = _floatParameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                _numericParameters[key] += incrementValue;
+                if (param.Values.Count > 0)
+                {
+                    param.Values[param.Values.Count - 1] += incrementValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"No value to increment for key '{key}'.");
+                }
             }
             else
             {
@@ -110,9 +141,17 @@ namespace Code.Internal.Scenario
 
         public float GetNumericParameter(string key)
         {
-            if (_numericParameters.ContainsKey(key))
+            var param = _floatParameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                return _numericParameters[key];
+                if (param.Values.Count > 0)
+                {
+                    return param.Values[param.Values.Count - 1];
+                }
+                else
+                {
+                    throw new InvalidOperationException($"No value to get for key '{key}'.");
+                }
             }
             else
             {
@@ -120,41 +159,91 @@ namespace Code.Internal.Scenario
             }
         }
 
-        public string GenerateJsonReport()
+        // Методы для параметров типа int
+        public void AddParameter(string key, int value)
         {
-            var flatDictionary = new Dictionary<string, string>(_parameters);
-            foreach (var kvp in _numericParameters)
+            var param = _intParameters.Find(p => p.Key == key);
+            if (param != null)
             {
-                flatDictionary[kvp.Key] = kvp.Value.ToString();
+                param.Values.Add(value);
             }
-
-            return BuildJsonString(flatDictionary);
+            else
+            {
+                _intParameters.Add(new Parameter<int>(key, value));
+            }
         }
 
-        #region JSON Generation
-        
-        private string BuildJsonString(Dictionary<string, string> flatDictionary)
+        public string GenerateJsonReport()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
             bool first = true;
-            foreach (var kvp in flatDictionary)
-            {
-                if (!first)
-                {
-                    sb.Append(",");
-                }
 
-                sb.Append("\"");
-                sb.Append(EscapeString(kvp.Key));
-                sb.Append("\":\"");
-                sb.Append(EscapeString(kvp.Value));
-                sb.Append("\"");
+            foreach (var param in _parameters)
+            {
+                if (!first) sb.Append(",");
+                sb.Append($"\"{EscapeString(param.Key)}\":");
+                sb.Append(BuildJsonArray(param.Values));
+                first = false;
+            }
+
+            foreach (var param in _floatParameters)
+            {
+                if (!first) sb.Append(",");
+                sb.Append($"\"{EscapeString(param.Key)}\":");
+                sb.Append(BuildJsonArray(param.Values));
+                first = false;
+            }
+
+            foreach (var param in _intParameters)
+            {
+                if (!first) sb.Append(",");
+                sb.Append($"\"{EscapeString(param.Key)}\":");
+                sb.Append(BuildJsonArray(param.Values));
                 first = false;
             }
 
             sb.Append("}");
             return sb.ToString();
+        }
+
+        #region Вспомогательные методы
+
+        private string BuildJsonArray<T>(List<T> values)
+        {
+            if (values.Count == 1)
+            {
+                return FormatJsonValue(values[0]);
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("[");
+                for (int i = 0; i < values.Count; i++)
+                {
+                    if (i > 0) sb.Append(",");
+                    sb.Append(FormatJsonValue(values[i]));
+                }
+                sb.Append("]");
+                return sb.ToString();
+            }
+        }
+
+        private string FormatJsonValue<T>(T value)
+        {
+            if (value is string)
+            {
+                return $"\"{EscapeString(value.ToString())}\"";
+            }
+            else if (value is float || value is double || value is int || value is long || value is decimal)
+            {
+                return value.ToString();
+            }
+            else
+            {
+                // Для других типов данных сериализуем как строку
+                return $"\"{EscapeString(value.ToString())}\"";
+            }
         }
 
         private string EscapeString(string str)
@@ -201,14 +290,27 @@ namespace Code.Internal.Scenario
 
             return sb.ToString();
         }
-        
+
         #endregion
+
+        // Класс Parameter
+        private class Parameter<T>
+        {
+            public string Key { get; }
+            public List<T> Values { get; }
+
+            public Parameter(string key, T value)
+            {
+                Key = key;
+                Values = new List<T> { value };
+            }
+        }
     }
 }
 
 // КАК использовать
 // ReportBuilder.Instance.AddParameter("Количество участников", 5f);
-// ReportBuilder.Instance.UpdateParameter("Количество участников", 10f);
+// ReportBuilder.Instance.AddParameter("Количество участников", 10f);
 // ReportBuilder.Instance.IncrementNumericParameter("Количество участников", 2.5f);
 // float value = ReportBuilder.Instance.GetNumericParameter("Количество участников");
 // Console.WriteLine(value);
