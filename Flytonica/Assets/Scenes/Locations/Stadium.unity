@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -1298,37 +1299,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_Size.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_Size.y
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_Size.z
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 896439578349449713, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_Center.y
-      value: -15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1214858304323288940, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.244
-      objectReference: {fileID: 0}
-    - target: {fileID: 3017108938311583747, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: 'm_Materials.Array.data[2]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9fabe2b822109c7498ad6c9b1da4f0e6, type: 2}
     - target: {fileID: 3481702086013386501, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
       propertyPath: m_Name
       value: stadium
-      objectReference: {fileID: 0}
-    - target: {fileID: 3664798819754226220, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4258906841450292671, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1370,26 +1343,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5019208096360718905, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7720770060656992223, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: 'm_Materials.Array.data[2]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9fabe2b822109c7498ad6c9b1da4f0e6, type: 2}
-    - target: {fileID: 7749502534322918936, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 7861211875844507561, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: cdd41742a234ffa428bc5944dddc61e8, type: 2}
-    - target: {fileID: 9126287033954084156, guid: d2b16655f87d2314c8bb4efd4d26262c, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: cdd41742a234ffa428bc5944dddc61e8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
