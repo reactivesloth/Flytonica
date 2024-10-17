@@ -45,6 +45,14 @@ namespace Code.Internal.UserInterface.Pages
         {
             base.OnClose();
             controlrMapper.Close(true);
+            if(ReInput.userDataStore != null) ReInput.userDataStore.Save();
+        }
+
+        protected override void OnBackClick()
+        {
+            base.OnBackClick();
+            controlrMapper.Close(true);
+            if(ReInput.userDataStore != null) ReInput.userDataStore.Save();
         }
     }
 }

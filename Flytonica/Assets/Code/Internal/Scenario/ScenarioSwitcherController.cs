@@ -32,7 +32,7 @@ namespace Code.Internal.Scenario
         }
         
         public void NextOrEnd(bool isFailed = false)
-        {
+        {            
             if(_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
             

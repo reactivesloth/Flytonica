@@ -4,6 +4,7 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.UserInterface
 {
@@ -11,10 +12,10 @@ namespace Code.Internal.UserInterface
     {
         public static UIController Instance { get; private set; }
 
-        [SerializeField] private Canvas canvas;
+        [SerializeField] private GameObject mainPanel;
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
-        [SerializeField] private GameObject drawUIPanel;
+        //[SerializeField] private GameObject drawUIPanel;
 
         private void Awake()
         {
@@ -51,8 +52,8 @@ namespace Code.Internal.UserInterface
         public void Pause()
         {
             print("Pause");
-            canvas.gameObject.SetActive(true);
-            drawUIPanel.SetActive(true);
+            mainPanel.gameObject.SetActive(true);
+            //drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
             DroneInput.Instance.MenuCameraHandle(true);
             Time.timeScale = 0;
@@ -60,8 +61,8 @@ namespace Code.Internal.UserInterface
 
         public void Unpause()
         {
-            canvas.gameObject.SetActive(false);
-            drawUIPanel.SetActive(false);
+            mainPanel.gameObject.SetActive(false);
+            //drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
             DroneInput.Instance.MenuCameraHandle(false);
@@ -69,15 +70,15 @@ namespace Code.Internal.UserInterface
 
         public void OnGameStart()
         {
-            drawUIPanel.SetActive(false);
+            //drawUIPanel.SetActive(false);
             Page.CurrentPage.Close();
-            canvas.gameObject.SetActive(false);
+            mainPanel.gameObject.SetActive(false);
         }
 
         public void OnMainMenu()
         {
-            canvas.gameObject.SetActive(true);
-            drawUIPanel.SetActive(true);
+            mainPanel.gameObject.SetActive(true);
+            //drawUIPanel.SetActive(true);
             firstPage.Open(true);
         }
     }
