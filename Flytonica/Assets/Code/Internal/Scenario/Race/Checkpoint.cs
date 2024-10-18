@@ -31,6 +31,11 @@ namespace Code.Internal.Scenario.Race
         [SerializeField] private Material nextCheckpointMaterial;
         [SerializeField] private Material otherCheckpointMaterial;
 
+        private void Awake()
+        {
+            ChangeStatus(CheckpointStatus.None);
+        }
+
         public void OnTriggerEnter(Collider other)
         {
             if (!other.TryGetComponent(out DroneController drone) || drone != DroneController.Instance) 
