@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
@@ -72,7 +73,7 @@ namespace Code.Internal.Scenario.Race
                     }
                     else
                     {
-                        UpdateCheckpointsStatus();
+                        SetNextCheckpoints();
 
                         // Correct gate
                     }
@@ -84,83 +85,17 @@ namespace Code.Internal.Scenario.Race
             }
         }
 
-        private void UpdateCheckpointsStatus()
+        private void SetNextCheckpoints()
         {
-            print(_nextCheckpoint);
             checkpoints[_nextCheckpoint].ChangeStatus(CheckpointStatus.Current);
             if (_nextCheckpoint + 1 < checkpoints.Count)
                 checkpoints[_nextCheckpoint + 1].ChangeStatus(CheckpointStatus.Next);
         }
 
-        protected override void StartRace()
-        {
-            base.StartRace();
-            _time = 0;
-            _raceCondition = RaceCondition.Running;
-            DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
-
-            UpdateCheckpointsStatus();
-        }
-
-        protected override void FinishRace(bool success = true)
-        {
-            base.FinishRace(success);
-            _raceCondition = RaceCondition.Finished;
-            DroneHUD.Instance?.SetTask("Задание выполнено!");
-            DroneHUD.Instance.SetMessage(MessageType.Normal, "Поздравляем! Ваше время: " + GetResult());
-            DroneInput.Instance.MenuCameraHandle(true);
-            foreach (var cp in checkpoints)
-            {
-                cp.SetEndColor(cp.checkpointStatus == CheckpointStatus.Passed);
-            }
-            
-            PopupPanel.ConfigurePopup("Задание выполнено!", $"Подздравляем! Время выполнения: {GetResult()}",
-                null, "Выйти в главное меню", Color.red, Color.white,
-                () => { ScenarioSwitcherController.Instance.EndSession(); },
-                null, "Продолжить", Color.green, Color.black, () =>
-                {
-                    var resultBuilder = ReportBuilder.Instance;
-
-                    resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_Время", GetResult());
-                    foreach (var checkpoint in checkpoints)
-                    {
-                        var status = checkpoint.checkpointStatus == CheckpointStatus.Passed
-                            ? $"Пройдена. Отклонение от центра: {(checkpoint.deviationFromCentre * 100):F2}%"
-                            : "Не пройдена";
-                        resultBuilder.AddParameter($"Точка {checkpoints.IndexOf(checkpoint) + 1}", status);
-                    }
-
-                    ScenarioSwitcherController.Instance.NextOrEnd();
-                });
-        }
-
-        public string GetResult()
-        {
-            TimeSpan time = TimeSpan.FromSeconds(GetResultInSeconds());
-            DateTime dateTime = DateTime.Today.Add(time);
-            return dateTime.ToString("mm:ss:fff");
-        }
-
-        public float GetResultInSeconds()
-        {
-            return _time;
-        }
-
-        private void OnDrawGizmos()
-        {
-            for (int i = 0; i < checkpoints.Count; i++)
-            {
-                Gizmos.color = Color.yellow;
-                if (i < checkpoints.Count - 1)
-                    Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up,
-                        checkpoints[i + 1].transform.position + Vector3.up);
-            }
-        }
-
         public override void Initialize(ScenarioSettings scenario)
         {
             base.Initialize(scenario);
-            
+
             var objects = GetComponentsInChildren<SpawnableObject>();
             checkpoints = new List<Checkpoint>();
 
@@ -188,8 +123,89 @@ namespace Code.Internal.Scenario.Race
                     checkpoints.Insert(checkpoints.Count, o.GetComponentInChildren<Checkpoint>());
                 }
             }
+
+            SetNextCheckpoints();
+        }
+
+        protected override void StartRace()
+        {
+            base.StartRace();
+            _time = 0;
+            _raceCondition = RaceCondition.Running;
+            DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
+
+            SetNextCheckpoints();
+        }
+
+        protected override void FinishRace(bool success = true)
+        {
+            base.FinishRace(success);
+
+            _raceCondition = RaceCondition.Finished;
+            DroneHUD.Instance?.SetTask("Задание выполнено!");
+            DroneHUD.Instance?.SetMessage(MessageType.Normal, "Поздравляем! Ваше время: " + GetResult());
+            DroneInput.Instance.MenuCameraHandle(true);
+
+            foreach (var cp in checkpoints)
+            {
+                cp.SetEndColor(cp.checkpointStatus == CheckpointStatus.Passed);
+            }
+
+            PopupPanel.ConfigurePopup("Задание выполнено!", $"Подздравляем! Время выполнения: {GetResult()}",
+                null, "Выйти в главное меню", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.EndSession(); },
+                null, "Продолжить", Color.green, Color.black, () =>
+                {
+                    AddStatistic();
+
+                    ScenarioSwitcherController.Instance.NextOrEnd();
+                });
+        }
+
+        protected override void AddStatistic()
+        {
+            var passedCount = checkpoints.Count(c => c.checkpointStatus == CheckpointStatus.Passed);
+            FinalScore -= (1f - (float)passedCount / checkpoints.Count) * 100f; //Штраф за непройденные чекпоинты
+
+            base.AddStatistic();
+
+            var resultBuilder = ReportBuilder.Instance;
+
+            resultBuilder.AddParameter($"Количество пройденных чекпоинтов", $"{passedCount}/{checkpoints.Count}");
+            foreach (var checkpoint in checkpoints)
+            {
+                var status = checkpoint.checkpointStatus == CheckpointStatus.Passed
+                    ? $"Пройдена. \nОтклонение от центра: {(checkpoint.deviationFromCentre * 100):F0}%"
+                    : "Не пройдена";
+                resultBuilder.AddParameter($"Точка {checkpoints.IndexOf(checkpoint) + 1}", status);
+            }
             
-            UpdateCheckpointsStatus();
+            resultBuilder.AddParameter($"Время на взлёт", $"00:00");
+            resultBuilder.AddParameter($"Время прохождения трассы", $"00:00");
+            resultBuilder.AddParameter($"Время на посадку", $"00:00");
+        }
+
+        public string GetResult()
+        {
+            TimeSpan time = TimeSpan.FromSeconds(GetResultInSeconds());
+            DateTime dateTime = DateTime.Today.Add(time);
+            return dateTime.ToString("mm:ss:fff");
+        }
+
+        public float GetResultInSeconds()
+        {
+            return _time;
+        }
+
+        private void OnDrawGizmos()
+        {
+            for (int i = 0; i < checkpoints.Count; i++)
+            {
+                Gizmos.color = Color.yellow;
+                if (i < checkpoints.Count - 1)
+                    Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up,
+                        checkpoints[i + 1].transform.position + Vector3.up);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using FishNet;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,8 @@ namespace Code.Internal.Scenario
 
         private int _currentStatus = 0;
 
+        public float ScoreSum;
+
         private void Awake()
         {
             Instance = this;
@@ -30,8 +33,9 @@ namespace Code.Internal.Scenario
             if (!sceneSettings.isTask) return;
             ReplayController.Instance.StartRecording(sceneSettings.taskId);
             ReportBuilder.Instance.Clear();
+            ScoreSum = 0;
             
-            ReportBuilder.Instance.AddParameter("Количество участников", "1", false);;
+            ReportBuilder.Instance.AddParameter("Количество участников", "1", false);
         }
 
         public void NextOrEnd(bool isFailed = false)
@@ -83,6 +87,9 @@ namespace Code.Internal.Scenario
             /*PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
 
+            var totalScore = ScoreSum / sceneSettings.currentScenarioCollection.nestedScenarios.Count;
+            
+            ReportBuilder.Instance.AddParameter("Общая оценка задания", $"{totalScore:F0}%", false);;
             EndTask();
         }
 
@@ -132,6 +139,13 @@ namespace Code.Internal.Scenario
             form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");
 
             HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, (s, l) => Debug.LogError(s));
+        }
+
+        private float GetTotalScore()
+        {
+            float result = 0;
+
+            return result;
         }
     }
 }
