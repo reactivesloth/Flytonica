@@ -108,7 +108,6 @@ namespace Code.Internal.Drone
         public override void OnOwnershipClient(NetworkConnection prevOwner)
         {
             base.OnOwnershipClient(prevOwner);
-            print(_rigidBody);
             _rigidBody.isKinematic = !IsOwner;
         }
 
@@ -144,12 +143,7 @@ namespace Code.Internal.Drone
 
         public void ResetDrone()
         {
-            _throttle = _yaw = _roll = _pitch = 0f;
-            engineFL.UpdateEngine(_rigidBody, currentVoltage, 0, controlFl);
-            engineFR.UpdateEngine(_rigidBody, currentVoltage, 0, controlFr);
-            engineRR.UpdateEngine(_rigidBody, currentVoltage, 0, controlRl);
-            engineRL.UpdateEngine(_rigidBody, currentVoltage, 0, controlRr);
-            _isEnginesOn = false;
+            ResetEngines();
             
             var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
             _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
@@ -167,15 +161,26 @@ namespace Code.Internal.Drone
         {
             EnginesOn();
             
+            _droneInput.InputSignalLevel = DroneSensors.InputSignal;
+            
             if(!_isEnginesOn)
                 return;
             
-            _droneInput.InputSignalLevel = DroneSensors.InputSignal;
             _throttle = (_droneInput.Throttle + 1) / 2;
             _pitch = _droneInput.Pitch;
             _roll = _droneInput.Roll;
             _yaw = _droneInput.Yaw;
             
+        }
+
+        private void ResetEngines()
+        {
+            _throttle = _yaw = _roll = _pitch = 0f;
+            engineFL.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineFR.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineRR.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineRL.UpdateEngine(_rigidBody, 0, 0, 0);
+            _isEnginesOn = false;
         }
 
         private void EnginesOn()
@@ -242,6 +247,12 @@ namespace Code.Internal.Drone
 
         private void UpdateEngines()
         {
+            if (_droneInput.KILLSWITCH)
+            {
+                ResetEngines();
+                return;
+            }
+            
             if (_currentFlightSettings == null || !_isEnginesOn) return;
 
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
