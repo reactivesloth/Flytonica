@@ -1,4 +1,6 @@
 using System;
+using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using FishNet.Component.Transforming;
 using FishNet.Connection;
 using FishNet.Object;
@@ -138,6 +140,11 @@ namespace Code.Internal.Drone
             if (_droneInput.RestartButton)
             {
                 ResetDrone();
+            }
+
+            if (!_isEnginesOn)
+            {
+                DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.1f);
             }
         }
 
