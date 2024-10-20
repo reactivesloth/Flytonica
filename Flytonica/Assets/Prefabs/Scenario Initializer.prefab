@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e85865ade342bf8eb9eb2ba11d3594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectionName: "\u041A\u043E\u0434\u044B"
+  collectionName: 
   searchingObjects:
   - descriptionTask: erTIONad
     finingObject: {fileID: 7574811189198522945}
@@ -819,6 +819,10 @@ PrefabInstance:
     - target: {fileID: 6357259279653320239, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
       propertyPath: m_Name
       value: Respawn
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756516871853859291, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
+      propertyPath: icon
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -5980506559034033550, guid: 601dfb65faf48436db3877d8e7fef918, type: 3}
