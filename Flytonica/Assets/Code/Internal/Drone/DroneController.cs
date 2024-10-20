@@ -347,7 +347,7 @@ namespace Code.Internal.Drone
 
                     _transform.Rotate(
                         new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
-                        Space.Self);
+                        Space.World);
                     _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime);
                     break;
                 default:
