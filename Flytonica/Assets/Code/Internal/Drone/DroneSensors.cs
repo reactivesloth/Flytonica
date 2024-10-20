@@ -21,6 +21,12 @@ namespace Code.Internal.Drone
         public float CameraSignalModifier { get; set; } = 1f;
         public float InputSignalModifier { get; set; } = 1f;
 
+        public event Action BatteryDepleted;
+        public event Action SignalLostDueToPowerLine;
+        public event Action SignalLostDueToElectronicWarfare;
+        public event Action SignalLostDueToDistance;
+        public event Action SignalLostDueToObstacles;
+        
         public float CameraSignal => _cameraSignal;
         public float InputSignal => _inputSignal;
         public float Speed => _rigidbody.linearVelocity.magnitude * 3.6f;
@@ -108,9 +114,9 @@ namespace Code.Internal.Drone
 
         private void UpdateSignals()
         {
-            float distance = Vector3.Distance(transform.position, _playerTransform.position);
-            float maxDistance = _droneController.Settings.maxDistanceInMetres;
-            float signalStrength = 1f - distance / maxDistance;
+            var distance = Vector3.Distance(transform.position, _playerTransform.position);
+            var maxDistance = _droneController.Settings.maxDistanceInMetres;
+            var signalStrength = 1f - distance / maxDistance;
 
             _cameraSignal = signalStrength * CameraSignalModifier;
             _inputSignal = signalStrength * InputSignalModifier;

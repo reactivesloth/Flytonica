@@ -24,8 +24,8 @@ namespace Code.Internal.Scenario.Searching
             finded = false;
         }
     }
-    
-    public class ScenarioSearching : MonoBehaviour
+
+    public class ScenarioSearching : ScenarioBase
     {
         private RaceCondition _raceCondition = RaceCondition.Waiting;
 
@@ -38,15 +38,19 @@ namespace Code.Internal.Scenario.Searching
         private float _gazeTime;
         private float _gazeTimeNotResponceTime;
         private int _findedCount = 0;
-        
-        private void Update()
+
+        // Добавлены переменные для подсчета сканирований
+        private int _totalScanAttempts = 0;
+
+        protected override void Update()
         {
-            #if UNITY_EDITOR
+            base.Update();
+#if UNITY_EDITOR
             if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
             {
                 FinishRace(true);
             }
-            #endif
+#endif
             
             if (Camera.main == null) return;
             
@@ -98,6 +102,9 @@ namespace Code.Internal.Scenario.Searching
                 {
                     DroneHUD.Instance.AimElement.Flash(Color.green, 1, () =>
                     {
+                        _gazeTime = 0;
+                        _totalScanAttempts++;
+                        
                         o.finded = true;
                         _findedCount += 1;
                         DroneHUD.Instance.SetMessage(MessageType.Normal, $"Найден объект {o.descriptionTask}", 3);
@@ -135,15 +142,18 @@ namespace Code.Internal.Scenario.Searching
 
             if (!(_gazeTimeNotResponceTime > 2)) return;
             _gazeTimeNotResponceTime = 0;
-                
+
             DroneHUD.Instance.AimElement.Flash(Color.red, 1, () =>
             {
                 _gazeTime = 0;
+                _totalScanAttempts++;
             });
         }
-        
-        private void StartRace()
+
+        protected override void StartRace()
         {
+            base.StartRace();
+
             _counter = 0;
             if (timer > 0)
             {
@@ -151,49 +161,76 @@ namespace Code.Internal.Scenario.Searching
             }
 
             _raceCondition = RaceCondition.Running;
-            
-            DroneHUD.Instance.SetMessage(MessageType.Normal,$"Вам необходимо сфотографировать {searchingObjects.Count} объектов." + $"\nНайдите {collectionName}." + "\nКамера работает с 15 метров.", 3);
+
+            DroneHUD.Instance.SetMessage(MessageType.Normal,
+                $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.", 3);
             DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
-            
         }
 
-        private void FinishRace(bool success)
+        protected override void FinishRace(bool success = true)
         {
+            base.FinishRace(success);
+
             _raceCondition = RaceCondition.Finished;
             DroneHUD.Instance.ClearMessage();
             DroneHUD.Instance.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance.MenuCameraHandle(true);
 
-            string ojbectResult = string.Empty;
+            string objectResult = string.Empty;
             foreach (var searchingObject in searchingObjects)
             {
-                ojbectResult += "\n" + searchingObject.descriptionTask + (searchingObject.finded ? ": Найден" : ": Не найден");
+                objectResult += "\n" + searchingObject.descriptionTask +
+                                (searchingObject.finded ? ": Найден" : ": Не найден");
             }
-            
-            PopupPanel.ConfigurePopup(success ? "Уровень пройден!" : "Время вышло!", success ? $"Подздравляем! Вы нашли все объекты: {ojbectResult} \n Время выполнения: {GetResult(_counter)}" : $"Вы нашли [{_findedCount}/{searchingObjects.Count}] объектов: {ojbectResult}",
-                null, "Выйти в главное меню", Color.red, Color.white, () =>
-                {
-                    ScenarioSwitcherController.Instance.EndSession();
-                }, 
+
+            string title = success ? "Уровень пройден!" : "Время вышло!";
+            string message = success
+                ? $"Поздравляем! Вы нашли все объекты:{objectResult}\nВремя выполнения: {GetResult(_counter)}\n" +
+                  $"Общее количество попыток сканирования: {_totalScanAttempts}\n"
+                : $"Вы нашли [{_findedCount}/{searchingObjects.Count}] объектов:{objectResult}\n" +
+                  $"Общее количество попыток сканирования: {_totalScanAttempts}\n";
+
+            PopupPanel.ConfigurePopup(title, message,
+                null, "Выйти в главное меню", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.EndSession(); },
                 null, "Продолжить", Color.green, Color.black, () =>
                 {
-                    var resultBuilder = ReportBuilder.Instance;
-
-                    resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_Время", GetResult(_counter));
-                    foreach (var searchingObject in searchingObjects)
-                    {
-                        resultBuilder.AddParameter($"{SceneManager.GetActiveScene().name}_" + searchingObject.finingObject.name.Replace("(Clone)", ""), searchingObject.finded ? "Найден" : "Не найден");
-                    }
-                    
+                    AddStatistic();
                     ScenarioSwitcherController.Instance.NextOrEnd();
                 });
         }
-        
+
+        protected override void AddStatistic()
+        {
+            FinalScore -= (_totalScanAttempts - _findedCount) * 5f; // Штраф за дополнительные сканирования
+            FinalScore -= (1f - (float)_findedCount / searchingObjects.Count) * 100; // Штраф за ненайденные объекты
+
+            float penaltyTime = 0;
+            if (TotalTime > 15f * 60f)
+                penaltyTime = 20;
+            else if (TotalTime > 25f * 60f)
+                penaltyTime = 50;
+            FinalScore -= penaltyTime;
+
+            base.AddStatistic();
+
+            var resultBuilder = ReportBuilder.Instance;
+
+            resultBuilder.AddParameter($"Количество попыток сканирования", _totalScanAttempts.ToString());
+            resultBuilder.AddParameter($"Количество найденных объектов", $"{_findedCount}/{searchingObjects.Count}");
+
+            foreach (var searchingObject in searchingObjects)
+            {
+                string objectName = searchingObject.finingObject.name.Replace("(Clone)", "");
+                resultBuilder.AddParameter($"{objectName}", searchingObject.finded ? "Найден" : "Не найден");
+            }
+        }
+
         private void UpdateTask()
         {
             DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
         }
-        
+
         public string GetResult(float t)
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(t);
@@ -201,17 +238,18 @@ namespace Code.Internal.Scenario.Searching
             return dateTime.ToString("mm:ss");
         }
 
-        public void Initialize()
+        public override void Initialize(ScenarioSettings scenario)
         {
+            base.Initialize(scenario);
             var objects = GetComponentsInChildren<SpawnableObject>();
             searchingObjects = new List<SearchingObject>();
 
             foreach (var o in objects)
             {
-                 if (o.Type == MapEditorObjectType.SearchingObject)
-                     searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
+                if (o.Type == MapEditorObjectType.SearchingObject)
+                    searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
             }
-            
+
             if (_raceCondition == RaceCondition.Waiting)
             {
                 StartRace();

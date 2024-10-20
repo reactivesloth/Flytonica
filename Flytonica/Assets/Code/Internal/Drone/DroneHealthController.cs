@@ -23,6 +23,8 @@ namespace Code.Internal.Drone
 
         private DroneSettings Settings => GetComponent<DroneController>().Settings;
 
+        public event Action OnObjectCollision, OnMenCollision, OnAnimalCollision, OnBirdCollision;
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -39,6 +41,9 @@ namespace Code.Internal.Drone
             {
                 var damage = CalculateDamage(_rigidbody.linearVelocity.magnitude * 3.6f);
                 ApplyDamage(damage * _damageMultiplier);
+                
+                //TODO: вызов событий столкновения с различными объектами для статистики
+                OnObjectCollision?.Invoke();
             }
         }
         

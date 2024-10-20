@@ -3,11 +3,7 @@ using FishNet.Component.Transforming;
 using FishNet.Connection;
 using FishNet.Object;
 using Unity.VisualScripting;
-using Code.Internal.Input;
-using Code.Internal.UserInterface;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace Code.Internal.Drone
 {
@@ -17,31 +13,32 @@ namespace Code.Internal.Drone
         [SerializeField] private DroneSettings droneSettings;
 
         [SerializeField] private DroneCamera droneCamera;
-        
+
         [SerializeField] private DroneEngine engineFL;
         [SerializeField] private DroneEngine engineFR;
         [SerializeField] private DroneEngine engineRL;
         [SerializeField] private DroneEngine engineRR;
-        
+
         private Transform _transform;
         private Rigidbody _rigidBody;
-        
+
         private DroneInput _droneInput;
         private int _currentFlightMode;
         private DroneFlightSettings _currentFlightSettings;
-        
+
         private float _throttle = 0;
         private float _pitch = 0;
         private float _roll = 0;
         private float _yaw = 0;
 
+        private bool _isEnginesOn = false;
+
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
 
-        [Range(2.4f, 3.8f)]
-        public float currentVoltage = 3.8f;
+        [Range(2.4f, 3.8f)] public float currentVoltage = 3.8f;
 
         public DroneSettings Settings => droneSettings;
-        
+
         /// <summary>
         /// The drone of a local player
         /// </summary>
@@ -50,7 +47,7 @@ namespace Code.Internal.Drone
         private float batteryLevelPercent = 1;
         private float deltaSpd;
         private float throttleHold;
-        
+
         public DroneSensors DroneSensors { get; private set; }
 
         protected override void OnValidate()
@@ -59,7 +56,7 @@ namespace Code.Internal.Drone
             _rigidBody = GetComponent<Rigidbody>();
             InitializeDrone();
         }
-        
+
         private void Awake()
         {
             _rigidBody = GetComponent<Rigidbody>();
@@ -111,32 +108,31 @@ namespace Code.Internal.Drone
         public override void OnOwnershipClient(NetworkConnection prevOwner)
         {
             base.OnOwnershipClient(prevOwner);
-            print(_rigidBody);
             _rigidBody.isKinematic = !IsOwner;
         }
 
         private void Update()
         {
-            if(!_droneInput)
+            if (!_droneInput)
                 _droneInput = DroneInput.Instance;
-            
-            if(!_droneInput || !_droneInput.IsOwner)
+
+            if (!_droneInput || !_droneInput.IsOwner)
                 return;
-            
+
             if (Instance == null)
                 Instance = this;
-            
+
             UpdateInput();
-            
+
             if (_currentFlightSettings == null)
                 _currentFlightSettings = droneSettings.currentFlightMode;
-            
+
             if (_droneInput.DroneMode)
             {
                 UpdateFlightMode();
             }
-            
-            if(_droneInput.DroneIrMode)
+
+            if (_droneInput.DroneIrMode)
                 droneCamera.SetIrMode();
 
             if (_droneInput.RestartButton)
@@ -147,6 +143,8 @@ namespace Code.Internal.Drone
 
         public void ResetDrone()
         {
+            ResetEngines();
+            
             var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
             _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
             _rigidBody.linearVelocity = Vector3.zero;
@@ -161,11 +159,75 @@ namespace Code.Internal.Drone
 
         private void UpdateInput()
         {
+            EnginesOn();
+            
             _droneInput.InputSignalLevel = DroneSensors.InputSignal;
+            
+            if(!_isEnginesOn)
+                return;
+            
             _throttle = (_droneInput.Throttle + 1) / 2;
             _pitch = _droneInput.Pitch;
             _roll = _droneInput.Roll;
             _yaw = _droneInput.Yaw;
+            
+        }
+
+        private void ResetEngines()
+        {
+            _throttle = _yaw = _roll = _pitch = 0f;
+            engineFL.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineFR.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineRR.UpdateEngine(_rigidBody, 0, 0, 0);
+            engineRL.UpdateEngine(_rigidBody, 0, 0, 0);
+            _isEnginesOn = false;
+        }
+
+        private void EnginesOn()
+        {
+            if (_isEnginesOn)
+                return;
+
+            var leftStickVector = new Vector2(_droneInput.Yaw, _droneInput.Throttle);
+            var rightStickVector = new Vector2(_droneInput.Roll, _droneInput.Pitch);
+
+            // Вычисляем длины векторов
+            float leftStickMagnitude = leftStickVector.magnitude;
+            float rightStickMagnitude = rightStickVector.magnitude;
+
+            // Проверяем, что длина каждого вектора больше 1
+            if (leftStickMagnitude > .9f && rightStickMagnitude > .9f)
+            {
+                // Вычисляем углы векторов в градусах
+                float leftStickAngle = MathF.Atan2(leftStickVector.y, leftStickVector.x) * (180 / MathF.PI);
+                float rightStickAngle = MathF.Atan2(rightStickVector.y, rightStickVector.x) * (180 / MathF.PI);
+
+                // Нормализуем углы в диапазон [0, 360)
+                leftStickAngle = (leftStickAngle + 360) % 360;
+                rightStickAngle = (rightStickAngle + 360) % 360;
+
+                // Целевые углы для нижнего правого и нижнего левого положений
+                float leftStickTargetAngle = 315f; // Нижний правый угол
+                float rightStickTargetAngle = 225f; // Нижний левый угол
+                float angleTolerance = 25f; // Допустимое отклонение в градусах
+
+                // Проверяем, находится ли угол стика в допустимом диапазоне
+                bool isLeftStickInPosition = MathF.Abs(DeltaAngle(leftStickAngle, leftStickTargetAngle)) <= angleTolerance;
+                bool isRightStickInPosition = MathF.Abs(DeltaAngle(rightStickAngle, rightStickTargetAngle)) <= angleTolerance;
+
+                if (isLeftStickInPosition && isRightStickInPosition)
+                {
+                    // Условия выполнены
+                    _isEnginesOn = true;
+                }
+            }
+        }
+
+        // Функция для вычисления минимальной разницы между двумя углами
+        private float DeltaAngle(float current, float target)
+        {
+            float delta = (target - current + 180) % 360 - 180;
+            return delta < -180 ? delta + 360 : delta;
         }
 
         private void UpdateFlightMode()
@@ -185,7 +247,13 @@ namespace Code.Internal.Drone
 
         private void UpdateEngines()
         {
-            if (_currentFlightSettings == null) return;
+            if (_droneInput.KILLSWITCH)
+            {
+                ResetEngines();
+                return;
+            }
+            
+            if (_currentFlightSettings == null || !_isEnginesOn) return;
 
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
             _rigidBody.linearDamping = _rigidBody.linearVelocity.magnitude > 0.2f ? 0.5f : 0;
@@ -195,14 +263,15 @@ namespace Code.Internal.Drone
             controlRl = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? 0 : -_yaw) - (_roll > 0 ? 0 : -_roll);
             controlRr = (_pitch > 0 ? 0 : -_pitch) - (_yaw > 0 ? _yaw : 0) - (_roll > 0 ? _roll : 0);
             acceleration = Mathf.Clamp(acceleration, 0, 1);
-            
+
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
-            { 
+            {
                 var landingGear = Physics.Raycast(_transform.position, Vector3.down, out _, 1);
                 acceleration += _droneInput.Throttle switch
                 {
                     > 0.2f when _rigidBody.linearVelocity.y < _currentFlightSettings.maxAscendingSpeed => 0.1f,
-                    < -0.2f when _rigidBody.linearVelocity.y > (landingGear ? -1 : -_currentFlightSettings.maxDescendingSpeed) => -0.1f,
+                    < -0.2f when _rigidBody.linearVelocity.y >
+                                 (landingGear ? -1 : -_currentFlightSettings.maxDescendingSpeed) => -0.1f,
                     _ => _rigidBody.linearVelocity.y > 0 ? -0.1f : 0.1f
                 };
                 acceleration = Mathf.Clamp(acceleration, 0, 1);
@@ -222,17 +291,18 @@ namespace Code.Internal.Drone
 
         private void CalculateBattery()
         {
-            currentVoltage -= droneSettings.batteryEnergyWh / 3600 / droneSettings.bateteryCellCount * Math.Min(0.1f, acceleration)* Time.deltaTime;
+            currentVoltage -= droneSettings.batteryEnergyWh / 3600 / droneSettings.bateteryCellCount *
+                              Math.Min(0.1f, acceleration) * Time.deltaTime;
             float batteryLevel = droneSettings.bateteryCellCount * currentVoltage;
             float minBatteryLevel = droneSettings.bateteryCellCount * droneSettings.minBatteryCellVoltage;
             float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
             batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);
         }
-        
+
         private void UpdateRotation()
         {
-            if (_currentFlightSettings == null) return;
-            
+            if (_currentFlightSettings == null || !_isEnginesOn) return;
+
             Quaternion rotation;
             var eulerAngles = _transform.eulerAngles;
             var rotationMagnitude = new Vector2(_pitch, _roll).magnitude;
@@ -243,26 +313,37 @@ namespace Code.Internal.Drone
                 case ControlType.MIXED when
                     rotationMagnitude < _currentFlightSettings.axisModeChangeValue:
                 {
-                    rotation = rotationMagnitude > 0.01f ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle) : Quaternion.Euler(0, eulerAngles.y, 0);
-                    _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                    rotation = rotationMagnitude > 0.01f
+                        ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y,
+                            -_roll * _currentFlightSettings.maxStabilizedAngle)
+                        : Quaternion.Euler(0, eulerAngles.y, 0);
+                    _transform.Rotate(
+                        new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
+                        Space.Self);
                     _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime * 5);
                     break;
                 }
                 case ControlType.HOLD:
-                    if (rotationMagnitude > 0.1f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed)
+                    if (rotationMagnitude > 0.1f &&
+                        _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed)
                     {
-                        rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y, -_roll * _currentFlightSettings.maxStabilizedAngle);
+                        rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y,
+                            -_roll * _currentFlightSettings.maxStabilizedAngle);
                     }
                     else
                     {
                         rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
                     }
 
-                    _transform.Rotate(new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                    _transform.Rotate(
+                        new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
+                        Space.Self);
                     _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime);
                     break;
                 default:
-                    _transform.Rotate(new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime), Space.Self);
+                    _transform.Rotate(
+                        new Vector3(_pitch, _yaw, -_roll) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
+                        Space.Self);
                     break;
             }
         }
@@ -271,7 +352,7 @@ namespace Code.Internal.Drone
         {
             return (engineFL.GetRPM() + engineFR.GetRPM() + engineRL.GetRPM() + engineRR.GetRPM()) / 4;
         }
-        
+
         public float GetMaxRPM()
         {
             return (engineFL.MaxRPM + engineFR.MaxRPM + engineRL.MaxRPM + engineRR.MaxRPM) / 4;
@@ -280,7 +361,7 @@ namespace Code.Internal.Drone
         public void WindEffect(Vector3 direction, float windSpeed)
         {
             if (_rigidBody == null) return;
-    
+
             // Плотность воздуха при нормальных условиях (кг/м³)
             const float airDensity = 1.225f;
 
@@ -302,6 +383,5 @@ namespace Code.Internal.Drone
             // Применяем силу ветра к Rigidbody дрона
             _rigidBody.AddForce(windForce, ForceMode.Force);
         }
-
     }
 }

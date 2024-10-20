@@ -21,6 +21,7 @@ namespace Code.Internal.Drone
         public bool DroneIrMode = false;
         public bool DroneMode = false;
         public bool DISARM = true;
+        public bool KILLSWITCH = false;
         public bool RestartButton = false;
 
         public bool UseInput = true;
@@ -63,8 +64,13 @@ namespace Code.Internal.Drone
 
             if (Instance == null)
                 Instance = this;
-
-            if (UseInput && !(InputSignalLevel <= 0))
+            
+            DISARM = _player.GetButton("DISARM");
+            KILLSWITCH = _player.GetButton("Killswitch");
+            if (KILLSWITCH)
+                DISARM = true;
+            
+            if (UseInput && !(InputSignalLevel <= 0) && !DISARM)
             {
                 if (_player.controllers.joystickCount > 0)
                     UpdateJoystick();
@@ -111,7 +117,7 @@ namespace Code.Internal.Drone
                     DISARM = false;
                 }
 
-                DISARM = !_player.GetButton("DISARM");
+                
             }
 
             if (!Application.isFocused) return;
