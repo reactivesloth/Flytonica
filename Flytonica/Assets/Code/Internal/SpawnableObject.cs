@@ -15,7 +15,9 @@ namespace Code.Internal
     
     public class SpawnableObject : MonoBehaviour
     {
+        public bool selected;
         public MapEditorObjectType Type;
         public Texture2D icon;
+        public string displayName;
     }
 }

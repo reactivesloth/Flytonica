@@ -1,3 +1,4 @@
+using System;
 using Code.Internal.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
@@ -54,12 +55,13 @@ namespace Code.Internal.MapEditor
         }
 
         public void InitializeLibraryPanel (MapEditorObjectType libraryPanelType) {
-            MapEditor.Instance.SelectEditorObject(null);
+            MapEditor.Instance.SelectObjectToSpawn(null);
             libraryPanel.Setup(libraryPanelType);
         }
 
-        public void InitializeSpawnedObjectsPanel () {
-            spawnedObjectsPanel.Setup ();
+        public void UpdateHierarchy(GameObject selected = null)
+        {
+            spawnedObjectsPanel.Setup (selected);
         }
     }
 }

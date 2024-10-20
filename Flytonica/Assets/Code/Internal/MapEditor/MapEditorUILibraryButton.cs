@@ -32,7 +32,7 @@ namespace Code.Internal.MapEditor
             _image.texture = _texture2D;
             
             _button.onClick.RemoveAllListeners();
-            _button.onClick.AddListener(() => { MapEditor.Instance.SelectEditorObject(prefab);});
+            _button.onClick.AddListener(() => { MapEditor.Instance.SelectObjectToSpawn(prefab);});
         }
     }
 }

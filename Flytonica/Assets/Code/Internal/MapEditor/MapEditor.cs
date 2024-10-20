@@ -18,7 +18,8 @@ namespace Code.Internal.MapEditor
         private bool _isEnabled;
         private Camera _camera;
         private GameObject _gizmo;
-        
+        [SerializeField] private Transform spawnedObjectsContainer;
+
         public static MapEditor Instance { get; private set; }
 
         private void Awake()
@@ -83,7 +84,7 @@ namespace Code.Internal.MapEditor
                             var tr = hit.transform.root;
                             if (tr.GetComponent<SpawnableObject>())
                             {
-                                currentSelectedEditorObject = tr.gameObject;
+                                SelectObjectToEdit(tr.gameObject);
                             }
                             else
                             {
@@ -101,35 +102,12 @@ namespace Code.Internal.MapEditor
                                     if (_gizmo != null)
                                         Destroy(_gizmo);
 
-                                    currentSelectedEditorObject = tr.gameObject;
+                                    SelectObjectToEdit(tr.gameObject);
                                 }
                                 // else
                                 // {
-                                //     currentSelectedEditorObject = null;
+                                //     SelectObjectToEdit(null);
                                 // }
-                            }
-                        }
-                    }
-                }
-
-                else if (UnityEngine.Input.GetKeyDown(KeyCode.Delete))
-                {
-                    if (Physics.Raycast(ray, out RaycastHit hit))
-                    {
-                        var tr = hit.transform.root;
-                        if (tr.GetComponent<SpawnableObject>())
-                        {
-                            RemoveObject(tr);
-                        }
-                        else
-                        {
-                            foreach (Transform t in tr)
-                            {
-                                if (t.GetComponent<SpawnableObject>())
-                                {
-                                    RemoveObject(tr);
-                                    break;
-                                }
                             }
                         }
                     }
@@ -143,11 +121,17 @@ namespace Code.Internal.MapEditor
                         if (_gizmo != null) Destroy(_gizmo);
                         _gizmo = Instantiate(mapEditorGizmo);
                         GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
+                        MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
+                    }
+
+                    if (UnityEngine.Input.GetKeyDown(KeyCode.Delete))
+                    {
+                        RemoveObject(currentSelectedEditorObject.GetComponent<SpawnableObject>().gameObject);
                     }
 
                     if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
                     {
-                        currentSelectedEditorObject = null;
+                        SelectObjectToEdit(null);
                     }
                 }
 
@@ -159,16 +143,32 @@ namespace Code.Internal.MapEditor
             }
         }
 
-        public void SelectEditorObject(GameObject obj)
+        public void SelectObjectToEdit (GameObject obj) {
+            if (obj == null) {
+                if (_gizmo == null)
+                {
+                    if (_gizmo != null) Destroy(_gizmo);
+                    _gizmo = Instantiate(mapEditorGizmo);
+                    GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
+                }
+
+                currentSelectedEditorObject = null;
+                return;
+            }
+
+            currentSelectedEditorObject = obj;
+        }
+
+        public void SelectObjectToSpawn (GameObject obj)
         {
             if (obj == null)
             {
                 currentObjectToSpawn = null;
-                currentSelectedEditorObject = null;
                 return;
             }
             
             currentObjectToSpawn = obj;
+            MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
         }
 
         public void AddObject(Vector3 position)
@@ -191,13 +191,16 @@ namespace Code.Internal.MapEditor
                     }
             }
 
-            var newObject = Instantiate(currentObjectToSpawn, position, Quaternion.identity);
-            currentSelectedEditorObject = newObject;
+            var newObject = Instantiate(currentObjectToSpawn, position, Quaternion.identity, spawnedObjectsContainer);
+            SelectObjectToEdit(newObject);
+            SelectObjectToSpawn(null);
+            MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
         }
 
-        public void RemoveObject(Transform t)
+        public void RemoveObject(GameObject go)
         {
-            Destroy(t.gameObject);
+            Destroy(go);
+            MapEditorUI.Instance.UpdateHierarchy (null);
         }
     }
 }
