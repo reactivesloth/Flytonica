@@ -153,6 +153,9 @@ namespace Code.Internal.Drone
 
         private void FixedUpdate()
         {
+            if (!_droneInput || !_droneInput.IsOwner)
+                return;
+
             UpdateEngines();
             UpdateRotation();
         }
