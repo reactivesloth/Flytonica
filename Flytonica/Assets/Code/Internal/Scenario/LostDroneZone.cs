@@ -13,7 +13,7 @@ namespace Code.Internal.Scenario
         [SerializeField] private DroneTriggerCallback warning, danger;
         [Range(0, 1)] [SerializeField] private float cameraLostPercent = 0.5f, controlLostPercent = 0.5f;
 
-        private DroneSensors CurrentDroneSensors => DroneController.Instance.DroneSensors;
+        private DroneSensors CurrentDroneSensors => DroneController.Instance?.DroneSensors;
 
         private void Awake()
         {
@@ -34,6 +34,8 @@ namespace Code.Internal.Scenario
         {
             if (DroneHUD.Instance != null)
                 DroneHUD.Instance.ClearMessage();
+            if(!DroneController.Instance)
+                return;
             CurrentDroneSensors.CameraSignalModifier = 1;
             CurrentDroneSensors.InputSignalModifier = 1;
         }
@@ -47,6 +49,9 @@ namespace Code.Internal.Scenario
 
         private void OnDangerZoneExit()
         {
+            if(!DroneController.Instance)
+                return;
+            
             if(warning.IsDroneInZone)
                 OnWarningZoneEnter();
             else
@@ -55,6 +60,9 @@ namespace Code.Internal.Scenario
 
         private void RandomEffect(float targetValue = 0)
         {
+            if(!DroneController.Instance)
+                return;
+            
             if (Random.value < cameraLostPercent)
                 CurrentDroneSensors.CameraSignalModifier = targetValue;
             
