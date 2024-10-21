@@ -56,6 +56,7 @@ namespace Code.Internal.MapEditor
 
         public void InitializeLibraryPanel (MapEditorObjectType libraryPanelType) {
             MapEditor.Instance.SelectObjectToSpawn(null);
+            MapEditor.Instance.SelectObjectToEdit(null);
             libraryPanel.Setup(libraryPanelType);
         }
 

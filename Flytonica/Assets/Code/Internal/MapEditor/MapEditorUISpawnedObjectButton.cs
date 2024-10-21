@@ -11,6 +11,8 @@ namespace Code.Internal.MapEditor
     {
         [SerializeField] private TextMeshProUGUI _text;
         private Button _button;
+
+        [SerializeField] Button buttonDelete;
         [SerializeField] Button buttonUp;
         [SerializeField] Button buttonDown;
         
@@ -25,8 +27,14 @@ namespace Code.Internal.MapEditor
             _button.onClick.AddListener(() => { MapEditor.Instance.SelectObjectToEdit(obj.gameObject);});
             _text.text = obj.displayName;
 
+            buttonDelete.gameObject.SetActive(obj.selected);
             buttonDown.gameObject.SetActive(obj.selected);
             buttonUp.gameObject.SetActive(obj.selected);
+
+            if (obj.selected) {
+                buttonDelete.onClick.RemoveAllListeners ();
+                buttonDelete.onClick.AddListener( () => {MapEditor.Instance.RemoveCurrentSelectedObject ();});
+            }
         }
     }
 }

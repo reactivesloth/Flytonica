@@ -681,8 +681,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18fffad203ab416fa45612f82db6aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selected: 0
   Type: 4
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 54db55d537a71434fb04c26af7a03d54, type: 3}
+  displayName: "\u0412\u043E\u0440\u043E\u0442\u0430 \u0444\u0438\u0433\u0443\u0440\u0430
+    \u043F\u044F\u0442\u0438\u0443\u0433\u043E\u043B\u044C\u043D\u0438\u043A"
 --- !u!114 &-3060043755190156762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -839,6 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointType: 1
+  deviationFromCentre: -1
   renderer: {fileID: 23075832836850130}
   currentCheckpointMaterial: {fileID: 2100000, guid: 041b66a412c6f0e46a9f4125730cbde4, type: 2}
   nextCheckpointMaterial: {fileID: 2100000, guid: 8d2190072ce741b4d8a3813473657418, type: 2}

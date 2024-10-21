@@ -75,55 +75,24 @@ namespace Code.Internal.MapEditor
             {
                 Ray ray = _camera.ScreenPointToRay(UnityEngine.Input.mousePosition);
 
-                if (UnityEngine.Input.GetMouseButtonDown(0) && currentObjectToSpawn != null && !UnityEngine.Input.GetMouseButton(1))
+                if (UnityEngine.Input.GetMouseButtonDown(0) && !UnityEngine.Input.GetMouseButton(1))
                 {
                     if (Physics.Raycast(ray, out RaycastHit hit))
                     {
-                        if (currentSelectedEditorObject == null)
+                        var tr = hit.transform;
+                        if (tr.GetComponentInParent<SpawnableObject>())
                         {
-                            var tr = hit.transform.root;
-                            if (tr.GetComponent<SpawnableObject>())
-                            {
-                                SelectObjectToEdit(tr.gameObject);
-                            }
-                            else
-                            {
-                                AddObject(hit.point);
-                            }
+                            SelectObjectToEdit(tr.GetComponentInParent<SpawnableObject>().gameObject);
                         }
-                        else
+                        else if (currentObjectToSpawn != null)
                         {
-                            var tr = hit.transform.root;
-
-                            if (currentSelectedEditorObject != tr.gameObject)
-                            {
-                                if (tr.GetComponent<SpawnableObject>())
-                                {
-                                    if (_gizmo != null)
-                                        Destroy(_gizmo);
-
-                                    SelectObjectToEdit(tr.gameObject);
-                                }
-                                // else
-                                // {
-                                //     SelectObjectToEdit(null);
-                                // }
-                            }
+                            AddObject(hit.point);
                         }
                     }
                 }
 
                 if (currentSelectedEditorObject != null)
                 {
-                    MapEditorUI.Instance.CloseLibraryPanel();
-                    if (_gizmo == null)
-                    {
-                        if (_gizmo != null) Destroy(_gizmo);
-                        _gizmo = Instantiate(mapEditorGizmo);
-                        GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
-                        MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
-                    }
-
                     if (UnityEngine.Input.GetKeyDown(KeyCode.Delete))
                     {
                         RemoveObject(currentSelectedEditorObject.GetComponent<SpawnableObject>().gameObject);
@@ -134,41 +103,28 @@ namespace Code.Internal.MapEditor
                         SelectObjectToEdit(null);
                     }
                 }
-
-                else
-                {
-                    if (_gizmo != null) 
-                        Destroy(_gizmo);
-                }
             }
         }
 
         public void SelectObjectToEdit (GameObject obj) {
-            if (obj == null) {
-                if (_gizmo == null)
-                {
-                    if (_gizmo != null) Destroy(_gizmo);
-                    _gizmo = Instantiate(mapEditorGizmo);
-                    GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
-                }
-
-                currentSelectedEditorObject = null;
-                return;
-            }
+            SelectObjectToSpawn(null);
+            
+            if (_gizmo != null) DestroyImmediate(_gizmo);
 
             currentSelectedEditorObject = obj;
+
+            if (currentSelectedEditorObject != null) {
+                _gizmo = Instantiate(mapEditorGizmo);
+                GizmoController.Instance.SelectTarget(currentSelectedEditorObject);
+                MapEditorUI.Instance.CloseLibraryPanel ();
+            }
+
+            MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
         }
 
         public void SelectObjectToSpawn (GameObject obj)
         {
-            if (obj == null)
-            {
-                currentObjectToSpawn = null;
-                return;
-            }
-            
             currentObjectToSpawn = obj;
-            MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
         }
 
         public void AddObject(Vector3 position)
@@ -193,14 +149,16 @@ namespace Code.Internal.MapEditor
 
             var newObject = Instantiate(currentObjectToSpawn, position, Quaternion.identity, spawnedObjectsContainer);
             SelectObjectToEdit(newObject);
-            SelectObjectToSpawn(null);
-            MapEditorUI.Instance.UpdateHierarchy (currentSelectedEditorObject);
         }
 
         public void RemoveObject(GameObject go)
         {
-            Destroy(go);
-            MapEditorUI.Instance.UpdateHierarchy (null);
+            DestroyImmediate(go);
+            SelectObjectToEdit(null);
+        }
+
+        public void RemoveCurrentSelectedObject () {
+            RemoveObject (currentSelectedEditorObject);
         }
     }
 }
