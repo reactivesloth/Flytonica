@@ -1,7 +1,6 @@
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface.Pages;
 using TransformGizmos;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,21 +32,47 @@ namespace Code.Internal.MapEditor
                 Destroy(gameObject);
             }
         }
-        
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
         public void LoadMapEditor(int sceneIndex, ScenarioType type, ConstructorScenarioPage constructor)
         {
             _constructor = constructor;
             _savedSceneName = _mapsSettings.maps[sceneIndex].loadingSceneName;
             _isEnabled = true;
-            _camera = Camera.main;
-            if (_camera != null)
-            {
-                _camera.transform.SetPositionAndRotation(new Vector3(0, 45, 0), Quaternion.Euler(90, 0, 0));
-                _camera.gameObject.AddComponent<MapEditorCamera>();
-            }
 
             SceneManager.LoadScene(_savedSceneName, LoadSceneMode.Additive);
             MapEditorUI.Instance.InitializeMainPanel(type);
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == _savedSceneName)
+            {
+                var objects = FindObjectsOfType<SpawnableObject>();
+                foreach (var o in objects)
+                {
+                    o.transform.SetParent(spawnedObjectsContainer);
+                }
+            
+                MapEditorUI.Instance.UpdateHierarchy (null);
+                
+                _camera = Camera.main;
+                if (_camera != null)
+                {
+                    var cameraSpawnPoint = GameObject.Find ("MapEditorCameraSpawnPoint").transform;
+                    _camera.transform.SetPositionAndRotation(cameraSpawnPoint.position, cameraSpawnPoint.rotation);
+                    _camera.gameObject.AddComponent<MapEditorCamera>();
+                }
+            }
         }
 
         public void UnloadMapEditor()
@@ -58,9 +83,10 @@ namespace Code.Internal.MapEditor
             {
                 Destroy(o.gameObject);
             }
-            
+
             SceneManager.UnloadSceneAsync(_savedSceneName);
             _isEnabled = false;
+            if (_camera == null) return;
             if (_camera.gameObject.GetComponent<MapEditorCamera>() != null)
                 Destroy(_camera.GetComponent<MapEditorCamera>());
             _camera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
