@@ -6,7 +6,6 @@ using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Code.Internal.Scenario.Searching
 {
@@ -87,11 +86,6 @@ namespace Code.Internal.Scenario.Searching
                 }
             }
             CancelFinding();
-            
-            if (timer > 0)
-                DroneHUD.Instance?.SetTime(GetResult (_timer));
-            else
-                DroneHUD.Instance?.SetTime(GetResult (_counter));
         }
 
         private void FindObject(SearchingObject o)
@@ -185,7 +179,7 @@ namespace Code.Internal.Scenario.Searching
 
             string title = success ? "Уровень пройден!" : "Время вышло!";
             string message = success
-                ? $"Поздравляем! Вы нашли все объекты:{objectResult}\nВремя выполнения: {GetResult(_counter)}\n" +
+                ? $"Поздравляем! Вы нашли все объекты:{objectResult}\nВремя выполнения: {GetTimeWithMs(_counter)}\n" +
                   $"Общее количество попыток сканирования: {_totalScanAttempts}\n"
                 : $"Вы нашли [{_findedCount}/{searchingObjects.Count}] объектов:{objectResult}\n" +
                   $"Общее количество попыток сканирования: {_totalScanAttempts}\n";
@@ -229,13 +223,6 @@ namespace Code.Internal.Scenario.Searching
         private void UpdateTask()
         {
             DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
-        }
-
-        public string GetResult(float t)
-        {
-            TimeSpan timeSpan = TimeSpan.FromSeconds(t);
-            DateTime dateTime = DateTime.Today.Add(timeSpan);
-            return dateTime.ToString("mm:ss");
         }
 
         public override void Initialize(ScenarioSettings scenario)
