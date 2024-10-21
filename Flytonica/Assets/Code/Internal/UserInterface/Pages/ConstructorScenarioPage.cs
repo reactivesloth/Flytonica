@@ -53,12 +53,12 @@ namespace Code.Internal.UserInterface.Pages
         private void OnLeaveButtonClick()
         {
             PopupPanel.ConfigurePopup("Выйти в меню?", "Вы уверены, что хотите удалить редактируемый сценарий? Прогресс нельзя будет восстановить.", null, "Вернуться в меню", Color.red, Color.white,
-                () => { scenariosManagementPage?.Open();}, null, "Продолжить редактирование", Color.green, Color.black, () => {});
+                () => { scenariosManagementPage?.Open();}, null, "Продолжить", Color.green, Color.black, () => {});
         }
         
         private void OnUploadButtonClick()
         {
-            PopupPanel.ConfigurePopup("Сохранить сценарий?", "Сценарий будет опубликован и доступен для назаначения в заданиях.", null, "Продолжить редактирование", Color.red, Color.white,
+            PopupPanel.ConfigurePopup("Сохранить сценарий?", "Сценарий будет опубликован и доступен для назаначения в заданиях.", null, "Продолжить", Color.red, Color.white,
                 () =>
                 {
                 }, null, "Сохранить сценарий", Color.green, Color.black,

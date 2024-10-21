@@ -1,5 +1,6 @@
 using Code.Internal.SceneManagement;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Code.Internal.MapEditor
@@ -15,6 +16,7 @@ namespace Code.Internal.MapEditor
         [SerializeField] private Button racingGatesButton;
         [SerializeField] private Button transportObjectsButton;
         [SerializeField] private Button searchingObjectsButton;
+        [SerializeField] private Button searchingIrObjectsButton;
 
         private void Awake()
         {
@@ -25,6 +27,7 @@ namespace Code.Internal.MapEditor
             racingGatesButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.RacingGate);});
             transportObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.TransportObject);});
             searchingObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingObject);});
+            searchingIrObjectsButton.onClick.AddListener(() => { MapEditorUI.Instance.InitializeLibraryPanel(MapEditorObjectType.SearchingIrObject);});
         }
 
         public void ClosePanel ()
@@ -37,6 +40,7 @@ namespace Code.Internal.MapEditor
             racingGatesButton.gameObject.SetActive(false);
             transportObjectsButton.gameObject.SetActive(false);
             searchingObjectsButton.gameObject.SetActive(false);
+            searchingIrObjectsButton.gameObject.SetActive(false);
         }
         
         public void Setup(ScenarioType scenarioType)
@@ -65,7 +69,7 @@ namespace Code.Internal.MapEditor
                     searchingObjectsButton.gameObject.SetActive(true);
                     break;
                 case ScenarioType.SearchingWithIR:
-                    searchingObjectsButton.gameObject.SetActive(true);
+                    searchingIrObjectsButton.gameObject.SetActive(true);
                     break;
                 default:
                     break;
