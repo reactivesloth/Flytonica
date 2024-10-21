@@ -10,7 +10,8 @@ namespace Code.Internal
         FinishGate = 3,
         RacingGate = 4,
         TransportObject = 5,
-        SearchingObject = 6
+        SearchingObject = 6,
+        SearchingIrObject = 7
     }
     
     public class SpawnableObject : MonoBehaviour

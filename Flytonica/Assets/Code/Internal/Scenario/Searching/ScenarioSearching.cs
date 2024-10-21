@@ -28,6 +28,7 @@ namespace Code.Internal.Scenario.Searching
     {
         private RaceCondition _raceCondition = RaceCondition.Waiting;
 
+        [SerializeField] private MapEditorObjectType searchingObjectType = MapEditorObjectType.SearchingObject;
         [SerializeField] private string collectionName;
         [SerializeField] private List<SearchingObject> searchingObjects;
         [SerializeField] private float timer = 300f;
@@ -233,7 +234,7 @@ namespace Code.Internal.Scenario.Searching
 
             foreach (var o in objects)
             {
-                if (o.Type == MapEditorObjectType.SearchingObject)
+                if (o.Type == searchingObjectType)
                     searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
             }
 
