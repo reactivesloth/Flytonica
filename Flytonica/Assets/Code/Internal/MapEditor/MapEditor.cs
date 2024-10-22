@@ -188,6 +188,7 @@ namespace Code.Internal.MapEditor
 
         public void RemoveCurrentSelectedObject () {
             RemoveObject (currentSelectedEditorObject);
+            SelectObjectToEdit(null);
         }
     }
 }
