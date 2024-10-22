@@ -90,6 +90,9 @@ namespace Code.Internal.MapEditor
             if (_camera.gameObject.GetComponent<MapEditorCamera>() != null)
                 Destroy(_camera.GetComponent<MapEditorCamera>());
             _camera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            if (_gizmo != null)
+                DestroyImmediate(_gizmo);
         }
 
         private void Update()
