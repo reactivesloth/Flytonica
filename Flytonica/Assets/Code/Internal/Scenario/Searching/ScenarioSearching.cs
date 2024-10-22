@@ -216,7 +216,7 @@ namespace Code.Internal.Scenario.Searching
 
             foreach (var searchingObject in searchingObjects)
             {
-                string objectName = searchingObject.finingObject.name.Replace("(Clone)", "");
+                var objectName = searchingObject.finingObject.GetComponent<SpawnableObject>().displayName;
                 resultBuilder.AddParameter($"{objectName}", searchingObject.finded ? "Найден" : "Не найден");
             }
         }
