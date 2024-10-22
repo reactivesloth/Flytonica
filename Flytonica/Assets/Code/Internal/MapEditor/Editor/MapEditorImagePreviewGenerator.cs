@@ -5,6 +5,43 @@ using UnityEngine;
 
 namespace Code.Internal.MapEditor.Editor
 {
+    public class MapEditorImagePreviewGeneratorWindow : EditorWindow
+    {
+        [MenuItem("Tools/Generate Prefab Icons")]
+        public static void ShowWindow()
+        {
+            GetWindow<MapEditorImagePreviewGeneratorWindow>("Prefab Icon Generator");
+        }
+
+        private void OnGUI()
+        {
+            GUILayout.Label("Generate Icons for Spawnable Objects", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("Generate Icons"))
+            {
+                GenerateIconsForAllPrefabs();
+            }
+        }
+
+        private static void GenerateIconsForAllPrefabs()
+        {
+            var allPrefabs = Resources.LoadAll<GameObject>("");
+
+            foreach (var prefab in allPrefabs)
+            {
+                if (!prefab.TryGetComponent(out SpawnableObject spawnableObject))
+                    continue;
+
+                if (spawnableObject.icon == null)
+                {
+                    MapEditorImagePreviewGenerator.GenerateAndSetIcon(spawnableObject);
+                }
+            }
+
+            Debug.Log("Icon generation complete.");
+        }
+    }
+
     [InitializeOnLoad]
     public class MapEditorImagePreviewGenerator
     {
@@ -34,7 +71,7 @@ namespace Code.Internal.MapEditor.Editor
             }
         }
 
-        private static void CheckAndSetIcons()
+        public static void CheckAndSetIcons()
         {
             var allPrefabs = Resources.LoadAll<GameObject>("");
 
@@ -47,7 +84,7 @@ namespace Code.Internal.MapEditor.Editor
             }
         }
 
-        private static void GenerateAndSetIcon(SpawnableObject spawnableObject)
+        public static void GenerateAndSetIcon(SpawnableObject spawnableObject)
         {
             if (spawnableObject == null)
             {
