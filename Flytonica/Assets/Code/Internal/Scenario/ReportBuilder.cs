@@ -59,6 +59,15 @@ namespace Code.Internal.Scenario
         public void AddParameter(string key, string value, bool isPrefix = true)
         {
             key = isPrefix ? $"({_prefixNumber}) {key}" : key;
+    
+            string originalKey = key;
+            int suffixNumber = 1;
+            while (_parameters.Exists(p => p.Key == key))
+            {
+                key = $"{originalKey}_{suffixNumber}";
+                suffixNumber++;
+            }
+
             _parameters.Add(new Parameter<string>(key, value));
         }
 
