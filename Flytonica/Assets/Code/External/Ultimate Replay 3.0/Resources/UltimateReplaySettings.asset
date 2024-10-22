@@ -496,6 +496,7 @@ MonoBehaviour:
   - {fileID: 574901116160002578}
   - {fileID: -4283756649907544389}
   - {fileID: 3914223634316550910}
+  - {fileID: 6810018692457709583}
   defaultReplayPreparer:
     skipTypes:
     - assemblyQualifiedTypeName: UltimateReplay.ReplayObject, UltimateReplay, Version=0.0.0.0,
@@ -790,6 +791,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: 3347243206504916276, guid: 6a07be813ca354887bacfc5f805639cc, type: 3}
+  allowPooling: 1
+--- !u!114 &6810018692457709583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: -4357942786156734500, guid: 208cdec1d6b4fb54ca6698c7ffedd305, type: 3}
   allowPooling: 1
 --- !u!114 &8049846929324650821
 MonoBehaviour:
