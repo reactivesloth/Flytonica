@@ -26,8 +26,6 @@ namespace Code.Internal.Scenario.Searching
 
     public class ScenarioSearching : ScenarioBase
     {
-        private RaceCondition _raceCondition = RaceCondition.Waiting;
-
         [SerializeField] private MapEditorObjectType searchingObjectType = MapEditorObjectType.SearchingObject;
         [SerializeField] private string collectionName;
         [SerializeField] private List<SearchingObject> searchingObjects;
@@ -54,7 +52,7 @@ namespace Code.Internal.Scenario.Searching
             
             if (Camera.main == null) return;
             
-            if (_raceCondition == RaceCondition.Running)
+            if (ScenarioCondition == ScenarioCondition.Running)
             {
                 _counter += Time.deltaTime;
                 if (timer > 0)
@@ -91,7 +89,7 @@ namespace Code.Internal.Scenario.Searching
 
         private void FindObject(SearchingObject o)
         {
-            if (_raceCondition == RaceCondition.Running)
+            if (ScenarioCondition == ScenarioCondition.Running)
             {
                 if (_gazeTime > 3)
                 {
@@ -155,8 +153,6 @@ namespace Code.Internal.Scenario.Searching
                 _timer = timer;
             }
 
-            _raceCondition = RaceCondition.Running;
-
             DroneHUD.Instance.SetMessage(MessageType.Normal,
                 $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.", 3);
             DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
@@ -165,11 +161,6 @@ namespace Code.Internal.Scenario.Searching
         protected override void FinishRace(bool success = true)
         {
             base.FinishRace(success);
-
-            _raceCondition = RaceCondition.Finished;
-            DroneHUD.Instance.ClearMessage();
-            DroneHUD.Instance.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
-            DroneInput.Instance.MenuCameraHandle(true);
 
             string objectResult = string.Empty;
             foreach (var searchingObject in searchingObjects)
@@ -238,7 +229,7 @@ namespace Code.Internal.Scenario.Searching
                     searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
             }
 
-            if (_raceCondition == RaceCondition.Waiting)
+            if (ScenarioCondition == ScenarioCondition.Waiting)
             {
                 StartRace();
             }

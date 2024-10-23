@@ -347,7 +347,19 @@ MonoBehaviour:
     - _id: 10
       _name: Killswitch
       _type: 1
-      _descriptiveName: Action1
+      _descriptiveName: "\u041A\u0438\u043B\u043B\u0441\u0432\u0438\u0442\u0447"
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _key: 
+      _positiveKey: 
+      _negativeKey: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 1
+    - _id: 11
+      _name: DropCargo
+      _type: 1
+      _descriptiveName: "\u0421\u0431\u0440\u043E\u0441 \u0433\u0440\u0443\u0437\u0430"
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _key: 
@@ -374,7 +386,7 @@ MonoBehaviour:
       - categoryId: 0
         actionIds: 
       - categoryId: 1
-        actionIds: 0000000001000000020000000300000004000000050000000600000007000000080000000a000000
+        actionIds: 0000000001000000020000000300000004000000050000000600000007000000080000000a0000000b000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -1394,13 +1406,24 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 11
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 116
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps: []
     customControllerMaps: []
     customControllers: []
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 11
+    actionIdCounter: 12
     actionCategoryIdCounter: 2
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 2

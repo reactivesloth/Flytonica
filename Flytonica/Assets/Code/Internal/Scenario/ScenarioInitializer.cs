@@ -2,6 +2,7 @@
 using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
+using Code.Internal.Scenario.Transport;
 using Code.Internal.SceneManagement;
 using UltimateReplay;
 using UnityEngine;
@@ -92,7 +93,7 @@ namespace Code.Internal.Scenario
                             sObj.SetParent(raceModeObjects.transform);
                             break;
                         case ScenarioType.Transport:
-                            sObj.SetParent(raceModeObjects.transform);
+                            sObj.SetParent(transportModeObjects.transform);
                             break;
                         case ScenarioType.Searching:
                             sObj.SetParent(searchingModeObjects.transform);
@@ -124,6 +125,7 @@ namespace Code.Internal.Scenario
                     break;
                 case ScenarioType.Transport:
                     transportModeObjects?.SetActive(true);
+                    FindAnyObjectByType<ScenarioTransport>().Initialize(_settings);
                     break;
                 case ScenarioType.Searching:
                     searchingModeObjects?.SetActive(true);

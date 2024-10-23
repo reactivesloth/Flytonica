@@ -23,6 +23,7 @@ namespace Code.Internal.Drone
         public bool DISARM = true;
         public bool KILLSWITCH = false;
         public bool RestartButton = false;
+        public bool DropCargoButton = false;
 
         public bool UseInput = true;
         public float InputSignalLevel = 1f;
@@ -117,7 +118,7 @@ namespace Code.Internal.Drone
                     DISARM = false;
                 }
 
-                
+                DropCargoButton = _player.GetButtonDown("DropCargo");
             }
 
             if (!Application.isFocused) return;

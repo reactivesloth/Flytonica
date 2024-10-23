@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: -3053347562455769648}
   - component: {fileID: 3646248444435090050}
   - component: {fileID: -4394725033424922844}
+  - component: {fileID: 396808909426539820}
   m_Layer: 7
   m_Name: COEX Clover 4
   m_TagString: Untagged
@@ -187,6 +188,7 @@ Transform:
   - {fileID: 3832107793426900270}
   - {fileID: 130484653860375555}
   - {fileID: 2254079679174693317}
+  - {fileID: 64662238074404856}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7943750329588308043
@@ -462,6 +464,7 @@ MonoBehaviour:
   DISARM: 1
   KILLSWITCH: 0
   RestartButton: 0
+  DropCargoButton: 0
   UseInput: 1
   InputSignalLevel: 1
   maxDelayTime: 1
@@ -487,7 +490,10 @@ MonoBehaviour:
   - {fileID: -3053347562455769648}
   - {fileID: 3646248444435090050}
   - {fileID: -4394725033424922844}
-  runtimeComponents: []
+  runtimeComponents:
+  - {fileID: -3053347562455769648}
+  - {fileID: 3646248444435090050}
+  - {fileID: -4394725033424922844}
   isPrefab: 1
   prefabType: 0
 --- !u!114 &-3053347562455769648
@@ -548,6 +554,20 @@ MonoBehaviour:
     reference: {fileID: -3365251737495109800}
   droneSensors: {fileID: 1716966041475679048}
   droneCamera: {fileID: 1625880259260389076}
+--- !u!114 &396808909426539820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9104c86cca314f2e8a5e395010a759b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody: {fileID: 1664149388969179879}
+  attachPoint: {fileID: 64662238074404856}
 --- !u!1 &1022046699937227879
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,6 +854,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2734237865607974186
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 64662238074404856}
+  m_Layer: 7
+  m_Name: AttachCargoPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &64662238074404856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2734237865607974186}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8112261754518527535}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2781224070963177673
 GameObject:
   m_ObjectHideFlags: 0
