@@ -171,8 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c6505e448e0454c89ecd2599eecb247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 0}
-  State: 0
+  rigidbody: {fileID: 2396247431264695675}
+  state: 0
+  collisionForceThreshold: 5
 --- !u!54 &2396247431264695675
 Rigidbody:
   m_ObjectHideFlags: 0

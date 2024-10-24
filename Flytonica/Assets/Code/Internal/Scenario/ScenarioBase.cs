@@ -72,6 +72,7 @@ namespace Code.Internal.Scenario
 
         public virtual void Initialize(ScenarioSettings scenario)
         {
+            DroneHUD.Instance.AimElement.SetActionIcon(scenario.scenarioType);
             CurrentScenario = scenario;
             FinalScore = 100f;
 

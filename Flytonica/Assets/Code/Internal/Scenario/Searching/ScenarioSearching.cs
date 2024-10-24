@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.SceneManagement;
@@ -49,9 +50,9 @@ namespace Code.Internal.Scenario.Searching
                 FinishRace(true);
             }
 #endif
-            
+
             if (Camera.main == null) return;
-            
+
             if (ScenarioCondition == ScenarioCondition.Running)
             {
                 _counter += Time.deltaTime;
@@ -84,6 +85,7 @@ namespace Code.Internal.Scenario.Searching
                     }
                 }
             }
+
             CancelFinding();
         }
 
@@ -97,11 +99,11 @@ namespace Code.Internal.Scenario.Searching
                     {
                         _gazeTime = 0;
                         _totalScanAttempts++;
-                        
+
                         o.finded = true;
                         _findedCount += 1;
                         DroneHUD.Instance.SetMessage(MessageType.Normal, $"Найден объект {o.descriptionTask}", 3);
-                        
+
                         if (_findedCount == searchingObjects.Count)
                         {
                             FinishRace(true);
@@ -116,7 +118,7 @@ namespace Code.Internal.Scenario.Searching
                 {
                     _gazeTime += Time.deltaTime;
                     _gazeTimeNotResponceTime = 0;
-                    DroneHUD.Instance.AimElement.SetProgressValue(_gazeTime/3);
+                    DroneHUD.Instance.AimElement.SetProgressValue(_gazeTime / 3);
                 }
             }
         }
@@ -154,8 +156,9 @@ namespace Code.Internal.Scenario.Searching
             }
 
             DroneHUD.Instance.SetMessage(MessageType.Normal,
-                $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.", 3);
-            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
+                $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.",
+                3);
+            UpdateTask();
         }
 
         protected override void FinishRace(bool success = true)
@@ -194,7 +197,7 @@ namespace Code.Internal.Scenario.Searching
             float penaltyTime = 0;
             if (TotalTime > 15f * 60f)
                 penaltyTime = 20;
-            else if (TotalTime > 25f * 60f)
+            if (TotalTime > 25f * 60f)
                 penaltyTime = 50;
             FinalScore -= penaltyTime;
 
@@ -214,7 +217,20 @@ namespace Code.Internal.Scenario.Searching
 
         private void UpdateTask()
         {
-            DroneHUD.Instance.SetTask($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]");
+            var taskText = new StringBuilder();
+
+            taskText.Append($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]. \n");
+            
+            foreach (var searchingObject in searchingObjects)
+            {
+                var obj = searchingObject.finingObject.GetComponent<SpawnableObject>();
+
+                var objectResult = searchingObject.finded ? "+" : "-";
+
+                taskText.Append($"{obj.displayName} [{objectResult}] \n");
+            }
+
+            DroneHUD.Instance.SetTask(taskText.ToString());
         }
 
         public override void Initialize(ScenarioSettings scenario)

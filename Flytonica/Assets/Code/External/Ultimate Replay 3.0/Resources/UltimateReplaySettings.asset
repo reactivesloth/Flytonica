@@ -84,6 +84,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: -8656702995668773667, guid: d356e3f907b0cbc45963b879d44fd200, type: 3}
   allowPooling: 1
+--- !u!114 &-7503779772186047826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: -3481690312918150334, guid: 0bfb9a86cfc654e469522c42caa31069, type: 3}
+  allowPooling: 1
 --- !u!114 &-6496335485938866914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +153,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: 3075687188663273017, guid: 1af7a6f635f67fa4ebe4e513645f07f6, type: 3}
+  allowPooling: 1
+--- !u!114 &-5839390243401451661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: 5070516398424986062, guid: ee0e141ac5773fe4eb01f5cbdea53f4c, type: 3}
   allowPooling: 1
 --- !u!114 &-5619535358319885942
 MonoBehaviour:
@@ -364,6 +392,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: -2031194489477060122, guid: 258f853d7bac9204099d19edefbd3a94, type: 3}
   allowPooling: 1
+--- !u!114 &-2160768901205392183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: 5146962738485368992, guid: ff2d53981926fac4e94c0691db1c4f89, type: 3}
+  allowPooling: 1
 --- !u!114 &-1662403377058981793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,6 +518,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: 5146962738485368992, guid: ff2d53981926fac4e94c0691db1c4f89, type: 3}
   allowPooling: 1
+--- !u!114 &-94982341517998615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: -8202474982031636177, guid: 870f171f23a5d37498f662fa1658dfb9, type: 3}
+  allowPooling: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -561,6 +617,10 @@ MonoBehaviour:
   - {fileID: -8354239593896315934}
   - {fileID: -3148441600500328269}
   - {fileID: 4870426878308146037}
+  - {fileID: -94982341517998615}
+  - {fileID: -7503779772186047826}
+  - {fileID: -2160768901205392183}
+  - {fileID: -5839390243401451661}
   defaultReplayPreparer:
     skipTypes:
     - assemblyQualifiedTypeName: UltimateReplay.ReplayObject, UltimateReplay, Version=0.0.0.0,

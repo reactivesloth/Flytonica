@@ -15,9 +15,15 @@ namespace Code.Internal.Scenario.Transport
         [SerializeField] private byte connectionId;
 
         private Collider _platformCollider;
+        
+        [NonSerialized] public float Precision = 0;
 
         public byte ConnectionId => connectionId;
 
+        public bool IsDropped { get; private set; }
+
+        public event Action<CargoObject> Delivered;
+        
         private void Awake()
         {
             _platformCollider = GetComponent<Collider>();
@@ -25,25 +31,24 @@ namespace Code.Internal.Scenario.Transport
 
         private void OnCollisionEnter(Collision other)
         {
-            print(other.gameObject.name);
-            print($"{other.gameObject.TryGetComponent(out CargoObject c)}");
-            print($"{connectionId}=={c.ConnectionId}");
-
             if (!other.gameObject.TryGetComponent(out CargoObject cargoObject) ||
-                cargoObject.ConnectionId != connectionId) return;
-            // Get the object's collider to determine its shape and size
+                cargoObject.ConnectionId != connectionId || IsDropped) return;
+            
             Collider objectCollider = other.collider;
 
             // Calculate the center point of the object at the time of collision
             Vector3 objectCenter = other.transform.position;
 
-            cargoObject.Precision = type switch
+            Precision = type switch
             {
                 DropZoneType.CenterTarget => CalculateCenterTarget(objectCenter, objectCollider),
                 DropZoneType.BasketTarget => CalculateBasketTarget(objectCenter, objectCollider),
                 _ => throw new ArgumentOutOfRangeException()
             };
+            print(Precision);
 
+            Delivered?.Invoke(cargoObject);
+            IsDropped = true;
             cargoObject.SetDelivery();
         }
 

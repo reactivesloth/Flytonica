@@ -1,4 +1,5 @@
 using System;
+using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using FishNet.Component.Transforming;
@@ -91,6 +92,7 @@ namespace Code.Internal.Drone
             _rigidBody = GetComponent<Rigidbody>();
             _rigidBody.mass = droneSettings.weight;
 
+            /*
             var com = Vector3.zero;
             com += engineFL.transform.position;
             com += engineFR.transform.position;
@@ -99,7 +101,7 @@ namespace Code.Internal.Drone
             com /= 4;
             com.y = 0;
             
-            _rigidBody.centerOfMass = com;
+            _rigidBody.centerOfMass = com;*/
 
             if (!engineFL.GetComponent<NetworkTransform>())
                 engineFL.AddComponent<NetworkTransform>();

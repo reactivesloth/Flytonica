@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using Code.Internal.Drone; // Добавляем этот неймспейс для доступа к DroneController
+﻿using System;
+using UnityEngine;
+using Code.Internal.Drone;
+using Code.Internal.UserInterface;
 
 namespace Code.Internal.Scenario.Transport
 {
@@ -11,20 +13,35 @@ namespace Code.Internal.Scenario.Transport
 
         public CargoObject cargoObject;
 
-        public float stationaryTime = 0f;
-        private const float requiredStationaryTime = 2f; // Время неподвижности
-        private const float velocityThreshold = 0.5f; // Порог скорости
+        private const float attachmentDuration = 2f; // Время прикрепления
+        private const float velocityThreshold = 0.5f; // Порог скорости для определения неподвижности
 
         private bool droneInZone = false;
+        private bool isAttaching = false;
+        private float attachmentProgress = 0f;
 
-        public byte ConnectionId => connectionId;
+        public int FallCount { get; private set; } = 0;
+        public int CollisionCount { get; private set; } = 0;
         
+        public byte ConnectionId => connectionId;
+
+        public int TakeCount { get; private set; } = 0;
+
+        public bool IsDelivery { get; private set; }
+
+        private void Awake()
+        {
+            FallCount = 0;
+            CollisionCount = 0;
+        }
+
         private void Update()
         {
-            if (!droneInZone || cargoObject.State != CargoState.NotAttached)
+            if (!droneInZone || IsDelivery)
                 return;
-
             if (DroneController.Instance == null || DroneController.Instance.DroneCargoController == null)
+                return;
+            if(DroneController.Instance.DroneCargoController.IsCargoAttached)
                 return;
 
             var droneRigidbody = DroneController.Instance.GetComponent<Rigidbody>();
@@ -34,20 +51,39 @@ namespace Code.Internal.Scenario.Transport
 
             var droneVelocity = droneRigidbody.linearVelocity.magnitude;
 
-            print($"Drone velocity: {droneVelocity}");
-            if (droneVelocity < velocityThreshold)
+            if (isAttaching)
             {
-                stationaryTime += Time.deltaTime;
-
-                if (stationaryTime >= requiredStationaryTime)
+                // Проверяем условия провала
+                if (droneVelocity > velocityThreshold)
                 {
+                    // Дрон начал двигаться слишком быстро, прерываем процесс
+                    isAttaching = false;
+                    attachmentProgress = 0f;
+                    OnFailure();
+                    return;
+                }
+
+                // Обновляем прогресс прикрепления
+                attachmentProgress += Time.deltaTime / attachmentDuration;
+                OnProgress(Mathf.Clamp01(attachmentProgress));
+
+                if (attachmentProgress >= 1f)
+                {
+                    // Прикрепление завершено успешно
+                    isAttaching = false;
+                    attachmentProgress = 1f;
                     AttachCargoToDrone();
-                    stationaryTime = 0f;
+                    OnSuccess();
                 }
             }
             else
             {
-                stationaryTime = 0f;
+                // Если дрон неподвижен, начинаем процесс прикрепления
+                if (droneVelocity < velocityThreshold)
+                {
+                    isAttaching = true;
+                    attachmentProgress = 0f;
+                }
             }
         }
 
@@ -55,7 +91,6 @@ namespace Code.Internal.Scenario.Transport
         {
             if (other.TryGetComponent(out DroneCargoController _))
             {
-                print("DRONE");
                 droneInZone = true;
             }
         }
@@ -65,12 +100,15 @@ namespace Code.Internal.Scenario.Transport
             if (other.TryGetComponent(out DroneCargoController _))
             {
                 droneInZone = false;
-                stationaryTime = 0f;
+                isAttaching = false;
+                attachmentProgress = 0f;
             }
         }
 
         public CargoObject SpawnCargo()
         {
+            if (cargoObject) return cargoObject;
+            
             var cargo = Instantiate(spawnedCargoPrefab, cargoSpawnPoint.position, cargoSpawnPoint.rotation);
             cargo.Init(this);
             cargoObject = cargo;
@@ -82,21 +120,57 @@ namespace Code.Internal.Scenario.Transport
             if (DroneController.Instance.DroneCargoController.IsCargoAttached)
                 return;
             if (cargoObject == null)
-                return;
+                SpawnCargo();
             var cargoRigidbody = cargoObject.GetComponent<Rigidbody>();
             if (cargoRigidbody == null)
                 return;
-            if(cargoObject.State == CargoState.Delivered)
+            if (cargoObject.state == CargoState.Delivered)
                 return;
 
+            TakeCount++;
             DroneController.Instance.DroneCargoController.Attach(cargoRigidbody);
             cargoObject.OnAttach();
+            cargoObject = null;
         }
 
         public void OnReset()
         {
+            if(!cargoObject) return;
             cargoObject.transform.position = cargoSpawnPoint.position;
             cargoObject.transform.rotation = cargoSpawnPoint.rotation;
+        }
+
+        protected void OnProgress(float progress)
+        {
+            DroneHUD.Instance.AimElement.SetProgressValue(progress);
+        }
+
+        protected void OnSuccess()
+        {
+            DroneHUD.Instance.AimElement.Flash(Color.green, 1);
+        }
+
+        protected void OnFailure()
+        {
+            DroneHUD.Instance.AimElement.Flash(Color.red, 1);
+        }
+
+        public void CargoFall()
+        {
+            print(FallCount);
+            FallCount++;
+        }
+
+        public void CargoCollision() => CollisionCount++;
+
+        public void Respawn()
+        {
+            SpawnCargo();
+        }
+
+        public void SetDelivery()
+        {
+            IsDelivery = true;
         }
     }
 }

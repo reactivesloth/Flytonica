@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Code.Internal.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,10 +9,11 @@ namespace Code.Internal.UserInterface.DroneHudElements
 {
     public class AimElement: MonoBehaviour
     {
+        [SerializeField] private Sprite cameraAim, transportAim;
         [SerializeField] private Image progressImage;
         [SerializeField] private Color targetColor = Color.green;
         [SerializeField] private GameObject progress;
-        [SerializeField] private Image aimIcon, cameraIcon;
+        [SerializeField] private Image aimIcon, actionIcon;
 
         private Color _startColor;
 
@@ -43,13 +45,23 @@ namespace Code.Internal.UserInterface.DroneHudElements
             SceneManager.sceneLoaded -= SceneChanged;
         }
 
+        public void SetActionIcon(ScenarioType scenarioType)
+        {
+            actionIcon.sprite = scenarioType switch
+            {
+                ScenarioType.Transport => transportAim,
+                ScenarioType.Searching => cameraAim,
+                ScenarioType.SearchingWithIR => cameraAim
+            };
+        }
+        
         public void SetProgressValue(float value)   
         {
             value = Mathf.Clamp(value, 0f, 1f);
 
             var isValue = value > 0;
             progress.SetActive(isValue);
-            cameraIcon.gameObject.SetActive(isValue);
+            actionIcon.gameObject.SetActive(isValue);
             aimIcon.gameObject.SetActive(!isValue);
             
             progressImage.fillAmount = value;
@@ -68,22 +80,22 @@ namespace Code.Internal.UserInterface.DroneHudElements
         private IEnumerator AnimFlash(Color color, float animTime, Action callback)
         {
             var sectionTime = animTime / 3;
-            var startColor = cameraIcon.color;
+            var startColor = actionIcon.color;
             
             var currentTime = 0f;
             while (currentTime < sectionTime)
             {
-                cameraIcon.color = Color.Lerp(_startColor, color, currentTime / sectionTime);
+                actionIcon.color = Color.Lerp(_startColor, color, currentTime / sectionTime);
                 progressImage.color = Color.Lerp(_startColor, color, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
             }
             
             currentTime = 0f;
-            var currentColor = cameraIcon.color;
+            var currentColor = actionIcon.color;
             while (currentTime < sectionTime)
             {
-                cameraIcon.color = Color.Lerp(currentColor, Color.clear, currentTime / sectionTime);
+                actionIcon.color = Color.Lerp(currentColor, Color.clear, currentTime / sectionTime);
                 progressImage.color = Color.Lerp(currentColor, Color.clear, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
@@ -92,17 +104,17 @@ namespace Code.Internal.UserInterface.DroneHudElements
             SetProgressValue(0);
             
             currentTime = 0f;
-            currentColor = cameraIcon.color;
+            currentColor = actionIcon.color;
             while (currentTime < sectionTime)
             {
-                cameraIcon.color = Color.Lerp(currentColor, startColor, currentTime / sectionTime);
+                actionIcon.color = Color.Lerp(currentColor, startColor, currentTime / sectionTime);
                 progressImage.color = Color.Lerp(currentColor, startColor, currentTime / sectionTime);
                 yield return null;
                 currentTime += Time.deltaTime;
             }
             
             _currentAnim = null;
-            cameraIcon.color = startColor;
+            actionIcon.color = startColor;
             progressImage.color = startColor;
             
             callback?.Invoke();
