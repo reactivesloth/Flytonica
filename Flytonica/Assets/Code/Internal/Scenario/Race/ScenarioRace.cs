@@ -96,23 +96,26 @@ namespace Code.Internal.Scenario.Race
         {
             base.Initialize(scenario);
 
-            var objects = GetComponentsInChildren<SpawnableObject>().ToList();
+            List<SpawnableObject> objects = new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
             foreach (var obj in objects)
             {
                 obj.transform.SetSiblingIndex(obj.sortOrder);
             }
             
-            foreach (var o in objects)
+            var sortOrder  = 0;
+            for (var i = 0; i < objects.Count(); i++)
             {
-                if (o.Type == MapEditorObjectType.RacingGate)
+                if (objects[i].Type == MapEditorObjectType.RacingGate)
                 {
-                    var gatePoints = o.GetComponentsInChildren<Checkpoint>();
+                    var gatePoints = objects[i].GetComponentsInChildren<Checkpoint>();
                     foreach (var c in gatePoints)
                     {
                         c.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Add(c);
-                        checkpoints.Last().sortOrder = o.sortOrder;
+                        checkpoints.Last().sortOrder = sortOrder;
                     }
+
+                    checkpoints.OrderBy(cp => cp.sortOrder);
                 }
             }
 
@@ -125,7 +128,6 @@ namespace Code.Internal.Scenario.Race
                     {
                         gatePoints[i].ChangeStatus(CheckpointStatus.None);
                         checkpoints.Insert(i, gatePoints[i]);
-                        checkpoints.Last().sortOrder = o.sortOrder;
                     }
                 }
 
@@ -138,13 +140,11 @@ namespace Code.Internal.Scenario.Race
                     {
                         gatePoint.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Insert(place, gatePoint);
-                        checkpoints.Last().sortOrder = o.sortOrder;
                         place++;
                     }
                 }
             }
 
-            checkpoints.OrderBy(ch => ch.sortOrder);
             
             SetNextCheckpoints();
 
