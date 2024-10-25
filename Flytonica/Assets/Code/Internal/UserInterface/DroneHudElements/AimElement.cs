@@ -51,7 +51,8 @@ namespace Code.Internal.UserInterface.DroneHudElements
             {
                 ScenarioType.Transport => transportAim,
                 ScenarioType.Searching => cameraAim,
-                ScenarioType.SearchingWithIR => cameraAim
+                ScenarioType.SearchingWithIR => cameraAim,
+                _ => actionIcon.sprite
             };
         }
         
