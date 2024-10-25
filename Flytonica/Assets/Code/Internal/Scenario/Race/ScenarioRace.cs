@@ -64,6 +64,7 @@ namespace Code.Internal.Scenario.Race
             if (checkpoint == checkpoints.First() && _raceState == RaceState.Takeoff)
             {
                 _raceState = RaceState.Racing;
+                DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
                 Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
             }
             
@@ -95,9 +96,12 @@ namespace Code.Internal.Scenario.Race
         {
             base.Initialize(scenario);
 
-            var objects = GetComponentsInChildren<SpawnableObject>();
-            checkpoints = new List<Checkpoint>();
-
+            var objects = GetComponentsInChildren<SpawnableObject>().ToList();
+            foreach (var obj in objects)
+            {
+                obj.transform.SetSiblingIndex(obj.sortOrder);
+            }
+            
             foreach (var o in objects)
             {
                 if (o.Type == MapEditorObjectType.RacingGate)
@@ -107,6 +111,7 @@ namespace Code.Internal.Scenario.Race
                     {
                         c.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Add(c);
+                        checkpoints.Last().sortOrder = o.sortOrder;
                     }
                 }
             }
@@ -120,6 +125,7 @@ namespace Code.Internal.Scenario.Race
                     {
                         gatePoints[i].ChangeStatus(CheckpointStatus.None);
                         checkpoints.Insert(i, gatePoints[i]);
+                        checkpoints.Last().sortOrder = o.sortOrder;
                     }
                 }
 
@@ -132,11 +138,14 @@ namespace Code.Internal.Scenario.Race
                     {
                         gatePoint.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Insert(place, gatePoint);
+                        checkpoints.Last().sortOrder = o.sortOrder;
                         place++;
                     }
                 }
             }
 
+            checkpoints.OrderBy(ch => ch.sortOrder);
+            
             SetNextCheckpoints();
 
             if (ScenarioCondition == ScenarioCondition.Waiting)
