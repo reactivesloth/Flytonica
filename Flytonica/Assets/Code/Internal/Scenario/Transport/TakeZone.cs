@@ -2,6 +2,7 @@
 using UnityEngine;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
+using UltimateReplay;
 
 namespace Code.Internal.Scenario.Transport
 {
@@ -110,6 +111,10 @@ namespace Code.Internal.Scenario.Transport
             if (cargoObject) return cargoObject;
             
             var cargo = Instantiate(spawnedCargoPrefab, cargoSpawnPoint.position, cargoSpawnPoint.rotation);
+            
+            if(cargo.TryGetComponent(out ReplayObject replayObject))
+                ReplayManager.AddReplayObjectToRecordScenes(replayObject);
+            
             cargo.Init(this);
             cargoObject = cargo;
             return cargo;
@@ -157,7 +162,7 @@ namespace Code.Internal.Scenario.Transport
 
         public void CargoFall()
         {
-            print(FallCount);
+                print(FallCount);
             FallCount++;
         }
 
