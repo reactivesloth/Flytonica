@@ -1,57 +1,52 @@
-﻿using Code.Internal.Drone;
+﻿using System.Collections.Generic;
+using Code.Internal.Drone;
+using Code.Internal.XR;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.Network.Teacher
 {
     public class HostCameraController : MonoBehaviour
     {
         public static HostCameraController Instance;
-
-        [SerializeField] private Camera hostCamera;
+        
+        [SerializeField] private List<XRDisableHeadTrackingInFPV> playerFpvCameraControllers;
 
         private NetworkObject targetDrone;
         
         private void Awake()
         {
             Instance = this;
+            playerFpvCameraControllers.ForEach(p => p.IsViewed = true);
         }
 
+        public void SetTeacherView()
+        {
+            playerFpvCameraControllers.ForEach(p => p.IsViewed = true);
+            if(!targetDrone) return;
+            var fpvCamController = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
+            if(!fpvCamController) return;
+            fpvCamController.IsViewed = false;
+        }
+        
         public void SetTargetDrone(NetworkObject drone)
         {
-            // Отписываемся от предыдущего дрона
-            if (targetDrone != null)
-            {
-                var previousDroneCamera = targetDrone.GetComponent<DroneCameraController>();
-                if (previousDroneCamera != null)
-                {
-                    previousDroneCamera.OnCameraDataUpdated -= UpdateCameraPosition;
-                }
-            }
+            var fpvCamController = drone.GetComponent<XRDisableHeadTrackingInFPV>();
+            if(!fpvCamController)
+                return;
 
             targetDrone = drone;
-
-            // Подписываемся на новый дрон
-            var droneCamera = targetDrone.GetComponent<DroneCameraController>();
-            droneCamera.OnCameraDataUpdated += UpdateCameraPosition;
-        }
-
-        public void UpdateCameraPosition(Vector3 position, Quaternion rotation)
-        {
-            hostCamera.transform.position = position;
-            hostCamera.transform.rotation = rotation;
+            fpvCamController.IsViewed = true;
+            playerFpvCameraControllers.ForEach(p => p.IsViewed = false);
         }
 
         private void OnDisable()
         {
-            if (targetDrone != null)
-            {
-                var droneCamera = targetDrone.GetComponent<DroneCameraController>();
-                if (droneCamera != null)
-                {
-                    droneCamera.OnCameraDataUpdated -= UpdateCameraPosition;
-                }
-            }
+            var fpvCamController = targetDrone?.GetComponent<XRDisableHeadTrackingInFPV>();
+            if(fpvCamController)
+                fpvCamController.IsViewed = false;
+            playerFpvCameraControllers.ForEach(p => p.IsViewed = true);
         }
     }
 }
