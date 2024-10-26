@@ -108,6 +108,8 @@ namespace Code.Internal.Scenario
                     sObj.transform.position = spawnedObject.position;
                     sObj.transform.rotation = spawnedObject.rotation;
                     sObj.transform.localScale = spawnedObject.scale;
+                    sObj.GetComponent<SpawnableObject>().sortOrder = spawnedObject.sortOrder;
+                    sObj.SetSiblingIndex(spawnedObject.sortOrder);
                 }
             }
 

@@ -24,5 +24,7 @@ namespace Code.Internal
         public MapEditorObjectType Type;
         public Texture2D icon;
         public string displayName;
+        
+        public int sortOrder = 0;
     }
 }

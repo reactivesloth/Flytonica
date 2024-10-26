@@ -30,7 +30,8 @@ namespace Code.Internal.Scenario.Race
         [SerializeField] private Material currentCheckpointMaterial;
         [SerializeField] private Material nextCheckpointMaterial;
         [SerializeField] private Material otherCheckpointMaterial;
-        
+        public float sortOrder;
+
         public void OnTriggerEnter(Collider other)
         {
             if (!other.TryGetComponent(out DroneController drone) || drone != DroneController.Instance) 

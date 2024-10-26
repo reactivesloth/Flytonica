@@ -64,6 +64,7 @@ namespace Code.Internal.Scenario.Race
             if (checkpoint == checkpoints.First() && _raceState == RaceState.Takeoff)
             {
                 _raceState = RaceState.Racing;
+                DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
                 Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
             }
             
@@ -95,19 +96,26 @@ namespace Code.Internal.Scenario.Race
         {
             base.Initialize(scenario);
 
-            var objects = GetComponentsInChildren<SpawnableObject>();
-            checkpoints = new List<Checkpoint>();
-
-            foreach (var o in objects)
+            List<SpawnableObject> objects = new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
+            foreach (var obj in objects)
             {
-                if (o.Type == MapEditorObjectType.RacingGate)
+                obj.transform.SetSiblingIndex(obj.sortOrder);
+            }
+            
+            var sortOrder  = 0;
+            for (var i = 0; i < objects.Count(); i++)
+            {
+                if (objects[i].Type == MapEditorObjectType.RacingGate)
                 {
-                    var gatePoints = o.GetComponentsInChildren<Checkpoint>();
+                    var gatePoints = objects[i].GetComponentsInChildren<Checkpoint>();
                     foreach (var c in gatePoints)
                     {
                         c.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Add(c);
+                        checkpoints.Last().sortOrder = sortOrder;
                     }
+
+                    checkpoints.OrderBy(cp => cp.sortOrder);
                 }
             }
 
@@ -137,6 +145,7 @@ namespace Code.Internal.Scenario.Race
                 }
             }
 
+            
             SetNextCheckpoints();
 
             if (ScenarioCondition == ScenarioCondition.Waiting)

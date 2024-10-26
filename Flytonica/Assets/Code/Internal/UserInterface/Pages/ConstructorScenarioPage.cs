@@ -94,7 +94,7 @@ namespace Code.Internal.UserInterface.Pages
 
             foreach (var o in objects)
             {
-                _spawnedObjects.Add(new SpawnedObject(o.gameObject.name, o.transform.position, o.transform.rotation, o.transform.lossyScale));
+                _spawnedObjects.Add(new SpawnedObject(o.gameObject.name, o.transform.position, o.transform.rotation, o.transform.lossyScale, o.transform.GetSiblingIndex()));
             }
 
             _data.objects = _spawnedObjects;
