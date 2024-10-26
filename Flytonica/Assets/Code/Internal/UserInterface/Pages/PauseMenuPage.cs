@@ -1,3 +1,5 @@
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using FishNet;
@@ -20,9 +22,19 @@ namespace Code.Internal.UserInterface.Pages
             gameObject.SetActive(false);
         }
 
+        protected override void OnOpen()
+        {
+            base.OnOpen();
+
+            var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
+            teacherHelpButton.gameObject.SetActive(!isTeacher);
+            keyBindingButton.gameObject.SetActive(!isTeacher);
+            replayButton.gameObject.SetActive(!isTeacher);
+        }
+
         private void ToMainMenuButton()
         {
-            UIController.Instance.Unpause();
+            UIController.Instance.Unpause(false);
 
             if (InstanceFinder.ServerManager.Started)
                 InstanceFinder.ServerManager.StopConnection(true);
