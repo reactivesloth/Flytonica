@@ -14,6 +14,7 @@ namespace Code.Internal.Drone
         [Range(-1, 1)] public float Yaw;
         [Range(-1, 1)] public float Pitch;
         [Range(-1, 1)] public float Roll;
+        [Range(-1, 1)] public float CameraAngleInput;
 
         public bool DroneCanSwitchCam = true;
         public bool DroneCanIrMode = true;
@@ -111,7 +112,8 @@ namespace Code.Internal.Drone
 
                 bufferIndex = (bufferIndex + 1) % bufferSize;
 
-                DroneMode = _player.GetButtonDown("DroneMode") || changeModeAction.action.WasPressedThisFrame();
+                CameraAngleInput = _player.GetAxis("DroneCameraAngle");
+                DroneMode = _player.GetButtonDown("DroneMode"); // || changeModeAction.action.WasPressedThisFrame();
 
                 if (Throttle < -0.9f && DISARM)
                 {
@@ -125,7 +127,7 @@ namespace Code.Internal.Drone
 
             if (DroneCanSwitchCam)
             {
-                if (_player.GetButtonDown("DroneCamera") || changeCameraAction.action.WasPressedThisFrame())
+                if (_player.GetButtonDown("DroneCamera")) // || changeCameraAction.action.WasPressedThisFrame())
                     DroneCam = !DroneCam;
             }
 
@@ -134,22 +136,13 @@ namespace Code.Internal.Drone
                 DroneIrMode = _player.GetButtonDown("IR Mode");
             }
 
-            RestartButton = _player.GetButtonDown("DroneRestart") || restartAction.action.WasPressedThisFrame();
+            RestartButton = _player.GetButtonDown("DroneRestart"); // || restartAction.action.WasPressedThisFrame();
         }
 
         private void UpdateJoystick()
         {
             _findJoystick = null;
-
-            foreach (var joystick in ReInput.controllers.Joysticks)
-            {
-                if (joystick.hardwareName.ToLower().Contains("flysky"))
-                {
-                    _findJoystick = joystick;
-                    break;
-                }
-            }
-
+            
             if (_findJoystick == null)
                 _findJoystick = _player.controllers.Joysticks[0];
 
