@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Code.Internal.Drone
 {
     [ReplayPreparerIgnore]
-    public class DroneCamera : NetworkBehaviour
+    public class DroneCameraController : NetworkBehaviour
     {
         [SerializeField] private GameObject cameraObject;
         [SerializeField] private GameObject irCameraObject;
@@ -32,8 +32,8 @@ namespace Code.Internal.Drone
 
             TransmitCameraTransform(Owner);
 
-            if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
-                SetCamera(DroneInput.Instance.DroneCam);
+             // if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
+             //     SetCamera(DroneInput.Instance.DroneCam);
 
             if(!DroneInput.Instance)
                 return;

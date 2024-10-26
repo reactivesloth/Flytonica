@@ -1,7 +1,5 @@
-using System;
 using Code.Internal.Drone;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.Internal.XR
 {
@@ -9,38 +7,29 @@ namespace Code.Internal.XR
     {
         public bool shouldBeEnabledInFPV = true;
         
-        private GameObject _camera;
+        [SerializeField] private GameObject switchedCamera;
         [SerializeField] private GameObject[] enabledInFPVObjects;
         [SerializeField] private GameObject[] disabledInFPVObjects;
         private DroneInput _droneInput;
-
-        private void Awake()
-        {
-            _camera = gameObject.GetComponentInChildren<Camera>(true).gameObject;
-        }
 
         private void Update()
         {
             if (_droneInput == null)
             {
-                _camera.SetActive(!shouldBeEnabledInFPV);
+                if(switchedCamera)
+                    switchedCamera.SetActive(!shouldBeEnabledInFPV);
                 _droneInput = DroneInput.Instance;
                 return;
             }
-
-            _camera.SetActive(_droneInput.DroneCam switch
-            {
-                true => shouldBeEnabledInFPV,
-                false => !shouldBeEnabledInFPV
-            });
-
-            SwitchObject(shouldBeEnabledInFPV, _camera);
+            
+            if(switchedCamera)
+                SwitchObject(shouldBeEnabledInFPV, switchedCamera);
             SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
             SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
         }
 
         private void SwitchObject (bool value, GameObject o) {
-            o.SetActive(_droneInput.DroneCam switch
+            o?.SetActive(_droneInput.DroneCam switch
             {
                 true => value,
                 false => !value
@@ -57,7 +46,8 @@ namespace Code.Internal.XR
 
         private void OnDisable()
         {
-            _camera.SetActive(!shouldBeEnabledInFPV);
+            if(switchedCamera)
+                switchedCamera.SetActive(!shouldBeEnabledInFPV);
         }
     }
 }

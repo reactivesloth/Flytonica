@@ -8,7 +8,7 @@ namespace Code.Internal.Replays
     public class PlaybackReplayBehaviour : ReplayBehaviour
     {
         private DroneInput _droneInput;
-        private DroneCamera _droneCamera;
+        private DroneCameraController _droneCameraController;
         
         private void Update()
         {
@@ -23,8 +23,8 @@ namespace Code.Internal.Replays
         {
             if(!_droneInput)
                 _droneInput = FindFirstObjectByType<DroneInput>();
-            if(!_droneCamera)
-                _droneCamera = FindFirstObjectByType<DroneCamera>();
+            if(!_droneCameraController)
+                _droneCameraController = FindFirstObjectByType<DroneCameraController>();
         }
 
         private void InputHandle()
@@ -38,9 +38,9 @@ namespace Code.Internal.Replays
             if (!_droneInput)
                 return; 
             _droneInput.DroneCam = !_droneInput.DroneCam;
-            if (!_droneCamera)
+            if (!_droneCameraController)
                 return;
-            _droneCamera.SetCamera(_droneInput.DroneCam);
+            _droneCameraController.SetCamera(_droneInput.DroneCam);
             DroneHUD.Instance.ShowHUD(_droneInput.DroneCam);
         }
 

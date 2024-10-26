@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 3646248444435090050}
   - component: {fileID: -4394725033424922844}
   - component: {fileID: 396808909426539820}
+  - component: {fileID: -2380807356400718475}
   m_Layer: 7
   m_Name: COEX Clover 4
   m_TagString: Untagged
@@ -255,7 +256,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 6410941242121581068}
   droneSettings: {fileID: 11400000, guid: 2f791b720e14e1f4f995d076f3bed167, type: 2}
-  droneCamera: {fileID: 1625880259260389076}
+  droneCameraController: {fileID: 1625880259260389076}
   engineFL: {fileID: 1771281082741106923}
   engineFR: {fileID: 220187889536851688}
   engineRL: {fileID: 2096257427621933019}
@@ -553,7 +554,7 @@ MonoBehaviour:
   replayObject:
     reference: {fileID: -3365251737495109800}
   droneSensors: {fileID: 1716966041475679048}
-  droneCamera: {fileID: 1625880259260389076}
+  droneCameraController: {fileID: 1625880259260389076}
 --- !u!114 &396808909426539820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,6 +569,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1664149388969179879}
   attachPoint: {fileID: 64662238074404856}
+--- !u!114 &-2380807356400718475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541629917646721985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldBeEnabledInFPV: 1
+  switchedCamera: {fileID: 5753573371405482055}
+  enabledInFPVObjects: []
+  disabledInFPVObjects: []
 --- !u!1 &1022046699937227879
 GameObject:
   m_ObjectHideFlags: 0

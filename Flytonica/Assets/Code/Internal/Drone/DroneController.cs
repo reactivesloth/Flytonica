@@ -7,6 +7,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.Drone
 {
@@ -15,7 +16,7 @@ namespace Code.Internal.Drone
     {
         [SerializeField] private DroneSettings droneSettings;
 
-        [SerializeField] private DroneCamera droneCamera;
+        [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
 
         [SerializeField] private DroneEngine engineFL;
         [SerializeField] private DroneEngine engineFR;
@@ -57,7 +58,7 @@ namespace Code.Internal.Drone
 
         protected override void OnValidate()
         {
-            droneCamera = GetComponent<DroneCamera>();
+            droneCameraController = GetComponent<DroneCameraController>();
             _rigidBody = GetComponent<Rigidbody>();
             InitializeDrone();
         }
@@ -141,7 +142,7 @@ namespace Code.Internal.Drone
             }
 
             if (_droneInput.DroneIrMode)
-                droneCamera.SetIrMode();
+                droneCameraController.SetIrMode();
 
             if (_droneInput.RestartButton)
             {

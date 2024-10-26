@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 2875385507186115965}
   - component: {fileID: -4243598199387741349}
   - component: {fileID: 1175544170475484517}
+  - component: {fileID: 7696433342160729603}
   m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -387,7 +388,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 7794961175099019535}
   droneSettings: {fileID: 11400000, guid: 83c2bb145beb017469ee1de591e147f0, type: 2}
-  droneCamera: {fileID: 4973870330401012139}
+  droneCameraController: {fileID: 4973870330401012139}
   engineFL: {fileID: 5498201892723543587}
   engineFR: {fileID: 6996990822719045157}
   engineRL: {fileID: 7683294162799265470}
@@ -685,7 +686,7 @@ MonoBehaviour:
   replayObject:
     reference: {fileID: 3075687188663273017}
   droneSensors: {fileID: 7968847895797777297}
-  droneCamera: {fileID: 4973870330401012139}
+  droneCameraController: {fileID: 4973870330401012139}
 --- !u!114 &1175544170475484517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +701,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 6103327545130313638}
   attachPoint: {fileID: 3701475064387726635}
+--- !u!114 &7696433342160729603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldBeEnabledInFPV: 1
+  switchedCamera: {fileID: 2666126503352247847}
+  enabledInFPVObjects: []
+  disabledInFPVObjects: []
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0

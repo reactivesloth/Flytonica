@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldBeEnabledInFPV: 0
+  switchedCamera: {fileID: 1918380066}
   enabledInFPVObjects: []
   disabledInFPVObjects: []
 --- !u!1 &154716211
@@ -651,6 +652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldBeEnabledInFPV: 0
+  switchedCamera: {fileID: 1244977289}
   enabledInFPVObjects: []
   disabledInFPVObjects:
   - {fileID: 191286304}
@@ -1414,6 +1416,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa920bb9d72042488e78c7a65258d83e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1244977289 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 191286299}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1286600078 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5355834355819475611, guid: 1fcd5ddc4f3853d419a639ad57bc2bd2, type: 3}
@@ -2664,6 +2671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldBeEnabledInFPV: 1
+  switchedCamera: {fileID: 0}
   enabledInFPVObjects: []
   disabledInFPVObjects: []
 --- !u!23 &4451273660052649577
@@ -2726,14 +2734,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1918380071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &4708728081845722828
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6304218988430876661}
-  m_Enabled: 1
 --- !u!1 &6304218988430876661
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,7 +2746,6 @@ GameObject:
   - component: {fileID: 7030914071543745097}
   - component: {fileID: 9038567079565717640}
   - component: {fileID: 3827777672983456970}
-  - component: {fileID: 4708728081845722828}
   m_Layer: 0
   m_Name: PanelCameraCamera
   m_TagString: Untagged

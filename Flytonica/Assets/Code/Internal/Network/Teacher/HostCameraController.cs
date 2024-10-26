@@ -22,7 +22,7 @@ namespace Code.Internal.Network.Teacher
             // Отписываемся от предыдущего дрона
             if (targetDrone != null)
             {
-                var previousDroneCamera = targetDrone.GetComponent<DroneCamera>();
+                var previousDroneCamera = targetDrone.GetComponent<DroneCameraController>();
                 if (previousDroneCamera != null)
                 {
                     previousDroneCamera.OnCameraDataUpdated -= UpdateCameraPosition;
@@ -32,7 +32,7 @@ namespace Code.Internal.Network.Teacher
             targetDrone = drone;
 
             // Подписываемся на новый дрон
-            var droneCamera = targetDrone.GetComponent<DroneCamera>();
+            var droneCamera = targetDrone.GetComponent<DroneCameraController>();
             droneCamera.OnCameraDataUpdated += UpdateCameraPosition;
         }
 
@@ -46,7 +46,7 @@ namespace Code.Internal.Network.Teacher
         {
             if (targetDrone != null)
             {
-                var droneCamera = targetDrone.GetComponent<DroneCamera>();
+                var droneCamera = targetDrone.GetComponent<DroneCameraController>();
                 if (droneCamera != null)
                 {
                     droneCamera.OnCameraDataUpdated -= UpdateCameraPosition;
