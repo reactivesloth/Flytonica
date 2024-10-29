@@ -2,11 +2,12 @@
 using UnityEngine;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
+using FishNet.Object;
 using UltimateReplay;
 
 namespace Code.Internal.Scenario.Transport
 {
-    public class TakeZone : MonoBehaviour
+    public class TakeZone : NetworkBehaviour
     {
         [SerializeField] private CargoObject spawnedCargoPrefab;
         [SerializeField] private Transform cargoSpawnPoint;

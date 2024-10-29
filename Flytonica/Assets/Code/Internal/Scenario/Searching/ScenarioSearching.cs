@@ -40,6 +40,8 @@ namespace Code.Internal.Scenario.Searching
 
         // Добавлены переменные для подсчета сканирований
         private int _totalScanAttempts = 0;
+        
+        public int FindedCount => _findedCount;
 
         protected override void Update()
         {

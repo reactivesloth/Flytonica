@@ -47,9 +47,9 @@ namespace Code.Internal.Scenario.Race
         
         public void ChangeStatus(CheckpointStatus type)
         {
-            if (renderer == null) return;
-
             checkpointStatus = type;
+            
+            if (renderer == null) return;
 
             switch (type)
             {

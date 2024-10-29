@@ -295,6 +295,7 @@ GameObject:
   - component: {fileID: -4243598199387741349}
   - component: {fileID: 1175544170475484517}
   - component: {fileID: 7696433342160729603}
+  - component: {fileID: 6019778411117429522}
   m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -434,6 +435,7 @@ MonoBehaviour:
   - {fileID: 4973870330401012139}
   - {fileID: 835091436568997191}
   - {fileID: -6028051076763233206}
+  - {fileID: 6019778411117429522}
   - {fileID: 8604697657438685796}
   - {fileID: 559483779103950717}
   - {fileID: -6871288054280019721}
@@ -719,6 +721,23 @@ MonoBehaviour:
   enabledInFPVObjects: []
   disabledInFPVObjects: []
   IsViewed: 0
+--- !u!114 &6019778411117429522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ce1bf8ddcf4bbf8693e491abe3c891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 4
+  _addedNetworkObject: {fileID: 7794961175099019535}
+  _networkObjectCache: {fileID: 7794961175099019535}
+  sensors: {fileID: 7968847895797777297}
+  IsObservable: 0
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,7 +905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1030,7 +1049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1486,7 +1505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2582,7 +2601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0

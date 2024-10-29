@@ -5,6 +5,7 @@ using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.Elements;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
@@ -19,7 +20,7 @@ namespace Code.Internal.Scenario
     
     public abstract class ScenarioBase : MonoBehaviour
     {
-        protected ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
+        public ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
         
         protected float TotalTime;
         protected ScenarioSettings CurrentScenario;
@@ -51,16 +52,14 @@ namespace Code.Internal.Scenario
             _collisionWithBirdsCount * 10;
 
         public bool IsStarting { get; protected set; }
-
+        public float TotalTimeInSeconds => TotalTime;
 
         protected virtual void Update()
         {
-            if (!IsStarting) return;
+            if (!IsStarting || !DroneController.Instance) return;
 
             TotalTime += Time.deltaTime;
             
-            
-
             if (!_droneControllerInitialized && DroneController.Instance != null)
             {
                 OnDroneControllerInitialized();
@@ -100,6 +99,16 @@ namespace Code.Internal.Scenario
             DroneHUD.Instance?.ClearMessage();
             DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance?.MenuCameraHandle(true);
+            
+            //AddStatistic();
+            
+            /*Leaderboard.Instance.Open(() =>
+            {
+                if(CurrentScenario.settingType == SettingType.TaskScenario)
+                    ScenarioSwitcherController.Instance.NextOrEnd();
+                else
+                    ScenarioSwitcherController.Instance.EndSession();
+            });*/
         }
 
         protected virtual void AddStatistic()

@@ -85,6 +85,20 @@ namespace Code.Internal.Drone
         {
             UpdateHud();
 
+            if (DroneController.Instance && DroneHUD.Instance && DroneHUD.Instance.IsShowing())
+            {
+                DroneHUD.Instance.BatteryElement.SetVoltage(BatteryVoltage);
+                DroneHUD.Instance.BatteryElement.SetСharge(BatteryLevel);
+
+                DroneHUD.Instance.CameraSignalElement.SetSignal(CameraSignal);
+                DroneHUD.Instance.InputSignalElement.SetSignal(InputSignal);
+
+                DroneHUD.Instance.HealthValueElement.Set(Health);
+
+                if (!string.IsNullOrEmpty(ModeName))
+                    DroneHUD.Instance.SetMode(ModeName);
+            }
+
             if (savedFlightSettings != _droneController.Settings.currentFlightMode)
             {
                 savedFlightSettings = _droneController.Settings.currentFlightMode;
@@ -100,20 +114,9 @@ namespace Code.Internal.Drone
             {
                 DroneHUD.Instance.AltValueElement.Set(Altitude);
                 DroneHUD.Instance.SpeedValueElement.Set(Speed);
-
-                DroneHUD.Instance.BatteryElement.SetVoltage(BatteryVoltage);
-                DroneHUD.Instance.BatteryElement.SetСharge(BatteryLevel);
-
+                
                 DroneHUD.Instance.HorizonElement.SetPitch(Pitch);
                 DroneHUD.Instance.HorizonElement.SetRoll(Roll);
-
-                DroneHUD.Instance.CameraSignalElement.SetSignal(CameraSignal);
-                DroneHUD.Instance.InputSignalElement.SetSignal(InputSignal);
-
-                DroneHUD.Instance.HealthValueElement.Set(Health);
-
-                if (!string.IsNullOrEmpty(ModeName))
-                    DroneHUD.Instance.SetMode(ModeName);
             }
         }
 
