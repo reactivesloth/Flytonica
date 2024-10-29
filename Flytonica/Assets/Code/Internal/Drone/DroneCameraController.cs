@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Code.Internal.Drone
 {
     [ReplayPreparerIgnore]
-    public class DroneCamera : NetworkBehaviour
+    public class DroneCameraController : NetworkBehaviour
     {
         [SerializeField] private GameObject cameraObject;
         [SerializeField] private GameObject irCameraObject;
@@ -32,15 +32,16 @@ namespace Code.Internal.Drone
 
             TransmitCameraTransform(Owner);
 
-            if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
-                SetCamera(DroneInput.Instance.DroneCam);
+             // if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
+             //     SetCamera(DroneInput.Instance.DroneCam);
 
             if(!DroneInput.Instance)
                 return;
 
             currentAngle = Mathf.Clamp(currentAngle, minAngle, maxAngle);
 
-            currentAngle -= Time.deltaTime * UnityEngine.Input.GetAxis("Mouse ScrollWheel") * 1000;
+            if (DroneInput.Instance != null)
+                currentAngle -= Time.deltaTime * DroneInput.Instance.CameraAngleInput * 1000;
 
             var rot = cameraObject.transform.localRotation;
             rot = Quaternion.Euler(currentAngle, rot.y, rot.z);

@@ -57,6 +57,8 @@ namespace Code.Internal.MapEditor
         {
             if (scene.name == _savedSceneName)
             {
+                SceneManager.SetActiveScene(scene);
+                
                 var objects = FindObjectsOfType<SpawnableObject>();
                 foreach (var o in objects)
                 {
@@ -188,6 +190,7 @@ namespace Code.Internal.MapEditor
 
         public void RemoveCurrentSelectedObject () {
             RemoveObject (currentSelectedEditorObject);
+            SelectObjectToEdit(null);
         }
     }
 }

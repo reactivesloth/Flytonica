@@ -3,6 +3,7 @@ using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.Replays
 {
@@ -11,7 +12,7 @@ namespace Code.Internal.Replays
         private const ushort AimFlashEventID = 25;
         
         [SerializeField] private DroneSensors droneSensors;
-        [SerializeField] private DroneCamera droneCamera;
+        [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
 
         // Переменные для хранения текущих значений
         private float _cameraSignal;
@@ -51,7 +52,7 @@ namespace Code.Internal.Replays
         private void OnValidate()
         {
             droneSensors = GetComponent<DroneSensors>();
-            droneCamera = GetComponent<DroneCamera>();
+            droneCameraController = GetComponent<DroneCameraController>();
         }
 
         public override void OnReplaySerialize(ReplayState state)
@@ -67,7 +68,7 @@ namespace Code.Internal.Replays
             _pitch = droneSensors.Pitch;
             _roll = droneSensors.Roll;
             _modeName = droneSensors.ModeName;
-            _cameraAngle = droneCamera.CurrentAngle;
+            _cameraAngle = droneCameraController.CurrentAngle;
             
             _altMaxValue = DroneHUD.Instance.AltValueElement.MaxValue;
             _currentTask = DroneHUD.Instance.CurrentTaskText;
@@ -213,7 +214,7 @@ namespace Code.Internal.Replays
 
             // Обновляем HUD и камеру
             SetHud();
-            droneCamera.SetCameraAngle(_cameraAngle);
+            droneCameraController.SetCameraAngle(_cameraAngle);
         }
 
         private void RecordUpdate(float t)

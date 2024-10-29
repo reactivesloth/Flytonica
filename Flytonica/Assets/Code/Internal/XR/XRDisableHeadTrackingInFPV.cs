@@ -1,7 +1,6 @@
 using System;
 using Code.Internal.Drone;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.Internal.XR
 {
@@ -9,42 +8,46 @@ namespace Code.Internal.XR
     {
         public bool shouldBeEnabledInFPV = true;
         
-        private GameObject _camera;
+        [SerializeField] private GameObject switchedCamera;
         [SerializeField] private GameObject[] enabledInFPVObjects;
         [SerializeField] private GameObject[] disabledInFPVObjects;
         private DroneInput _droneInput;
 
-        private void Awake()
-        {
-            _camera = gameObject.GetComponentInChildren<Camera>(true).gameObject;
-        }
-
+        public bool IsViewed = false;
+        
         private void Update()
         {
-            if (_droneInput == null)
+            if (!_droneInput)
             {
-                _camera.SetActive(!shouldBeEnabledInFPV);
+                if(switchedCamera)
+                    switchedCamera.SetActive(!shouldBeEnabledInFPV);
                 _droneInput = DroneInput.Instance;
-                return;
             }
-
-            _camera.SetActive(_droneInput.DroneCam switch
+            
+            if(_droneInput)
             {
-                true => shouldBeEnabledInFPV,
-                false => !shouldBeEnabledInFPV
-            });
-
-            SwitchObject(shouldBeEnabledInFPV, _camera);
-            SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
-            SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
+                if (switchedCamera)
+                    SwitchObject(shouldBeEnabledInFPV, switchedCamera);
+                SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
+                SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
+            }
+            else
+            {
+                if (switchedCamera)
+                    SwitchViewObject(IsViewed, switchedCamera);
+            }
         }
 
-        private void SwitchObject (bool value, GameObject o) {
-            o.SetActive(_droneInput.DroneCam switch
+        private void SwitchObject(bool value, GameObject o) {
+            o?.SetActive(_droneInput.DroneCam switch
             {
                 true => value,
                 false => !value
             });
+        }
+        
+        private void SwitchViewObject(bool value, GameObject o) {
+            o?.SetActive(IsViewed);
         }
         
         private void SwitchObject(bool value, GameObject[] ojbects)
@@ -57,7 +60,8 @@ namespace Code.Internal.XR
 
         private void OnDisable()
         {
-            _camera.SetActive(!shouldBeEnabledInFPV);
+            if(switchedCamera)
+                switchedCamera.SetActive(!shouldBeEnabledInFPV);
         }
     }
 }

@@ -83,6 +83,19 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
+            UpdateHud();
+
+            if (savedFlightSettings != _droneController.Settings.currentFlightMode)
+            {
+                savedFlightSettings = _droneController.Settings.currentFlightMode;
+                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {ModeName}", 2);
+            }
+
+            UpdateSignals();
+        }
+
+        public void UpdateHud()
+        {
             if (DroneHUD.Instance != null && DroneHUD.Instance.IsShowing())
             {
                 DroneHUD.Instance.AltValueElement.Set(Altitude);
@@ -102,14 +115,6 @@ namespace Code.Internal.Drone
                 if (!string.IsNullOrEmpty(ModeName))
                     DroneHUD.Instance.SetMode(ModeName);
             }
-
-            if (savedFlightSettings != _droneController.Settings.currentFlightMode)
-            {
-                savedFlightSettings = _droneController.Settings.currentFlightMode;
-                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {ModeName}", 2);
-            }
-
-            UpdateSignals();
         }
 
         private void UpdateSignals()

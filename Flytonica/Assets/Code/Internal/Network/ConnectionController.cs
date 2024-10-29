@@ -87,7 +87,7 @@ namespace Code.Internal.Network
 
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
-            await Task.Delay(1000);
+            await Task.Delay(5000);
             var scenario = sceneSettings.currentScenario;
             if (connection.ClientId == 0 && sceneSettings.isNet)
             {
@@ -109,7 +109,7 @@ namespace Code.Internal.Network
 
             MovePlayer(connection);
         }
-
+    
         [TargetRpc]
         private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
         {

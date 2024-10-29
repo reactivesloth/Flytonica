@@ -2,14 +2,25 @@
 using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.Drone;
+using Code.Internal.Scenario.Race;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
 {
+    
+    public enum ScenarioCondition
+    {
+        Waiting,
+        Running,
+        Finished
+    }
+    
     public abstract class ScenarioBase : MonoBehaviour
     {
+        protected ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
+        
         protected float TotalTime;
         protected ScenarioSettings CurrentScenario;
 
@@ -61,6 +72,7 @@ namespace Code.Internal.Scenario
 
         public virtual void Initialize(ScenarioSettings scenario)
         {
+            DroneHUD.Instance.AimElement.SetActionIcon(scenario.scenarioType);
             CurrentScenario = scenario;
             FinalScore = 100f;
 
@@ -76,12 +88,18 @@ namespace Code.Internal.Scenario
             ReportBuilder.Instance.AddParameter("Время и дата начала сценария",
                 DateTime.Now.ToString(CultureInfo.InvariantCulture));
             IsStarting = true;
+            ScenarioCondition = ScenarioCondition.Running;
         }
 
         protected virtual void FinishRace(bool success = true)
         {
+            ScenarioCondition = ScenarioCondition.Finished;
             _isSuccess = success;
             IsStarting = false;
+            
+            DroneHUD.Instance?.ClearMessage();
+            DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
+            DroneInput.Instance?.MenuCameraHandle(true);
         }
 
         protected virtual void AddStatistic()

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Code.Internal.Network.Teacher;
+using Code.Internal.XR;
 using FishNet.Connection;
 using FishNet.Object;
 using TMPro;
@@ -11,6 +12,7 @@ namespace Code.Internal.UserInterface.Pages
     public class HostUIControllerPage: MonoBehaviour
     {
         [SerializeField] private Button updateButton;
+        [SerializeField] private Button thirdViewButton;
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private Button playerListItemPrefab;
 
@@ -20,6 +22,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             UpdatePlayerList();
             updateButton.onClick.AddListener(UpdatePlayerList);
+            thirdViewButton?.onClick.AddListener(HostCameraController.Instance.SetTeacherView);
         }
 
         private void OnEnable()

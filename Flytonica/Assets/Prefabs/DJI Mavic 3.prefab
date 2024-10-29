@@ -128,6 +128,37 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 1
   m_CustomBakedTexture: {fileID: 0}
+--- !u!1 &1620089962039474879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3701475064387726635}
+  m_Layer: 7
+  m_Name: AttachCargoPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3701475064387726635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620089962039474879}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3709543160775172288}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3024822195391795243
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +293,8 @@ GameObject:
   - component: {fileID: 4353708161759591684}
   - component: {fileID: 2875385507186115965}
   - component: {fileID: -4243598199387741349}
+  - component: {fileID: 1175544170475484517}
+  - component: {fileID: 7696433342160729603}
   m_Layer: 7
   m_Name: DJI Mavic 3
   m_TagString: Untagged
@@ -288,6 +321,7 @@ Transform:
   - {fileID: 5840573888468072636}
   - {fileID: 2291974503870020555}
   - {fileID: 262047121034971154}
+  - {fileID: 3701475064387726635}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &581403483088071652
@@ -331,7 +365,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -354,7 +388,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 7794961175099019535}
   droneSettings: {fileID: 11400000, guid: 83c2bb145beb017469ee1de591e147f0, type: 2}
-  droneCamera: {fileID: 4973870330401012139}
+  droneCameraController: {fileID: 4973870330401012139}
   engineFL: {fileID: 5498201892723543587}
   engineFR: {fileID: 6996990822719045157}
   engineRL: {fileID: 7683294162799265470}
@@ -555,6 +589,7 @@ MonoBehaviour:
   Yaw: 0
   Pitch: 0
   Roll: 0
+  CameraAngleInput: 0
   DroneCanSwitchCam: 1
   DroneCanIrMode: 1
   DroneCam: 0
@@ -563,6 +598,7 @@ MonoBehaviour:
   DISARM: 1
   KILLSWITCH: 0
   RestartButton: 0
+  DropCargoButton: 0
   UseInput: 1
   InputSignalLevel: 1
   maxDelayTime: 1
@@ -651,7 +687,38 @@ MonoBehaviour:
   replayObject:
     reference: {fileID: 3075687188663273017}
   droneSensors: {fileID: 7968847895797777297}
-  droneCamera: {fileID: 4973870330401012139}
+  droneCameraController: {fileID: 4973870330401012139}
+--- !u!114 &1175544170475484517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9104c86cca314f2e8a5e395010a759b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody: {fileID: 6103327545130313638}
+  attachPoint: {fileID: 3701475064387726635}
+--- !u!114 &7696433342160729603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084223439770484522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldBeEnabledInFPV: 1
+  switchedCamera: {fileID: 2666126503352247847}
+  enabledInFPVObjects: []
+  disabledInFPVObjects: []
+  IsViewed: 0
 --- !u!1 &3158527963095976077
 GameObject:
   m_ObjectHideFlags: 0

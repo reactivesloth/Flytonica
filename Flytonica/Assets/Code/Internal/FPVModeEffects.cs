@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
+using Code.Internal.XR;
 using UnityEngine;
 
 namespace Code.Internal
@@ -9,13 +10,12 @@ namespace Code.Internal
     public class FPVModeEffects : MonoBehaviour
     {
         private DroneInput _input;
-
+        
         private void Update()
         {
             if (_input == null)
             {
-                DroneHUD.Instance.ShowHUD(false);
-                _input = FindObjectsByType<DroneInput>(FindObjectsSortMode.None).FirstOrDefault(i => i.IsOwner);
+                _input = DroneInput.Instance;
                 return;
             }
             

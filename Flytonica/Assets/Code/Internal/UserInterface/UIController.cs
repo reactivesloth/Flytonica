@@ -55,17 +55,18 @@ namespace Code.Internal.UserInterface
             mainPanel.gameObject.SetActive(true);
             //drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
-            DroneInput.Instance.MenuCameraHandle(true);
+            DroneInput.Instance?.MenuCameraHandle(true);
             Time.timeScale = 0;
         }
 
-        public void Unpause()
+        public void Unpause(bool isChangeCamera = true)
         {
             mainPanel.gameObject.SetActive(false);
             //drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
-            DroneInput.Instance.MenuCameraHandle(false);
+            if(isChangeCamera)
+                DroneInput.Instance?.MenuCameraHandle(false);
         }
 
         public void OnGameStart()

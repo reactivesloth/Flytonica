@@ -8,13 +8,6 @@ using UnityEngine;
 
 namespace Code.Internal.Scenario.Race
 {
-    public enum RaceCondition
-    {
-        Waiting,
-        Running,
-        Finished
-    }
-
     public enum RaceState
     {
         None,
@@ -27,14 +20,8 @@ namespace Code.Internal.Scenario.Race
         [SerializeField] private List<Checkpoint> checkpoints;
 
         private int _nextCheckpoint = 0;
-        private RaceCondition _raceCondition;
         private RaceState _raceState = RaceState.None;
         private float _timeTakeoff, _timeRacing;
-
-        private void Awake()
-        {
-            _raceCondition = RaceCondition.Waiting;
-        }
 
         private void Start()
         {
@@ -77,6 +64,7 @@ namespace Code.Internal.Scenario.Race
             if (checkpoint == checkpoints.First() && _raceState == RaceState.Takeoff)
             {
                 _raceState = RaceState.Racing;
+                DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
                 Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
             }
             
@@ -90,7 +78,7 @@ namespace Code.Internal.Scenario.Race
             {
                 _nextCheckpoint++;
                 
-                if (_raceCondition == RaceCondition.Running)
+                if (ScenarioCondition == ScenarioCondition.Running)
                 {
                     SetNextCheckpoints();
                 }
@@ -108,19 +96,26 @@ namespace Code.Internal.Scenario.Race
         {
             base.Initialize(scenario);
 
-            var objects = GetComponentsInChildren<SpawnableObject>();
-            checkpoints = new List<Checkpoint>();
-
-            foreach (var o in objects)
+            List<SpawnableObject> objects = new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
+            foreach (var obj in objects)
             {
-                if (o.Type == MapEditorObjectType.RacingGate)
+                obj.transform.SetSiblingIndex(obj.sortOrder);
+            }
+            
+            var sortOrder  = 0;
+            for (var i = 0; i < objects.Count(); i++)
+            {
+                if (objects[i].Type == MapEditorObjectType.RacingGate)
                 {
-                    var gatePoints = o.GetComponentsInChildren<Checkpoint>();
+                    var gatePoints = objects[i].GetComponentsInChildren<Checkpoint>();
                     foreach (var c in gatePoints)
                     {
                         c.ChangeStatus(CheckpointStatus.None);
                         checkpoints.Add(c);
+                        checkpoints.Last().sortOrder = sortOrder;
                     }
+
+                    checkpoints.OrderBy(cp => cp.sortOrder);
                 }
             }
 
@@ -150,9 +145,10 @@ namespace Code.Internal.Scenario.Race
                 }
             }
 
+            
             SetNextCheckpoints();
 
-            if (_raceCondition == RaceCondition.Waiting)
+            if (ScenarioCondition == ScenarioCondition.Waiting)
             {
                 StartRace();
             }
@@ -163,7 +159,6 @@ namespace Code.Internal.Scenario.Race
             base.StartRace();
             _timeTakeoff = 0;
             _timeRacing = 0;
-            _raceCondition = RaceCondition.Running;
             _raceState = RaceState.Takeoff;
 
             DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
@@ -175,11 +170,6 @@ namespace Code.Internal.Scenario.Race
         {
             _raceState = RaceState.None;
             base.FinishRace(success);
-
-            _raceCondition = RaceCondition.Finished;
-            DroneHUD.Instance?.SetTask("Задание выполнено!");
-            DroneHUD.Instance?.SetMessage(MessageType.Normal, "Поздравляем! Ваше время: " + GetTimeWithMs(TotalTime));
-            DroneInput.Instance.MenuCameraHandle(true);
 
             foreach (var cp in checkpoints)
             {
@@ -219,7 +209,6 @@ namespace Code.Internal.Scenario.Race
             }
 
             resultBuilder.AddParameter($"Время на взлёт", GetTime(_timeTakeoff));
-            
             resultBuilder.AddParameter($"Время прохождения трассы", GetTime(_timeRacing));
         }
 

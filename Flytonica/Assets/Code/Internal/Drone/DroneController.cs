@@ -1,4 +1,5 @@
 using System;
+using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using FishNet.Component.Transforming;
@@ -6,6 +7,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.Drone
 {
@@ -14,7 +16,7 @@ namespace Code.Internal.Drone
     {
         [SerializeField] private DroneSettings droneSettings;
 
-        [SerializeField] private DroneCamera droneCamera;
+        [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
 
         [SerializeField] private DroneEngine engineFL;
         [SerializeField] private DroneEngine engineFR;
@@ -46,6 +48,8 @@ namespace Code.Internal.Drone
         /// </summary>
         public static DroneController Instance { get; private set; }
 
+        public DroneCargoController DroneCargoController { get; private set; }
+
         private float batteryLevelPercent = 1;
         private float deltaSpd;
         private float throttleHold;
@@ -54,7 +58,7 @@ namespace Code.Internal.Drone
 
         protected override void OnValidate()
         {
-            droneCamera = GetComponent<DroneCamera>();
+            droneCameraController = GetComponent<DroneCameraController>();
             _rigidBody = GetComponent<Rigidbody>();
             InitializeDrone();
         }
@@ -64,6 +68,7 @@ namespace Code.Internal.Drone
             _rigidBody = GetComponent<Rigidbody>();
             _transform = GetComponent<Transform>();
             DroneSensors = GetComponent<DroneSensors>();
+            DroneCargoController = GetComponent<DroneCargoController>();
 
             InitializeDrone();
         }
@@ -83,19 +88,21 @@ namespace Code.Internal.Drone
             engineRR.InitializeEngine(droneSettings, true);
         }
 
-        private void InitializePhysics()
+        private void InitializePhysics(Rigidbody cargo = null)
         {
             _rigidBody = GetComponent<Rigidbody>();
             _rigidBody.mass = droneSettings.weight;
 
-            // var com = Vector3.zero;
-            // com += engineFL.transform.position;
-            // com += engineFR.transform.position;
-            // com += engineRL.transform.position;
-            // com += engineRR.transform.position;
-            // com /= 4;
-            // com.y = 0;
-            // _rigidBody.centerOfMass = com;
+            /*
+            var com = Vector3.zero;
+            com += engineFL.transform.position;
+            com += engineFR.transform.position;
+            com += engineRL.transform.position;
+            com += engineRR.transform.position;
+            com /= 4;
+            com.y = 0;
+            
+            _rigidBody.centerOfMass = com;*/
 
             if (!engineFL.GetComponent<NetworkTransform>())
                 engineFL.AddComponent<NetworkTransform>();
@@ -135,7 +142,7 @@ namespace Code.Internal.Drone
             }
 
             if (_droneInput.DroneIrMode)
-                droneCamera.SetIrMode();
+                droneCameraController.SetIrMode();
 
             if (_droneInput.RestartButton)
             {
@@ -151,6 +158,8 @@ namespace Code.Internal.Drone
         public void ResetDrone()
         {
             ResetEngines();
+
+            DroneCargoController.OnReset();
             
             var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
             _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
