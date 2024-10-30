@@ -85,7 +85,9 @@ namespace Code.Internal.Network
 
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
-            await Task.Delay(5000);
+            while (!Observers.Contains(connection))
+                await Task.Delay(100);
+            
             var scenario = sceneSettings.currentScenario;
             if (connection.ClientId == 0 && sceneSettings.isNet)
             {
