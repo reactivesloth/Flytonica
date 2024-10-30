@@ -7,7 +7,7 @@ using UltimateReplay;
 
 namespace Code.Internal.Scenario.Transport
 {
-    public class TakeZone : NetworkBehaviour
+    public class TakeZone : MonoBehaviour
     {
         [SerializeField] private CargoObject spawnedCargoPrefab;
         [SerializeField] private Transform cargoSpawnPoint;
