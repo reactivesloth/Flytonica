@@ -4,6 +4,7 @@ using System.Linq;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using JetBrains.Annotations;
 
 namespace Code.Internal.Network.Teacher
 {
@@ -11,13 +12,13 @@ namespace Code.Internal.Network.Teacher
     {
         public static PlayerManager Instance;
 
-        private readonly SyncDictionary<NetworkConnection, PlayerResultInLeaderboard> _playerResults = new();
+        private readonly SyncDictionary<NetworkConnection, PlayerData> _playerDatas = new();
 
-        private readonly Dictionary<NetworkConnection, NetworkObject> _playerDrones = new();
+        //private readonly Dictionary<NetworkConnection, NetworkObject> _playerDrones = new();
 
-        public Dictionary<NetworkConnection, NetworkObject> AllPlayers => _playerDrones;
+        public SyncDictionary<NetworkConnection, PlayerData> AllPlayers => _playerDatas;
 
-        public PlayerResultInLeaderboard[] LeaderboardResults => _playerResults.Values.ToArray();
+        public PlayerData[] LeaderboardResults => _playerDatas.Values.ToArray();
 
         public event Action OnPlayerListUpdated;
 
@@ -29,31 +30,27 @@ namespace Code.Internal.Network.Teacher
         public override void OnStartServer()
         {
             base.OnStartServer();
-            _playerResults.Clear();
+            _playerDatas.Clear();
         }
-
-        public void AddPlayer(NetworkConnection connection, NetworkObject drone)
+        
+        public void AddPlayer(NetworkConnection connection, string playerName, NetworkObject drone)
         {
-            if (_playerDrones.TryAdd(connection, drone))
-            {
+            if (_playerDatas.TryAdd(connection, new PlayerData(playerName, drone)))
                 OnPlayerListUpdated?.Invoke();
-            }
-
-            _playerResults.TryAdd(connection, new PlayerResultInLeaderboard($"Player {connection.ClientId}"));
         }
-
-        public void RemovePlayer(NetworkConnection connection)
+        
+        /*public void RemovePlayer(NetworkConnection connection)
         {
             if (_playerDrones.ContainsKey(connection))
             {
                 _playerDrones.Remove(connection);
                 OnPlayerListUpdated?.Invoke();
             }
-        }
+        }*/
 
-        public void UpdateResultTime(NetworkConnection connection, float newTime, int newScore, bool isFinished)
+        public void UpdateResult(NetworkConnection connection, float newTime, int newScore, bool isFinished)
         {
-            if (!_playerResults.TryGetValue(connection, out var result))
+            if (!_playerDatas.TryGetValue(connection, out var result))
                 return;
 
             result.Time = newTime;
@@ -61,22 +58,25 @@ namespace Code.Internal.Network.Teacher
             result.IsFinished = isFinished;
         }
     }
-
-    [Serializable]
-    public class PlayerResultInLeaderboard
+    
+    public class PlayerData
     {
         public string PlayerName;
+        
+        public NetworkObject Drone;
         public int Score;
         public float Time;
         public bool IsFinished;
+        
 
-        public PlayerResultInLeaderboard()
+        public PlayerData()
         {
         }
 
-        public PlayerResultInLeaderboard(string playerName)
+        public PlayerData(string playerName, NetworkObject drone)
         {
             PlayerName = playerName;
+            Drone = drone;
         }
 
         public override string ToString()

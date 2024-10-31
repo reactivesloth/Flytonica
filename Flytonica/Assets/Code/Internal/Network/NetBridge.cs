@@ -1,4 +1,5 @@
-﻿using Code.Internal.Drone;
+﻿using Code.Internal.API;
+using Code.Internal.Drone;
 using Code.Internal.Network.Teacher;
 using Code.Internal.Scenario;
 using Code.Internal.Scenario.Race;
@@ -7,6 +8,7 @@ using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
 using FishNet.Connection;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace Code.Internal.Network
@@ -19,10 +21,22 @@ namespace Code.Internal.Network
 
         public bool IsObservable = false;
 
+        public readonly SyncVar<string> PlayerNickNameSync = new();
+
         protected override void OnValidate()
         {
             base.OnValidate();
             sensors = GetComponent<DroneSensors>();
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (!IsOwner) 
+                return;
+            
+            var nickName = HttpClient.IsAuthorized ? HttpClient.UserData.name : $"Player {OwnerId}";
+            SetName(Owner, nickName);
         }
 
         private void Update()
@@ -62,16 +76,17 @@ namespace Code.Internal.Network
                     score = scenarioSearching.FindedCount;
                     break;
             }
-            
-            UpdatePlayerResult(Owner, scenario.TotalTimeInSeconds, score, scenario.ScenarioCondition == ScenarioCondition.Finished);
+
+            UpdatePlayerResult(Owner, scenario.TotalTimeInSeconds, score,
+                scenario.ScenarioCondition == ScenarioCondition.Finished);
         }
 
         [ServerRpc]
         private void UpdatePlayerResult(NetworkConnection player, float time, int score, bool isFinished)
         {
-            PlayerManager.Instance.UpdateResultTime(player, time, score, isFinished);
+            PlayerManager.Instance.UpdateResult(player, time, score, isFinished);
         }
-        
+
         [ServerRpc]
         private void SendBaseScenarioStateToServer(float timer, string taskText, string windText, int altMaxValue)
         {
@@ -101,7 +116,15 @@ namespace Code.Internal.Network
         private void SendSearchingScenarioStateToServer()
         {
         }
-        
+
+        [ServerRpc]
+        private void SetName(NetworkConnection sender, string value)
+        {
+            print(value);
+            PlayerNickNameSync.Value = value;
+            PlayerManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
+        }
+
         private void UpdateLocalScenarioBaseState(float timer, string taskText, string windText, int altMaxValue)
         {
             if (!IsObservable) return;
@@ -124,7 +147,7 @@ namespace Code.Internal.Network
 
             DroneHUD.Instance.BatteryElement.SetСharge(batteryCharge);
             DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
-            
+
             DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
         }
 

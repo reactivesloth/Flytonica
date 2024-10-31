@@ -30,7 +30,7 @@ namespace Code.Internal.Network
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));
             _drones.Add(drone);
             
-            PlayerManager.Instance.AddPlayer(connection, drone);
+            //PlayerManager.Instance.AddPlayer(connection, drone);
             
             if(drone.TryGetComponent(out ReplayObject replayObject))
                 ReplayManager.AddReplayObjectToRecordScenes(replayObject);
@@ -53,7 +53,7 @@ namespace Code.Internal.Network
             if(drone.TryGetComponent(out ReplayObject replayObject))
                 ReplayManager.RemoveReplayObjectFromRecordScenes(replayObject);
             _drones.Remove(drone);
-            PlayerManager.Instance.RemovePlayer(connection);
+            //PlayerManager.Instance.RemovePlayer(connection);
             InstanceFinder.ServerManager.Despawn(drone, DespawnType.Destroy);
             Destroy(drone.gameObject);
         }

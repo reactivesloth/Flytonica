@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Code.Internal.Network.Teacher;
 using Code.Internal.UserInterface.Elements;
 using Code.Internal.XR;
@@ -15,11 +16,11 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button updateButton;
         [SerializeField] private Button thirdViewButton;
         [SerializeField] private Button leaderboardButton;
-        
+
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private Button playerListItemPrefab;
 
-        private Dictionary<NetworkConnection, NetworkObject> playerDrones;
+        private Dictionary<NetworkConnection, PlayerData> playersWithDrones;
 
         private void Start()
         {
@@ -49,12 +50,13 @@ namespace Code.Internal.UserInterface.Pages
                 Destroy(child.gameObject);
             }
 
-            playerDrones = PlayerManager.Instance.AllPlayers;
+            playersWithDrones = PlayerManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
+                .ToDictionary(d => d.Key, d => d.Value);
 
-            foreach (var player in playerDrones)
+            foreach (var player in playersWithDrones)
             {
                 var listItem = Instantiate(playerListItemPrefab, playerListContainer);
-                listItem.GetComponentInChildren<TMP_Text>().text = $"Player {player.Key.ClientId}";
+                listItem.GetComponentInChildren<TMP_Text>().text = player.Value.PlayerName;
                 var connection = player.Key;
                 listItem.onClick.AddListener(() => { SelectPlayer(connection); });
             }
@@ -62,7 +64,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void SelectPlayer(NetworkConnection connection)
         {
-            var drone = playerDrones[connection];
+            var drone = playersWithDrones[connection].Drone;
             HostCameraController.Instance.SetTargetDrone(drone);
         }
 
