@@ -1,6 +1,9 @@
 using Code.Internal.UserInterface.DroneHudElements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.UserInterface
 {
@@ -9,6 +12,7 @@ namespace Code.Internal.UserInterface
         public static DroneHUD Instance { get; private set; }
         
         [SerializeField] private GameObject HUDPanel;
+        [SerializeField] private bool keepActiveHUDPanelforXR = true;
         [field: SerializeField] public RectTransform gameUi;
 
         [Header("UI element")] 
@@ -37,21 +41,56 @@ namespace Code.Internal.UserInterface
             Instance = this;
         }
 
-        public void ShowHUD(bool value) => HUDPanel.SetActive(value);
+        public void ShowHUD(bool value)
+        {
+            if (keepActiveHUDPanelforXR)
+            {
+                if (XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+                {
+                    HUDPanel.SetActive(true);
+                    return;
+                }
+            }
 
-        public void SetWind(float speed, string direction) => windText?.SetText($"Ветер {direction} {speed:F1} м/с");
-        
-        public void SetWind(string value) => windText?.SetText(value);
-        
-        public void SetTask(string text) => taskText.text = text;
-        
-        public void SetMode(string text) => modeText.text = text;
-        
-        public void SetTime(string text) => timeText.text = $"SEC {text}";
+            if (HUDPanel!= null)
+                HUDPanel.SetActive(value);
+        }
 
-        public bool IsShowing() => HUDPanel.activeSelf;
+        public void SetWind(float speed, string direction)
+        {
+            if (windText != null) windText.SetText($"Ветер {direction} {speed:F1} м/с");
+        }
 
-        public void ClearMessage() => MessageBoxElement.ClearMessage();
-        public void SetMessage( MessageType type,string text, float duration = 0) => MessageBoxElement.DrawMessage(type, text, duration);
+        public void SetWind(string value)
+        {
+            if (windText != null) windText.SetText(value);
+        }
+
+        public void SetTask(string text)
+        {
+            if (taskText != null) taskText.text = text;
+        }
+
+        public void SetMode(string text)
+        {
+            if (modeText != null) modeText.text = text;
+        }
+
+        public void SetTime(string text)
+        {
+            if (timeText != null) timeText.text = $"SEC {text}";
+        }
+
+        public bool IsShowing() => HUDPanel != null && HUDPanel.activeSelf;
+
+        public void ClearMessage()
+        {
+            if (MessageBoxElement != null) MessageBoxElement.ClearMessage();
+        }
+
+        public void SetMessage( MessageType type,string text, float duration = 0)
+        {
+            if (MessageBoxElement != null) MessageBoxElement.DrawMessage(type, text, duration);
+        }
     }
 }

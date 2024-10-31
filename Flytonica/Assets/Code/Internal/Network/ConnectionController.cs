@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
-using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
-using FishNet.Managing.Server;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
@@ -87,7 +85,9 @@ namespace Code.Internal.Network
 
         private async void InvokeTargetInitializeScenario(NetworkConnection connection)
         {
-            await Task.Delay(5000);
+            while (!Observers.Contains(connection))
+                await Task.Delay(100);
+            
             var scenario = sceneSettings.currentScenario;
             if (connection.ClientId == 0 && sceneSettings.isNet)
             {

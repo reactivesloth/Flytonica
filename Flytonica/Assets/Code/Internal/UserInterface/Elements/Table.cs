@@ -7,16 +7,21 @@ namespace Code.Internal.UserInterface.Elements
     public class Table : MonoBehaviour
     {
         [SerializeField] private bool isShowHeaders = true;
-        
+
+        [SerializeField] private Transform numbersParent;
+        [SerializeField] private Transform contentParent;
+
         [SerializeField] private GameObject headerCellPrefab;
         [SerializeField] private GameObject cellPrefab;
-        
+
         [SerializeField] private GameObject contentRow;
         [SerializeField] private float fixedColumnWidth = 72f;
-        
+
         [SerializeField] private List<string> titlesHeaders;
         [SerializeField] private List<string> testData;
-        private readonly List<GameObject> _rows = new();
+        private readonly List<GameObject> _cells = new();
+
+        private int rowCount = 0;
 
         private void Awake()
         {
@@ -27,17 +32,15 @@ namespace Code.Internal.UserInterface.Elements
         
         private void GenerateHeader(List<string> titles)
         {
-            if(!isShowHeaders)
+            if (!isShowHeaders)
                 return;
-            
-            var headerRowContent = Instantiate(contentRow, transform);
-            headerRowContent.transform.SetParent(transform);
-            headerRowContent.transform.localScale = Vector3.one;
 
-            AddCell(headerCellPrefab, "№", headerRowContent, fixedColumnWidth, true);
+            var headerRowContent = Instantiate(contentRow, contentParent);
+
+            AddCell(headerCellPrefab, "№", numbersParent.gameObject, false);
 
             foreach (var title in titles)
-                AddCell(headerCellPrefab, title, headerRowContent, 0, false);
+                AddCell(headerCellPrefab, title, headerRowContent,false);
         }
 
         public void AddRow(params string[] data)
@@ -48,23 +51,39 @@ namespace Code.Internal.UserInterface.Elements
                 return;
             }
 
-            var rowContent = Instantiate(contentRow, transform);
-            rowContent.transform.SetParent(transform);    
-            rowContent.transform.localScale = Vector3.one;
+            var rowContent = Instantiate(contentRow, contentParent);
+
+            rowCount++;
             
-            AddCell(cellPrefab, (_rows.Count + 1).ToString(), rowContent, fixedColumnWidth, true);
-            
+            AddCell(cellPrefab, rowCount.ToString(), numbersParent.gameObject);
+
             foreach (var cellData in data)
-                AddCell(cellPrefab, cellData, rowContent, 0, false);
+                AddCell(cellPrefab, cellData, rowContent);
             
-            _rows.Add(rowContent);
+            _cells.Add(rowContent);
         }
 
-        private void AddCell(GameObject prefab, string data, GameObject row, float width, bool isFixedWidth)
+        private void AddCell(GameObject prefab, string data, GameObject row, bool isContent = true)
         {
             var cell = Instantiate(prefab, row.transform);
-            
+
             cell.GetComponentInChildren<TMP_Text>().text = data;
+            
+            if(isContent)
+                _cells.Add(cell);
+        }
+
+        public void Clear()
+        {
+            rowCount = 0;
+            
+            foreach (var row in _cells)
+            {
+                if(row)
+                    Destroy(row);
+            }
+
+            _cells.Clear();
         }
     }
 }

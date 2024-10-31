@@ -20,21 +20,23 @@ namespace Code.Internal.Network.Teacher
         private void Awake()
         {
             Instance = this;
-            playerFpvCameraControllers.ForEach(p => p.IsViewed = true);
+            SetPlayerFpv(true);
         }
 
         private void Update()
         {
             if(targetDrone)
                 targetDrone?.GetComponent<DroneSensors>()?.UpdateHud();
+            else
+                SetTeacherView();
         }
 
         public void SetTeacherView()
         {
-            playerFpvCameraControllers.ForEach(p => p.IsViewed = true);
-            
-            if(!targetDrone) 
-                return;
+            SetPlayerFpv(true);
+
+            if (targetDrone)
+                targetDrone.GetComponent<NetBridge>().IsObservable = false;   
             var fpvCamController = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
             if(!fpvCamController) 
                 return;
@@ -45,14 +47,28 @@ namespace Code.Internal.Network.Teacher
         
         public void SetTargetDrone(NetworkObject drone)
         {
+            if (targetDrone)
+            {
+                targetDrone.GetComponent<NetBridge>().IsObservable = false;   
+                var targetFpv = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
+                if(!targetFpv) 
+                    return;
+                targetDrone = null;
+                targetFpv.IsViewed = false;
+            }
+            
             var fpvCamController = drone?.GetComponent<XRDisableHeadTrackingInFPV>();
             if(!fpvCamController)
                 return;
+            
             targetDrone = drone;
+            targetDrone.GetComponent<NetBridge>().IsObservable = true;
             fpvCamController.IsViewed = true;
-            playerFpvCameraControllers.ForEach(p => p.IsViewed = false);
+            SetPlayerFpv(false);
             DroneHUD.Instance.ShowHUD(true);
         }
+        
+        private void SetPlayerFpv(bool value) => playerFpvCameraControllers.ForEach(p => p.IsViewed = value);
 
         private void OnDisable()
         {

@@ -76,12 +76,21 @@ namespace Code.Internal.UserInterface.Pages
         private void Delete()
         {
             //TODO: Init popup
+            PopupPanel.ConfigurePopup("Вы деействительно хотите удалить?",
+                $"Вы удалите весь отчёт о прохождении этого задания. Продолжить?",
+                null, "Удалить", Color.red, Color.white,
+                () =>
+                {
+                    HttpClient.Delete(LinkConstants.LogDeleteUrl(replaysRoot.SelectedButton.GetSaveData<LogData>().id),
+                        callback: GenerateList);
+                },
+                null, "Отмена", Color.green, Color.black, null);
         }
 
         private void View()
         {
             var replayData = replaysRoot.SelectedButton.GetSaveData<LogData>();
-            
+
             viewReplayPage.Init(replayData);
             viewReplayPage.Open();
         }

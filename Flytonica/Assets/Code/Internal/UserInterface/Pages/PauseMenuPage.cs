@@ -1,6 +1,7 @@
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
+using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet;
 using UnityEngine;
@@ -36,11 +37,9 @@ namespace Code.Internal.UserInterface.Pages
         {
             UIController.Instance.Unpause(false);
 
-            if (InstanceFinder.ServerManager.Started)
-                InstanceFinder.ServerManager.StopConnection(true);
-            InstanceFinder.ClientManager.StopConnection();
+            ScenarioSwitcherController.Instance.FailTask();
 
-            GameSceneManager.Instance.ToMenuSingle();
+            //GameSceneManager.Instance.ToMenuSingle();
         }
 
         private void ReturnToGame()

@@ -2,6 +2,7 @@
 using UnityEngine;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
+using FishNet.Object;
 using UltimateReplay;
 
 namespace Code.Internal.Scenario.Transport

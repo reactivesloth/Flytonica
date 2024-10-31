@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
+using FishNet.Object;
 using UnityEngine;
 
 namespace Code.Internal.Scenario.Transport
@@ -11,8 +12,10 @@ namespace Code.Internal.Scenario.Transport
         private List<TakeZone> _takeZones;
         private List<DropZone> _dropZones;
 
-        private int deliveredCargoCount;
+        private int _deliveredCargoCount;
 
+        public int DeliveredCargoCount => _deliveredCargoCount;
+        
         public override void Initialize(ScenarioSettings scenario)
         {
             base.Initialize(scenario);
@@ -43,7 +46,7 @@ namespace Code.Internal.Scenario.Transport
         protected override void StartRace()
         {
             base.StartRace();
-            deliveredCargoCount = 0;
+            _deliveredCargoCount = 0;
 
             UpdateTask();
         }
@@ -51,16 +54,8 @@ namespace Code.Internal.Scenario.Transport
         protected override void FinishRace(bool success = true)
         {
             base.FinishRace(success);
-
-            PopupPanel.ConfigurePopup("Задание выполнено!",
-                $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
-                null, "Выйти в главное меню", Color.red, Color.white,
-                () => { ScenarioSwitcherController.Instance.EndSession(); },
-                null, "Продолжить", Color.green, Color.black, () =>
-                {
-                    AddStatistic();
-                    ScenarioSwitcherController.Instance.NextOrEnd();
-                });
+            
+            
         }
 
         protected override void AddStatistic()
@@ -68,7 +63,7 @@ namespace Code.Internal.Scenario.Transport
             if (_takeZones.Sum(t => t.TakeCount) - _takeZones.Count > 0)
                 FinalScore -= (_takeZones.Sum(t => t.TakeCount) - _takeZones.Count) * 5f; //Штраф за лишние поднятия
             print(FinalScore);
-            FinalScore -= (1f - (float)deliveredCargoCount / _dropZones.Count) * 100; //Штраф за недоставленные грузы
+            FinalScore -= (1f - (float)_deliveredCargoCount / _dropZones.Count) * 100; //Штраф за недоставленные грузы
             print(FinalScore);
             
             print(_takeZones.Sum(c => c.FallCount));
@@ -93,7 +88,7 @@ namespace Code.Internal.Scenario.Transport
             resultBuilder.AddParameter("Количество падений груза", _takeZones.Sum(c => c.FallCount));
             resultBuilder.AddParameter("Количество столкновений груза", _takeZones.Sum(c => c.CollisionCount));
 
-            resultBuilder.AddParameter($"Количество доставленых грузов", $"{deliveredCargoCount}/{_dropZones.Count}");
+            resultBuilder.AddParameter($"Количество доставленых грузов", $"{_deliveredCargoCount}/{_dropZones.Count}");
 
             foreach (var dropZone in _dropZones)
             {
@@ -108,14 +103,14 @@ namespace Code.Internal.Scenario.Transport
 
         private void OnCargoDelivery(CargoObject cargo)
         {
-            deliveredCargoCount++;
+            _deliveredCargoCount++;
             _takeZones.FirstOrDefault(z => z.ConnectionId == cargo.ConnectionId)?.SetDelivery();
             UpdateTask();
         }
 
         private void UpdateTask()
         {
-            if (deliveredCargoCount >= _dropZones.Count)
+            if (_deliveredCargoCount >= _dropZones.Count)
             {
                 DroneHUD.Instance.SetTask($"Вы доставили все предметы");
                 FinishRace();
@@ -123,7 +118,7 @@ namespace Code.Internal.Scenario.Transport
             else
             {
                 var taskText = string.Empty;
-                taskText += $"Доставьте предметы {deliveredCargoCount}/{_dropZones.Count} \n";
+                taskText += $"Доставьте предметы {_deliveredCargoCount}/{_dropZones.Count} \n";
                 
                 /*foreach (var dropZone in _dropZones)
                 {

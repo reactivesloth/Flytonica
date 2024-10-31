@@ -316,6 +316,17 @@ namespace Code.Internal.Drone
             float minBatteryLevel = droneSettings.bateteryCellCount * droneSettings.minBatteryCellVoltage;
             float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
             batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);
+            print(batteryLevelPercent);
+            
+            if(batteryLevelPercent is >= 9 and <= 11)
+                DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", 5f);
+            
+            if(batteryLevelPercent <= 0f)
+            {
+                DroneSensors.InputSignal = 0;
+                DroneSensors.CameraSignal = 0;
+                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна");
+            }
         }
 
         private void UpdateRotation()

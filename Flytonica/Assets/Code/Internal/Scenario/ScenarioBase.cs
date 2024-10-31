@@ -5,22 +5,22 @@ using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.Elements;
 using UnityEngine;
 
 namespace Code.Internal.Scenario
 {
-    
     public enum ScenarioCondition
     {
         Waiting,
         Running,
         Finished
     }
-    
+
     public abstract class ScenarioBase : MonoBehaviour
     {
-        protected ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
-        
+        public ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
+
         protected float TotalTime;
         protected ScenarioSettings CurrentScenario;
 
@@ -51,22 +51,20 @@ namespace Code.Internal.Scenario
             _collisionWithBirdsCount * 10;
 
         public bool IsStarting { get; protected set; }
-
+        public float TotalTimeInSeconds => TotalTime;
 
         protected virtual void Update()
         {
-            if (!IsStarting) return;
+            if (!IsStarting || !DroneController.Instance) return;
 
             TotalTime += Time.deltaTime;
-            
-            
 
             if (!_droneControllerInitialized && DroneController.Instance != null)
             {
                 OnDroneControllerInitialized();
                 _droneControllerInitialized = true;
             }
-            
+
             DroneHUD.Instance?.SetTime(GetTimeWithMs(TotalTime));
         }
 
@@ -80,6 +78,11 @@ namespace Code.Internal.Scenario
             _dischargeCount = _collisionWithObjectsCount = _signalLossesPliCount = _signalLossesRebCount =
                 _signalLossesWallsCount = _signalLossesFarCount = _collisionWithMensCount =
                     _collisionWithAnimalsCount = _collisionWithBirdsCount = 0;
+
+            var resultBuilder = ReportBuilder.Instance;
+            resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
+            resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
+            resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
         }
 
         protected virtual void StartRace()
@@ -96,10 +99,19 @@ namespace Code.Internal.Scenario
             ScenarioCondition = ScenarioCondition.Finished;
             _isSuccess = success;
             IsStarting = false;
-            
+
             DroneHUD.Instance?.ClearMessage();
             DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance?.MenuCameraHandle(true);
+
+            AddStatistic();
+
+            PopupPanel.ConfigurePopup("Задание выполнено!",
+                $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
+                null, "Провалить задание", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.FailTask(); },
+                null, "Продолжить", Color.green, Color.black,
+                () => { ScenarioSwitcherController.Instance.NextOrEnd(); });
         }
 
         protected virtual void AddStatistic()
@@ -113,9 +125,6 @@ namespace Code.Internal.Scenario
             var resultBuilder = ReportBuilder.Instance;
 
             //Фиксируем другие неоцениваемые параметры
-            resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
-            resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
-            resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
             resultBuilder.AddParameter("Успешность сценария", _isSuccess ? "Да" : "Нет");
             resultBuilder.AddParameter("Время выполнения задания",
                 $"{(int)(TotalTime / 60):D2}:{(int)(TotalTime % 60):D2}");
@@ -204,7 +213,7 @@ namespace Code.Internal.Scenario
             var dateTime = DateTime.Today.Add(timeSpan);
             return dateTime.ToString("mm:ss:fff");
         }
-        
+
         public static string GetTime(float t)
         {
             var timeSpan = TimeSpan.FromSeconds(t);

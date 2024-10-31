@@ -4,6 +4,7 @@ using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
 
@@ -20,7 +21,10 @@ namespace Code.Internal.Scenario
 
         private ScenarioSettings _settings;
         private bool _cameraInitialized = false;
+        private ScenarioBase _currentScenario;
         
+        public ScenarioBase CurrentScenario => _currentScenario;
+
         private void Update()
         {
             if (DroneController.Instance == null)
@@ -50,6 +54,7 @@ namespace Code.Internal.Scenario
             transportModeObjects?.SetActive(false);
             searchingModeObjects?.SetActive(false);
             searchingIRModeObjects?.SetActive(false);
+            DroneHUD.Instance?.SetTask(string.Empty);
 
             var objectsToClean = FindObjectsOfType<SpawnableObject>(true);
             foreach (var o in objectsToClean)
@@ -123,19 +128,23 @@ namespace Code.Internal.Scenario
                     break;
                 case ScenarioType.Race:
                     raceModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioRace>().Initialize(_settings);
+                    _currentScenario = FindAnyObjectByType<ScenarioRace>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 case ScenarioType.Transport:
                     transportModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioTransport>().Initialize(_settings);
+                    _currentScenario = FindAnyObjectByType<ScenarioTransport>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 case ScenarioType.Searching:
                     searchingModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioSearching>().Initialize(_settings);
+                    _currentScenario = FindAnyObjectByType<ScenarioSearching>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 case ScenarioType.SearchingWithIR:
                     searchingIRModeObjects?.SetActive(true);
-                    FindAnyObjectByType<ScenarioSearching>().Initialize(_settings);
+                    _currentScenario = FindAnyObjectByType<ScenarioSearching>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

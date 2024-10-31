@@ -23,6 +23,9 @@ namespace Code.Internal.Scenario.Race
         private RaceState _raceState = RaceState.None;
         private float _timeTakeoff, _timeRacing;
 
+        public int PassedCheckpoints => checkpoints.Count(c => c.checkpointStatus == CheckpointStatus.Passed);
+
+
         private void Start()
         {
             DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
@@ -65,19 +68,21 @@ namespace Code.Internal.Scenario.Race
             {
                 _raceState = RaceState.Racing;
                 DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
-                Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
+                Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
+                Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
             }
-            
+
             if (checkpoint == checkpoints.Last() && _raceState == RaceState.Racing)
             {
                 FinishRace();
-                Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");
+                Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");
+                Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");
             }
-            
+
             if (checkpoints.IndexOf(checkpoint) == _nextCheckpoint && _nextCheckpoint + 1 < checkpoints.Count)
             {
                 _nextCheckpoint++;
-                
+
                 if (ScenarioCondition == ScenarioCondition.Running)
                 {
                     SetNextCheckpoints();
@@ -96,13 +101,14 @@ namespace Code.Internal.Scenario.Race
         {
             base.Initialize(scenario);
 
-            List<SpawnableObject> objects = new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
+            List<SpawnableObject> objects =
+                new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
             foreach (var obj in objects)
             {
                 obj.transform.SetSiblingIndex(obj.sortOrder);
             }
-            
-            var sortOrder  = 0;
+
+            var sortOrder = 0;
             for (var i = 0; i < objects.Count(); i++)
             {
                 if (objects[i].Type == MapEditorObjectType.RacingGate)
@@ -134,7 +140,7 @@ namespace Code.Internal.Scenario.Race
                 if (o.Type == MapEditorObjectType.FinishGate)
                 {
                     var gatePoints = o.GetComponentsInChildren<Checkpoint>();
-                    
+
                     var place = checkpoints.Count;
                     foreach (var gatePoint in gatePoints)
                     {
@@ -145,7 +151,7 @@ namespace Code.Internal.Scenario.Race
                 }
             }
 
-            
+
             SetNextCheckpoints();
 
             if (ScenarioCondition == ScenarioCondition.Waiting)
@@ -176,7 +182,7 @@ namespace Code.Internal.Scenario.Race
                 cp.SetEndColor(cp.checkpointStatus == CheckpointStatus.Passed);
             }
 
-            PopupPanel.ConfigurePopup("Задание выполнено!",
+            /*PopupPanel.ConfigurePopup("Задание выполнено!",
                 $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Выйти в главное меню", Color.red, Color.white,
                 () => { ScenarioSwitcherController.Instance.EndSession(); },
@@ -185,7 +191,7 @@ namespace Code.Internal.Scenario.Race
                     AddStatistic();
 
                     ScenarioSwitcherController.Instance.NextOrEnd();
-                });
+                });*/
         }
 
         protected override void AddStatistic()
@@ -220,6 +226,35 @@ namespace Code.Internal.Scenario.Race
                 if (i < checkpoints.Count - 1)
                     Gizmos.DrawLine(checkpoints[i].transform.position + Vector3.up,
                         checkpoints[i + 1].transform.position + Vector3.up);
+            }
+        }
+
+        public int[] GetCheckpointStatuses()
+        {
+            int[] statuses = new int[checkpoints.Count];
+            for (int i = 0; i < checkpoints.Count; i++)
+            {
+                statuses[i] = (int)checkpoints[i].checkpointStatus;
+            }
+
+            return statuses;
+        }
+
+        // Method to set the state
+        public void SetScenarioState(int[] checkpointStatuses)
+        {
+            SetCheckpointStatuses(checkpointStatuses);
+        }
+
+        private void SetCheckpointStatuses(int[] statuses)
+        {
+            for (int i = 0; i < statuses.Length; i++)
+            {
+                if (i >= 0 && i < checkpoints.Count)
+                {
+                    var status = (CheckpointStatus)statuses[i];
+                    checkpoints[i].ChangeStatus(status);
+                }
             }
         }
     }
