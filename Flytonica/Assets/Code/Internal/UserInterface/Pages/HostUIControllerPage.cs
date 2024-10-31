@@ -70,7 +70,10 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLeaderBoardOpen()
         {
-            Leaderboard.Instance.Open();
+            if(!Leaderboard.Instance.gameObject.activeSelf)
+                Leaderboard.Instance.Open();
+            else
+                Leaderboard.Instance.Close();
         }
     }
 }
