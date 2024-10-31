@@ -235,7 +235,7 @@ namespace Code.Internal.Replays
 
         private void SetHud()
         {
-            if (DroneHUD.Instance == null || !DroneHUD.Instance.IsShowing()) return;
+            if (DroneHUD.Instance == null) return;
 
             // Обновляем элементы HUD с использованием интерполированных значений
             DroneHUD.Instance.AltValueElement.Set(_altitude);
