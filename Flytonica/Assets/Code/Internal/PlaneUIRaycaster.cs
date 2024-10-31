@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Code.Internal
@@ -21,7 +22,7 @@ namespace Code.Internal
         
         private void Initialize ()
         {
-            ui.gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled
+            ui.gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled || GameObject.FindObjectsByType<XRDeviceSimulator>(FindObjectsInactive.Include, FindObjectsSortMode.None) != null
                 ? RenderMode.ScreenSpaceCamera
                 : RenderMode.ScreenSpaceOverlay;
         }
