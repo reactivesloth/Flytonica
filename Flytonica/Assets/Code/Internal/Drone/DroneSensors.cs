@@ -27,8 +27,18 @@ namespace Code.Internal.Drone
         public event Action SignalLostDueToDistance;
         public event Action SignalLostDueToObstacles;
         
-        public float CameraSignal => _cameraSignal;
-        public float InputSignal => _inputSignal;
+        public float CameraSignal
+        {
+            get => _cameraSignal;
+            set => _cameraSignal = value;
+        }
+
+        public float InputSignal
+        {
+            get => _inputSignal;
+            set => _inputSignal = value;
+        }
+
         public float Speed => _rigidbody.linearVelocity.magnitude * 3.6f;
         public float Altitude => transform.position.y;
         public float Health { get; set; }

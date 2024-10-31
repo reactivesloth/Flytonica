@@ -322,7 +322,11 @@ namespace Code.Internal.Drone
                 DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", 5f);
             
             if(batteryLevelPercent <= 0f)
-                DroneHUD.Instance.SetMessage(MessageType.Error,"Батарея разряжена, связь с квадрокоптером потеряна");
+            {
+                DroneSensors.InputSignal = 0;
+                DroneSensors.CameraSignal = 0;
+                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна");
+            }
         }
 
         private void UpdateRotation()
