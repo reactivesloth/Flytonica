@@ -16,7 +16,7 @@ namespace Code.Internal.XR
         
         private void Initialize ()
         {
-            if (XRSettings.isDeviceActive && XRSettings.enabled || GameObject.FindObjectsByType<XRDeviceSimulator>(FindObjectsInactive.Include, FindObjectsSortMode.None) != null)
+            if (XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
             {
                 desktopPlayer.SetActive(false);
                 XRPlayer.SetActive(true);

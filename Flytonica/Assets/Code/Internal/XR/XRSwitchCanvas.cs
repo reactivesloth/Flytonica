@@ -17,7 +17,7 @@ namespace Code.Internal.XR
         private void Initialize ()
         {
             var canvas = gameObject.GetComponent<Canvas>();
-            canvas.renderMode = XRSettings.isDeviceActive && XRSettings.enabled || GameObject.FindObjectsByType<XRDeviceSimulator>(FindObjectsInactive.Include, FindObjectsSortMode.None) != null
+            canvas.renderMode = XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null
                 ? RenderMode.ScreenSpaceCamera
                 : RenderMode.ScreenSpaceOverlay;
 

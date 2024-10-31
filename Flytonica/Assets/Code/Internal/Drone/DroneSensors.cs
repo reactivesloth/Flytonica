@@ -85,7 +85,7 @@ namespace Code.Internal.Drone
         {
             UpdateHud();
 
-            if (DroneController.Instance && DroneHUD.Instance && DroneHUD.Instance.IsShowing())
+            if (DroneController.Instance && DroneHUD.Instance)
             {
                 DroneHUD.Instance.BatteryElement.SetVoltage(BatteryVoltage);
                 DroneHUD.Instance.BatteryElement.SetСharge(BatteryLevel);
@@ -110,7 +110,7 @@ namespace Code.Internal.Drone
 
         public void UpdateHud()
         {
-            if (DroneHUD.Instance != null && DroneHUD.Instance.IsShowing())
+            if (DroneHUD.Instance != null)
             {
                 DroneHUD.Instance.AltValueElement.Set(Altitude);
                 DroneHUD.Instance.SpeedValueElement.Set(Speed);
