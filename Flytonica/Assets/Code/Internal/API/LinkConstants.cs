@@ -80,6 +80,7 @@ namespace Code.Internal.API
         // Sends: CreateLogRequestData (user_scenario_id, device_uuid, status, file, replay)
         // Receives: LogData (id, uuid, owner_id, scenario_id, file_id, created_at)
         private const string LogCreatePath = "logs/create";
+        private const string LogDeletePath = "logs/delete/{0}";
 
         // Path for fetching multiple log entries with pagination
         // Sends: Query parameters (page, itemsPerPage)
@@ -126,6 +127,8 @@ namespace Code.Internal.API
         public static string DeviceCheckUrl(string id) => CombineUrl(string.Format(CheckDevicePath, id));
 
         public static string LogCreateUrl => CombineUrl(LogCreatePath);
+        
+        public static string LogDeleteUrl(int id) => CombineUrl(string.Format(LogDeletePath, id));
 
         public static string LogsMultiUrl(Dictionary<string, string> queryParams = null) =>
             CombineUrl(LogsMultiPath, queryParams);
