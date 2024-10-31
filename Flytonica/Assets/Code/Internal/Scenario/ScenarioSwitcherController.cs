@@ -29,6 +29,13 @@ namespace Code.Internal.Scenario
             Instance = this;
         }
 
+        
+        public void FailTask()
+        {
+            _currentStatus = 2;
+            End();
+        }
+        
         public void StartTask()
         {
             if (!sceneSettings.isTask) return;
@@ -102,11 +109,10 @@ namespace Code.Internal.Scenario
 
         private void EndTask()
         {
-            //Time.timeScale = 0f;
+            Time.timeScale = 0f;
             var replay = ReplayController.Instance.StopRecording();
             if (sceneSettings.isTask)
                 SendData(replay);
-            print("End");
             EndSession();
         }
 

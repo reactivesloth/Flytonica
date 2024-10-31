@@ -10,18 +10,17 @@ using UnityEngine;
 
 namespace Code.Internal.Scenario
 {
-    
     public enum ScenarioCondition
     {
         Waiting,
         Running,
         Finished
     }
-    
+
     public abstract class ScenarioBase : MonoBehaviour
     {
         public ScenarioCondition ScenarioCondition = ScenarioCondition.Waiting;
-        
+
         protected float TotalTime;
         protected ScenarioSettings CurrentScenario;
 
@@ -59,13 +58,13 @@ namespace Code.Internal.Scenario
             if (!IsStarting || !DroneController.Instance) return;
 
             TotalTime += Time.deltaTime;
-            
+
             if (!_droneControllerInitialized && DroneController.Instance != null)
             {
                 OnDroneControllerInitialized();
                 _droneControllerInitialized = true;
             }
-            
+
             DroneHUD.Instance?.SetTime(GetTimeWithMs(TotalTime));
         }
 
@@ -79,7 +78,7 @@ namespace Code.Internal.Scenario
             _dischargeCount = _collisionWithObjectsCount = _signalLossesPliCount = _signalLossesRebCount =
                 _signalLossesWallsCount = _signalLossesFarCount = _collisionWithMensCount =
                     _collisionWithAnimalsCount = _collisionWithBirdsCount = 0;
-            
+
             var resultBuilder = ReportBuilder.Instance;
             resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
             resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
@@ -100,34 +99,19 @@ namespace Code.Internal.Scenario
             ScenarioCondition = ScenarioCondition.Finished;
             _isSuccess = success;
             IsStarting = false;
-            
+
             DroneHUD.Instance?.ClearMessage();
             DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance?.MenuCameraHandle(true);
-            
-            
+
+            AddStatistic();
+
             PopupPanel.ConfigurePopup("Задание выполнено!",
                 $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
-                null, "Выйти в главное меню", Color.red, Color.white,
-                () =>
-                {
-                    ScenarioSwitcherController.Instance.EndSession();
-                    DroneHUD.Instance?.SetTask(string.Empty);
-                },
-                null, "Продолжить", Color.green, Color.black, () =>
-                {
-                    DroneHUD.Instance?.SetTask(string.Empty);
-                    print(ScenarioSwitcherController.Instance.IsNet);
-                    if(ScenarioSwitcherController.Instance.IsNet)
-                    {
-                        ScenarioSwitcherController.Instance.EndSession();
-                    }
-                    else
-                    {
-                        AddStatistic();
-                        ScenarioSwitcherController.Instance.NextOrEnd();
-                    }
-                });
+                null, "Провалить задание", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.FailTask(); },
+                null, "Продолжить", Color.green, Color.black,
+                () => { ScenarioSwitcherController.Instance.NextOrEnd(); });
         }
 
         protected virtual void AddStatistic()
@@ -229,7 +213,7 @@ namespace Code.Internal.Scenario
             var dateTime = DateTime.Today.Add(timeSpan);
             return dateTime.ToString("mm:ss:fff");
         }
-        
+
         public static string GetTime(float t)
         {
             var timeSpan = TimeSpan.FromSeconds(t);

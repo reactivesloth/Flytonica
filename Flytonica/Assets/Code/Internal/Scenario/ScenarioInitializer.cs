@@ -4,6 +4,7 @@ using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
 
@@ -53,6 +54,7 @@ namespace Code.Internal.Scenario
             transportModeObjects?.SetActive(false);
             searchingModeObjects?.SetActive(false);
             searchingIRModeObjects?.SetActive(false);
+            DroneHUD.Instance?.SetTask(string.Empty);
 
             var objectsToClean = FindObjectsOfType<SpawnableObject>(true);
             foreach (var o in objectsToClean)
