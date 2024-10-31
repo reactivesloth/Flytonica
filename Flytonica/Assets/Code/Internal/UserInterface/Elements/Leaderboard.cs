@@ -65,7 +65,7 @@ namespace Code.Internal.UserInterface.Elements
         private void GenerateResultTable()
         {
             // Сортируем результаты
-            var sortedResults = PlayerManager.Instance.LeaderboardResults
+            var sortedResults = UsersManager.Instance.LeaderboardResults
                 .OrderByDescending(result => result.IsFinished)  // Сначала финишировавшие пользователи
                 .ThenByDescending(result => result.Score)        // Затем по убыванию очков
                 .ThenBy(result => result.Time)                   // И по возрастанию времени

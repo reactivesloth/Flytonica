@@ -1,4 +1,5 @@
 ﻿using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using Code.Internal.Network.Teacher;
 using Code.Internal.Scenario;
@@ -23,6 +24,8 @@ namespace Code.Internal.Network
 
         public readonly SyncVar<string> PlayerNickNameSync = new();
 
+        public bool IsTeacher => HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher;
+
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -32,11 +35,11 @@ namespace Code.Internal.Network
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (!IsOwner) 
+            if (!IsOwner)
                 return;
-            
+
             var nickName = HttpClient.IsAuthorized ? HttpClient.UserData.name : $"Player {OwnerId}";
-            SetName(Owner, nickName);
+            SetPlayerDataInServer(Owner, nickName);
         }
 
         private void Update()
@@ -61,7 +64,8 @@ namespace Code.Internal.Network
 
             //Пока сюда загоняем то что не реплецируется через DroneSensors.UpdateHUD()
             SendDroneVars(sensors.ModeName, sensors.Health, sensors.CameraSignal, sensors.InputSignal,
-                sensors.BatteryLevel, sensors.BatteryVoltage, DroneHUD.Instance.AimElement.Progress);
+                sensors.BatteryLevel, sensors.BatteryVoltage, DroneHUD.Instance.AimElement.Progress,
+                sensors.Speed);
 
             switch (scenario)
             {
@@ -77,37 +81,37 @@ namespace Code.Internal.Network
                     break;
             }
 
-            UpdatePlayerResult(Owner, scenario.TotalTimeInSeconds, score,
+            UpdatePlayerResultInServer(Owner, scenario.TotalTimeInSeconds, score,
                 scenario.ScenarioCondition == ScenarioCondition.Finished);
         }
 
         [ServerRpc]
-        private void UpdatePlayerResult(NetworkConnection player, float time, int score, bool isFinished)
+        private void UpdatePlayerResultInServer(NetworkConnection player, float time, int score, bool isFinished)
         {
-            PlayerManager.Instance.UpdateResult(player, time, score, isFinished);
+            UpdatePlayerResultForTeacher(player,time, score, isFinished);
         }
 
         [ServerRpc]
         private void SendBaseScenarioStateToServer(float timer, string taskText, string windText, int altMaxValue)
         {
-            UpdateLocalScenarioBaseState(timer, taskText, windText, altMaxValue);
+            SendBaseScenarioStateForTeacher(timer, taskText, windText, altMaxValue);
         }
 
         [ServerRpc]
         private void SendDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress)
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
         {
-            UpdateDroneVars(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, batteryCharge,
-                batteryVoltage, aimProgress);
+            SendDroneVarsForTeacher(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, batteryCharge,
+                batteryVoltage, aimProgress, speed);
         }
 
         [ServerRpc]
         private void SendRaceScenarioStateToServer(int[] checkpointStatuses)
         {
-            UpdateLocalScenarioRaceState(checkpointStatuses);
+            SendRaceScenarioStateForTeacher(checkpointStatuses);
         }
 
-        [ServerRpc]
+        /*[ServerRpc]
         private void SendTransportScenarioStateToServer()
         {
         }
@@ -115,15 +119,68 @@ namespace Code.Internal.Network
         [ServerRpc]
         private void SendSearchingScenarioStateToServer()
         {
-        }
+        }*/
 
         [ServerRpc]
-        private void SetName(NetworkConnection sender, string value)
+        private void SetPlayerDataInServer(NetworkConnection sender, string value)
         {
-            print(value);
-            PlayerNickNameSync.Value = value;
-            PlayerManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
+            SetPlayerDataForTeacher(sender, value);
         }
+
+        //========================================================================================
+        [ObserversRpc]
+        private void UpdatePlayerResultForTeacher(NetworkConnection player, float time,
+            int score, bool isFinished)
+        {
+            if(!IsTeacher) return;
+            UsersManager.Instance.UpdateResult(player, time, score, isFinished);
+        }
+
+        [ObserversRpc]
+        private void SendBaseScenarioStateForTeacher(float timer, string taskText,
+            string windText, int altMaxValue)
+        {
+            if(!IsTeacher) return;
+            UpdateLocalScenarioBaseState(timer, taskText, windText, altMaxValue);
+        }
+
+        [ObserversRpc]
+        private void SendDroneVarsForTeacher(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed )
+        {
+            if(!IsTeacher) return;
+            UpdateDroneVars(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, batteryCharge,
+                batteryVoltage, aimProgress, speed);
+        }
+
+        [ObserversRpc]
+        private void SendRaceScenarioStateForTeacher(int[] checkpointStatuses)
+        {
+            if(!IsTeacher) return;
+            UpdateLocalScenarioRaceState(checkpointStatuses);
+        }
+
+        /*[ObserversRpc]
+        private void SendTransportScenarioStateForTeacher()
+        {
+            if(!IsTeacher) return;
+        }
+
+        [ObserversRpc]
+        private void SendSearchingScenarioStateForTeacher()
+        {
+            if(!IsTeacher) return;
+        }*/
+
+        [ObserversRpc]
+        private void SetPlayerDataForTeacher(NetworkConnection sender, string value)
+        {
+            if (!IsTeacher) return;
+            PlayerNickNameSync.Value = value;
+            UsersManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
+        }
+
+        //================================================================================================
 
         private void UpdateLocalScenarioBaseState(float timer, string taskText, string windText, int altMaxValue)
         {
@@ -136,12 +193,13 @@ namespace Code.Internal.Network
         }
 
         private void UpdateDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress)
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
         {
             if (!IsObservable) return;
 
             DroneHUD.Instance.SetMode(sensorsModeName);
             DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
+            DroneHUD.Instance.SpeedValueElement.Set(speed);
             DroneHUD.Instance.CameraSignalElement.SetSignal(sensorsCameraSignal);
             DroneHUD.Instance.InputSignalElement.SetSignal(sensorsInputSignal);
 
@@ -149,6 +207,7 @@ namespace Code.Internal.Network
             DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
 
             DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
+            
         }
 
         private void UpdateLocalScenarioRaceState(int[] checkpointStatuses)

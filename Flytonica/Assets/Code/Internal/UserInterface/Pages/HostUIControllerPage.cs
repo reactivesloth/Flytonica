@@ -32,14 +32,14 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnEnable()
         {
-            PlayerManager.Instance.OnPlayerListUpdated += UpdatePlayerList;
+            UsersManager.Instance.OnPlayerListUpdated += UpdatePlayerList;
         }
 
         private void OnDisable()
         {
-            if (PlayerManager.Instance != null)
+            if (UsersManager.Instance != null)
             {
-                PlayerManager.Instance.OnPlayerListUpdated -= UpdatePlayerList;
+                UsersManager.Instance.OnPlayerListUpdated -= UpdatePlayerList;
             }
         }
 
@@ -50,7 +50,7 @@ namespace Code.Internal.UserInterface.Pages
                 Destroy(child.gameObject);
             }
 
-            playersWithDrones = PlayerManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
+            playersWithDrones = UsersManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
                 .ToDictionary(d => d.Key, d => d.Value);
 
             foreach (var player in playersWithDrones)
