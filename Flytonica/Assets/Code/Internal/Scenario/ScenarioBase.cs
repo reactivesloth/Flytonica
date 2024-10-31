@@ -79,6 +79,11 @@ namespace Code.Internal.Scenario
             _dischargeCount = _collisionWithObjectsCount = _signalLossesPliCount = _signalLossesRebCount =
                 _signalLossesWallsCount = _signalLossesFarCount = _collisionWithMensCount =
                     _collisionWithAnimalsCount = _collisionWithBirdsCount = 0;
+            
+            var resultBuilder = ReportBuilder.Instance;
+            resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
+            resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
+            resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
         }
 
         protected virtual void StartRace()
@@ -104,9 +109,14 @@ namespace Code.Internal.Scenario
             PopupPanel.ConfigurePopup("Задание выполнено!",
                 $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Выйти в главное меню", Color.red, Color.white,
-                () => { ScenarioSwitcherController.Instance.EndSession(); },
+                () =>
+                {
+                    ScenarioSwitcherController.Instance.EndSession();
+                    DroneHUD.Instance?.SetTask(string.Empty);
+                },
                 null, "Продолжить", Color.green, Color.black, () =>
                 {
+                    DroneHUD.Instance?.SetTask(string.Empty);
                     print(ScenarioSwitcherController.Instance.IsNet);
                     if(ScenarioSwitcherController.Instance.IsNet)
                     {
@@ -131,9 +141,6 @@ namespace Code.Internal.Scenario
             var resultBuilder = ReportBuilder.Instance;
 
             //Фиксируем другие неоцениваемые параметры
-            resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
-            resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
-            resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
             resultBuilder.AddParameter("Успешность сценария", _isSuccess ? "Да" : "Нет");
             resultBuilder.AddParameter("Время выполнения задания",
                 $"{(int)(TotalTime / 60):D2}:{(int)(TotalTime % 60):D2}");
