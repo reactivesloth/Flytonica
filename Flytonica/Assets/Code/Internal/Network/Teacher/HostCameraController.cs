@@ -27,6 +27,9 @@ namespace Code.Internal.Network.Teacher
         {
             if(targetDrone)
                 targetDrone?.GetComponent<DroneSensors>()?.UpdateHud();
+            
+            if(Camera.allCamerasCount == 0)
+                SetTeacherView();
         }
 
         public void SetTeacherView()

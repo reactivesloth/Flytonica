@@ -61,8 +61,7 @@ namespace Code.Internal.Network
             int score = 0;
             SendBaseScenarioStateToServer(scenario.TotalTimeInSeconds, DroneHUD.Instance.CurrentTaskText,
                 DroneHUD.Instance.CurrentWindText, DroneHUD.Instance.AltValueElement.MaxValue);
-
-            //Пока сюда загоняем то что не реплецируется через DroneSensors.UpdateHUD()
+            
             SendDroneVars(sensors.ModeName, sensors.Health, sensors.CameraSignal, sensors.InputSignal,
                 sensors.BatteryLevel, sensors.BatteryVoltage, DroneHUD.Instance.AimElement.Progress,
                 sensors.Speed);
