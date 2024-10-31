@@ -42,6 +42,13 @@ namespace Code.Internal.Network
             SetPlayerDataInServer(Owner, nickName);
         }
 
+        public override void OnStopClient()
+        {
+            RemovePlayerForServer(Owner);
+            
+            base.OnStopClient();
+        }
+
         private void Update()
         {
             if (!_scenarioInitializer)
@@ -125,6 +132,12 @@ namespace Code.Internal.Network
         {
             SetPlayerDataForTeacher(sender, value);
         }
+        
+        [ObserversRpc]
+        private void RemovePlayerForServer(NetworkConnection sender)
+        {
+            RemovePlayerForTeacher(sender);
+        }
 
         //========================================================================================
         [ObserversRpc]
@@ -177,6 +190,13 @@ namespace Code.Internal.Network
             if (!IsTeacher) return;
             PlayerNickNameSync.Value = value;
             UsersManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
+        }
+        
+        [ObserversRpc]
+        private void RemovePlayerForTeacher(NetworkConnection sender)
+        {
+            if (!IsTeacher) return;
+            UsersManager.Instance.RemovePlayer(sender);
         }
 
         //================================================================================================

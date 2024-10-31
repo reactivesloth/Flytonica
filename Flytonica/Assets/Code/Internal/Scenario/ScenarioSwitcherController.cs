@@ -22,6 +22,7 @@ namespace Code.Internal.Scenario
         private int _currentStatus = 0;
 
         public float ScoreSum;
+        public bool IsNet => sceneSettings.isNet;  
 
         private void Awake()
         {
@@ -39,7 +40,7 @@ namespace Code.Internal.Scenario
         }
 
         public void NextOrEnd(bool isFailed = false)
-        {            
+        {
             if(_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
 
@@ -59,6 +60,7 @@ namespace Code.Internal.Scenario
             PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Продолжить", Color.green, Color.black, () => LoadNext(result));*/
 
+            print("Next");
             ReportBuilder.Instance.AddPrefix();
             LoadNext();
         }
@@ -87,19 +89,24 @@ namespace Code.Internal.Scenario
             /*PopupPanel.ConfigurePopup("Ваш результат: ", $"{BuildResultString(result)}", null, "Переиграть", Color.white, Color.black,
                 Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
 
-            var totalScore = ScoreSum / sceneSettings.currentScenarioCollection.nestedScenarios.Count;
+            float totalScore = 0;
+            if(sceneSettings.isTask)
+                totalScore = ScoreSum / sceneSettings.currentScenarioCollection.nestedScenarios.Count;
             
             ReportBuilder.Instance.AddParameter("Общая оценка задания", $"{totalScore:F0}%", false);;
+            
+            print("End");
             EndTask();
         }
 
 
         private void EndTask()
         {
-            Time.timeScale = 0f;
+            //Time.timeScale = 0f;
             var replay = ReplayController.Instance.StopRecording();
             if (sceneSettings.isTask)
                 SendData(replay);
+            print("End");
             EndSession();
         }
 

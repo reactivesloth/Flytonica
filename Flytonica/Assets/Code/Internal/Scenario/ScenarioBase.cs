@@ -100,15 +100,24 @@ namespace Code.Internal.Scenario
             DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance?.MenuCameraHandle(true);
             
-            //AddStatistic();
             
-            /*Leaderboard.Instance.Open(() =>
-            {
-                if(CurrentScenario.settingType == SettingType.TaskScenario)
-                    ScenarioSwitcherController.Instance.NextOrEnd();
-                else
-                    ScenarioSwitcherController.Instance.EndSession();
-            });*/
+            PopupPanel.ConfigurePopup("Задание выполнено!",
+                $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
+                null, "Выйти в главное меню", Color.red, Color.white,
+                () => { ScenarioSwitcherController.Instance.EndSession(); },
+                null, "Продолжить", Color.green, Color.black, () =>
+                {
+                    print(ScenarioSwitcherController.Instance.IsNet);
+                    if(ScenarioSwitcherController.Instance.IsNet)
+                    {
+                        ScenarioSwitcherController.Instance.EndSession();
+                    }
+                    else
+                    {
+                        AddStatistic();
+                        ScenarioSwitcherController.Instance.NextOrEnd();
+                    }
+                });
         }
 
         protected virtual void AddStatistic()

@@ -54,16 +54,8 @@ namespace Code.Internal.Scenario.Transport
         protected override void FinishRace(bool success = true)
         {
             base.FinishRace(success);
-
-            PopupPanel.ConfigurePopup("Задание выполнено!",
-                $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
-                null, "Выйти в главное меню", Color.red, Color.white,
-                () => { ScenarioSwitcherController.Instance.EndSession(); },
-                null, "Продолжить", Color.green, Color.black, () =>
-                {
-                    AddStatistic();
-                    ScenarioSwitcherController.Instance.NextOrEnd();
-                });
+            
+            
         }
 
         protected override void AddStatistic()

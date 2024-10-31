@@ -174,7 +174,7 @@ namespace Code.Internal.Scenario.Searching
                                 (searchingObject.finded ? ": Найден" : ": Не найден");
             }
 
-            string title = success ? "Уровень пройден!" : "Время вышло!";
+            /*string title = success ? "Уровень пройден!" : "Время вышло!";
             string message = success
                 ? $"Поздравляем! Вы нашли все объекты:{objectResult}\nВремя выполнения: {GetTimeWithMs(_counter)}\n" +
                   $"Общее количество попыток сканирования: {_totalScanAttempts}\n"
@@ -188,7 +188,7 @@ namespace Code.Internal.Scenario.Searching
                 {
                     AddStatistic();
                     ScenarioSwitcherController.Instance.NextOrEnd();
-                });
+                });*/
         }
 
         protected override void AddStatistic()

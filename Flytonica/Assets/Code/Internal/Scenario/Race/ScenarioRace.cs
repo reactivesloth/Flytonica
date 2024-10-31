@@ -182,7 +182,7 @@ namespace Code.Internal.Scenario.Race
                 cp.SetEndColor(cp.checkpointStatus == CheckpointStatus.Passed);
             }
 
-            PopupPanel.ConfigurePopup("Задание выполнено!",
+            /*PopupPanel.ConfigurePopup("Задание выполнено!",
                 $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Выйти в главное меню", Color.red, Color.white,
                 () => { ScenarioSwitcherController.Instance.EndSession(); },
@@ -191,7 +191,7 @@ namespace Code.Internal.Scenario.Race
                     AddStatistic();
 
                     ScenarioSwitcherController.Instance.NextOrEnd();
-                });
+                });*/
         }
 
         protected override void AddStatistic()
