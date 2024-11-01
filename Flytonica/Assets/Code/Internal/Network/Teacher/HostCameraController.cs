@@ -15,7 +15,7 @@ namespace Code.Internal.Network.Teacher
         
         [SerializeField] private List<XRDisableHeadTrackingInFPV> playerFpvCameraControllers;
 
-        private NetworkObject targetDrone;
+        public NetworkObject targetDrone;
         
         private void Awake()
         {

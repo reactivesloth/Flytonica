@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.Network.Teacher;
@@ -17,6 +18,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button updateButton;
         [SerializeField] private Button thirdViewButton;
         [SerializeField] private Button leaderboardButton;
+        [SerializeField] private Button resetPlayerButton;
 
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private HostPlayerButton playerListItemPrefab;
@@ -24,12 +26,23 @@ namespace Code.Internal.UserInterface.Pages
         private Dictionary<NetworkConnection, PlayerData> playersWithDrones;
         private readonly Dictionary<NetworkConnection, HostPlayerButton> playersButtons = new();
 
+        private void Update()
+        {
+            resetPlayerButton.gameObject.SetActive(HostCameraController.Instance.targetDrone);
+        }
+
         private void Start()
         {
             UpdatePlayerList();
             updateButton.onClick.AddListener(UpdatePlayerList);
             thirdViewButton?.onClick.AddListener(HostCameraController.Instance.SetTeacherView);
             leaderboardButton.onClick.AddListener(OnLeaderBoardOpen);
+            resetPlayerButton.onClick.AddListener(ResetPlayerButton);
+        }
+
+        private void ResetPlayerButton()
+        {
+            UsersManager.Instance.ResetPlayer(HostCameraController.Instance.targetDrone.Owner);
         }
 
         private void OnEnable()
@@ -64,12 +77,6 @@ namespace Code.Internal.UserInterface.Pages
                 listItem.Init(player.Value.Drone, player.Value.PlayerName);
                 playersButtons.Add(player.Key, listItem);
             }
-        }
-
-        private void SelectPlayer(NetworkConnection connection)
-        {
-            var drone = playersWithDrones[connection].Drone;
-            HostCameraController.Instance.SetTargetDrone(drone);
         }
 
         private void OnLeaderBoardOpen()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Code.Internal.API;
@@ -14,6 +15,9 @@ namespace Code.Internal.Network
 {
     public class ConnectionController : NetworkBehaviour
     {
+        public static ConnectionController Instance { get; private set; }
+
+        [SerializeField] private GameObject locomotion;
         [SerializeField] private GameObject hostControl;
 
         [SerializeField] private SceneLoadingSettings sceneSettings;
@@ -24,12 +28,18 @@ namespace Code.Internal.Network
         private bool _sceneLoaded;
         private readonly Dictionary<NetworkConnection, UserType> _pendingConnections = new();
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         public override void OnStartServer()
         {
             base.OnStartServer();
             //ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
             print(sceneSettings.currentScenario.currentMap);
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
+            locomotion.SetActive(true);
         }
 
         public override void OnStopServer()
@@ -37,6 +47,7 @@ namespace Code.Internal.Network
             base.OnStopServer();
             //ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             _sceneLoaded = false;
+            locomotion.SetActive(false);
         }
 
         public override void OnStartClient()
@@ -105,7 +116,7 @@ namespace Code.Internal.Network
 
             if (sceneSettings.isNet)
                 TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
-            
+
             if (userType == UserType.Teacher)
             {
                 hostControl.SetActive(true);
@@ -116,7 +127,7 @@ namespace Code.Internal.Network
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
             }
 
-            MovePlayer(connection);
+            MovePlayerRpc(connection);
         }
 
         private void OnDisconnectedPlayer(NetworkConnection connection)
@@ -165,6 +176,11 @@ namespace Code.Internal.Network
         }
 
         [TargetRpc]
+        public void MovePlayerRpc(NetworkConnection connection)
+        {
+            MovePlayer(connection);
+        }
+        
         public void MovePlayer(NetworkConnection connection)
         {
             var spawners = GameObject.FindGameObjectsWithTag("Player Respawn")

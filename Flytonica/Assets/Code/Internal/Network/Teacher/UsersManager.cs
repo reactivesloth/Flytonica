@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
+using Code.Internal.Drone;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -67,6 +68,20 @@ namespace Code.Internal.Network.Teacher
         {
             if (AllPlayers.ContainsKey(sender))
                 OnHelpSignal?.Invoke(sender);
+        }
+
+        public void ResetPlayer(NetworkConnection connection)
+        {
+            if(!_playerDatas.TryGetValue(connection, out var data))return;
+            
+            ResetPlayerRpc(connection);
+        }
+
+        [TargetRpc]
+        protected void ResetPlayerRpc(NetworkConnection connection)
+        {
+            DroneController.Instance?.ResetDrone();
+            ConnectionController.Instance?.MovePlayer(connection);
         }
     }
 
