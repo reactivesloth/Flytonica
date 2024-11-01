@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.API.Wrappers.SendModels;
@@ -62,8 +63,7 @@ namespace Code.Internal.UserInterface.Pages
                 response =>
                 {
                     var data = JsonUtility.FromJson<DeviceData>(response);
-                    SaveCheckActivationDate(DateTime.Today);
-                    
+                    SaveCheckActivationDate(DateTime.UtcNow.Date);
                     ToLogin();
                 }, (response, code) =>
                 {
@@ -75,40 +75,51 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLicenceValid()
         {
+            SaveCheckActivationDate(DateTime.UtcNow.Date);
             ToLogin();
         }
 
         private void OnLicenceInvalid()
         {
-            
+            // Обработка невалидной лицензии
         }
 
         private void ErrorGetLicence()
         {
+            print(IsMoreThanFiveDays);
             if (!IsMoreThanFiveDays)
                 ToLogin();
             else
-                MakeError("Для обновление вашей лицензии требуется подключение к интернету", OnOpen);
+                MakeError("Для обновления вашей лицензии требуется подключение к интернету", OnOpen);
         }
 
         private void MakeError(string error, UnityAction action)
         {
             PopupPanel.ConfigurePopup("Ошибка",
-                error, 
-                leftButtonAction: action, leftButtonText:"Повторить",
-                rightButtonText:"Закрыть");
+                error,
+                leftButtonAction: action, leftButtonText: "Повторить",
+                rightButtonText: "Закрыть");
         }
 
         private void ToLogin() => loginPage?.Open();
 
         private void SaveCheckActivationDate(DateTime date) =>
-            PlayerPrefs.SetString("Licence", date.ToShortDateString());
+            PlayerPrefs.SetString("Licence", date.ToString("O", CultureInfo.InvariantCulture));
 
         private DateTime GetCheckActivationDate =>
-            DateTime.TryParse(PlayerPrefs.GetString("Licence"), out var parsedDate)
+            DateTime.TryParseExact(PlayerPrefs.GetString("Licence"), "O", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var parsedDate)
                 ? parsedDate
                 : DateTime.MinValue;
 
-        private bool IsMoreThanFiveDays => (DateTime.Now - GetCheckActivationDate).TotalDays > 5;
+        private bool IsMoreThanFiveDays
+        {
+            get
+            {
+                var currentDate = DateTime.UtcNow.Date;
+                var savedDate = GetCheckActivationDate.Date;
+                return (currentDate - savedDate).TotalDays > 5;
+            }
+        }
     }
 }
