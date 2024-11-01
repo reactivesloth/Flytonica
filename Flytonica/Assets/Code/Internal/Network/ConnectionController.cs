@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet.Connection;
 using FishNet.Object;
-using FishNet.Transporting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,6 +15,9 @@ namespace Code.Internal.Network
 {
     public class ConnectionController : NetworkBehaviour
     {
+        public static ConnectionController Instance { get; private set; }
+
+        [SerializeField] private GameObject locomotion;
         [SerializeField] private GameObject hostControl;
 
         [SerializeField] private SceneLoadingSettings sceneSettings;
@@ -23,25 +26,48 @@ namespace Code.Internal.Network
         [SerializeField] private AvailableDronesSettings drones;
 
         private bool _sceneLoaded;
-        private readonly List<NetworkConnection> _pendingConnections = new();
+        private readonly Dictionary<NetworkConnection, UserType> _pendingConnections = new();
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
-            ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
+            //ServerManager.OnRemoteConnectionState += OnRemoteConnectionState;
             print(sceneSettings.currentScenario.currentMap);
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
+            locomotion.SetActive(true);
         }
 
         public override void OnStopServer()
         {
             base.OnStopServer();
-            ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
+            //ServerManager.OnRemoteConnectionState -= OnRemoteConnectionState;
             _sceneLoaded = false;
-            hostControl.SetActive(false);
+            locomotion.SetActive(false);
         }
 
-        private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            print("Client started");
+            if (HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
+                hostControl.SetActive(true);
+            ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
+        }
+
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            hostControl.SetActive(false);
+            ServerDisconnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
+        }
+
+        /*private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
         {
             switch (args.ConnectionState)
             {
@@ -57,11 +83,51 @@ namespace Code.Internal.Network
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }*/
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ServerConnectionHandle(NetworkConnection connection, int userTypeInt)
+        {
+            var userType = (UserType)userTypeInt;
+            print($"Server handle {userType}");
+            if (_sceneLoaded)
+                OnConnectedPlayer(connection, userType);
+            else
+                _pendingConnections.Add(connection, userType);
         }
 
-        private void OnConnectedPlayer(NetworkConnection connection)
+        [ServerRpc(RequireOwnership = false)]
+        public void ServerDisconnectionHandle(NetworkConnection connection, int userTypeInt)
         {
-            InvokeTargetInitializeScenario(connection);
+            OnDisconnectedPlayer(connection);
+        }
+
+        private async void OnConnectedPlayer(NetworkConnection connection, UserType userType)
+        {
+            print("PlayerConnected");
+            while (!Observers.Contains(connection))
+                await Task.Delay(100);
+
+            var scenario = sceneSettings.currentScenario;
+            var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
+                drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
+                scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode),
+                scenario.cameraThirdPerson, scenario.cameraSwitchAllowed, objects: scenario.objects);
+
+            if (sceneSettings.isNet)
+                TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
+
+            if (userType == UserType.Teacher)
+            {
+                hostControl.SetActive(true);
+            }
+            else
+            {
+                var drone = NetworkManager.GetComponent<PlayersSpawner>()
+                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
+            }
+
+            MovePlayerRpc(connection);
         }
 
         private void OnDisconnectedPlayer(NetworkConnection connection)
@@ -77,48 +143,22 @@ namespace Code.Internal.Network
 
             foreach (var connection in _pendingConnections)
             {
-                OnConnectedPlayer(connection);
+                OnConnectedPlayer(connection.Key, connection.Value);
             }
 
             _pendingConnections.Clear();
         }
 
-        private async void InvokeTargetInitializeScenario(NetworkConnection connection)
-        {
-            while (!Observers.Contains(connection))
-                await Task.Delay(100);
-            
-            var scenario = sceneSettings.currentScenario;
-            if (connection.ClientId == 0 && sceneSettings.isNet)
-            {
-                hostControl.SetActive(true);
-            }
-            else
-            {
-                var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
-                    drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
-                    scenario.scenarioType, scenario.currentDrone.flightModes.IndexOf(scenario.currentDroneMode),
-                    scenario.cameraThirdPerson, scenario.cameraSwitchAllowed, objects: scenario.objects);
-
-                if (sceneSettings.isNet)
-                    TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
-
-                var drone = NetworkManager.GetComponent<PlayersSpawner>()
-                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
-            }
-
-            MovePlayer(connection);
-        }
-    
         [TargetRpc]
-        private void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
+        public void TargetInitializeScenario(NetworkConnection connection, string scenarioSettingsJson)
         {
             var scenarioInfo = JsonUtility.FromJson<ScenarioSettingsData>(scenarioSettingsJson);
             var scenario = ScenarioSettings.CreateDynamicTaskScenario(0, scenarioInfo.name,
                 scenarioInfo.description, scenarioInfo.typeId, maps.maps[scenarioInfo.mapId],
                 drones.drones[scenarioInfo.droneId],
                 drones.drones[scenarioInfo.droneId].flightModes[scenarioInfo.droneModeId],
-                scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId, scenarioInfo.objects, scenarioInfo.windLayers);
+                scenarioInfo.cameraThirdPerson, scenarioInfo.cameraAllowedSwitchModeId, scenarioInfo.objects,
+                scenarioInfo.windLayers);
 
             InitScenario(scenario);
         }
@@ -136,7 +176,12 @@ namespace Code.Internal.Network
         }
 
         [TargetRpc]
-        private void MovePlayer(NetworkConnection connection)
+        public void MovePlayerRpc(NetworkConnection connection)
+        {
+            MovePlayer(connection);
+        }
+        
+        public void MovePlayer(NetworkConnection connection)
         {
             var spawners = GameObject.FindGameObjectsWithTag("Player Respawn")
                 .Select(o => o.transform).ToArray();

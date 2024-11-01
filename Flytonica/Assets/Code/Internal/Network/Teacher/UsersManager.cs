@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
+using Code.Internal.Drone;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -25,6 +26,7 @@ namespace Code.Internal.Network.Teacher
         public PlayerData[] LeaderboardResults => _playerDatas.Values.ToArray();
 
         public event Action OnPlayerListUpdated;
+        public event Action<NetworkConnection> OnHelpSignal;
 
         private void Awake()
         {
@@ -44,13 +46,6 @@ namespace Code.Internal.Network.Teacher
                 OnPlayerListUpdated?.Invoke();
         }
 
-        [ServerRpc]
-        public void AddTeacher(NetworkConnection connection)
-        {
-            if(!_teachers.Contains(connection))
-                _teachers.Add(connection);
-        }
-        
         public void RemovePlayer(NetworkConnection connection)
         {
             if (_playerDatas.ContainsKey(connection))
@@ -58,34 +53,47 @@ namespace Code.Internal.Network.Teacher
                 OnPlayerListUpdated?.Invoke();
             }
         }
-        
-        [ServerRpc]
-        public void RemoveTeacher(NetworkConnection connection)
-        {
-            if(_teachers.Contains(connection))
-                _teachers.Remove(connection);
-        }
 
         public void UpdateResult(NetworkConnection connection, float newTime, int newScore, bool isFinished)
         {
-            if (!_playerDatas.TryGetValue(connection, out var result))
+            if (!_playerDatas.TryGetValue(connection, out var data))
                 return;
 
-            result.Time = newTime;
-            result.Score = newScore;
-            result.IsFinished = isFinished;
+            data.Time = newTime;
+            data.Score = newScore;
+            data.IsFinished = isFinished;
+        }
+
+        public void HelpSignal(NetworkConnection sender)
+        {
+            if (AllPlayers.ContainsKey(sender))
+                OnHelpSignal?.Invoke(sender);
+        }
+
+        public void ResetPlayer(NetworkConnection connection)
+        {
+            if(!_playerDatas.TryGetValue(connection, out var data))return;
+            
+            ResetPlayerRpc(connection);
+        }
+
+        [TargetRpc]
+        protected void ResetPlayerRpc(NetworkConnection connection)
+        {
+            DroneController.Instance?.ResetDrone();
+            ConnectionController.Instance?.MovePlayer(connection);
         }
     }
-    
+
     public class PlayerData
     {
         public string PlayerName;
-        
+
         public NetworkObject Drone;
         public int Score;
         public float Time;
         public bool IsFinished;
-        
+
 
         public PlayerData()
         {

@@ -7,6 +7,7 @@ using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -91,6 +92,11 @@ namespace Code.Internal.Network
                 scenario.ScenarioCondition == ScenarioCondition.Finished);
         }
 
+        public void HelpSignal()
+        {
+            HelpSignalOnServer(Owner);
+        }
+
         [ServerRpc]
         private void UpdatePlayerResultInServer(NetworkConnection player, float time, int score, bool isFinished)
         {
@@ -133,10 +139,16 @@ namespace Code.Internal.Network
             SetPlayerDataForTeacher(sender, value);
         }
         
-        [ObserversRpc]
+        [ServerRpc]
         private void RemovePlayerForServer(NetworkConnection sender)
         {
             RemovePlayerForTeacher(sender);
+        }
+
+        [ServerRpc]
+        private void HelpSignalOnServer(NetworkConnection sender)
+        {
+            HelpSignalForTeacher(sender);
         }
 
         //========================================================================================
@@ -197,6 +209,14 @@ namespace Code.Internal.Network
         {
             if (!IsTeacher) return;
             UsersManager.Instance.RemovePlayer(sender);
+        }
+        
+        [ObserversRpc]
+        private void HelpSignalForTeacher(NetworkConnection sender)
+        {
+            if (!IsTeacher) return;
+            
+            UsersManager.Instance.HelpSignal(sender);
         }
 
         //================================================================================================

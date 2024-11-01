@@ -1,6 +1,7 @@
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
+using Code.Internal.Network;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet;
@@ -12,7 +13,7 @@ namespace Code.Internal.UserInterface.Pages
     public class PauseMenuPage : Page
     {
         [SerializeField]
-        private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton, replayButton;
+        private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton, replayButton, restartServerButton;
 
         protected new void Awake()
         {
@@ -20,6 +21,8 @@ namespace Code.Internal.UserInterface.Pages
             toMainMenuButton.onClick.AddListener(ToMainMenuButton);
             returnToGameButton.onClick.AddListener(ReturnToGame);
             replayButton.onClick.AddListener(Replay);
+            teacherHelpButton.onClick.AddListener(HelpSignal);
+            restartServerButton.onClick.AddListener(RestartServer);
             gameObject.SetActive(false);
         }
 
@@ -28,6 +31,9 @@ namespace Code.Internal.UserInterface.Pages
             base.OnOpen();
 
             var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
+            
+            restartServerButton.gameObject.SetActive(isTeacher);
+            
             teacherHelpButton.gameObject.SetActive(!isTeacher);
             keyBindingButton.gameObject.SetActive(!isTeacher);
             replayButton.gameObject.SetActive(!isTeacher);
@@ -53,6 +59,17 @@ namespace Code.Internal.UserInterface.Pages
         {
             ReturnToGame();
             DroneController.Instance.ResetDrone();
+        }
+
+        private void HelpSignal()
+        {
+            DroneController.Instance.GetComponent<NetBridge>().HelpSignal();
+        }
+
+        private void RestartServer()
+        {
+            ReturnToGame();
+            ResetController.Instance.RestartServerRequest();
         }
     }
 }

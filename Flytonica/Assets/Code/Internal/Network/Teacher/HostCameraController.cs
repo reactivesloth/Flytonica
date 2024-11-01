@@ -15,7 +15,7 @@ namespace Code.Internal.Network.Teacher
         
         [SerializeField] private List<XRDisableHeadTrackingInFPV> playerFpvCameraControllers;
 
-        private NetworkObject targetDrone;
+        public NetworkObject targetDrone;
         
         private void Awake()
         {
@@ -35,9 +35,13 @@ namespace Code.Internal.Network.Teacher
         {
             SetPlayerFpv(true);
 
+            XRDisableHeadTrackingInFPV fpvCamController = null;
             if (targetDrone)
-                targetDrone.GetComponent<NetBridge>().IsObservable = false;   
-            var fpvCamController = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
+            {
+                targetDrone.GetComponent<NetBridge>().IsObservable = false;
+                fpvCamController = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
+            }
+            
             if(!fpvCamController) 
                 return;
             targetDrone = null;
