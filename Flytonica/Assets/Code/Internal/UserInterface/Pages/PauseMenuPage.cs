@@ -1,6 +1,7 @@
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
+using Code.Internal.Network;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet;
@@ -20,6 +21,7 @@ namespace Code.Internal.UserInterface.Pages
             toMainMenuButton.onClick.AddListener(ToMainMenuButton);
             returnToGameButton.onClick.AddListener(ReturnToGame);
             replayButton.onClick.AddListener(Replay);
+            teacherHelpButton.onClick.AddListener(HelpSignal);
             gameObject.SetActive(false);
         }
 
@@ -53,6 +55,11 @@ namespace Code.Internal.UserInterface.Pages
         {
             ReturnToGame();
             DroneController.Instance.ResetDrone();
+        }
+
+        private void HelpSignal()
+        {
+            DroneController.Instance.GetComponent<NetBridge>().HelpSignal();
         }
     }
 }

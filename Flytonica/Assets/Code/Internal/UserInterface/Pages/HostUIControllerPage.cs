@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Code.Internal.Drone;
 using Code.Internal.Network.Teacher;
 using Code.Internal.UserInterface.Elements;
 using Code.Internal.XR;
@@ -18,9 +19,10 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button leaderboardButton;
 
         [SerializeField] private Transform playerListContainer;
-        [SerializeField] private Button playerListItemPrefab;
+        [SerializeField] private HostPlayerButton playerListItemPrefab;
 
         private Dictionary<NetworkConnection, PlayerData> playersWithDrones;
+        private Dictionary<NetworkConnection, HostPlayerButton> playersButtons;
 
         private void Start()
         {
@@ -33,6 +35,7 @@ namespace Code.Internal.UserInterface.Pages
         private void OnEnable()
         {
             UsersManager.Instance.OnPlayerListUpdated += UpdatePlayerList;
+            UsersManager.Instance.OnHelpSignal += Help;
         }
 
         private void OnDisable()
@@ -40,14 +43,16 @@ namespace Code.Internal.UserInterface.Pages
             if (UsersManager.Instance != null)
             {
                 UsersManager.Instance.OnPlayerListUpdated -= UpdatePlayerList;
+                UsersManager.Instance.OnHelpSignal -= Help;
             }
         }
 
         public void UpdatePlayerList()
         {
-            foreach (Transform child in playerListContainer)
+            playersButtons = new Dictionary<NetworkConnection, HostPlayerButton>();
+            foreach (var button in playersButtons.Values)
             {
-                Destroy(child.gameObject);
+                Destroy(button.gameObject);
             }
 
             playersWithDrones = UsersManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
@@ -56,9 +61,8 @@ namespace Code.Internal.UserInterface.Pages
             foreach (var player in playersWithDrones)
             {
                 var listItem = Instantiate(playerListItemPrefab, playerListContainer);
-                listItem.GetComponentInChildren<TMP_Text>().text = player.Value.PlayerName;
-                var connection = player.Key;
-                listItem.onClick.AddListener(() => { SelectPlayer(connection); });
+                listItem.Init(player.Value.Drone, player.Value.PlayerName);
+                playersButtons.Add(player.Key, listItem);
             }
         }
 
@@ -70,10 +74,18 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLeaderBoardOpen()
         {
-            if(!Leaderboard.Instance.gameObject.activeSelf)
+            if (!Leaderboard.Instance.gameObject.activeSelf)
                 Leaderboard.Instance.Open();
             else
                 Leaderboard.Instance.Close();
+        }
+
+        private void Help(NetworkConnection connection)
+        {
+            if (!playersButtons.TryGetValue(connection, out var button))
+                return;
+
+            button.Help();
         }
     }
 }
