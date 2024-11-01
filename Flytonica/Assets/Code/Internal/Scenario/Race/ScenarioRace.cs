@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Code.Internal.Drone;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
@@ -55,6 +57,10 @@ namespace Code.Internal.Scenario.Race
                 case RaceState.Racing:
                     _timeRacing += Time.deltaTime;
                     break;
+                case RaceState.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -100,6 +106,8 @@ namespace Code.Internal.Scenario.Race
         public override void Initialize(ScenarioSettings scenario)
         {
             base.Initialize(scenario);
+
+            checkpoints.Clear();
 
             List<SpawnableObject> objects =
                 new List<SpawnableObject>(GetComponentsInChildren<SpawnableObject>().OrderBy(o => o.sortOrder));
@@ -240,20 +248,20 @@ namespace Code.Internal.Scenario.Race
             return statuses;
         }
 
-        // Method to set the state
         public void SetScenarioState(int[] checkpointStatuses)
         {
-            SetCheckpointStatuses(checkpointStatuses);
-        }
+            StringBuilder log = new StringBuilder();
 
-        private void SetCheckpointStatuses(int[] statuses)
-        {
-            for (int i = 0; i < statuses.Length; i++)
+            print(checkpoints.Count);
+            print(checkpointStatuses.Length);
+            for (int i = 0; i < checkpointStatuses.Length; i++)
             {
                 if (i >= 0 && i < checkpoints.Count)
                 {
-                    var status = (CheckpointStatus)statuses[i];
+                    var status = (CheckpointStatus)checkpointStatuses[i];
                     checkpoints[i].ChangeStatus(status);
+
+                    log.Append($"{status}, ");
                 }
             }
         }

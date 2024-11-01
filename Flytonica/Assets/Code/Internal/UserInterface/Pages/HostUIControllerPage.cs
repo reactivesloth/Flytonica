@@ -22,7 +22,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private HostPlayerButton playerListItemPrefab;
 
         private Dictionary<NetworkConnection, PlayerData> playersWithDrones;
-        private Dictionary<NetworkConnection, HostPlayerButton> playersButtons;
+        private readonly Dictionary<NetworkConnection, HostPlayerButton> playersButtons = new();
 
         private void Start()
         {
@@ -49,11 +49,11 @@ namespace Code.Internal.UserInterface.Pages
 
         public void UpdatePlayerList()
         {
-            playersButtons = new Dictionary<NetworkConnection, HostPlayerButton>();
             foreach (var button in playersButtons.Values)
             {
                 Destroy(button.gameObject);
             }
+            playersButtons.Clear();
 
             playersWithDrones = UsersManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
                 .ToDictionary(d => d.Key, d => d.Value);
