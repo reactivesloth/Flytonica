@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
+using Code.Internal.Avatars;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet.Connection;
@@ -26,7 +27,19 @@ namespace Code.Internal.Network
         [SerializeField] private AvailableDronesSettings drones;
 
         private bool _sceneLoaded;
-        private readonly Dictionary<NetworkConnection, UserType> _pendingConnections = new();
+        private readonly Dictionary<NetworkConnection, UserData> _pendingConnections = new();
+        
+        private struct UserData
+        {
+            public UserType UserType;
+            public int AvatarId;
+
+            public UserData(UserType userType, int avatarId)
+            {
+                UserType = userType;
+                AvatarId = avatarId;
+            }
+        }
 
         private void Awake()
         {
@@ -57,7 +70,7 @@ namespace Code.Internal.Network
             print("Client started");
             if (HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
                 hostControl.SetActive(true);
-            ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
+            ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type, PlayerPrefs.GetInt("Avatar"));
         }
 
         public override void OnStopClient()
@@ -86,14 +99,14 @@ namespace Code.Internal.Network
         }*/
 
         [ServerRpc(RequireOwnership = false)]
-        public void ServerConnectionHandle(NetworkConnection connection, int userTypeInt)
+        public void ServerConnectionHandle(NetworkConnection connection, int userTypeInt, int avatarId)
         {
             var userType = (UserType)userTypeInt;
             print($"Server handle {userType}");
             if (_sceneLoaded)
-                OnConnectedPlayer(connection, userType);
+                OnConnectedPlayer(connection, userType, avatarId);
             else
-                _pendingConnections.Add(connection, userType);
+                _pendingConnections.Add(connection, new UserData(userType, avatarId));
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -102,7 +115,7 @@ namespace Code.Internal.Network
             OnDisconnectedPlayer(connection);
         }
 
-        private async void OnConnectedPlayer(NetworkConnection connection, UserType userType)
+        private async void OnConnectedPlayer(NetworkConnection connection, UserType userType, int avatarId)
         {
             print("PlayerConnected");
             while (!Observers.Contains(connection))
@@ -125,6 +138,7 @@ namespace Code.Internal.Network
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
+                AvatarController.Instance.SpawnAvatar(connection, avatarId);
             }
 
             MovePlayerRpc(connection);
@@ -143,7 +157,7 @@ namespace Code.Internal.Network
 
             foreach (var connection in _pendingConnections)
             {
-                OnConnectedPlayer(connection.Key, connection.Value);
+                OnConnectedPlayer(connection.Key, connection.Value.UserType, connection.Value.AvatarId);
             }
 
             _pendingConnections.Clear();

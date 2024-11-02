@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.Avatars.Settings;
 using Code.Internal.SceneManagement;
 using FishNet;
 using FishNet.Discovery;
@@ -19,14 +19,20 @@ namespace Code.Internal.UserInterface.Pages
     {
         [SerializeField] private TMP_Text studentNameText;
 
+        
+        [SerializeField] private Image avatarImage;
         [SerializeField] private Button tasksButton,
             singleScriptsButton,
             toRoomButton,
-            settingsButton;
+            settingsButton,
+            avatarSettingsButton;
 
         [SerializeField] private Page loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
         [SerializeField] private Page settingsPage;
+        [SerializeField] private Page avatarSettingsPage;
+        
+        [SerializeField] private AvatarsList avatarsList;
         [SerializeField] private AvailableScenariosSettings singleScenariosSettings;
         [SerializeField] private AvailableScenariosSettings taskScenariosSettings;
         [SerializeField] private AvailableMapsSettings maps;
@@ -49,10 +55,23 @@ namespace Code.Internal.UserInterface.Pages
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
             _discovery.SearchForServers();
 
+            int avatarIndex = 0;
+            try
+            {
+                avatarIndex = PlayerPrefs.GetInt("Avatar");
+            }
+            catch (PlayerPrefsException)
+            {
+                PlayerPrefs.SetInt("Avatar", 0);
+            }
+
+            avatarImage.sprite = avatarsList.avatarsIksList[avatarIndex].icon;
+
             singleScriptsButton.onClick.AddListener(OnSingleScripts);
             tasksButton.onClick.AddListener(OnTaskScripts);
             toRoomButton.onClick.AddListener(OnConnect);
             settingsButton.onClick.AddListener(OnSettings);
+            avatarSettingsButton.onClick.AddListener(OnAvatarSettings);
 
             if (HttpClient.IsAuthorized)
             {
@@ -69,6 +88,7 @@ namespace Code.Internal.UserInterface.Pages
             tasksButton.onClick.RemoveListener(OnTaskScripts);
             toRoomButton.onClick.RemoveListener(OnConnect);
             settingsButton.onClick.RemoveListener(OnSettings);
+            avatarSettingsButton.onClick.RemoveListener(OnAvatarSettings);
         }
 
         // Executes the logout function
@@ -135,5 +155,12 @@ namespace Code.Internal.UserInterface.Pages
             HttpClient.SetUserData(new UserData { name = "Гость", type = UserType.Guest});
             SetData();
         }
+        
+        
+        private void OnAvatarSettings()
+        {
+            avatarSettingsPage.Open();
+        }
+
     }
 }
