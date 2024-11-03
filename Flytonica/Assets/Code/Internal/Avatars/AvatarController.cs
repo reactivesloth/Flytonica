@@ -3,6 +3,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using RootMotion.FinalIK;
 using UnityEngine;
+using Avatar = UnityEngine.Avatar;
 
 namespace Code.Internal.Avatars
 {
@@ -39,12 +40,14 @@ namespace Code.Internal.Avatars
             else if (_instance != this)
                 Destroy(gameObject);
         }
-
+        
         public void SpawnAvatar(NetworkConnection avatarOwner, int avatarId)
         {
             var avatar = Instantiate(avatarsList.avatarsIksList[avatarId].avatarIk);
             ServerManager.Spawn(avatar.GetComponent<NetworkObject>(), avatarOwner);
             InitUserAvatar(avatarOwner, avatar.GetComponent<NetworkObject>());
+            InitNotOwner(avatar.GetComponent<NetworkObject>());
+            
         }
 
         [TargetRpc]
@@ -54,6 +57,13 @@ namespace Code.Internal.Avatars
             vrIk.solver.spine.headTarget = vrHead;
             vrIk.solver.leftArm.target = vrLeftHand;
             vrIk.solver.rightArm.target = vrRightHand;
+        }
+
+        [ObserversRpc]
+        public void InitNotOwner(NetworkObject avatar)
+        {
+            if (!avatar.IsOwner)
+                avatar.GetComponent<VRIK>().enabled = false;
         }
     }
 }
