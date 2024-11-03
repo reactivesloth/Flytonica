@@ -3,6 +3,7 @@ using Code.Internal.Drone;
 using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
+using Code.Internal.Scenario.Tutorial;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using UltimateReplay;
@@ -125,6 +126,8 @@ namespace Code.Internal.Scenario
                     break;
                 case ScenarioType.Tutorial:
                     tutorialModeObjects?.SetActive(true);
+                    _currentScenario = FindAnyObjectByType<ScenarioTutorial>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 case ScenarioType.Race:
                     raceModeObjects?.SetActive(true);

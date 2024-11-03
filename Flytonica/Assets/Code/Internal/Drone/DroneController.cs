@@ -54,6 +54,7 @@ namespace Code.Internal.Drone
         private float deltaSpd;
         private float throttleHold;
 
+        public bool EnginesEnabled => _isEnginesOn;
         public DroneSensors DroneSensors { get; private set; }
 
         protected override void OnValidate()
@@ -306,6 +307,9 @@ namespace Code.Internal.Drone
             engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
+            
+            if (_rigidBody.linearVelocity.magnitude < 0.01f && _throttle <= 0f)
+                ResetEngines();
         }
 
         private void CalculateBattery()
