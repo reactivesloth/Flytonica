@@ -39,8 +39,21 @@ namespace Code.Internal.Scenario.Tutorial
             base.StartRace();
             _timeTakeoff = 0;
             _timeRacing = 0;
+            
+            //Get tutorial scenario ojbect and initialize
+            //it's spawned by spawnableobjects in scenario settings and have coroutine with tasks and repliques
         }
 
+        public void LeaveTutorial()
+        {
+            FinishRace(false);
+        }
+
+        public void CompleteTutorial()
+        {
+            FinishRace(true);
+        }
+        
         protected override void FinishRace(bool success = true)
         {
             base.FinishRace(success);
