@@ -589,6 +589,7 @@ GameObject:
   m_Component:
   - component: {fileID: 451674020}
   - component: {fileID: 451674021}
+  - component: {fileID: 451674022}
   m_Layer: 0
   m_Name: XR Player
   m_TagString: Untagged
@@ -633,6 +634,20 @@ MonoBehaviour:
   - {fileID: 191286302}
   - {fileID: 191286301}
   IsViewed: 1
+--- !u!114 &451674022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451674017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7cfd25603e204276bff73c1d9b42fd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tablet: {fileID: 1781869222}
+  gamepad: {fileID: 260798356}
 --- !u!1 &500408813
 GameObject:
   m_ObjectHideFlags: 0
@@ -2784,6 +2799,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5609982803509424203, guid: 1fcd5ddc4f3853d419a639ad57bc2bd2, type: 3}
   m_PrefabInstance: {fileID: 1941118851}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1781869222 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d6c1ec4576d1c475a877b26ca3595bd8, type: 3}
+  m_PrefabInstance: {fileID: 746864254}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1828890878
 GameObject:
