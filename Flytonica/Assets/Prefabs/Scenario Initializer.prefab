@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e85865ade342bf8eb9eb2ba11d3594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScenarioCondition: 0
   searchingObjectType: 7
   collectionName: 
   searchingObjects: []
@@ -203,6 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e85865ade342bf8eb9eb2ba11d3594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScenarioCondition: 0
   searchingObjectType: 6
   collectionName: 
   searchingObjects:
@@ -275,6 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72cbdec87da97c4688a9c89d8e1d3e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScenarioCondition: 0
   checkpoints: []
 --- !u!1 &6586777364904685921
 GameObject:
@@ -285,6 +288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5356888411411758910}
+  - component: {fileID: 6723328754578753944}
   m_Layer: 0
   m_Name: Tutorial
   m_TagString: Untagged
@@ -307,6 +311,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 274046177649460532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6723328754578753944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6586777364904685921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9d29917bf884a64a5176ac622539da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScenarioCondition: 0
 --- !u!1 &8557777868805177551
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250ac403e4c3403894456b130fae939e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScenarioCondition: 0
 --- !u!1001 &620456818368269101
 PrefabInstance:
   m_ObjectHideFlags: 0
