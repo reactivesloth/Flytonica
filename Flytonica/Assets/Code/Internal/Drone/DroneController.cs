@@ -308,7 +308,7 @@ namespace Code.Internal.Drone
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
             
-            if (_rigidBody.linearVelocity.magnitude < 1f && GetRPM() <= 0)
+            if (_rigidBody.linearVelocity.magnitude < 1f && GetRPM() <= 0 && _throttle < 0.1f)
                 ResetEngines();
         }
 
