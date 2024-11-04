@@ -11,6 +11,8 @@ public class XRPlayerHandItems : MonoBehaviour
     private void Awake()
     {
         SceneManager.activeSceneChanged += SceneChanged;
+        tablet.SetActive(false);
+        gamepad.SetActive(false);
     }
 
     private void SceneChanged(Scene arg0, Scene arg1)
