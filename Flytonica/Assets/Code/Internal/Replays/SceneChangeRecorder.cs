@@ -74,18 +74,18 @@ namespace Code.Internal.Replays
                 return;
 
             print("Replay end event");
+            UnloadLoadedScene();
             _loadedSceneName = string.Empty;
             DroneHUD.Instance.ShowHUD(false);
-            UnloadLoadedScene();
         }
 
         private async void ReloadScenesAsync()
         {
-            if (string.IsNullOrEmpty(_activeSceneName))
-                return;
-
             UnloadLoadedScene();
 
+            if (string.IsNullOrEmpty(_activeSceneName))
+                return;
+            
             await SceneManager.LoadSceneAsync(_activeSceneName, LoadSceneMode.Additive);
             var loadedScene = SceneManager.GetSceneByName(_activeSceneName);
             if (loadedScene.IsValid())
