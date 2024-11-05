@@ -26,6 +26,7 @@ namespace Code.Internal.Replays
         private ReplayFileStorage _replayFileStorage;
         private string _replayFilePath;
         private Scene _currentReplayScene;
+        private int _taskId;
 
         public event Action PlaybackFinished;
         
@@ -86,6 +87,8 @@ namespace Code.Internal.Replays
 
         public void StartPlayback(int taskId)
         {
+            _taskId = taskId;
+            
             _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
             if (!System.IO.File.Exists(_replayFilePath))
             {
@@ -96,10 +99,10 @@ namespace Code.Internal.Replays
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
 
             _playbackOperation = ReplayManager.BeginPlayback(_replayFileStorage);
-            _playbackOperation.Options.PlaybackEndBehaviour = PlaybackEndBehaviour.StopPlayback;
+            _playbackOperation.Options.PlaybackEndBehaviour = PlaybackEndBehaviour.LoopPlayback;
             Debug.Log("Начато воспроизведение реплея");
 
-            _playbackOperation.OnPlaybackStop.AddListener(OnReplayFinished);
+            _playbackOperation.OnPlaybackEnd.AddListener(OnReplayFinished);
         }
 
         public void StopPlayback()
@@ -128,6 +131,7 @@ namespace Code.Internal.Replays
         {
             Debug.Log("Воспроизведение реплея завершено");
             PlaybackFinished?.Invoke();
+            StartPlayback(_taskId);
             Pause();
             Seek(0);
         }

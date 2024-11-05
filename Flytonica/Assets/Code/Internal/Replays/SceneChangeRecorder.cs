@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,12 +43,23 @@ namespace Code.Internal.Replays
             _activeSceneName = state.ReadString();
         }
 
+        protected override void OnReplayStart()
+        {
+            base.OnReplayStart();
+            if (!IsReplaying)
+                return;
+            
+            _loadedSceneName = string.Empty;
+        }
+
         protected override void OnReplayUpdate(float t)
         {
             base.OnReplayUpdate(t);
             if (!IsReplaying)
                 return;
 
+            print($"{_loadedSceneName} == {_activeSceneName}");
+            
             if (_loadedSceneName == _activeSceneName || string.IsNullOrEmpty(_activeSceneName))
                 return;
 
@@ -61,7 +73,9 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
+            print("Replay end event");
             _loadedSceneName = string.Empty;
+            DroneHUD.Instance.ShowHUD(false);
             UnloadLoadedScene();
         }
 

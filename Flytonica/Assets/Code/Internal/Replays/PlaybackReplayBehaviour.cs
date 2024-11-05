@@ -21,8 +21,8 @@ namespace Code.Internal.Replays
 
         private void FindObjects()
         {
-            if(!_droneInput)
-                _droneInput = FindFirstObjectByType<DroneInput>();
+            if (!_droneInput)
+                _droneInput = FindAnyObjectByType<DroneInput>(FindObjectsInactive.Exclude);
             if(!_droneCameraController)
                 _droneCameraController = FindFirstObjectByType<DroneCameraController>();
         }
@@ -53,6 +53,11 @@ namespace Code.Internal.Replays
             DroneHUD.Instance.ShowHUD(false);
             if(_droneInput)
                 _droneInput.DroneCam = false;
+            if(_droneCameraController)
+                _droneCameraController.SetCamera(_droneInput.DroneCam);
+
+            _droneInput = null;
+            _droneCameraController = null;
         }
     }
 }
