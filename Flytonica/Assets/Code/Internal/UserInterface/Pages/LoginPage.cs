@@ -97,7 +97,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnErrorLogin(string response, long code)
         {
-            Debug.LogError(response);
+            Debug.LogError($"{code}: {response}");
         }
     }
 }

@@ -156,7 +156,6 @@ namespace Code.Internal.Replays
 
         public void Seek(float normalizedTime)
         {
-            
             _playbackOperation?.SeekPlaybackNormalized(normalizedTime);
         }
 

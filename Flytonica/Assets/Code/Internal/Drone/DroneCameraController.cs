@@ -1,4 +1,6 @@
-﻿using Code.Internal.XR;
+﻿using Code.Internal.API;
+using Code.Internal.API.Wrappers;
+using Code.Internal.XR;
 using FishNet.Connection;
 using FishNet.Object;
 using UltimateReplay;
@@ -34,7 +36,7 @@ namespace Code.Internal.Drone
         {
             base.OnOwnershipClient(prevOwner);
             
-            if(disableHeadTrackingInFPV)
+            if(disableHeadTrackingInFPV && !(HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher))
                 disableHeadTrackingInFPV.enabled = IsOwner;
         }
 
