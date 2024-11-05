@@ -23,16 +23,14 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private AvailableDronesSettings drones;
         [SerializeField] private string tasksTitle = "Доступные задания", learnTitle = "Доступные сценарии";
 
-        [Header("Conponents:")] [SerializeField]
-        private ScrollRect pageScroll;
-        [SerializeField]
-        private Transform selectScriptParent;
+        [Header("Conponents:")]
+        [SerializeField] private Transform selectScriptParent;
         [SerializeField] private TMP_Text pageTitle;
 
         [SerializeField] private ScenarioInfoPanel infoPanel;
         [SerializeField] private Button startGameButton;
 
-        [SerializeField] private Button updateButton, upButton, downButton;
+        [SerializeField] private Button updateButton;
 
         [Header("Prefabs:")] [SerializeField] private SelectScriptButton buttonPrefab;
         [SerializeField] private GameObject listPrefab;
@@ -52,9 +50,6 @@ namespace Code.Internal.UserInterface.Pages
             
             updateButton?.onClick.AddListener(InitTasks);
             
-            upButton?.onClick.AddListener(MoveUp);
-            downButton?.onClick.AddListener(MoveDown);
-            
             infoPanel?.Close();
         }
 
@@ -65,9 +60,6 @@ namespace Code.Internal.UserInterface.Pages
             startGameButton?.onClick.RemoveListener(OnStartGame);
             
             updateButton?.onClick.RemoveListener(InitTasks);
-            
-            upButton?.onClick.RemoveListener(MoveUp);
-            downButton?.onClick.RemoveListener(MoveDown);
         }
 
         public void InitTasks()
@@ -239,18 +231,6 @@ namespace Code.Internal.UserInterface.Pages
                     }
                 }
             }
-        }
-
-        private void MoveUp()
-        {
-            var scrollStep = 0.1f; // Adjust the scroll speed as needed
-            pageScroll.verticalNormalizedPosition = Mathf.Clamp01(pageScroll.verticalNormalizedPosition + scrollStep);
-        }
-
-        private void MoveDown()
-        {
-            var scrollStep = 0.1f; // Adjust the scroll speed as needed
-            pageScroll.verticalNormalizedPosition = Mathf.Clamp01(pageScroll.verticalNormalizedPosition - scrollStep);
         }
         
         #region Tasks Get
