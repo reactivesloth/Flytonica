@@ -123,6 +123,9 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
+            if(!IsOwner)
+                return;
+            
             if (!_droneInput)
                 _droneInput = DroneInput.Instance;
 

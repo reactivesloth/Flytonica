@@ -16,7 +16,7 @@ namespace Code.Internal.Network
     {
         private readonly List<NetworkObject> _drones = new();
 
-        public NetworkObject Spawn(NetworkConnection connection, DroneSettings settings, bool isTeacher = false)
+        public NetworkObject Spawn(NetworkConnection connection, DroneSettings settings)
         {
             if (!InstanceFinder.ServerManager.Clients.ContainsValue(connection))
                 return null;

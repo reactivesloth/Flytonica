@@ -301,7 +301,6 @@ GameObject:
   - component: {fileID: 3523723226343322048}
   - component: {fileID: 4574850746238292657}
   - component: {fileID: 6605096761610849414}
-  - component: {fileID: 3520288663450856467}
   - component: {fileID: 5789164011847043727}
   m_Layer: 0
   m_Name: FPVCamera
@@ -424,23 +423,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &3520288663450856467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6347821693160888019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shouldBeEnabledInFPV: 1
-  switchedCamera: {fileID: 0}
-  enabledInFPVObjects: []
-  disabledInFPVObjects: []
-  IsViewed: 0
 --- !u!81 &5789164011847043727
 AudioListener:
   m_ObjectHideFlags: 0

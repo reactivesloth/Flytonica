@@ -87,8 +87,7 @@ namespace Code.Internal.Scenario
         {
             FindAnyObjectByType<ScenarioInitializer>().Initialize(sceneSettings.currentScenario);
             InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().Spawn(
-                InstanceFinder.ClientManager.Connection, sceneSettings.currentScenario.currentDrone,
-                sceneSettings.currentScenario.currentDroneMode);
+                InstanceFinder.ClientManager.Connection, sceneSettings.currentScenario.currentDrone);
         }
 
         private void End()

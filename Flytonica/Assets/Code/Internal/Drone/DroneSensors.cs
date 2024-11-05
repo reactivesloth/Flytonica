@@ -1,12 +1,13 @@
 ﻿using System;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
+using FishNet.Object;
 using UnityEngine;
 
 namespace Code.Internal.Drone
 {
     [RequireComponent(typeof(DroneController))]
-    public class DroneSensors : MonoBehaviour
+    public class DroneSensors : NetworkBehaviour
     {
         private DroneController _droneController;
         [SerializeField] private Rigidbody _rigidbody;
@@ -93,6 +94,9 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
+            if(!IsOwner)
+                return;
+            
             UpdateHud();
 
             if (DroneController.Instance && DroneHUD.Instance)

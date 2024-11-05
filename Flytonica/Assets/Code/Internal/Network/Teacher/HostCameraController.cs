@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using Code.Internal.UserInterface;
 using Code.Internal.XR;
@@ -20,7 +22,8 @@ namespace Code.Internal.Network.Teacher
         private void Awake()
         {
             Instance = this;
-            SetPlayerFpv(true);
+            if(HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
+                SetPlayerFpv(true);
         }
 
         private void Update()

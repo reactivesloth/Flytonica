@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Code.Internal.XR;
 using FishNet.Connection;
 using FishNet.Object;
 using UltimateReplay;
@@ -9,6 +9,7 @@ namespace Code.Internal.Drone
     [ReplayPreparerIgnore]
     public class DroneCameraController : NetworkBehaviour
     {
+        [SerializeField] private XRDisableHeadTrackingInFPV disableHeadTrackingInFPV;
         [SerializeField] private GameObject cameraObject;
         [SerializeField] private GameObject irCameraObject;
 
@@ -18,19 +19,31 @@ namespace Code.Internal.Drone
 
         public float CurrentAngle => currentAngle;
 
-        public event Action<Vector3, Quaternion> OnCameraDataUpdated;
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            disableHeadTrackingInFPV = gameObject.GetComponent<XRDisableHeadTrackingInFPV>();
+        }
 
         private void Awake()
         {
             irCameraObject.SetActive(false);
         }
 
+        public override void OnOwnershipClient(NetworkConnection prevOwner)
+        {
+            base.OnOwnershipClient(prevOwner);
+            
+            if(disableHeadTrackingInFPV)
+                disableHeadTrackingInFPV.enabled = IsOwner;
+        }
+
         private void Update()
         {
-            if (!IsOwner || !IsSpawned)
+            if (!IsOwner)
+            {
                 return;
-
-            TransmitCameraTransform(Owner);
+            }
 
              // if (DroneInput.Instance && cameraObject.activeSelf != DroneInput.Instance.DroneCam)
              //     SetCamera(DroneInput.Instance.DroneCam);
@@ -55,23 +68,16 @@ namespace Code.Internal.Drone
             DroneCameraEffectController.Instance.SetIrMode(!isIrModeNow);
         }
 
-        public void SetCamera(bool value) => cameraObject.SetActive(value);
+        public void SetCamera(bool value)
+        {
+            cameraObject.SetActive(value);
+        } 
 
         public void SetCameraAngle(float value)
         {
             var rot = cameraObject.transform.localRotation;
             rot = Quaternion.Euler(value, rot.y, rot.z);
             cameraObject.transform.localRotation = rot;
-        }
-        
-
-        [ServerRpc]
-        private void TransmitCameraTransform(NetworkConnection sender)
-        {
-            var position = cameraObject.transform.position;
-            var rotation = cameraObject.transform.rotation;
-
-            OnCameraDataUpdated?.Invoke(position, rotation);
         }
     }
 }

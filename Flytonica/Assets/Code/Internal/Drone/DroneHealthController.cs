@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using Code.Internal.SceneManagement;
+using FishNet.Object;
 using UnityEditor;
 using UnityEngine;
 
 namespace Code.Internal.Drone
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class DroneHealthController : MonoBehaviour
+    public class DroneHealthController : NetworkBehaviour
     {
         [SerializeField] private float timeOutSecs = 1f;
         
@@ -76,7 +77,7 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if (CurrentDroneSensors== null) return;
+            if(IsOwner && CurrentDroneSensors)
                 CurrentDroneSensors.Health = _currentHealth;
         }
 

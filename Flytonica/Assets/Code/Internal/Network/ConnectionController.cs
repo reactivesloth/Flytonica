@@ -118,6 +118,7 @@ namespace Code.Internal.Network
         private async void OnConnectedPlayer(NetworkConnection connection, UserType userType, int avatarId)
         {
             print("PlayerConnected");
+            
             while (!Observers.Contains(connection))
                 await Task.Delay(100);
 
@@ -137,7 +138,7 @@ namespace Code.Internal.Network
             else
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
-                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
+                    .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
             }
 

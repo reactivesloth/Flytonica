@@ -410,6 +410,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
+  disableHeadTrackingInFPV: {fileID: 7696433342160729603}
   cameraObject: {fileID: 8278530903556258650}
   irCameraObject: {fileID: 5695389359944302536}
   currentAngle: 0
@@ -433,6 +434,8 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 5167742280540814752}
   - {fileID: 4973870330401012139}
+  - {fileID: 7968847895797777297}
+  - {fileID: 8126251185370172783}
   - {fileID: 835091436568997191}
   - {fileID: -6028051076763233206}
   - {fileID: 6019778411117429522}
@@ -496,6 +499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4ae277a41a46fe9ca11238b20ab2fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 7794961175099019535}
   _rigidbody: {fileID: 6103327545130313638}
 --- !u!114 &8126251185370172783
 MonoBehaviour:
@@ -509,6 +515,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad5dbeb15f3c48aeac0e1d181a630f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 7794961175099019535}
+  _networkObjectCache: {fileID: 7794961175099019535}
   timeOutSecs: 1
   _damageMultiplier: 3
   _currentHealth: 100
@@ -536,7 +545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -581,7 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e7d22756cb54df9b7d1fda9984fc3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   changeModeAction: {fileID: 7671190069710442087, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -734,7 +743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ce1bf8ddcf4bbf8693e491abe3c891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   sensors: {fileID: 7968847895797777297}
@@ -906,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1050,7 +1059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -1506,7 +1515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 8
+  _componentIndexCache: 10
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2602,7 +2611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 7794961175099019535}
   _networkObjectCache: {fileID: 7794961175099019535}
   _componentConfiguration: 0
@@ -2695,6 +2704,26 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7891788199573436123, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: <IsNested>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891788199573436123, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: <PrefabId>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891788199573436123, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: <AssetPathHash>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891788199573436123, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: <ComponentIndex>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891788199573436123, guid: 681cbf49e64104e44a185a6685d33926, type: 3}
+      propertyPath: <SerializedRootNetworkBehaviour>k__BackingField
+      value: 
+      objectReference: {fileID: 5167742280540814752}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

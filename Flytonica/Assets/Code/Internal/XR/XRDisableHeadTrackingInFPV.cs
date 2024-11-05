@@ -1,4 +1,6 @@
 using System;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
 using UnityEngine;
 
@@ -24,14 +26,14 @@ namespace Code.Internal.XR
                 _droneInput = DroneInput.Instance;
             }
             
-            if(_droneInput)
+            if(_droneInput && _droneInput.IsOwner)
             {
                 if (switchedCamera)
                     SwitchObject(shouldBeEnabledInFPV, switchedCamera);
                 SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
                 SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
             }
-            else
+            else if(HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
             {
                 if (switchedCamera)
                     SwitchViewObject(IsViewed, switchedCamera);
