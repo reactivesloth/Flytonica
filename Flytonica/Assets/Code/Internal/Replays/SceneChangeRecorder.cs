@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Code.Internal.UserInterface;
+using System.Threading.Tasks;
 using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -73,15 +74,17 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
-            print("Replay end event");
-            UnloadLoadedScene();
             _loadedSceneName = string.Empty;
             DroneHUD.Instance.ShowHUD(false);
+            UnloadAllScenes();
         }
 
         private async void ReloadScenesAsync()
         {
-            UnloadLoadedScene();
+            ReplayController.Instance.Pause();
+            ReplayController.Instance.IsSceneTransitioning = true;
+
+            await UnloadLoadedScene();
 
             if (string.IsNullOrEmpty(_activeSceneName))
                 return;
@@ -90,18 +93,34 @@ namespace Code.Internal.Replays
             var loadedScene = SceneManager.GetSceneByName(_activeSceneName);
             if (loadedScene.IsValid())
                 SceneManager.SetActiveScene(loadedScene);
+            
+            ReplayController.Instance.PlayReplay();
+            ReplayController.Instance.IsSceneTransitioning = false;
 
             Debug.Log($"Сцена {_activeSceneName} загружена во время воспроизведения");
         }
 
-        private void UnloadLoadedScene()
+        private async Task UnloadLoadedScene()
         {
             if (string.IsNullOrEmpty(_loadedSceneName))
                 return;
 
             var unloadedScene = SceneManager.GetSceneByName(_loadedSceneName);
             if (unloadedScene.IsValid())
-                SceneManager.UnloadSceneAsync(_loadedSceneName);
+                await SceneManager.UnloadSceneAsync(_loadedSceneName);
+        }
+
+        private async void UnloadAllScenes()
+        {
+            foreach (var sceneName in trackedScenesNames)
+            {
+                var scene = SceneManager.GetSceneByName(sceneName);
+                if (scene.isLoaded)
+                {
+                    Debug.Log($"Выгрузка сцены: {sceneName}");
+                    await SceneManager.UnloadSceneAsync(sceneName);
+                }
+            }
         }
     }
 }
