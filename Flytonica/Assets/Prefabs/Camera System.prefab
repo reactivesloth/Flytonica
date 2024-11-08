@@ -816,7 +816,6 @@ GameObject:
   - component: {fileID: 6562418821740791545}
   - component: {fileID: 3545079527139552960}
   - component: {fileID: 6042357109377106442}
-  - component: {fileID: 5968484526817356346}
   m_Layer: 0
   m_Name: UIFPVCamera
   m_TagString: MainCamera
@@ -935,20 +934,3 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &5968484526817356346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8953024067120864852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724453d7ac6c15a40bdb1f89c0645d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shouldBeEnabledInFPV: 0
-  switchedCamera: {fileID: 0}
-  enabledInFPVObjects: []
-  disabledInFPVObjects: []
-  IsViewed: 0

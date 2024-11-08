@@ -250,10 +250,8 @@ namespace Code.Internal.Scenario.Race
 
         public void SetScenarioState(int[] checkpointStatuses)
         {
-            StringBuilder log = new StringBuilder();
-
-            print(checkpoints.Count);
-            print(checkpointStatuses.Length);
+            var log = new StringBuilder();
+            
             for (int i = 0; i < checkpointStatuses.Length; i++)
             {
                 if (i >= 0 && i < checkpoints.Count)

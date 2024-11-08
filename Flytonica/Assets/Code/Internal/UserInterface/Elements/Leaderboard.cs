@@ -30,6 +30,7 @@ namespace Code.Internal.UserInterface.Elements
         private void Awake()
         {
             _instance = this;
+            gameObject.SetActive(false);
         }
 
         public void Open(UnityAction closeAction = null)

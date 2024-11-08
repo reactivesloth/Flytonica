@@ -33,6 +33,8 @@ namespace Code.Internal.Replays
         public float CurrentPlaybackTime => _playbackOperation?.PlaybackTime ?? 0f;
         public float TotalPlaybackTime => !_playbackOperation.IsDisposed ? _playbackOperation.Duration : 0f;
         
+        public bool IsSceneTransitioning { get; set; }
+        
         protected void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
