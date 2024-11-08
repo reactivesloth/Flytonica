@@ -12,6 +12,7 @@ namespace Code.Internal
     {
         [SerializeField] private RectTransform ui;
         [SerializeField] private XRRayInteractor[] xrRayInteractors;
+        [SerializeField] private string trackedTag;
 
         private GameObject _lastHoveredObject;
 
@@ -19,10 +20,12 @@ namespace Code.Internal
         {
             Invoke("Initialize", 1);
         }
-        
-        private void Initialize ()
+
+        private void Initialize()
         {
-            ui.gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null
+            ui.gameObject.GetComponent<Canvas>().renderMode = XRSettings.isDeviceActive && XRSettings.enabled ||
+                                                              FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive
+                                                                  .Include) != null
                 ? RenderMode.ScreenSpaceCamera
                 : RenderMode.ScreenSpaceOverlay;
         }
@@ -34,7 +37,8 @@ namespace Code.Internal
 
             foreach (var rayInteractor in xrRayInteractors)
             {
-                if (rayInteractor.TryGetCurrent3DRaycastHit(out var hit) && hit.collider.gameObject.CompareTag("UIPlane"))
+                if (rayInteractor.TryGetCurrent3DRaycastHit(out var hit) &&
+                    hit.collider.gameObject.CompareTag(trackedTag)) 
                 {
                     var screenPosition = GetScreenPosition(hit);
                     Simulate(rayInteractor, screenPosition);
@@ -67,26 +71,29 @@ namespace Code.Internal
                 _lastHoveredObject = targetObject;
             }
 
-            if (targetObject != null && rayInteractor.uiPressInput.inputActionReferencePerformed.action.WasPressedThisFrame())
+            if (targetObject != null &&
+                rayInteractor.uiPressInput.inputActionReferencePerformed.action.WasPressedThisFrame())
                 SimulateClick(targetObject, pointerData, ExecuteEvents.pointerClickHandler);
-            
         }
 
-        private static void SimulateClick(GameObject obj, PointerEventData pointerData, ExecuteEvents.EventFunction<IPointerClickHandler> action)
+        private static void SimulateClick(GameObject obj, PointerEventData pointerData,
+            ExecuteEvents.EventFunction<IPointerClickHandler> action)
         {
             ExecuteEvents.Execute(obj, pointerData, action);
             if (obj.transform.parent != null)
                 SimulateClick(obj.transform.parent.gameObject, pointerData, action);
         }
 
-        private static void SimulateEnter(GameObject obj, PointerEventData pointerData, ExecuteEvents.EventFunction<IPointerEnterHandler> action)
+        private static void SimulateEnter(GameObject obj, PointerEventData pointerData,
+            ExecuteEvents.EventFunction<IPointerEnterHandler> action)
         {
             ExecuteEvents.Execute(obj, pointerData, action);
             if (obj.transform.parent != null)
                 SimulateEnter(obj.transform.parent.gameObject, pointerData, action);
         }
 
-        private static void SimulateExit(GameObject obj, PointerEventData pointerData, ExecuteEvents.EventFunction<IPointerExitHandler> action)
+        private static void SimulateExit(GameObject obj, PointerEventData pointerData,
+            ExecuteEvents.EventFunction<IPointerExitHandler> action)
         {
             ExecuteEvents.Execute(obj, pointerData, action);
             if (obj.transform.parent != null)
@@ -104,7 +111,7 @@ namespace Code.Internal
 
         private void ClearHoveredObject()
         {
-            if (_lastHoveredObject == null) 
+            if (_lastHoveredObject == null)
                 return;
             PointerEventData pointerData = new(EventSystem.current);
             SimulateExit(_lastHoveredObject, pointerData, ExecuteEvents.pointerExitHandler);

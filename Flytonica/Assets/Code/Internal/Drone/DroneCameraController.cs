@@ -13,6 +13,7 @@ namespace Code.Internal.Drone
     {
         [SerializeField] private XRDisableHeadTrackingInFPV disableHeadTrackingInFPV;
         [SerializeField] private GameObject cameraObject;
+        [field:SerializeField] public GameObject UiCamera  { get; private set; }
         [SerializeField] private GameObject irCameraObject;
 
         [SerializeField] [Range(-45, 90)] private float currentAngle;

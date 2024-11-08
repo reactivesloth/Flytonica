@@ -8,6 +8,7 @@ using FishNet.Discovery;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.UserInterface.Pages
 {
@@ -36,7 +37,7 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
-            playScenarioButton.interactable = !XRSettings.enabled || !XRSettings.isDeviceActive || _currentIPEndPoint != null;
+            playScenarioButton.interactable = !XRSettings.enabled || !XRSettings.isDeviceActive || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) == null || _currentIPEndPoint != null;
             editScenarioButton.interactable = !XRSettings.enabled && !XRSettings.isDeviceActive;
             
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
@@ -53,7 +54,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnPlayScenarioClicked()
         {
-            if (XRSettings.enabled && XRSettings.isDeviceActive)
+            if (XRSettings.enabled && XRSettings.isDeviceActive || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
             {
                 InstanceFinder.ClientManager.StartConnection(_currentIPEndPoint.Address.ToString());
             }
