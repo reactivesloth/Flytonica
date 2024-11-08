@@ -19,7 +19,9 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button thirdViewButton;
         [SerializeField] private Button leaderboardButton;
         [SerializeField] private Button resetPlayerButton;
+        [SerializeField] private Button mapButton;
 
+        [SerializeField] private GameObject mapUi;
         [SerializeField] private Transform playerListContainer;
         [SerializeField] private HostPlayerButton playerListItemPrefab;
 
@@ -38,6 +40,7 @@ namespace Code.Internal.UserInterface.Pages
             thirdViewButton?.onClick.AddListener(HostCameraController.Instance.SetTeacherView);
             leaderboardButton.onClick.AddListener(OnLeaderBoardOpen);
             resetPlayerButton.onClick.AddListener(ResetPlayerButton);
+            mapButton.onClick.AddListener(OnOpenMap);
         }
 
         private void ResetPlayerButton()
@@ -66,6 +69,7 @@ namespace Code.Internal.UserInterface.Pages
             {
                 Destroy(button.gameObject);
             }
+
             playersButtons.Clear();
 
             playersWithDrones = UsersManager.Instance.AllPlayers.Where(d => d.Value.Drone != null)
@@ -94,5 +98,7 @@ namespace Code.Internal.UserInterface.Pages
 
             button.Help();
         }
+
+        private void OnOpenMap() => mapUi?.SetActive(!mapUi.activeSelf);
     }
 }
