@@ -511,6 +511,7 @@ MonoBehaviour:
   - {fileID: -3053347562455769648}
   - {fileID: 3646248444435090050}
   - {fileID: -4394725033424922844}
+  - {fileID: 3079450896581539523}
   runtimeComponents:
   - {fileID: -3053347562455769648}
   - {fileID: 3646248444435090050}
@@ -954,6 +955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 457639752544969565}
   - component: {fileID: 7782231253472033067}
+  - component: {fileID: 3079450896581539523}
   m_Layer: 12
   m_Name: Line
   m_TagString: Untagged
@@ -1083,6 +1085,24 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3079450896581539523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568135919262387392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bd2f5b768e32243b7e0dfccd0ae1d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 17463
+  replayObject:
+    reference: {fileID: -3365251737495109800}
+  observedLineRenderer: {fileID: 7782231253472033067}
+  updateFlags: 2
 --- !u!1 &2734237865607974186
 GameObject:
   m_ObjectHideFlags: 0
