@@ -129,7 +129,9 @@ public sealed class bl_MiniMap : MonoBehaviour
         {
             if (_minimapUI == null)
             {
-                _minimapUI = FindAnyObjectByType<bl_MiniMapUI>(FindObjectsInactive.Include);
+                _minimapUI = transform.parent != null
+                    ? transform.parent.GetComponentInChildren<bl_MiniMapUI>(true)
+                    : GetComponentInChildren<bl_MiniMapUI>(true);
             }
             return _minimapUI;
         }

@@ -6,7 +6,7 @@ namespace Lovatto.MiniMap
     public class bl_MiniMapTexture : MonoBehaviour, IPointerClickHandler
     {
         private RectTransform Area;
-        private bl_MiniMap MiniMap => FindAnyObjectByType<bl_MiniMap>();
+        private bl_MiniMap MiniMap;
 
         /// <summary>
         /// 
@@ -14,7 +14,7 @@ namespace Lovatto.MiniMap
         void Awake()
         {
             Area = GetComponent<RectTransform>();
-            //MiniMap = FindAnyObjectByType<bl_MiniMap>();
+            MiniMap = transform.root.GetComponentInChildren<bl_MiniMap>();
         }
 
         /// <summary>
