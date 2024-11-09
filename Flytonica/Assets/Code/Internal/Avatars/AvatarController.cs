@@ -1,19 +1,31 @@
-﻿using Code.Internal.Avatars.Settings;
+﻿using System;
+using Code.Internal.Avatars.Settings;
 using FishNet.Connection;
 using FishNet.Object;
 using RootMotion.FinalIK;
 using UnityEngine;
-using Avatar = UnityEngine.Avatar;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.Avatars
 {
+    [Serializable]
+    public class AvatarIKTargetRig
+    {
+        public Transform head;
+        public Transform leftHand;
+        public Transform rightHand;
+    }
+    
     public class AvatarController : NetworkBehaviour
     {
         private static AvatarController _instance;
-        
-        [SerializeField] private AvatarsList avatarsList;
-        [SerializeField] private Transform vrHead, vrLeftHand, vrRightHand;
 
+        [SerializeField] private Transform player;
+        [SerializeField] private AvatarsList avatarsList;
+
+        [SerializeField] private AvatarIKTargetRig desktopRig, vrRig;
+        
         public static AvatarController Instance
         {
             get
@@ -43,20 +55,22 @@ namespace Code.Internal.Avatars
         
         public void SpawnAvatar(NetworkConnection avatarOwner, int avatarId)
         {
-            var avatar = Instantiate(avatarsList.avatarsIksList[avatarId].avatarIk);
+            var avatar = Instantiate(avatarsList.avatarsIksList[avatarId].avatarIk, player);
             ServerManager.Spawn(avatar.GetComponent<NetworkObject>(), avatarOwner);
             InitUserAvatar(avatarOwner, avatar.GetComponent<NetworkObject>());
             InitNotOwner(avatar.GetComponent<NetworkObject>());
-            
         }
 
         [TargetRpc]
         public void InitUserAvatar(NetworkConnection avatarOwner, NetworkObject avatar)
         {
             var vrIk = avatar.GetComponent<VRIK>();
-            vrIk.solver.spine.headTarget = vrHead;
-            vrIk.solver.leftArm.target = vrLeftHand;
-            vrIk.solver.rightArm.target = vrRightHand;
+            bool isVR = XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null;
+
+            var rig = isVR ? vrRig : desktopRig;
+            vrIk.solver.spine.headTarget = rig.head;
+            vrIk.solver.leftArm.target = rig.leftHand;
+            vrIk.solver.rightArm.target = rig.rightHand;
         }
 
         [ObserversRpc]

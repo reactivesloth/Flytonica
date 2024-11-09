@@ -108,7 +108,7 @@ namespace Code.Internal.Scenario
 
         private void EndTask()
         {
-            Time.timeScale = 0f;
+            Time.timeScale = 0.01f;
             var replay = ReplayController.Instance.StopRecording();
             if (sceneSettings.isTask)
                 SendData(replay);
