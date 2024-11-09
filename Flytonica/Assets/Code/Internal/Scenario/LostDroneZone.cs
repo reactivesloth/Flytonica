@@ -8,6 +8,7 @@ namespace Code.Internal.Scenario
 {
     public class LostDroneZone : MonoBehaviour
     {
+        [SerializeField] private bool showZoneOnMap = false;
         [SerializeField] private string warningText, errorText;
 
         [SerializeField] private DroneTriggerCallback warning, danger;
