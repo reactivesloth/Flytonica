@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: -9030149840258663741}
   - component: {fileID: -5138699134431509389}
   - component: {fileID: 194057840205544910}
+  - component: {fileID: 4443152433677812270}
   m_Layer: 0
   m_Name: GATE_ PLSTC_Round
   m_TagString: Untagged
@@ -542,6 +543,7 @@ MonoBehaviour:
   icon: {fileID: 2800000, guid: 3933443ec103ca14fa13b4e36b7e2f16, type: 3}
   displayName: "\u0412\u043E\u0440\u043E\u0442\u0430 \u0444\u0438\u0433\u0443\u0440\u0430
     \u043A\u0440\u0443\u0433"
+  sortOrder: 0
 --- !u!114 &-6413445633765287206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,6 +633,40 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 6b131dfad08ff8a48b7565dc71a81479, type: 2}
   - {fileID: 2100000, guid: da5f30f1f1b002046a1c93608a527021, type: 2}
   recordFlags: 3
+--- !u!114 &4443152433677812270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400409307159236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f131dd35d296fca4e90efc4ed717e48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  OffSet: {x: 0, y: 0, z: 0}
+  iconData: {fileID: 11400000, guid: 08a44ab3ff9abd847ae83ffeb5a9fbca, type: 2}
+  ShowCircleArea: 0
+  CircleAreaRadius: 10
+  CircleAreaColor: {r: 1, g: 1, b: 1, a: 0.9}
+  isInteractable: 1
+  interacableAction: 0
+  InfoItem: 'Scenario Object '
+  keepTextAlwaysFacingUp: 0
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
+  OffScreen: 1
+  opacityBasedDistance: 1
+  maxDistance: 1000
+  iconFaceDirection: 0
+  DestroyWithObject: 1
+  BorderOffScreen: 0.01
+  RenderDelay: 0
+  m_Effect: 2
+  CustomIconPrefab: {fileID: 0}
 --- !u!1 &1459300456977580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,3 +1210,4 @@ MonoBehaviour:
   currentCheckpointMaterial: {fileID: 2100000, guid: 6b131dfad08ff8a48b7565dc71a81479, type: 2}
   nextCheckpointMaterial: {fileID: 2100000, guid: da5f30f1f1b002046a1c93608a527021, type: 2}
   otherCheckpointMaterial: {fileID: 2100000, guid: 3428b190042337a4188af42090de56a0, type: 2}
+  sortOrder: 0

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7221918900659166052}
   - component: {fileID: 7164438295507727870}
   - component: {fileID: 2960932306178131700}
+  - component: {fileID: 2284285956893658050}
   m_Layer: 0
   m_Name: Transport_BlueDropZone
   m_TagString: Untagged
@@ -74,6 +75,7 @@ MonoBehaviour:
   Type: 5
   icon: {fileID: 2800000, guid: 0dcdcd1cb91ef4941bb1ae588eafd9c2, type: 3}
   displayName: "\u0421\u0438\u043D\u044F\u044F \u0437\u043E\u043D\u0430 \u0441\u0431\u0440\u043E\u0441\u0430"
+  sortOrder: 0
 --- !u!114 &7221918900659166052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +137,40 @@ MonoBehaviour:
   - {fileID: 7164438295507727870}
   isPrefab: 1
   prefabType: 0
+--- !u!114 &2284285956893658050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955882340377954675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f131dd35d296fca4e90efc4ed717e48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  OffSet: {x: 0, y: 0, z: 0}
+  iconData: {fileID: 11400000, guid: 08a44ab3ff9abd847ae83ffeb5a9fbca, type: 2}
+  ShowCircleArea: 0
+  CircleAreaRadius: 10
+  CircleAreaColor: {r: 1, g: 1, b: 1, a: 0.9}
+  isInteractable: 1
+  interacableAction: 0
+  InfoItem: 'Scenario Object '
+  keepTextAlwaysFacingUp: 0
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
+  OffScreen: 1
+  opacityBasedDistance: 1
+  maxDistance: 1000
+  iconFaceDirection: 0
+  DestroyWithObject: 1
+  BorderOffScreen: 0.01
+  RenderDelay: 0
+  m_Effect: 2
+  CustomIconPrefab: {fileID: 0}
 --- !u!1001 &3370469696215417912
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1231311179778054078}
   - component: {fileID: -6409323502001910437}
   - component: {fileID: 5347021614517630870}
+  - component: {fileID: 7387137408028602815}
   m_Layer: 0
   m_Name: GATE_MTL_SQR_Standing (FINISH)
   m_TagString: Untagged
@@ -109,6 +110,7 @@ MonoBehaviour:
   Type: 3
   icon: {fileID: 2800000, guid: 444a5fb25875b5541b24d9571af92c7c, type: 3}
   displayName: "\u0424\u0438\u043D\u0438\u0448\u043D\u044B\u0435 \u0432\u043E\u0440\u043E\u0442\u0430"
+  sortOrder: 0
 --- !u!114 &1231311179778054078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +178,40 @@ MonoBehaviour:
     id: 1334
   replayObject:
     reference: {fileID: 1231311179778054078}
+--- !u!114 &7387137408028602815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675555397553869668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f131dd35d296fca4e90efc4ed717e48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  OffSet: {x: 0, y: 0, z: 0}
+  iconData: {fileID: 11400000, guid: 08a44ab3ff9abd847ae83ffeb5a9fbca, type: 2}
+  ShowCircleArea: 0
+  CircleAreaRadius: 10
+  CircleAreaColor: {r: 1, g: 1, b: 1, a: 0.9}
+  isInteractable: 1
+  interacableAction: 0
+  InfoItem: 'Scenario Object '
+  keepTextAlwaysFacingUp: 0
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
+  OffScreen: 1
+  opacityBasedDistance: 1
+  maxDistance: 1000
+  iconFaceDirection: 0
+  DestroyWithObject: 1
+  BorderOffScreen: 0.01
+  RenderDelay: 0
+  m_Effect: 2
+  CustomIconPrefab: {fileID: 0}
 --- !u!1 &2552797825548208412
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +500,7 @@ MonoBehaviour:
   currentCheckpointMaterial: {fileID: 2100000, guid: 37af0754e7b3ad444b53810324fd0139, type: 2}
   nextCheckpointMaterial: {fileID: 2100000, guid: 2b074b0d5fa6b2546ab6a967e2b1eb99, type: 2}
   otherCheckpointMaterial: {fileID: 2100000, guid: 1c15df654dbe0394f8f7465dead03c99, type: 2}
+  sortOrder: 0
 --- !u!1 &6002075749598218291
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +909,7 @@ MonoBehaviour:
   currentCheckpointMaterial: {fileID: 2100000, guid: 37af0754e7b3ad444b53810324fd0139, type: 2}
   nextCheckpointMaterial: {fileID: 2100000, guid: 2b074b0d5fa6b2546ab6a967e2b1eb99, type: 2}
   otherCheckpointMaterial: {fileID: 2100000, guid: 1c15df654dbe0394f8f7465dead03c99, type: 2}
+  sortOrder: 0
 --- !u!1 &6319387132596411945
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,8 @@ namespace Code.Internal.Scenario
             danger.OnDroneExit += OnDangerZoneExit;
         }
 
+        private void Start() => InitMinimapEntity();
+
         private void OnWarningZoneEnter()
         {
             if (DroneHUD.Instance != null)
@@ -80,6 +82,25 @@ namespace Code.Internal.Scenario
             warning.OnDroneExit -= OnWarningZoneExit;
             danger.OnDroneEnter -= OnDangerZoneEnter;
             danger.OnDroneExit -= OnDangerZoneExit;
+        }
+
+        private void InitMinimapEntity()
+        {
+            var entity = GetComponent<bl_MiniMapEntity>();
+            if (!entity)
+                return;
+            entity.enabled = showZoneOnMap;
+            
+            if(!showZoneOnMap)
+                return;
+            
+            var boxCollider = warning.GetComponent<BoxCollider>();
+            if (!boxCollider)
+                return;
+            
+            var radius = Mathf.Max(boxCollider.size.x, boxCollider.size.y, boxCollider.size.z) / 2f;
+            entity.CircleAreaRadius = radius;
+            entity.OnUpdateItem();
         }
     }
 }

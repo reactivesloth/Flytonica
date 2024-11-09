@@ -77,6 +77,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3598327648591313208}
   - component: {fileID: 9030244096327348963}
+  - component: {fileID: 1174250447030665107}
   m_Layer: 0
   m_Name: Drone Forbidden Zone
   m_TagString: Untagged
@@ -122,6 +123,42 @@ MonoBehaviour:
   danger: {fileID: 8068537865838139971}
   cameraLostPercent: 1
   controlLostPercent: 1
+--- !u!114 &1174250447030665107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3424322122365581962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f131dd35d296fca4e90efc4ed717e48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 916949312079752212}
+  OffSet: {x: 0, y: 0, z: 0}
+  iconData: {fileID: 11400000, guid: 89389007959611f4097d703222b805ef, type: 2}
+  ShowCircleArea: 1
+  CircleAreaRadius: 10
+  CircleAreaColor: {r: 1, g: 0.80241597, b: 0, a: 0.5019608}
+  isInteractable: 1
+  interacableAction: 0
+  InfoItem: 'Danger
+
+'
+  keepTextAlwaysFacingUp: 0
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
+  OffScreen: 1
+  opacityBasedDistance: 1
+  maxDistance: 1000
+  iconFaceDirection: 0
+  DestroyWithObject: 1
+  BorderOffScreen: 0.01
+  RenderDelay: 0
+  m_Effect: 2
+  CustomIconPrefab: {fileID: 0}
 --- !u!1 &5482156703708709576
 GameObject:
   m_ObjectHideFlags: 0

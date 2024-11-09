@@ -123,7 +123,7 @@ namespace Lovatto.MiniMap
             {
                 if(_minimap == null)
                 {
-                    _minimap = GetComponentInParent<bl_MiniMap>();
+                    _minimap = FindAnyObjectByType<bl_MiniMap>();
                 }
                 return _minimap;
             }
