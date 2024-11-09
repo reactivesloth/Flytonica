@@ -22,7 +22,7 @@ namespace Lovatto.MiniMap
         /// </summary>
         void Start()
         {
-            MiniMap = GetComponentInParent<bl_MiniMap>();
+            MiniMap = FindAnyObjectByType<bl_MiniMap>(FindObjectsInactive.Include); // Изменение изначального значения
             if (Target == null)
             {
                 Target = MiniMap.Target;

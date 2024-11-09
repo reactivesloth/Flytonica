@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
@@ -7,7 +6,6 @@ using Code.Internal.UserInterface;
 using Code.Internal.XR;
 using FishNet.Object;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
@@ -17,6 +15,7 @@ namespace Code.Internal.Network.Teacher
     {
         public static HostCameraController Instance;
 
+        [SerializeField] private bl_MiniMap map;
         [SerializeField] private List<XRDisableHeadTrackingInFPV> playerFpvCameraControllers;
 
         public NetworkObject targetDrone;
@@ -39,6 +38,7 @@ namespace Code.Internal.Network.Teacher
         public void SetTeacherView()
         {
             SetPlayerFpv(true);
+            map.Target = GameObject.FindGameObjectWithTag("Player").transform;
 
             XRDisableHeadTrackingInFPV fpvCamController = null;
             if (targetDrone)
@@ -61,6 +61,8 @@ namespace Code.Internal.Network.Teacher
                 SetInXR(drone);
             else
                 SetInPC(drone);
+            
+            map.Target = drone.transform;
         }
 
         private void SetInXR(NetworkObject drone)
