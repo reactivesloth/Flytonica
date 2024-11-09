@@ -25,6 +25,10 @@ namespace Code.Internal.Network
                 .Select(o => o.transform).ToArray();
 
             var spawn = spawners[Random.Range(0, spawners.Length)];
+            
+            var player = GameObject.FindWithTag("Player");
+            player.transform.SetPositionAndRotation(spawn.transform.position + Vector3.back, spawn.transform.rotation);
+            
             var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position,
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, SceneManager.GetSceneByName("Main"));

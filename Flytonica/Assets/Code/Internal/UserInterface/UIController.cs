@@ -16,7 +16,9 @@ namespace Code.Internal.UserInterface
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
         //[SerializeField] private GameObject drawUIPanel;
-
+        
+        private float savedAudioVolume;
+        
         private void Awake()
         {
             Instance = this;
@@ -56,7 +58,9 @@ namespace Code.Internal.UserInterface
             //drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
             DroneInput.Instance?.MenuCameraHandle(true);
-            Time.timeScale = 0;
+            Time.timeScale = 0.01f;
+            savedAudioVolume = AudioListener.volume;
+            AudioListener.volume = 0f;
         }
 
         public void Unpause(bool isChangeCamera = true)
@@ -67,6 +71,7 @@ namespace Code.Internal.UserInterface
             Time.timeScale = 1f;
             if(isChangeCamera)
                 DroneInput.Instance?.MenuCameraHandle(false);
+            AudioListener.volume = savedAudioVolume;
         }
 
         public void OnGameStart()
