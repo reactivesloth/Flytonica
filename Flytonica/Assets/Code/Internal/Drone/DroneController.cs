@@ -39,6 +39,8 @@ namespace Code.Internal.Drone
 
         private float controlFl, controlFr, controlRl, controlRr, acceleration;
 
+        [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioClip batteryBeep;
         [Range(2.4f, 3.8f)] public float currentVoltage = 3.8f;
 
         public DroneSettings Settings => droneSettings;
@@ -324,9 +326,14 @@ namespace Code.Internal.Drone
             float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
             batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);   
             
-            if(batteryLevelPercent is >= 9 and <= 11)
+            if(batteryLevelPercent is >= 1 and <= 11) {
                 DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", 5f);
-            
+                if (batteryBeep != null && sfxSource != null)
+                {
+                    if (!sfxSource.isPlaying)
+                        sfxSource.PlayOneShot(batteryBeep);
+                }
+            }
             if(batteryLevelPercent <= 0f)
             {
                 DroneSensors.InputSignal = 0;
