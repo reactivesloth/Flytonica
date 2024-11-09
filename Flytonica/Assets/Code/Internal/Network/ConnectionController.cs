@@ -10,6 +10,7 @@ using Code.Internal.SceneManagement;
 using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network
@@ -19,7 +20,8 @@ namespace Code.Internal.Network
         public static ConnectionController Instance { get; private set; }
 
         [SerializeField] private GameObject locomotion;
-        [SerializeField] private GameObject hostControl;
+        [SerializeField] private List<GameObject> hostControls;
+        [SerializeField] private List<GameObject> clientControls;
 
         [SerializeField] private SceneLoadingSettings sceneSettings;
         [SerializeField] private AvailableScenariosSettings scenarios;
@@ -69,14 +71,15 @@ namespace Code.Internal.Network
 
             print("Client started");
             if (HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
-                hostControl.SetActive(true);
+                hostControls.ForEach(o => o.SetActive(true));
             ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type, PlayerPrefs.GetInt("Avatar"));
         }
 
         public override void OnStopClient()
         {
             base.OnStopClient();
-            hostControl.SetActive(false);
+            hostControls.ForEach(o => o.SetActive(false));
+            clientControls.ForEach(o => o.SetActive(false));
             ServerDisconnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
         }
 
@@ -133,13 +136,14 @@ namespace Code.Internal.Network
 
             if (userType == UserType.Teacher)
             {
-                hostControl.SetActive(true);
+                hostControls.ForEach(o => o.SetActive(true));
             }
             else
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
+                clientControls.ForEach(o => o.SetActive(true));
             }
 
             MovePlayerRpc(connection);

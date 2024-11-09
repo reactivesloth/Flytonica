@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Code.Internal.Drone;
 using Code.Internal.Network.Teacher;
 using Code.Internal.UserInterface.Elements;
-using Code.Internal.XR;
 using FishNet.Connection;
-using FishNet.Object;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
