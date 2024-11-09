@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
@@ -17,6 +19,8 @@ namespace Code.Internal.Drone
         [SerializeField] private DroneSettings droneSettings;
 
         [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
+        [SerializeField] private LineRenderer lineRenderer;
+        [SerializeField] private float pathPointInterval = 1.0f; // Интервал в секундах
 
         [SerializeField] private DroneEngine engineFL;
         [SerializeField] private DroneEngine engineFR;
@@ -63,6 +67,7 @@ namespace Code.Internal.Drone
         {
             droneCameraController = GetComponent<DroneCameraController>();
             _rigidBody = GetComponent<Rigidbody>();
+            lineRenderer = GetComponentInChildren<LineRenderer>();
             InitializeDrone();
         }
 
@@ -74,6 +79,11 @@ namespace Code.Internal.Drone
             DroneCargoController = GetComponent<DroneCargoController>();
 
             InitializeDrone();
+        }
+
+        private void Start()
+        {
+            StartCoroutine(AddPointCoroutine());
         }
 
         private void InitializeDrone()
@@ -425,6 +435,24 @@ namespace Code.Internal.Drone
 
             // Применяем силу ветра к Rigidbody дрона
             _rigidBody.AddForce(windForce, ForceMode.Force);
+        }
+        
+        private IEnumerator AddPointCoroutine()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(pathPointInterval);
+                AddPoint();
+            }
+        }
+
+        private void AddPoint()
+        {
+            // Получаем текущую позицию и добавляем её в LineRenderer
+            Vector3 currentPosition = _transform.position;
+            int pointCount = lineRenderer.positionCount;
+            lineRenderer.positionCount = pointCount + 1;
+            lineRenderer.SetPosition(pointCount, currentPosition);
         }
     }
 }
