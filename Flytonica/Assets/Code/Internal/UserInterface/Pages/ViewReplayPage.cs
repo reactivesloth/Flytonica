@@ -39,7 +39,7 @@ namespace Code.Internal.UserInterface.Pages
             UpdateSpeedButtonLabel();
 
             ReplayController.Instance.PlaybackFinished += OnPauseButtonPressed;
-            
+
             if (DroneHUD.Instance != null)
             {
                 RectTransform gameUi = DroneHUD.Instance.gameUi;
@@ -80,15 +80,22 @@ namespace Code.Internal.UserInterface.Pages
             }
         }
 
+        protected override void OnBackClick()
+        {
+            if (ReplayController.Instance.IsSceneTransitioning) 
+                return;
+            base.OnBackClick();
+        }
+
         private void OnDisable()
         {
             playButton.onClick.RemoveListener(OnPlayButtonPressed);
             pauseButton.onClick.RemoveListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.RemoveListener(OnSeekSliderChanged);
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
-            
+
             ReplayController.Instance.PlaybackFinished -= OnPauseButtonPressed;
-            
+
             if (DroneHUD.Instance != null)
             {
                 RectTransform gameUi = DroneHUD.Instance.gameUi;
@@ -126,28 +133,28 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnPlayButtonPressed()
         {
-            if(ReplayController.Instance.IsSceneTransitioning) return;
+            if (ReplayController.Instance.IsSceneTransitioning) return;
             ReplayController.Instance.PlayReplay();
             UpdatePlayPauseButtons(true);
         }
 
         private void OnPauseButtonPressed()
         {
-            if(ReplayController.Instance.IsSceneTransitioning) return;
+            if (ReplayController.Instance.IsSceneTransitioning) return;
             ReplayController.Instance.Pause();
             UpdatePlayPauseButtons(false);
         }
 
         private void OnSeekSliderChanged(float value)
         {
-            if(ReplayController.Instance.IsSceneTransitioning) return;
+            if (ReplayController.Instance.IsSceneTransitioning) return;
             if (!_isUpdatingSlider)
                 ReplayController.Instance.Seek(value);
         }
 
         private void OnSpeedButtonPressed()
         {
-            if(ReplayController.Instance.IsSceneTransitioning) return;
+            if (ReplayController.Instance.IsSceneTransitioning) return;
             currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeeds.Length;
             float selectedSpeed = playbackSpeeds[currentSpeedIndex];
             ReplayController.Instance.SetPlaybackSpeed(selectedSpeed);
