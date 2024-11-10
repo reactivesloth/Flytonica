@@ -45,18 +45,23 @@ namespace Code.Internal.Drone
         {
             if (!CurrentDroneSensors) return;
 
+            UpdateDroneEffects(CurrentDroneSensors.CameraSignal);
+        }
+
+        public void UpdateDroneEffects(float cameraSignal)
+        {
             if (_filmGrain)
-                _filmGrain.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal - minOffsetCamera, minGrainIntensity,
+                _filmGrain.intensity.value = Mathf.Clamp(1f - cameraSignal - minOffsetCamera, minGrainIntensity,
                     maxGrainIntensity);
 
             if (_chromaticAberration)
-                _chromaticAberration.intensity.value = Mathf.Clamp(1f - CurrentDroneSensors.CameraSignal - minOffsetCamera, minChromaticIntensity,
+                _chromaticAberration.intensity.value = Mathf.Clamp(1f - cameraSignal - minOffsetCamera, minChromaticIntensity,
                     maxChromaticIntensity);
 
             if (_liftGammaGain)
             {
                 var value = _liftGammaGain.lift.value;
-                value.w = CurrentDroneSensors.CameraSignal <= 0.01 ? 1 : 0;
+                value.w = cameraSignal <= 0.01 ? 1 : 0;
                 _liftGammaGain.lift.value = value;
             }
         }

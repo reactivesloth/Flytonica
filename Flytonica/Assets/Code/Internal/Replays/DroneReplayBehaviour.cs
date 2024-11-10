@@ -34,6 +34,7 @@ namespace Code.Internal.Replays
         private string _timeText = string.Empty;
 
         private float _aimProgress;
+        private bool _isIrMode;
 
         // Переменные для интерполяции (предыдущие и следующие значения)
         private float _cameraSignalPrev, _cameraSignalNext;
@@ -77,6 +78,8 @@ namespace Code.Internal.Replays
 
             _aimProgress = DroneHUD.Instance.AimElement.Progress;
 
+            _isIrMode = GetComponent<DroneCameraController>().IsIrModeNow;
+
             // Записываем значения в состояние
             state.Write(_cameraSignal);
             state.Write(_inputSignal);
@@ -94,6 +97,7 @@ namespace Code.Internal.Replays
             state.Write(_windText);
             state.Write(_timeText);
             state.Write(_aimProgress);
+            state.Write(_isIrMode);
         }
 
         public override void OnReplayDeserialize(ReplayState state)
@@ -141,6 +145,8 @@ namespace Code.Internal.Replays
 
             _aimProgressPrev = _aimProgressNext;
             _aimProgressNext = state.ReadSingle();
+
+            _isIrMode = state.ReadBool();
         }
 
         protected override void Awake()
@@ -214,6 +220,8 @@ namespace Code.Internal.Replays
 
             // Обновляем HUD и камеру
             SetHud();
+            DroneCameraEffectController.Instance.UpdateDroneEffects(_cameraSignal);
+            GetComponent<DroneCameraController>().SetIrMode(_isIrMode);
             droneCameraController.SetCameraAngle(_cameraAngle);
         }
 

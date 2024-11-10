@@ -22,6 +22,8 @@ namespace Code.Internal.Drone
 
         public float CurrentAngle => currentAngle;
 
+        public bool IsIrModeNow => irCameraObject.activeSelf;
+
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -64,11 +66,15 @@ namespace Code.Internal.Drone
             cameraObject.transform.localRotation = rot;
         }
 
-        public void SetIrMode()
+        public void SwitchIrMode()
         {
-            var isIrModeNow = irCameraObject.activeSelf;
-            irCameraObject.SetActive(!isIrModeNow);
-            DroneCameraEffectController.Instance.SetIrMode(!isIrModeNow);
+            SetIrMode(!IsIrModeNow);
+        }
+        
+        public void SetIrMode(bool isIrMode)
+        {
+            irCameraObject.SetActive(isIrMode);
+            DroneCameraEffectController.Instance.SetIrMode(isIrMode);
         }
 
         public void SetCamera(bool value)

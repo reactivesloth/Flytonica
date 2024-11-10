@@ -10,6 +10,7 @@ using Code.Internal.UserInterface;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using RootMotion;
 using UnityEngine;
 
 namespace Code.Internal.Network
@@ -69,10 +70,9 @@ namespace Code.Internal.Network
             SendBaseScenarioStateToServer(scenario.TotalTimeInSeconds, DroneHUD.Instance.CurrentTaskText,
                 DroneHUD.Instance.CurrentWindText, DroneHUD.Instance.AltValueElement.MaxValue);
 
-            print(sensors.Speed);
             SendDroneVars(sensors.ModeName, sensors.Health, sensors.CameraSignal, sensors.InputSignal,
                 sensors.BatteryLevel, sensors.BatteryVoltage, DroneHUD.Instance.AimElement.Progress,
-                sensors.Speed);
+                sensors.Speed, GetComponent<DroneCameraController>().IsIrModeNow);
 
             switch (scenario)
             {
@@ -111,11 +111,11 @@ namespace Code.Internal.Network
 
         [ServerRpc]
         private void SendDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed, bool isIrMode)
         {
             SendDroneVarsForTeacher(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal,
                 batteryCharge,
-                batteryVoltage, aimProgress, speed);
+                batteryVoltage, aimProgress, speed, isIrMode);
         }
 
         [ServerRpc]
@@ -171,12 +171,11 @@ namespace Code.Internal.Network
 
         [ObserversRpc]
         private void SendDroneVarsForTeacher(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed, bool isIrMode)
         {
             if (!IsTeacher) return;
             if (!IsObservable) return;
 
-            print(speed);
             DroneHUD.Instance.SetMode(sensorsModeName);
             DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
             DroneHUD.Instance.SpeedValueElement.Set(speed);
@@ -187,6 +186,9 @@ namespace Code.Internal.Network
             DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
 
             DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
+            
+            DroneCameraEffectController.Instance.UpdateDroneEffects(sensorsCameraSignal);
+            GetComponent<DroneCameraController>().SetIrMode(isIrMode);
         }
 
         [ObserversRpc]

@@ -158,7 +158,7 @@ namespace Code.Internal.Drone
             }
 
             if (_droneInput.DroneIrMode)
-                droneCameraController.SetIrMode();
+                droneCameraController.SwitchIrMode();
 
             if (_droneInput.RestartButton)
             {
