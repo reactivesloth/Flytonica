@@ -26,7 +26,7 @@ namespace Code.Internal.UserInterface.Pages
                 lineMark?.gameObject.SetActive(isMark);
             }
         }
-        
+
         [Header("Containers: ")] [SerializeField]
         private AvailableMapsSettings availableMaps;
 
@@ -78,9 +78,9 @@ namespace Code.Internal.UserInterface.Pages
         private ScenarioType _currentType;
         private DroneSettings _currentDrone;
         private DroneFlightSettings _currentMode;
-        
+
         [SerializeField] private Page constructorPage;
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -128,7 +128,7 @@ namespace Code.Internal.UserInterface.Pages
                 availableMaps.maps.IndexOf(_currentMap), _currentType, _currentDrone.flightModes.IndexOf(_currentMode),
                 _isThirdPersonMode, _isViewSelection,
                 wind, new List<SpawnedObject>());
-            
+
             var page = constructorPage as ConstructorScenarioPage;
             if (page != null)
             {
@@ -204,7 +204,11 @@ namespace Code.Internal.UserInterface.Pages
                 SetToggle(mapsGroup, map.name, _mapToggles, map);
 
             foreach (ScenarioType type in Enum.GetValues(typeof(ScenarioType)))
+            {
+                if (type == ScenarioType.Tutorial) 
+                    continue;
                 SetToggle(typeSelectionGroup, type.GetName(), _scenarioTypeToggles, type);
+            }
         }
 
         private void InitStep2()
