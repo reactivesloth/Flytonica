@@ -94,6 +94,6 @@ namespace Code.Internal.UserInterface.Pages
             button.Help();
         }
 
-        private void OnOpenMap() => mapUi?.SetActive(!mapUi.activeSelf);
+        private void OnOpenMap() => mapUi?.SetActive(true);
     }
 }

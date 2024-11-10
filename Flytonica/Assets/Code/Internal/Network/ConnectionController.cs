@@ -11,6 +11,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static Code.Internal.Avatars.AvatarController;
 using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network
@@ -68,10 +69,11 @@ namespace Code.Internal.Network
         public override void OnStartClient()
         {
             base.OnStartClient();
+            
+            var isTeacher = HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher;
+            clientControls.ForEach(o => o.SetActive(!isTeacher));
+            hostControls.ForEach(o => o.SetActive(isTeacher));
 
-            print("Client started");
-            if (HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
-                hostControls.ForEach(o => o.SetActive(true));
             ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type, PlayerPrefs.GetInt("Avatar"));
         }
 
@@ -134,16 +136,17 @@ namespace Code.Internal.Network
             if (sceneSettings.isNet)
                 TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
 
-            if (userType == UserType.Teacher)
+            var isTeacher = userType == UserType.Teacher;
+            
+            if (isTeacher)
             {
-                hostControls.ForEach(o => o.SetActive(true));
+                
             }
             else
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
-                clientControls.ForEach(o => o.SetActive(true));
             }
 
             MovePlayerRpc(connection);
