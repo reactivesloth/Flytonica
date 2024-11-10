@@ -7,7 +7,6 @@ using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
-using Code.Internal.UserInterface.Pages;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -46,7 +45,7 @@ namespace Code.Internal.Network
         public override void OnStopClient()
         {
             RemovePlayerForServer(Owner);
-            
+
             base.OnStopClient();
         }
 
@@ -69,7 +68,8 @@ namespace Code.Internal.Network
             int score = 0;
             SendBaseScenarioStateToServer(scenario.TotalTimeInSeconds, DroneHUD.Instance.CurrentTaskText,
                 DroneHUD.Instance.CurrentWindText, DroneHUD.Instance.AltValueElement.MaxValue);
-            
+
+            print(sensors.Speed);
             SendDroneVars(sensors.ModeName, sensors.Health, sensors.CameraSignal, sensors.InputSignal,
                 sensors.BatteryLevel, sensors.BatteryVoltage, DroneHUD.Instance.AimElement.Progress,
                 sensors.Speed);
@@ -100,7 +100,7 @@ namespace Code.Internal.Network
         [ServerRpc]
         private void UpdatePlayerResultInServer(NetworkConnection player, float time, int score, bool isFinished)
         {
-            UpdatePlayerResultForTeacher(player,time, score, isFinished);
+            UpdatePlayerResultForTeacher(player, time, score, isFinished);
         }
 
         [ServerRpc]
@@ -113,7 +113,8 @@ namespace Code.Internal.Network
         private void SendDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
             float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
         {
-            SendDroneVarsForTeacher(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, batteryCharge,
+            SendDroneVarsForTeacher(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal,
+                batteryCharge,
                 batteryVoltage, aimProgress, speed);
         }
 
@@ -138,7 +139,7 @@ namespace Code.Internal.Network
         {
             SetPlayerDataForTeacher(sender, value);
         }
-        
+
         [ServerRpc]
         private void RemovePlayerForServer(NetworkConnection sender)
         {
@@ -156,7 +157,7 @@ namespace Code.Internal.Network
         private void UpdatePlayerResultForTeacher(NetworkConnection player, float time,
             int score, bool isFinished)
         {
-            if(!IsTeacher) return;
+            if (!IsTeacher) return;
             UsersManager.Instance.UpdateResult(player, time, score, isFinished);
         }
 
@@ -164,23 +165,34 @@ namespace Code.Internal.Network
         private void SendBaseScenarioStateForTeacher(float timer, string taskText,
             string windText, int altMaxValue)
         {
-            if(!IsTeacher) return;
+            if (!IsTeacher) return;
             UpdateLocalScenarioBaseState(timer, taskText, windText, altMaxValue);
         }
 
         [ObserversRpc]
         private void SendDroneVarsForTeacher(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed )
+            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
         {
-            if(!IsTeacher) return;
-            UpdateDroneVars(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, batteryCharge,
-                batteryVoltage, aimProgress, speed);
+            if (!IsTeacher) return;
+            if (!IsObservable) return;
+
+            print(speed);
+            DroneHUD.Instance.SetMode(sensorsModeName);
+            DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
+            DroneHUD.Instance.SpeedValueElement.Set(speed);
+            DroneHUD.Instance.CameraSignalElement.SetSignal(sensorsCameraSignal);
+            DroneHUD.Instance.InputSignalElement.SetSignal(sensorsInputSignal);
+
+            DroneHUD.Instance.BatteryElement.SetСharge(batteryCharge);
+            DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
+
+            DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
         }
 
         [ObserversRpc]
         private void SendRaceScenarioStateForTeacher(int[] checkpointStatuses)
         {
-            if(!IsTeacher) return;
+            if (!IsTeacher) return;
             UpdateLocalScenarioRaceState(checkpointStatuses);
         }
 
@@ -203,19 +215,19 @@ namespace Code.Internal.Network
             PlayerNickNameSync.Value = value;
             UsersManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
         }
-        
+
         [ObserversRpc]
         private void RemovePlayerForTeacher(NetworkConnection sender)
         {
             if (!IsTeacher) return;
             UsersManager.Instance.RemovePlayer(sender);
         }
-        
+
         [ObserversRpc]
         private void HelpSignalForTeacher(NetworkConnection sender)
         {
             if (!IsTeacher) return;
-            
+
             UsersManager.Instance.HelpSignal(sender);
         }
 
@@ -229,24 +241,6 @@ namespace Code.Internal.Network
             DroneHUD.Instance.SetTask(taskText);
             DroneHUD.Instance.SetWind(windText);
             DroneHUD.Instance.AltValueElement.MaxValue = altMaxValue;
-        }
-
-        private void UpdateDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
-            float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed)
-        {
-            if (!IsObservable) return;
-
-            DroneHUD.Instance.SetMode(sensorsModeName);
-            DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
-            DroneHUD.Instance.SpeedValueElement.Set(speed);
-            DroneHUD.Instance.CameraSignalElement.SetSignal(sensorsCameraSignal);
-            DroneHUD.Instance.InputSignalElement.SetSignal(sensorsInputSignal);
-
-            DroneHUD.Instance.BatteryElement.SetСharge(batteryCharge);
-            DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
-
-            DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
-            
         }
 
         private void UpdateLocalScenarioRaceState(int[] checkpointStatuses)

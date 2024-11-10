@@ -106,6 +106,8 @@ namespace Code.Internal.Drone
 
                 DroneHUD.Instance.CameraSignalElement.SetSignal(CameraSignal);
                 DroneHUD.Instance.InputSignalElement.SetSignal(InputSignal);
+                
+                DroneHUD.Instance.SpeedValueElement.Set(Speed);
 
                 DroneHUD.Instance.HealthValueElement.Set(Health);
 
@@ -127,7 +129,6 @@ namespace Code.Internal.Drone
             if (DroneHUD.Instance != null)
             {
                 DroneHUD.Instance.AltValueElement.Set(Altitude);
-                DroneHUD.Instance.SpeedValueElement.Set(Speed);
                 
                 DroneHUD.Instance.HorizonElement.SetPitch(Pitch);
                 DroneHUD.Instance.HorizonElement.SetRoll(Roll);
