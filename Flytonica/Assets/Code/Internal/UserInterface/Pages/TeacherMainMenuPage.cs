@@ -5,6 +5,7 @@ using Code.Internal.API;
 using Code.Internal.SceneManagement;
 using FishNet;
 using FishNet.Discovery;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
@@ -14,8 +15,10 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class TeacherMainMenuPage : Page
     {
-        [SerializeField]
-        private Button playScenarioButton, editScenarioButton, studentsButton, settingsButton;
+        [SerializeField] private TMP_Text onlinePlayButtonText;
+        [SerializeField] private string pcText, vrText;
+
+        [SerializeField] private Button playScenarioButton, editScenarioButton, studentsButton, settingsButton;
 
         [SerializeField] private LoginPage loginPage;
         [SerializeField] private ScriptsPage scriptsPage;
@@ -37,9 +40,12 @@ namespace Code.Internal.UserInterface.Pages
         protected override void OnOpen()
         {
             base.OnOpen();
-            playScenarioButton.interactable = !XRSettings.enabled || !XRSettings.isDeviceActive || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) == null || _currentIPEndPoint != null;
-            editScenarioButton.interactable = !XRSettings.enabled && !XRSettings.isDeviceActive;
-            
+            var isXr = (XRSettings.enabled && XRSettings.isDeviceActive) ||
+                       FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null;
+
+            playScenarioButton.interactable = !isXr || _currentIPEndPoint != null;
+            onlinePlayButtonText.text = isXr ? vrText : pcText;
+
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
             _discovery.SearchForServers();
 
@@ -54,7 +60,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnPlayScenarioClicked()
         {
-            if (XRSettings.enabled && XRSettings.isDeviceActive || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+            if (XRSettings.enabled && XRSettings.isDeviceActive ||
+                FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
             {
                 InstanceFinder.ClientManager.StartConnection(_currentIPEndPoint.Address.ToString());
             }
@@ -70,7 +77,7 @@ namespace Code.Internal.UserInterface.Pages
             scenariosManagementPage.Init(true);
             scenariosManagementPage.Open();
         }
-    
+
         private void OnStudentsClicked()
         {
             groupsPage?.Open();
@@ -99,7 +106,6 @@ namespace Code.Internal.UserInterface.Pages
 
         private void SetDemo()
         {
-
         }
     }
 }
