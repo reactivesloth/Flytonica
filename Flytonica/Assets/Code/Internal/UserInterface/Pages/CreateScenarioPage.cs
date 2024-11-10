@@ -161,7 +161,9 @@ namespace Code.Internal.UserInterface.Pages
                         break;
                     case 3:
                         _currentDrone = _droneToggles[droneGroup.GetFirstActiveToggle()];
-                        _currentMode = _modeToggles[modeGroup.GetFirstActiveToggle()];
+                        _currentMode = modeGroup.GetFirstActiveToggle()
+                            ? _modeToggles[modeGroup.GetFirstActiveToggle()]
+                            : _currentDrone.flightModes[0];
                         InitStep3();
                         break;
                     case 4:
@@ -205,7 +207,7 @@ namespace Code.Internal.UserInterface.Pages
 
             foreach (ScenarioType type in Enum.GetValues(typeof(ScenarioType)))
             {
-                if (type == ScenarioType.Tutorial) 
+                if (type == ScenarioType.Tutorial)
                     continue;
                 SetToggle(typeSelectionGroup, type.GetName(), _scenarioTypeToggles, type);
             }
@@ -214,8 +216,13 @@ namespace Code.Internal.UserInterface.Pages
         private void InitStep2()
         {
             ClearToggles(_droneToggles);
+            ClearToggles(_modeToggles);
+
             foreach (var drone in availableDrones.drones)
                 SetToggle(droneGroup, drone.name, _droneToggles, drone);
+            
+            _droneToggles.Keys.First().isOn = true;
+            UpdateModes(_droneToggles[_droneToggles.Keys.First()]);
 
             foreach (var droneToggle in _droneToggles.Keys)
                 droneToggle.onValueChanged.AddListener(_ => UpdateModes());
