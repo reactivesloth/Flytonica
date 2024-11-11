@@ -51,6 +51,7 @@ namespace Code.Internal.MapEditor
         
         public void InitializeMainPanel(ScenarioType type)
         {
+            ClosePanel();
             mainPanel.Setup(type);
         }
 
