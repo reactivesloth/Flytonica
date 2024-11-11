@@ -58,7 +58,7 @@ namespace Code.Internal.UserInterface.Pages
         
         private void OnUploadButtonClick()
         {
-            PopupPanel.ConfigurePopup("Сохранить сценарий?", "Сценарий будет опубликован и доступен для назаначения в заданиях.", null, "Продолжить", Color.red, Color.white,
+            PopupPanel.ConfigurePopup("Сохранить сценарий?", "Сценарий будет опубликован и доступен для назначения в заданиях.", null, "Редактирование", Color.red, Color.white,
                 () =>
                 {
                 }, null, "Сохранить сценарий", Color.green, Color.black,
