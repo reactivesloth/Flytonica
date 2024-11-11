@@ -107,11 +107,9 @@ namespace Code.Internal.Scenario
             AddStatistic();
 
             PopupPanel.ConfigurePopup("Задание выполнено!",
-                $"Подздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
-                null, "Провалить задание", Color.red, Color.white,
-                () => { ScenarioSwitcherController.Instance.FailTask(); },
+                $"Поздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Продолжить", Color.green, Color.black,
-                () => { ScenarioSwitcherController.Instance.NextOrEnd(); });
+                () => { ScenarioSwitcherController.Instance.NextOrEnd(); }, showClose: false);
         }
 
         protected virtual void AddStatistic()

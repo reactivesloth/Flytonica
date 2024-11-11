@@ -51,10 +51,15 @@ namespace Code.Internal.UserInterface
                 descriptionText.text = description;
         }
 
-        public void SetLeftButton(UnityAction onClickAction = null, string text = null,
+        public void SetLeftButton(bool isShow = true, UnityAction onClickAction = null, string text = null,
             Sprite sprite = null, Color? buttonColor = null,
             Color? textColor = null)
         {
+            leftButton.gameObject.SetActive(isShow);
+
+            if (!isShow)
+                return;
+
             if (leftButtonImage != null)
             {
                 leftButtonImage.sprite = sprite ?? standardButtonSprite;
@@ -74,10 +79,15 @@ namespace Code.Internal.UserInterface
             }
         }
 
-        public void SetRightButton(UnityAction onClickAction = null, string text = null,
+        public void SetRightButton(bool isShow = true, UnityAction onClickAction = null, string text = null,
             Sprite sprite = null, Color? buttonColor = null,
             Color? textColor = null)
         {
+            rightButton.gameObject.SetActive(isShow);
+
+            if (!isShow)
+                return;
+
             if (rightButtonImage != null)
             {
                 rightButtonImage.sprite = sprite ?? standardButtonSprite;
@@ -97,30 +107,47 @@ namespace Code.Internal.UserInterface
             }
         }
 
+        private void SetClose(bool showClose) => cancelButton.gameObject.SetActive(showClose);
+
         public static void ConfigurePopup(string title, string description,
             Sprite leftButtonSprite = null, string leftButtonText = null, Color? leftButtonColor = null,
             Color? leftButtonTextColor = null, UnityAction leftButtonAction = null,
             Sprite rightButtonSprite = null, string rightButtonText = null, Color? rightButtonColor = null,
-            Color? rightButtonTextColor = null, UnityAction rightButtonAction = null)
+            Color? rightButtonTextColor = null, UnityAction rightButtonAction = null, bool showClose = true)
         {
             var popup = FindObjectOfType<PopupPanel>(true);
+
             popup.SetTitle(title);
             popup.SetDescription(description);
-            popup.SetLeftButton(()=> { leftButtonAction?.Invoke(); popup.Hide(); }, leftButtonText, leftButtonSprite, leftButtonColor, leftButtonTextColor);
-            popup.SetRightButton(()=> { rightButtonAction?.Invoke(); popup.Hide(); }, rightButtonText, rightButtonSprite, rightButtonColor,
+
+            popup.SetLeftButton(leftButtonAction != null, () =>
+            {
+                leftButtonAction?.Invoke();
+                popup.Hide();
+            }, leftButtonText, leftButtonSprite, leftButtonColor, leftButtonTextColor);
+            popup.SetRightButton(rightButtonAction != null, () =>
+                {
+                    rightButtonAction?.Invoke();
+                    popup.Hide();
+                }, rightButtonText, rightButtonSprite, rightButtonColor,
                 rightButtonTextColor);
+
+            popup.SetClose(showClose);
             popup.Show();
         }
 
         public static void ShowDeleteTemplate(UnityAction deleteAction, string entityName, string objectName)
         {
-            
             var popup = FindObjectOfType<PopupPanel>(true);
             popup.SetTitle($"Удалить {entityName}?");
             popup.SetDescription(
                 $"Вы уверены, что хотите удалить сценарий {objectName}? Его нельзя будет восстановить.");
-            popup.SetLeftButton(()=> { deleteAction?.Invoke(); popup.Hide(); }, "Удалить", null, Color.red, Color.white);
-            popup.SetRightButton(popup.Hide, "Отменить");
+            popup.SetLeftButton(true, () =>
+            {
+                deleteAction?.Invoke();
+                popup.Hide();
+            }, "Удалить", null, Color.red, Color.white);
+            popup.SetRightButton(true, popup.Hide, "Отменить");
             popup.Show();
         }
     }
