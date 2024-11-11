@@ -65,7 +65,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void SetTask()
         {
-            userTaskControlPage.Init(studentsRoot.SelectedButton.GetSaveData<StudentData>().user_id);
+            var student = studentsRoot.SelectedButton.GetSaveData<StudentData>();
+            userTaskControlPage.Init(student.user_id, student.user_name);
             userTaskControlPage.Open();
         }
 

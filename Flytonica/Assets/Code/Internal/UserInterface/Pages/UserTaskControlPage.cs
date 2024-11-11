@@ -15,10 +15,13 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Button deleteTask, setTask;
 
         private int _currentUserId;
+        private string _studentName;
 
-        public void Init(int userId)
+        public void Init(int userId, string studentName)
         {
             _currentUserId = userId;
+            _studentName = studentName;
+            title.text = $"Задания для {studentName}";
         }
 
         protected override void OnOpen()
