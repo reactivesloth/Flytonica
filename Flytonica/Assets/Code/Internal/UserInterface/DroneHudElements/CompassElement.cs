@@ -19,6 +19,9 @@ namespace Code.Internal.UserInterface.DroneHudElements
         
         void Update()
         {
+            if(!DroneController.Instance)
+                return;
+            
             if (Target == null)
             {
                 Target = DroneController.Instance?.transform;

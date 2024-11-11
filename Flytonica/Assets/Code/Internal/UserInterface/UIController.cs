@@ -55,7 +55,6 @@ namespace Code.Internal.UserInterface
         {
             print("Pause");
             mainPanel.gameObject.SetActive(true);
-            //drawUIPanel.SetActive(true);
             pauseMenuPage.Open(true);
             DroneInput.Instance?.MenuCameraHandle(true);
             Time.timeScale = 0.01f;
@@ -66,7 +65,6 @@ namespace Code.Internal.UserInterface
         public void Unpause(bool isChangeCamera = true)
         {
             mainPanel.gameObject.SetActive(false);
-            //drawUIPanel.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
             if(isChangeCamera)
@@ -76,7 +74,6 @@ namespace Code.Internal.UserInterface
 
         public void OnGameStart()
         {
-            //drawUIPanel.SetActive(false);
             Page.CurrentPage.Close();
             mainPanel.gameObject.SetActive(false);
         }
@@ -84,7 +81,6 @@ namespace Code.Internal.UserInterface
         public void OnMainMenu()
         {
             mainPanel.gameObject.SetActive(true);
-            //drawUIPanel.SetActive(true);
             firstPage.Open(true);
         }
     }
