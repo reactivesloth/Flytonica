@@ -141,6 +141,7 @@ namespace Code.Internal.UserInterface.Pages
         private IEnumerator LoadScenariosListCoroutine()
         {
             taskScenariosSettings.scenarios.Clear();
+            InitViewList();
 
             // Build the URL for the initial request
             string url = LinkConstants.MapConfigMultiUrl(new Dictionary<string, string>
