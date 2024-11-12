@@ -12,6 +12,8 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class PauseMenuPage : Page
     {
+        [SerializeField] private Page keyBindingPage;
+
         [SerializeField]
         private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton, replayButton, restartServerButton;
 
@@ -23,6 +25,7 @@ namespace Code.Internal.UserInterface.Pages
             replayButton.onClick.AddListener(Replay);
             teacherHelpButton.onClick.AddListener(HelpSignal);
             restartServerButton.onClick.AddListener(RestartServer);
+            keyBindingButton.onClick.AddListener(OnKeyBinding);
             gameObject.SetActive(false);
         }
 
@@ -70,6 +73,11 @@ namespace Code.Internal.UserInterface.Pages
         {
             ReturnToGame();
             ResetController.Instance.RestartServerRequest();
+        }
+
+        private void OnKeyBinding()
+        {
+            keyBindingPage.Open();
         }
     }
 }

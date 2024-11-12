@@ -59,8 +59,12 @@ namespace Code.Internal.UserInterface.Pages
                     var tasks = JsonUtility.FromJson<MultiAssignedScenarioDataResponse>(response).data;
                     var generateData = new List<TableButtonGenerateData<AssignedScenarioData>>();
 
+                    //Показываем только ещё не проёденные задания
                     foreach (var taskData in tasks)
                     {
+                        if(taskData.status != 0)
+                            return;
+                        
                         var display = new[] { taskData.scenario_name };
                         var data = new TableButtonGenerateData<AssignedScenarioData>(display, taskData);
                         generateData.Add(data);

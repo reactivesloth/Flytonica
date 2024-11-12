@@ -18,6 +18,8 @@ namespace Code.Internal.UserInterface
         //[SerializeField] private GameObject drawUIPanel;
         
         private float savedAudioVolume;
+
+        private bool _isPaused;
         
         private void Awake()
         {
@@ -41,18 +43,17 @@ namespace Code.Internal.UserInterface
         {
             if(!GameSceneManager.Instance.IsPlaying) 
                 return;
-            
-            var isPaused = pauseMenuPage.gameObject.activeSelf;
 
+            if(_isPaused)
+                return;
+            
             pauseMenuPage.Open(true);
-            if (isPaused)
-                Unpause();
-            else
-                Pause();
+            Pause();
         }
 
         public void Pause()
         {
+            _isPaused = true;
             print("Pause");
             mainPanel.gameObject.SetActive(true);
             pauseMenuPage.Open(true);
@@ -64,6 +65,7 @@ namespace Code.Internal.UserInterface
 
         public void Unpause(bool isChangeCamera = true)
         {
+            _isPaused = false;
             mainPanel.gameObject.SetActive(false);
             pauseMenuPage.Close();
             Time.timeScale = 1f;
