@@ -4,6 +4,7 @@ using Code.Internal.API.Wrappers;
 using Code.Internal.API.Wrappers.ReceiveModels;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace Code.Internal.API
 {
@@ -133,6 +134,7 @@ namespace Code.Internal.API
         private static HttpClient CreateInstance(string url)
         {
             var httpClientObject = new GameObject(url);
+            DontDestroyOnLoad(httpClientObject);
             return httpClientObject.AddComponent<HttpClient>();
         }
     }

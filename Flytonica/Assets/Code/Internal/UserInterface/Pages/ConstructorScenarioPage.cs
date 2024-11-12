@@ -83,7 +83,7 @@ namespace Code.Internal.UserInterface.Pages
                     HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
             
                     _spawnedObjects.Clear();
-                    scenariosManagementPage?.Open(false);
+                    scenariosManagementPage?.Open();
                 });
         }
 
