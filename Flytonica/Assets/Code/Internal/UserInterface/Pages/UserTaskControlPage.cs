@@ -63,7 +63,7 @@ namespace Code.Internal.UserInterface.Pages
                     foreach (var taskData in tasks)
                     {
                         if(taskData.status != 0)
-                            return;
+                            continue;
                         
                         var display = new[] { taskData.scenario_name };
                         var data = new TableButtonGenerateData<AssignedScenarioData>(display, taskData);
