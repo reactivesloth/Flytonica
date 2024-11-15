@@ -324,7 +324,7 @@ namespace Code.Internal.Drone
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
             
-            if (_throttle < 0.05f && GetHeightFromFloor() < 1)
+            if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 1)
                 ResetEngines();
         }
 
@@ -454,18 +454,6 @@ namespace Code.Internal.Drone
             int pointCount = lineRenderer.positionCount;
             lineRenderer.positionCount = pointCount + 1;
             lineRenderer.SetPosition(pointCount, currentPosition);
-        }
-
-        public float GetHeightFromFloor()
-        {
-            if (Physics.Raycast(_transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity))
-            {
-                return hit.distance;
-            }
-            else
-            {
-                return Mathf.Infinity;
-            }
         }
     }
 }
