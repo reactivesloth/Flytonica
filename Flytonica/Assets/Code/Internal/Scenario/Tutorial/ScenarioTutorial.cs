@@ -41,7 +41,8 @@ namespace Code.Internal.Scenario.Tutorial
             _timeRacing = 0;
 
             var scenarioRoutine = GetComponentInChildren<ScenarioTutorialRoutine>();
-            scenarioRoutine.Initialize();
+            if (scenarioRoutine != null)
+                scenarioRoutine.Initialize();
         }
 
         public void LeaveTutorial()

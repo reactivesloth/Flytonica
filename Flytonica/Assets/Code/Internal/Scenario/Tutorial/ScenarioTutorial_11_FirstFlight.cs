@@ -32,7 +32,7 @@ namespace Code.Internal.Scenario.Tutorial
             
             // Приземление
             yield return StartCoroutine(PlayReqlique(landing));
-            yield return new WaitUntil(()=> DroneController.Instance.GetComponent<Rigidbody>().linearVelocity.magnitude < 0.1f);
+            yield return new WaitUntil(()=> DroneController.Instance.GetComponent<Rigidbody>().linearVelocity.magnitude < 0.1f && DroneController.Instance.GetHeightFromFloor() < 1);
             
             // Отключение двигателей
             yield return StartCoroutine(PlayReqlique(engineOff));

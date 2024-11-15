@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Code.Internal.Scenario;
 using Code.Internal.Scenario.Transport;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
@@ -165,10 +166,10 @@ namespace Code.Internal.Drone
                 ResetDrone();
             }
 
-            if (!_isEnginesOn)
-            {
-                DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.1f);
-            }
+            // if (!_isEnginesOn)
+            // {
+            //     DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.1f);
+            // }
         }
 
         public void ResetDrone()
@@ -323,7 +324,7 @@ namespace Code.Internal.Drone
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
             
-            if (_rigidBody.linearVelocity.magnitude < 1f && GetRPM() <= 0 && _throttle < 0.1f && GetHeightFromFloor() < 1)
+            if (_throttle < 0.05f && GetHeightFromFloor() < 1)
                 ResetEngines();
         }
 
