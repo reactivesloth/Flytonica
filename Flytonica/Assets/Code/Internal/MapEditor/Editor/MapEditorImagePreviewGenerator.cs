@@ -47,8 +47,8 @@ namespace Code.Internal.MapEditor.Editor
     {
         static MapEditorImagePreviewGenerator()
         {
-            EditorApplication.projectChanged += OnProjectChanged;
-            CheckAndSetIcons();
+            //EditorApplication.projectChanged += OnProjectChanged;
+            //CheckAndSetIcons();
         }
 
         private static void OnProjectChanged()
@@ -96,7 +96,7 @@ namespace Code.Internal.MapEditor.Editor
 
             if (preview == null)
             {
-                Debug.LogWarning("Preview generation failed or is not ready yet.");
+                Debug.LogWarning($"Preview generation failed or is not ready yet. {spawnableObject.displayName} ({spawnableObject.gameObject.name})");
                 return;
             }
 
@@ -123,9 +123,9 @@ namespace Code.Internal.MapEditor.Editor
                 return;
             }
 
-            string resourcePath = "SpawnableObjectsIcons/" + Path.GetFileNameWithoutExtension(fileName);
+            var resourcePath = "SpawnableObjectsIcons/" + Path.GetFileNameWithoutExtension(fileName);
 
-            Texture2D savedIcon = Resources.Load<Texture2D>(resourcePath);
+            var savedIcon = Resources.Load<Texture2D>(resourcePath);
             if (savedIcon != null)
             {
                 spawnableObject.icon = savedIcon;
