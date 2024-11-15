@@ -31,6 +31,7 @@ namespace Code.Internal.UserInterface
         [field: SerializeField] public SignalElement InputSignalElement { get; private set; }
 
         [field: SerializeField] public ValueElement HealthValueElement { get; private set; }
+        [field: SerializeField] public CompassElement CompassElement { get; private set; }
 
         public string CurrentWindText => windText.text;
         public string CurrentTaskText => taskText.text;

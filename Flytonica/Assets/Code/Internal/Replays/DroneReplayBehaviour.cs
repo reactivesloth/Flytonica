@@ -10,7 +10,7 @@ namespace Code.Internal.Replays
     public class DroneReplayBehaviour : ReplayRecordableBehaviour
     {
         private const ushort AimFlashEventID = 25;
-        
+
         [SerializeField] private DroneSensors droneSensors;
         [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
 
@@ -25,7 +25,7 @@ namespace Code.Internal.Replays
         private float _pitch;
         private float _roll;
         private string _modeName = string.Empty;
-        
+
         private float _cameraAngle;
 
         private int _altMaxValue;
@@ -35,6 +35,7 @@ namespace Code.Internal.Replays
 
         private float _aimProgress;
         private bool _isIrMode;
+        private int _compassRotation;
 
         // Переменные для интерполяции (предыдущие и следующие значения)
         private float _cameraSignalPrev, _cameraSignalNext;
@@ -49,6 +50,7 @@ namespace Code.Internal.Replays
         private float _cameraAnglePrev, _cameraAngleNext;
         private float _aimProgressPrev, _aimProgressNext;
         private float _altMaxValuePrev, _altMaxValueNext;
+        private int _compassRotationPrev, _compassRotationNext;
 
         private void OnValidate()
         {
@@ -58,7 +60,6 @@ namespace Code.Internal.Replays
 
         public override void OnReplaySerialize(ReplayState state)
         {
-            // Получаем текущие значения из DroneSensors и DroneCamera
             _cameraSignal = droneSensors.CameraSignal;
             _inputSignal = droneSensors.InputSignal;
             _health = droneSensors.Health;
@@ -70,7 +71,7 @@ namespace Code.Internal.Replays
             _roll = droneSensors.Roll;
             _modeName = droneSensors.ModeName;
             _cameraAngle = droneCameraController.CurrentAngle;
-            
+
             _altMaxValue = DroneHUD.Instance.AltValueElement.MaxValue;
             _currentTask = DroneHUD.Instance.CurrentTaskText;
             _windText = DroneHUD.Instance.CurrentWindText;
@@ -80,7 +81,8 @@ namespace Code.Internal.Replays
 
             _isIrMode = GetComponent<DroneCameraController>().IsIrModeNow;
 
-            // Записываем значения в состояние
+            _compassRotation = DroneHUD.Instance.CompassElement.Rotation;
+
             state.Write(_cameraSignal);
             state.Write(_inputSignal);
             state.Write(_health);
@@ -98,11 +100,11 @@ namespace Code.Internal.Replays
             state.Write(_timeText);
             state.Write(_aimProgress);
             state.Write(_isIrMode);
+            state.Write(_compassRotation);
         }
 
         public override void OnReplayDeserialize(ReplayState state)
         {
-            // Сдвигаем предыдущие значения и читаем новые значения для интерполяции
             _cameraSignalPrev = _cameraSignalNext;
             _cameraSignalNext = state.ReadSingle();
 
@@ -135,7 +137,6 @@ namespace Code.Internal.Replays
             _cameraAnglePrev = _cameraAngleNext;
             _cameraAngleNext = state.ReadSingle();
 
-            // Преобразуем _altMaxValue в float для интерполяции
             _altMaxValuePrev = _altMaxValueNext;
             _altMaxValueNext = state.ReadInt32();
 
@@ -147,6 +148,9 @@ namespace Code.Internal.Replays
             _aimProgressNext = state.ReadSingle();
 
             _isIrMode = state.ReadBool();
+
+            _compassRotationPrev = _compassRotationNext;
+            _compassRotationNext = state.ReadInt32();
         }
 
         protected override void Awake()
@@ -164,7 +168,6 @@ namespace Code.Internal.Replays
         protected override void OnReplayReset()
         {
             base.OnReplayReset();
-            // Сбрасываем предыдущие и следующие значения, чтобы избежать артефактов при перемотке
             _cameraSignalPrev = _cameraSignalNext;
             _inputSignalPrev = _inputSignalNext;
             _healthPrev = _healthNext;
@@ -177,6 +180,7 @@ namespace Code.Internal.Replays
             _cameraAnglePrev = _cameraAngleNext;
             _aimProgressPrev = _aimProgressNext;
             _altMaxValuePrev = _altMaxValueNext;
+            _compassRotationPrev = _compassRotationNext;
         }
 
         protected override void OnReplayEvent(ushort eventID, ReplayState eventData)
@@ -204,7 +208,6 @@ namespace Code.Internal.Replays
 
         private void PlaybackUpdate(float t)
         {
-            // Выполняем интерполяцию между предыдущими и следующими значениями
             _cameraSignal = Mathf.Lerp(_cameraSignalPrev, _cameraSignalNext, t);
             _inputSignal = Mathf.Lerp(_inputSignalPrev, _inputSignalNext, t);
             _health = Mathf.Lerp(_healthPrev, _healthNext, t);
@@ -217,8 +220,8 @@ namespace Code.Internal.Replays
             _cameraAngle = Mathf.Lerp(_cameraAnglePrev, _cameraAngleNext, t);
             _aimProgress = Mathf.Lerp(_aimProgressPrev, _aimProgressNext, t);
             _altMaxValue = Mathf.RoundToInt(Mathf.Lerp(_altMaxValuePrev, _altMaxValueNext, t));
+            _compassRotation = Mathf.RoundToInt(Mathf.Lerp(_compassRotationPrev, _compassRotationNext, t));
 
-            // Обновляем HUD и камеру
             SetHud();
             DroneCameraEffectController.Instance.UpdateDroneEffects(_cameraSignal);
             GetComponent<DroneCameraController>().SetIrMode(_isIrMode);
@@ -227,14 +230,13 @@ namespace Code.Internal.Replays
 
         private void RecordUpdate(float t)
         {
-            
         }
 
         private void HandleFlashEvent(Color color, float animTime)
         {
-            if(!IsRecording) 
+            if (!IsRecording)
                 return;
-            
+
             var data = ReplayState.pool.GetReusable();
             data.Write(color);
             data.Write(animTime);
@@ -245,7 +247,6 @@ namespace Code.Internal.Replays
         {
             if (DroneHUD.Instance == null) return;
 
-            // Обновляем элементы HUD с использованием интерполированных значений
             DroneHUD.Instance.AltValueElement.Set(_altitude);
             DroneHUD.Instance.SpeedValueElement.Set(_speed);
 
@@ -267,6 +268,7 @@ namespace Code.Internal.Replays
             DroneHUD.Instance.SetWind(_windText);
             DroneHUD.Instance.SetTime(_timeText);
             DroneHUD.Instance.AimElement.SetProgressValue(_aimProgress);
+            DroneHUD.Instance.CompassElement.SetRotation(_compassRotation);
         }
     }
 }

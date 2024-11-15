@@ -14,47 +14,17 @@ namespace Code.Internal.UserInterface.DroneHudElements
         public RectTransform West;
         
         [HideInInspector] public int Grade;
-        
-        private int Rotation;
-        
+        [HideInInspector] public int Rotation;
+
         void Update()
         {
-            if(!DroneController.Instance)
-                return;
-            
             if (Target == null)
-            {
                 Target = DroneController.Instance?.transform;
-            }
+            if(Target == null)
+                return;
 
-            if (Target != null)
-            {
-                Rotation = (int)Mathf.Abs(Target.eulerAngles.y) % 360;
-            }
-            else
-            {
-                Rotation = (int)Mathf.Abs(m_Transform.eulerAngles.y) % 360;
-            }
-
-            Grade = Rotation;
-            if (Grade > 180)
-            {
-                Grade = Grade - 360;
-            }
-
-            float centerX = CompassRoot.sizeDelta.x * 0.5f;
-            
-            if (North != null)
-                North.anchoredPosition = new Vector2((centerX - (Grade * 2) - centerX), 0);
-            
-            if (South != null)
-                South.anchoredPosition = new Vector2((centerX - Rotation * 2 + 360) - centerX, 0);
-            
-            if (East != null)
-                East.anchoredPosition = new Vector2((centerX - Grade * 2 + 180) - centerX, 0);
-            
-            if (West != null)
-                West.anchoredPosition = new Vector2((centerX - Rotation * 2 + 540) - centerX, 0);
+            float angle = Target != null ? Target.eulerAngles.y : m_Transform.eulerAngles.y;
+            SetRotation(angle);
         }
 
         public float Angle360(Vector2 p1, Vector2 p2, Vector2 o = default(Vector2))
@@ -72,6 +42,33 @@ namespace Code.Internal.UserInterface.DroneHudElements
             }
             float angle = Vector2.Angle(v1, v2);
             return Mathf.Sign(Vector3.Cross(v1, v2).z) < 0 ? (360 - angle) % 360 : angle;
+        }
+
+        public void SetTarget(Transform target) => Target = target;
+        
+        public void SetRotation(float angle)
+        {
+            Rotation = (int)Mathf.Abs(angle) % 360;
+
+            Grade = Rotation;
+            if (Grade > 180)
+            {
+                Grade -= 360;
+            }
+
+            float centerX = CompassRoot.sizeDelta.x * 0.5f;
+
+            if (North != null)
+                North.anchoredPosition = new Vector2((centerX - (Grade * 2) - centerX), 0);
+
+            if (South != null)
+                South.anchoredPosition = new Vector2((centerX - Rotation * 2 + 360) - centerX, 0);
+
+            if (East != null)
+                East.anchoredPosition = new Vector2((centerX - Grade * 2 + 180) - centerX, 0);
+
+            if (West != null)
+                West.anchoredPosition = new Vector2((centerX - Rotation * 2 + 540) - centerX, 0);
         }
 
         private Transform t;

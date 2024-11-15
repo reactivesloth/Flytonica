@@ -45,10 +45,12 @@ namespace Code.Internal.Network.Teacher
             {
                 targetDrone.GetComponent<NetBridge>().IsObservable = false;
                 fpvCamController = targetDrone.GetComponent<XRDisableHeadTrackingInFPV>();
+                targetDrone.GetComponent<DroneCameraController>().UiCamera.SetActive(false);
             }
 
             if (!fpvCamController)
                 return;
+            
             targetDrone = null;
             fpvCamController.IsViewed = false;
             DroneHUD.Instance.ShowHUD(false);
@@ -61,6 +63,9 @@ namespace Code.Internal.Network.Teacher
                 SetInXR(drone);
             else
                 SetInPC(drone);
+            
+            DroneHUD.Instance.CompassElement.SetTarget(drone.transform);
+            DroneHUD.Instance.ShowHUD(true);
             
             map.Target = drone.transform;
         }
@@ -79,8 +84,6 @@ namespace Code.Internal.Network.Teacher
             targetDrone.GetComponent<NetBridge>().IsObservable = true;
             var newTargetFpv = targetDrone.GetComponent<DroneCameraController>();
             newTargetFpv.UiCamera.SetActive(true);
-            
-            DroneHUD.Instance.ShowHUD(true);
         }
 
         private void SetInPC(NetworkObject drone)
@@ -103,7 +106,6 @@ namespace Code.Internal.Network.Teacher
             targetDrone.GetComponent<NetBridge>().IsObservable = true;
             fpvCamController.IsViewed = true;
             SetPlayerFpv(false);
-            DroneHUD.Instance.ShowHUD(true);
         }
 
         private void SetPlayerFpv(bool value) => playerFpvCameraControllers.ForEach(p => p.IsViewed = value);
