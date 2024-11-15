@@ -157,9 +157,8 @@ namespace Code.Internal.Scenario.Searching
                 _timer = timer;
             }
 
-            DroneHUD.Instance.SetMessage(MessageType.Normal,
-                $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.",
-                3);
+            DroneHUD.Instance.SetMessage(MessageType.Normal, "В этом сценарии вам нужно будет найти объекты по заданию. Будьте внимательны, осматривая территорию, а при нахождении сфотографируйте объект задания, чтобы убедиться что вы нашли нужный. Нужно сделать фото как можно быстрее, и избегать столкновений и аварий. Будьте внимательны, на локации есть источники помех!", 5);
+//            DroneHUD.Instance.SetMessage(MessageType.Normal, $"Вам необходимо сфотографировать {searchingObjects.Count} объектов.\nНайдите {collectionName}.\nКамера работает с 15 метров.", 3);
             UpdateTask();
         }
 

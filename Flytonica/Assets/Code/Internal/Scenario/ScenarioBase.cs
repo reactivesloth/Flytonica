@@ -109,7 +109,7 @@ namespace Code.Internal.Scenario
             AddStatistic();
 
             PopupPanel.ConfigurePopup("Задание выполнено!",
-                $"Поздравляем! Время выполнения: {GetTimeWithMs(TotalTime)}",
+                $"Отлично, сценарий успешно завершен! Можете ознакомиться со своими результатами.\nВремя выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Продолжить", Color.green, Color.black,
                 () => { ScenarioSwitcherController.Instance.NextOrEnd(); }, showClose: false);
         }

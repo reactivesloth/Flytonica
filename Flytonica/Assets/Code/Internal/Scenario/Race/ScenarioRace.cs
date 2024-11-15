@@ -31,7 +31,7 @@ namespace Code.Internal.Scenario.Race
         private void Start()
         {
             DroneHUD.Instance?.SetTask("Пролетите через стартовое кольцо чтобы начать гонку");
-            DroneHUD.Instance?.SetMessage(MessageType.Normal, "Пролетите через стартовое кольцо чтобы начать гонку", 3);
+            DroneHUD.Instance?.SetMessage(MessageType.Normal, "В этом обучающем сценарии вам нужно пролететь по отметкам в гоночной трассе за минимальное время. Точно следуйте маршруту и визуальным подсказкам, а также будьте аккуратны чтобы избежать столкновений.", 3);
         }
 
         protected override void Update()
@@ -74,15 +74,11 @@ namespace Code.Internal.Scenario.Race
             {
                 _raceState = RaceState.Racing;
                 DroneHUD.Instance?.SetTask("Выполняйте пролет через зеленые кольца");
-                Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
-                Debug.Log($"Гонка началась. Время взлёта: {GetTime(_timeTakeoff)}");
             }
 
             if (checkpoint == checkpoints.Last() && _raceState == RaceState.Racing)
             {
                 FinishRace();
-                Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");
-                Debug.Log($"Гонка закончилась. Время прохождения: {GetTime(_timeRacing)}");
             }
 
             if (checkpoints.IndexOf(checkpoint) == _nextCheckpoint && _nextCheckpoint + 1 < checkpoints.Count)

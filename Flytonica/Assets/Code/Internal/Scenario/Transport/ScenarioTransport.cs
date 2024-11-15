@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using FishNet.Object;
 using UnityEngine;
 
@@ -48,6 +49,7 @@ namespace Code.Internal.Scenario.Transport
             base.StartRace();
             _deliveredCargoCount = 0;
 
+            DroneHUD.Instance?.SetMessage(MessageType.Normal, "Добро пожаловать! В этом задании вам нужно доставить посылки в несколько точек. Будьте внимательны и осторожны!", 3);
             UpdateTask();
         }
 
