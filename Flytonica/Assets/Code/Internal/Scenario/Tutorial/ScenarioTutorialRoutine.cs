@@ -10,7 +10,7 @@ namespace Code.Internal.Scenario.Tutorial
     [Serializable]
     public class ScenarioTutorialReplique
     {
-        public string text;
+        [TextArea (3, 5)] public string text;
         public AudioClip clip;
         public Action onComplete;
     }
