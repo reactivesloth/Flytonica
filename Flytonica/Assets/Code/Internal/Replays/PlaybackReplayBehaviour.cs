@@ -2,14 +2,18 @@
 using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.Replays
 {
     public class PlaybackReplayBehaviour : ReplayBehaviour
     {
+        [SerializeField] private GameObject uiPanelInTablet;
+        
         private DroneInput _droneInput;
         private DroneCameraController _droneCameraController;
-        
+
         private void Update()
         {
             if (!IsReplaying)
@@ -44,12 +48,19 @@ namespace Code.Internal.Replays
             DroneHUD.Instance.ShowHUD(_droneInput.DroneCam);
         }
 
+        protected override void OnReplayStart()
+        {
+            base.OnReplayStart();
+            
+            UIController.Instance.SetUiToTablet(uiPanelInTablet, true);
+        }
+
         protected override void OnReplayEnd()
         {
             base.OnReplayEnd();
             if (!IsReplaying)
                 return;
-            
+            UIController.Instance.SetUiToTablet(uiPanelInTablet, false);
             DroneHUD.Instance.ShowHUD(false);
             if(_droneInput)
                 _droneInput.DroneCam = false;

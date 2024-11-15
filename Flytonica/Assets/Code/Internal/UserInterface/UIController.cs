@@ -5,6 +5,8 @@ using Code.Internal.UserInterface.Pages;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.UserInterface
 {
@@ -16,7 +18,9 @@ namespace Code.Internal.UserInterface
         [SerializeField] private Page pauseMenuPage, firstPage;
         [SerializeField] private InputActionReference[] pauseButtons;
         //[SerializeField] private GameObject drawUIPanel;
-        
+
+        [SerializeField] private GameObject mainUiPanel;
+            
         private float savedAudioVolume;
 
         private bool _isPaused;
@@ -84,6 +88,15 @@ namespace Code.Internal.UserInterface
         {
             mainPanel.gameObject.SetActive(true);
             firstPage.Open(true);
+        }
+
+        public void SetUiToTablet(GameObject tabletPanel, bool useTablet)
+        {
+            tabletPanel.SetActive(useTablet);
+            var isXr = (XRSettings.enabled && XRSettings.isDeviceActive) ||
+                    FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null;
+            if(isXr)
+                mainUiPanel.SetActive(!useTablet);
         }
     }
 }

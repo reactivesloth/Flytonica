@@ -59,7 +59,7 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
-            print($"{_loadedSceneName} == {_activeSceneName}");
+            //print($"{_loadedSceneName} == {_activeSceneName}");
             
             if (_loadedSceneName == _activeSceneName || string.IsNullOrEmpty(_activeSceneName))
                 return;

@@ -45,6 +45,7 @@ namespace Code.Internal.UserInterface.Pages
 
             playScenarioButton.interactable = !isXr || _currentIPEndPoint != null;
             onlinePlayButtonText.text = isXr ? vrText : pcText;
+            editScenarioButton.interactable = !isXr;
 
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
             _discovery.SearchForServers();
