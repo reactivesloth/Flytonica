@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Code.Internal.Drone;
-using Code.Internal.Scenario.Race;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
@@ -244,6 +244,11 @@ namespace Code.Internal.Scenario.Searching
             {
                 if (o.Type == searchingObjectType)
                     searchingObjects.Add(new SearchingObject(o.name.Replace("(Clone)", ""), o.gameObject));
+
+                if (o.Type is MapEditorObjectType.SearchingObject or MapEditorObjectType.SearchingIrObject)
+                    if (HttpClient.UserData == null || HttpClient.UserData.type != UserType.Teacher)
+                        if (o.TryGetComponent(out bl_MiniMapEntity entity))
+                            Destroy(entity);
             }
 
             if (ScenarioCondition == ScenarioCondition.Waiting)
