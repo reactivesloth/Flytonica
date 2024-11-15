@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Code.Internal.API;
@@ -10,8 +9,6 @@ using Code.Internal.SceneManagement;
 using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
-using UnityEngine.Serialization;
-using static Code.Internal.Avatars.AvatarController;
 using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network

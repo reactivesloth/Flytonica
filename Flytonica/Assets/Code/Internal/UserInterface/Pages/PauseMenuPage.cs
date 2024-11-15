@@ -36,8 +36,9 @@ namespace Code.Internal.UserInterface.Pages
             var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
             
             restartServerButton.gameObject.SetActive(isTeacher);
-            
-            teacherHelpButton.gameObject.SetActive(!isTeacher);
+
+            var isOnHelpSignalButton = !isTeacher && !InstanceFinder.ServerManager.Started;
+            teacherHelpButton.gameObject.SetActive(isOnHelpSignalButton);
             keyBindingButton.gameObject.SetActive(!isTeacher);
             replayButton.gameObject.SetActive(!isTeacher);
         }

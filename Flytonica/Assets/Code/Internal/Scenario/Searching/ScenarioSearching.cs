@@ -220,15 +220,16 @@ namespace Code.Internal.Scenario.Searching
         {
             var taskText = new StringBuilder();
 
-            taskText.Append($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}]. \n");
+            taskText.Append($"Найти и сфотографировать объекты [{_findedCount}/{searchingObjects.Count}].\n " +
+                            $"Необходимо найти: \n");
             
             foreach (var searchingObject in searchingObjects)
             {
-                var obj = searchingObject.finingObject.GetComponent<SpawnableObject>();
-
                 var objectResult = searchingObject.finded ? "+" : "-";
-
-                taskText.Append($"{obj.displayName} [{objectResult}] \n");
+                if(searchingObject.finded)
+                    continue;
+                var obj = searchingObject.finingObject.GetComponent<SpawnableObject>();
+                taskText.Append($"{obj.displayName}\n");
             }
 
             DroneHUD.Instance.SetTask(taskText.ToString());
