@@ -78,6 +78,11 @@ namespace Code.Internal.UserInterface
 
         public void SetTime(string text)
         {
+            if (text == null)
+            {
+                timeText.text = string.Empty;
+                return;
+            }
             if (timeText != null) timeText.text = $"SEC {text}";
         }
 

@@ -99,7 +99,9 @@ namespace Code.Internal.Scenario
             ScenarioCondition = ScenarioCondition.Finished;
             _isSuccess = success;
             IsStarting = false;
-
+            
+            DroneHUD.Instance.SetTime(null);
+            
             DroneHUD.Instance?.ClearMessage();
             DroneHUD.Instance?.SetTask(success ? "Задание выполнено!" : "Задание провалено!");
             DroneInput.Instance?.MenuCameraHandle(true);
@@ -203,6 +205,8 @@ namespace Code.Internal.Scenario
             droneSensors.SignalLostDueToObstacles -= IncrementSignalLossesWallsCount;
             droneSensors.SignalLostDueToPowerLine -= IncrementSignalLossesPliCount;
             droneSensors.SignalLostDueToElectronicWarfare -= IncrementSignalLossesRebCount;
+            
+            DroneHUD.Instance.SetTime(null);
         }
 
         public static string GetTimeWithMs(float t)

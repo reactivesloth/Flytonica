@@ -50,9 +50,15 @@ namespace Code.Internal.Scenario.Tutorial
         {
             DroneHUD.Instance.SetTask("Все задачи выполнены!");
             DroneHUD.Instance.ClearMessage();
+            DroneHUD.Instance.SetTime(null);
             GetComponentInParent<ScenarioTutorial>().CompleteTutorial();
         }
 
+        protected virtual void Update()
+        {
+            
+        }
+        
         protected IEnumerator PlayReqlique(ScenarioTutorialReplique replique)
         {
             DroneHUD.Instance?.SetTask(replique.text);

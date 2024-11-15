@@ -13,7 +13,7 @@ namespace Code.Internal.SceneManagement
         public SettingType settingType;
         [HideInInspector] public int id;
         public new string name;
-        public string description;
+        [TextArea(3,5)]public string description;
         public ScenarioType scenarioType = ScenarioType.FreeFlight;
         public MapSettings[] availableMaps;
 

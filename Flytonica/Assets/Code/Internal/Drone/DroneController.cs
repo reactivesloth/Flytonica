@@ -64,6 +64,11 @@ namespace Code.Internal.Drone
         public bool EnginesEnabled => _isEnginesOn;
         public DroneSensors DroneSensors { get; private set; }
 
+        public float Pitch => _pitch;
+        public float Roll => _roll;
+        public float Yaw => _yaw;
+        public float Throttle => _throttle;
+        
         protected override void OnValidate()
         {
             droneCameraController = GetComponent<DroneCameraController>();

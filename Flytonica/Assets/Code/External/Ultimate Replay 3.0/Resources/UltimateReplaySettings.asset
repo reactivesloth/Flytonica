@@ -641,6 +641,8 @@ MonoBehaviour:
   - {fileID: -363144571761091911}
   - {fileID: -1255958839633494114}
   - {fileID: -8081182921830332678}
+  - {fileID: 728618232914441895}
+  - {fileID: 3100754459718734771}
   defaultReplayPreparer:
     skipTypes:
     - assemblyQualifiedTypeName: UltimateReplay.ReplayObject, UltimateReplay, Version=0.0.0.0,
@@ -725,6 +727,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: 8680077671760097731, guid: dc585041065ae448e9ceb57eee690b05, type: 3}
+  allowPooling: 1
+--- !u!114 &728618232914441895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: -1152601546193092479, guid: 72bd3529f58934c0f96f5954287f2756, type: 3}
   allowPooling: 1
 --- !u!114 &760848069473641600
 MonoBehaviour:
@@ -823,6 +839,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayPrefab: {fileID: -1434515283586059349, guid: b6676c036075c5e4491836424f9f5ce3, type: 3}
+  allowPooling: 1
+--- !u!114 &3100754459718734771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6433425ae01a1245b39532acd227ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayPrefab: {fileID: -1152601546193092479, guid: e52db187f33e54fa6bcce9aca9ec77e2, type: 3}
   allowPooling: 1
 --- !u!114 &3445711817588641417
 MonoBehaviour:
