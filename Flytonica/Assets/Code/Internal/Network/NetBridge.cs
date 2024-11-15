@@ -10,7 +10,6 @@ using Code.Internal.UserInterface;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using RootMotion;
 using UnityEngine;
 
 namespace Code.Internal.Network

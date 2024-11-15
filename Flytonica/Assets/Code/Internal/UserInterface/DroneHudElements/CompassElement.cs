@@ -18,13 +18,10 @@ namespace Code.Internal.UserInterface.DroneHudElements
 
         void Update()
         {
-            if (!DroneController.Instance)
-                return;
-
             if (Target == null)
-            {
                 Target = DroneController.Instance?.transform;
-            }
+            if(Target == null)
+                return;
 
             float angle = Target != null ? Target.eulerAngles.y : m_Transform.eulerAngles.y;
             SetRotation(angle);
@@ -47,6 +44,8 @@ namespace Code.Internal.UserInterface.DroneHudElements
             return Mathf.Sign(Vector3.Cross(v1, v2).z) < 0 ? (360 - angle) % 360 : angle;
         }
 
+        public void SetTarget(Transform target) => Target = target;
+        
         public void SetRotation(float angle)
         {
             Rotation = (int)Mathf.Abs(angle) % 360;
