@@ -72,12 +72,12 @@ namespace Code.Internal.Scenario
             LoadNext();
         }
 
-        private void LoadNext()
+        private async void LoadNext()
         {
             InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>()
                 .Despawn(InstanceFinder.ClientManager.Connection);
             sceneSettings.currentScenario = sceneSettings.currentScenario.nextScenario;
-            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+            await SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             GameSceneManager.Instance.LoadGlobalScene(sceneSettings.currentScenario.currentMap, OnSceneLoaded);
 
             Time.timeScale = 1f;

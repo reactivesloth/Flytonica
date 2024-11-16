@@ -27,7 +27,7 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-            
+
             QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("QualitySettingsLevel", 1), false);
             LoadSceneLocal("UI Scene");
         }
@@ -92,11 +92,11 @@ namespace Code.Internal.SceneManagement
         {
             if (!IsPlaying)
                 return;
-            if (NetworkManager == null || NetworkManager.ClientManager == null) 
+            if (NetworkManager == null || NetworkManager.ClientManager == null)
                 return;
 
             IsPlaying = false;
-            
+
             NetworkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
             NetworkManager.ClientManager.StopConnection();
         }
