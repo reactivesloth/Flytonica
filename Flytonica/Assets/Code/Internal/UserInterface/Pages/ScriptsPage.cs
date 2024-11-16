@@ -132,8 +132,7 @@ namespace Code.Internal.UserInterface.Pages
             
             print(sceneSettings.currentScenario.nextScenario?.name);
             
-            if(_isTaskInit)
-                ScenarioSwitcherController.Instance.StartTask();
+            ScenarioSwitcherController.Instance.StartTask();
 
             InstanceFinder.ServerManager.StartConnection();
 

@@ -81,11 +81,15 @@ namespace Code.Internal.API
         // Receives: LogData (id, uuid, owner_id, scenario_id, file_id, created_at)
         private const string LogCreatePath = "logs/create";
         private const string LogDeletePath = "logs/delete/{0}";
+        private const string LogIndividualCreatePath = "logs/personal/create";
+        private const string LogIndividualDeletePath = "logs/personal/delete/{0}";
+        
 
         // Path for fetching multiple log entries with pagination
         // Sends: Query parameters (page, itemsPerPage)
         // Receives: MultiLogDataResponse (List<LogData>, total_count)
         private const string LogsMultiPath = "logs/get_multi";
+        private const string LogsIndividualMultiPath = "logs/personal/get_multi";
 
         private const string GroupsList = "groups/get_multi";
         private const string GroupPath = "groups/get/{0}";
@@ -128,10 +132,17 @@ namespace Code.Internal.API
 
         public static string LogCreateUrl => CombineUrl(LogCreatePath);
         
+        public static string IndividualLogCreateUrl => CombineUrl(LogIndividualCreatePath);
+        
         public static string LogDeleteUrl(int id) => CombineUrl(string.Format(LogDeletePath, id));
+        
+        public static string LogIndividualDeleteUrl(int id) => CombineUrl(string.Format(LogIndividualDeletePath, id));
 
         public static string LogsMultiUrl(Dictionary<string, string> queryParams = null) =>
             CombineUrl(LogsMultiPath, queryParams);
+        
+        public static string LogsIndividualMultiUrl(Dictionary<string, string> queryParams = null) =>
+            CombineUrl(LogsIndividualMultiPath, queryParams);
 
         public static string GroupsMulti(Dictionary<string, string> queryParams = null) =>
             CombineUrl(GroupsList, queryParams);

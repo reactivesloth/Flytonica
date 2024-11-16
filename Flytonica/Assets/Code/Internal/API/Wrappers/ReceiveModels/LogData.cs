@@ -9,7 +9,7 @@ namespace Code.Internal.API.Wrappers.ReceiveModels
         public int id;
         public string uuid;
         public int owner_id;
-        public int user_scenario_id;
+        public int user_scenario_id = -1;
         public int file_id;
         public int replay_id;
         public string created_at;  // Дата создания записи

@@ -59,7 +59,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void ShowReplays()
         {
-            replaysPage.Init(studentsRoot.SelectedButton.GetSaveData<StudentData>().user_id);
+            replaysPage.InitUser(studentsRoot.SelectedButton.GetSaveData<StudentData>().user_id);
             replaysPage.Open();
         }
 

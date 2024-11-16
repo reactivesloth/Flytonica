@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
-using Code.Internal.Replays;
 using Code.Internal.UserInterface.Elements.TableElements;
-using FishNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,10 +18,19 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private ViewReplayPage viewReplayPage;
 
         private int _currentUserId;
+        private bool _isLocal;
 
-        public void Init(int id)
+        public void InitUser(int id)
         {
+            _isLocal = false;
             _currentUserId = id;
+            GenerateListFromUser();
+        }
+
+        public void InitLocal()
+        {
+            _isLocal = true;
+            GenerateListFromLocal();
         }
 
         protected override void OnOpen()
@@ -36,7 +43,6 @@ namespace Code.Internal.UserInterface.Pages
             replaysRoot.SelectionStateChange += SetButtons;
 
             SetButtons(replaysRoot.SelectedButton);
-            GenerateList();
         }
 
         protected override void OnClose()
@@ -46,10 +52,10 @@ namespace Code.Internal.UserInterface.Pages
             delete.onClick.RemoveListener(Delete);
             view.onClick.RemoveListener(View);
 
-            replaysRoot.SelectionStateChange += SetButtons;
+            replaysRoot.SelectionStateChange -= SetButtons;
         }
 
-        private void GenerateList()
+        private void GenerateListFromUser()
         {
             HttpClient.Get(LinkConstants.LogsMultiUrl(new Dictionary<string, string>
                 { { "user_id", _currentUserId.ToString() }, { "page", "1" }, { "itemsPerPage", "9999" } }), response =>
@@ -59,7 +65,6 @@ namespace Code.Internal.UserInterface.Pages
 
                 foreach (var replayData in list)
                 {
-                    print(replayData.created_at);
                     var display = new[]
                     {
                         DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture),
@@ -68,23 +73,59 @@ namespace Code.Internal.UserInterface.Pages
                     var data = new TableButtonGenerateData<LogData>(display, replayData);
                     generateData.Add(data);
                 }
+                
+                HttpClient.Get(LinkConstants.LogsIndividualMultiUrl(new Dictionary<string, string>
+                    { { "user_id", _currentUserId.ToString() }, { "page", "1" }, { "itemsPerPage", "9999" } }),
+                    response2 =>
+                    {
+                        var list2 = JsonUtility.FromJson<MultiLogDataResponse>(response2).data;
+                        
+                        foreach (var replayData in list2)
+                        {
+                            var display = new[]
+                            {
+                                DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture),
+                                replayData.user_name, "", "-", "-"
+                            };
+                            var data = new TableButtonGenerateData<LogData>(display, replayData);
+                            generateData.Add(data);
+                        }
+                        
+                        replaysRoot.Generate(generateData);
+                    });
 
-                replaysRoot.Generate(generateData);
             }, (error, code) => Debug.LogError(error));
+        }
+        
+        private void GenerateListFromLocal()
+        {
+            //TODO
         }
 
         private void Delete()
         {
-            //TODO: Init popup
-            PopupPanel.ConfigurePopup("Вы деействительно хотите удалить?",
-                $"Вы удалите весь отчёт о прохождении этого задания. Продолжить?",
+            if (_isLocal)
+                DeleteLocal();
+            else
+                DeleteFromServer();
+        }
+
+        private void DeleteFromServer()
+        {
+            PopupPanel.ConfigurePopup("Вы действительно хотите удалить?",
+                $"Вы удалите весь отчёт о прохождении этого задания в ЛМС. Продолжить?",
                 null, "Удалить", Color.red, Color.white,
                 () =>
                 {
                     HttpClient.Delete(LinkConstants.LogDeleteUrl(replaysRoot.SelectedButton.GetSaveData<LogData>().id),
-                        callback: GenerateList);
+                        callback: GenerateListFromUser);
                 },
                 null, "Отмена", Color.green, Color.black, null);
+        }
+
+        private void DeleteLocal()
+        {
+            //TODO
         }
 
         private void View()

@@ -29,12 +29,12 @@ namespace Code.Internal.Replays
         private int _taskId;
 
         public event Action PlaybackFinished;
-        
+
         public float CurrentPlaybackTime => _playbackOperation?.PlaybackTime ?? 0f;
         public float TotalPlaybackTime => !_playbackOperation.IsDisposed ? _playbackOperation.Duration : 0f;
-        
+
         public bool IsSceneTransitioning { get; set; }
-        
+
         protected void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -57,9 +57,13 @@ namespace Code.Internal.Replays
             }
         }
 
-        public void StartRecording(int taskId)
+        public void StartTaskRecording(int taskId)
         {
-            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
+            print($"TASK_ID: {_taskId}");
+            if (taskId > 0)
+                _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
+            else 
+                _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"PERSONALREPLAY.replay");
 
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
 
@@ -90,8 +94,26 @@ namespace Code.Internal.Replays
         public void StartPlayback(int taskId)
         {
             _taskId = taskId;
-            
+
             _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
+            if (!System.IO.File.Exists(_replayFilePath))
+            {
+                Debug.LogError("Файл реплея не найден");
+                return;
+            }
+
+            _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
+
+            _playbackOperation = ReplayManager.BeginPlayback(_replayFileStorage);
+            _playbackOperation.Options.PlaybackEndBehaviour = PlaybackEndBehaviour.LoopPlayback;
+            Debug.Log("Начато воспроизведение реплея");
+
+            _playbackOperation.OnPlaybackEnd.AddListener(OnReplayFinished);
+        }
+
+        public void StartPlayback(string path)
+        {
+            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, path);
             if (!System.IO.File.Exists(_replayFilePath))
             {
                 Debug.LogError("Файл реплея не найден");
@@ -113,7 +135,7 @@ namespace Code.Internal.Replays
             {
                 _playbackOperation.StopPlayback();
                 Debug.Log("Остановлено воспроизведение реплея");
-                
+
 
                 if (_currentReplayScene.IsValid())
                     SceneManager.UnloadSceneAsync(_currentReplayScene);

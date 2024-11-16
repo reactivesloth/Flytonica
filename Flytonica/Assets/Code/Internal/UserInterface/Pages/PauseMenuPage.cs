@@ -13,11 +13,11 @@ namespace Code.Internal.UserInterface.Pages
     public class PauseMenuPage : Page
     {
         [SerializeField] private SceneLoadingSettings sceneSettings;
-        
+
         [SerializeField] private Page keyBindingPage;
 
         [SerializeField] private GameObject warningTextObject;
-        
+
         [SerializeField] private Button toMainMenuButton,
             teacherHelpButton,
             returnToGameButton,
@@ -42,7 +42,7 @@ namespace Code.Internal.UserInterface.Pages
             base.OnOpen();
 
             var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
-            
+
             warningTextObject?.SetActive(!isTeacher && !sceneSettings.isTask);
 
             restartServerButton.gameObject.SetActive(isTeacher);
@@ -63,8 +63,6 @@ namespace Code.Internal.UserInterface.Pages
                     UIController.Instance.Unpause(false);
                     ScenarioSwitcherController.Instance.FailTask();
                 }, null, "Продолжить задание", Color.green, Color.black, ReturnToGame);
-
-
             //GameSceneManager.Instance.ToMenuSingle();
         }
 

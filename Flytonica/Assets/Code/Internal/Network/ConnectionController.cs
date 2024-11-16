@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
 using Code.Internal.Avatars;
+using Code.Internal.Replays;
 using Code.Internal.Scenario;
 using Code.Internal.SceneManagement;
 using FishNet.Connection;
@@ -123,7 +124,8 @@ namespace Code.Internal.Network
             
             while (!Observers.Contains(connection))
                 await Task.Delay(100);
-
+            
+            
             var scenario = sceneSettings.currentScenario;
             var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
                 drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
@@ -144,6 +146,8 @@ namespace Code.Internal.Network
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
+                if (sceneSettings.isNet)
+                    StartRecording(connection);
             }
 
             MovePlayerRpc(connection);
@@ -199,6 +203,9 @@ namespace Code.Internal.Network
         {
             MovePlayer(connection);
         }
+        
+        [TargetRpc]
+        public void StartRecording(NetworkConnection connection) => ReplayController.Instance.StartTaskRecording(-1);
         
         public void MovePlayer(NetworkConnection connection)
         {

@@ -82,7 +82,7 @@ namespace Code.Internal.UserInterface.Pages
 
         protected override void OnBackClick()
         {
-            if (ReplayController.Instance.IsSceneTransitioning) 
+            if (ReplayController.Instance.IsSceneTransitioning)
                 return;
             base.OnBackClick();
         }
@@ -106,22 +106,33 @@ namespace Code.Internal.UserInterface.Pages
 
         public void Init(LogData logData)
         {
-            var fileName = $"{logData.user_scenario_id}.replay";
+            var usedId = logData.user_scenario_id >= 0 ? logData.user_scenario_id : logData.replay_id;
+            var fileName = $"{usedId}.replay";
+
             var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
 
             nameText.text = logData.scenario_name;
 
             if (System.IO.File.Exists(filePath))
             {
-                ReplayController.Instance.StartPlayback(logData.user_scenario_id);
+                ReplayController.Instance.StartPlayback(usedId);
             }
             else
             {
                 HttpClient.GetBinary(LinkConstants.GetFile(logData.replay_file_path), onSuccess: bytes =>
                 {
                     System.IO.File.WriteAllBytes(filePath, bytes);
-                    ReplayController.Instance.StartPlayback(logData.user_scenario_id);
+                    ReplayController.Instance.StartPlayback(usedId);
                 });
+            }
+        }
+
+        public void Init(string path)
+        {
+            nameText.text = string.Empty;
+            if (System.IO.File.Exists(path))
+            {
+                ReplayController.Instance.StartPlayback(path);
             }
         }
 

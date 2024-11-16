@@ -37,6 +37,9 @@ namespace Code.Internal.Replays
 
         public override void OnReplaySerialize(ReplayState state)
         {
+            print($"SCENE: {SceneManager.GetActiveScene().name}");
+            if(string.IsNullOrEmpty(_activeSceneName) && trackedScenesNames.Contains(SceneManager.GetActiveScene().name))
+                _activeSceneName = SceneManager.GetActiveScene().name;
             state.Write(_activeSceneName);
         }
 
@@ -44,10 +47,11 @@ namespace Code.Internal.Replays
         {
             _activeSceneName = state.ReadString();
         }
-
+        
         protected override void OnReplayStart()
         {
             base.OnReplayStart();
+            
             if (!IsReplaying)
                 return;
 

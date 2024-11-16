@@ -22,33 +22,32 @@ namespace Code.Internal.Scenario
         private int _currentStatus = 0;
 
         public float ScoreSum;
-        public bool IsNet => sceneSettings.isNet;  
+        public bool IsNet => sceneSettings.isNet;
 
         private void Awake()
         {
             Instance = this;
         }
 
-        
+
         public void FailTask()
         {
             _currentStatus = 2;
             End();
         }
-        
+
         public void StartTask()
         {
-            if (!sceneSettings.isTask) return;
-            ReplayController.Instance.StartRecording(sceneSettings.taskId);
+            ReplayController.Instance.StartTaskRecording(sceneSettings.taskId);
             ReportBuilder.Instance.Clear();
             ScoreSum = 0;
-            
+
             ReportBuilder.Instance.AddParameter("Количество участников", "1", false);
         }
 
         public void NextOrEnd(bool isFailed = false)
         {
-            if(_currentStatus != 2)
+            if (_currentStatus != 2)
                 _currentStatus = isFailed ? 2 : 1;
 
             print(sceneSettings.currentScenario.name);
@@ -96,11 +95,12 @@ namespace Code.Internal.Scenario
                 Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
 
             float totalScore = 0;
-            if(sceneSettings.isTask)
+            if (sceneSettings.isTask)
                 totalScore = ScoreSum / sceneSettings.currentScenarioCollection.nestedScenarios.Count;
-            
-            ReportBuilder.Instance.AddParameter("Общая оценка задания", $"{totalScore:F0}%", false);;
-            
+
+            ReportBuilder.Instance.AddParameter("Общая оценка задания", $"{totalScore:F0}%", false);
+            ;
+
             print("End");
             EndTask();
         }
@@ -109,9 +109,11 @@ namespace Code.Internal.Scenario
         private void EndTask()
         {
             Time.timeScale = 0.01f;
-            var replay = ReplayController.Instance.StopRecording();
+            var replayPath = ReplayController.Instance.StopRecording();
             if (sceneSettings.isTask)
-                SendData(replay);
+                SendTaskResult(ReportBuilder.Instance.GenerateJsonReport(), replayPath);
+            else
+                SendIndividualResult(ReportBuilder.Instance.GenerateJsonReport(), replayPath);
             EndSession();
         }
 
@@ -125,12 +127,7 @@ namespace Code.Internal.Scenario
             GameSceneManager.Instance.ToMenuSingle();
         }
 
-        private void SendData(string replayPath)
-        {
-            Send(ReportBuilder.Instance.GenerateJsonReport(), replayPath);
-        }
-
-        private void Send(string result, string replayPath)
+        private void SendTaskResult(string result, string replayPath)
         {
             var settingsFile = Encoding.UTF8.GetBytes(result);
 
@@ -139,18 +136,40 @@ namespace Code.Internal.Scenario
                 Debug.LogError($"Файл реплея не найден по пути: {replayPath}");
                 return;
             }
-
-
+            
             var replayData = System.IO.File.ReadAllBytes(replayPath);
 
             var form = new WWWForm();
             form.AddField("user_scenario_id", sceneSettings.taskId);
-            form.AddField("device_uuid", "");
+            form.AddField("device_uuid",  /*SystemInfo.deviceUniqueIdentifier*/"");
             form.AddField("status", _currentStatus);
             form.AddBinaryData("file", settingsFile, "Result.json", "application/json");
             form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");
 
             HttpClient.PostFormData(LinkConstants.LogCreateUrl, form, Debug.Log, (s, l) => Debug.LogError(s));
+        }
+
+        private void SendIndividualResult(string result, string replayPath)
+        {
+            var settingsFile = Encoding.UTF8.GetBytes(result);
+
+            if (!System.IO.File.Exists(replayPath))
+            {
+                Debug.LogError($"Файл реплея не найден по пути: {replayPath}");
+                return;
+            }
+            
+            var replayData = System.IO.File.ReadAllBytes(replayPath);
+
+            var form = new WWWForm();
+            //form.AddField("user_scenario_id", sceneSettings.taskId);
+            form.AddField("device_uuid",  /*SystemInfo.deviceUniqueIdentifier*/"");
+            form.AddField("status", _currentStatus);
+            form.AddBinaryData("file", settingsFile, "Result.json", "application/json");
+            form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");
+
+            //TODO: Link and data
+            HttpClient.PostFormData(LinkConstants.IndividualLogCreateUrl, form, Debug.Log, (s, l) => Debug.LogError(s));
         }
 
         private float GetTotalScore()

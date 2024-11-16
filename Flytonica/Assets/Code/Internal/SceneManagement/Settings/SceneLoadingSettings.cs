@@ -9,7 +9,7 @@ namespace Code.Internal.SceneManagement
     {
         public bool isTask;
         public bool isNet;
-        public int taskId;
+        public int taskId = -1;
         public MapSettings currentMap;
         public ScenarioSettings currentScenarioCollection;
         public ScenarioSettings currentScenario;
