@@ -12,10 +12,18 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class PauseMenuPage : Page
     {
+        [SerializeField] private SceneLoadingSettings sceneSettings;
+        
         [SerializeField] private Page keyBindingPage;
 
-        [SerializeField]
-        private Button toMainMenuButton, teacherHelpButton, returnToGameButton, keyBindingButton, replayButton, restartServerButton;
+        [SerializeField] private GameObject warningTextObject;
+        
+        [SerializeField] private Button toMainMenuButton,
+            teacherHelpButton,
+            returnToGameButton,
+            keyBindingButton,
+            replayButton,
+            restartServerButton;
 
         protected new void Awake()
         {
@@ -35,6 +43,8 @@ namespace Code.Internal.UserInterface.Pages
 
             var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
             
+            warningTextObject?.SetActive(!isTeacher && !sceneSettings.isTask);
+
             restartServerButton.gameObject.SetActive(isTeacher);
 
             var isOnHelpSignalButton = !isTeacher && !InstanceFinder.ServerManager.Started;
@@ -45,9 +55,15 @@ namespace Code.Internal.UserInterface.Pages
 
         private void ToMainMenuButton()
         {
-            UIController.Instance.Unpause(false);
+            PopupPanel.ConfigurePopup("Выйти?",
+                "Вы действительно хотите выйти", null, "Выйти", Color.red,
+                Color.black,
+                () =>
+                {
+                    UIController.Instance.Unpause(false);
+                    ScenarioSwitcherController.Instance.FailTask();
+                }, null, "Продолжить задание", Color.green, Color.black, ReturnToGame);
 
-            ScenarioSwitcherController.Instance.FailTask();
 
             //GameSceneManager.Instance.ToMenuSingle();
         }
