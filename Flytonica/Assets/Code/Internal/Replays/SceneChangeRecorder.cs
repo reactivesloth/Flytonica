@@ -13,6 +13,7 @@ namespace Code.Internal.Replays
         
         private string _activeSceneName = string.Empty;
         private string _loadedSceneName = string.Empty;
+        private bool _replayEnded = false; // Флаг для отслеживания окончания реплея
 
         protected override void Awake()
         {
@@ -49,7 +50,8 @@ namespace Code.Internal.Replays
             base.OnReplayStart();
             if (!IsReplaying)
                 return;
-            
+
+            _replayEnded = false; // Сбрасываем флаг при старте реплея
             _loadedSceneName = string.Empty;
         }
 
@@ -59,8 +61,6 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
-            //print($"{_loadedSceneName} == {_activeSceneName}");
-            
             if (_loadedSceneName == _activeSceneName || string.IsNullOrEmpty(_activeSceneName))
                 return;
 
@@ -74,6 +74,7 @@ namespace Code.Internal.Replays
             if (!IsReplaying)
                 return;
 
+            _replayEnded = true; // Устанавливаем флаг окончания реплея
             _loadedSceneName = string.Empty;
             DroneHUD.Instance.ShowHUD(false);
             UnloadAllScenes();
@@ -81,19 +82,30 @@ namespace Code.Internal.Replays
 
         private async void ReloadScenesAsync()
         {
+            if (_replayEnded) return; // Проверяем, не закончился ли реплей
+
             ReplayController.Instance.Pause();
             ReplayController.Instance.IsSceneTransitioning = true;
 
             await UnloadLoadedScene();
 
-            if (string.IsNullOrEmpty(_activeSceneName))
+            if (string.IsNullOrEmpty(_activeSceneName) || _replayEnded)
                 return;
-            
-            await SceneManager.LoadSceneAsync(_activeSceneName, LoadSceneMode.Additive);
+
+            var loadSceneOp = SceneManager.LoadSceneAsync(_activeSceneName, LoadSceneMode.Additive);
+            await loadSceneOp;
+
+            if (_replayEnded)
+            {
+                // Если реплей закончился во время загрузки, выгружаем сцену
+                await SceneManager.UnloadSceneAsync(_activeSceneName);
+                return;
+            }
+
             var loadedScene = SceneManager.GetSceneByName(_activeSceneName);
             if (loadedScene.IsValid())
                 SceneManager.SetActiveScene(loadedScene);
-            
+
             ReplayController.Instance.PlayReplay();
             ReplayController.Instance.IsSceneTransitioning = false;
 
@@ -102,7 +114,7 @@ namespace Code.Internal.Replays
 
         private async Task UnloadLoadedScene()
         {
-            if (string.IsNullOrEmpty(_loadedSceneName))
+            if (string.IsNullOrEmpty(_loadedSceneName) || _replayEnded)
                 return;
 
             var unloadedScene = SceneManager.GetSceneByName(_loadedSceneName);
