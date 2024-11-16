@@ -47,6 +47,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             UsersManager.Instance.OnPlayerListUpdated += UpdatePlayerList;
             UsersManager.Instance.OnHelpSignal += Help;
+            UpdatePlayerList();
         }
 
         private void OnDisable()

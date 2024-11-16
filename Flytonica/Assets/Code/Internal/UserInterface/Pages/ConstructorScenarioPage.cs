@@ -80,10 +80,11 @@ namespace Code.Internal.UserInterface.Pages
                     form.AddField("name", _title);
                     form.AddBinaryData("file", settingsFile, $"Scenario.json");
 
-                    HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form);
-            
-                    _spawnedObjects.Clear();
-                    scenariosManagementPage?.Open();
+                    HttpClient.PostFormData(LinkConstants.MapConfigCreateUrl, form, s =>
+                    {
+                        _spawnedObjects.Clear();
+                        scenariosManagementPage?.Open();
+                    }, (s, l) => Debug.LogError($"{l}: {s}"));
                 });
         }
 
