@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.Drone;
 using Code.Internal.Replays;
 using TMPro;
 using UltimateReplay;
@@ -25,6 +29,9 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private float[] playbackSpeeds = { 0.5f, 1f, 1.5f, 2f };
         [SerializeField] private int currentSpeedIndex = 1;
 
+        [Header("Players")] [SerializeField] private TMP_Text playersNamesText;
+        [SerializeField] private TMP_Text replayOwnerText;
+
         private bool _isUpdatingSlider;
         private Vector2 originalAnchoredPosition;
         private Vector2 originalSizeDelta;
@@ -35,7 +42,7 @@ namespace Code.Internal.UserInterface.Pages
             pauseButton.onClick.AddListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.AddListener(OnSeekSliderChanged);
             speedButton.onClick.AddListener(OnSpeedButtonPressed);
-            
+
             backSeekButton.onClick.AddListener(BackwardSeek);
             forwardSeekButton.onClick.AddListener(ForwardSeek);
 
@@ -97,7 +104,7 @@ namespace Code.Internal.UserInterface.Pages
             pauseButton.onClick.RemoveListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.RemoveListener(OnSeekSliderChanged);
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
-            
+
             backSeekButton.onClick.RemoveListener(BackwardSeek);
             forwardSeekButton.onClick.RemoveListener(ForwardSeek);
 
@@ -117,9 +124,10 @@ namespace Code.Internal.UserInterface.Pages
             var fileName = $"{usedId}.replay";
 
             var filePath = System.IO.Path.Combine(Application.persistentDataPath, fileName);
+            SetOwnerName(logData.user_name);
 
             nameText.text = logData.scenario_name;
-
+            
             if (System.IO.File.Exists(filePath))
             {
                 ReplayController.Instance.StartPlayback(usedId);
@@ -142,6 +150,24 @@ namespace Code.Internal.UserInterface.Pages
                 ReplayController.Instance.StartPlayback(path);
             }
         }
+
+        public void SetPlayerList(List<DroneController> drones)
+        {
+            var text = new StringBuilder();
+            text.Append("Игроки в сессии:");
+
+            for (var i = 0; i < drones.Count; i++)
+            {
+                var replayBeh = drones[i].GetComponent<DroneReplayBehaviour>();
+                text.Append(replayBeh.PlayerName);
+                text.Append(i < drones.Count - 1 ? ", " : ".");
+            }
+
+            playersNamesText.text = text.ToString();
+        }
+
+
+        public void SetOwnerName(string ownerName) => replayOwnerText.text = $"Реплей принадлежит игроку {ownerName}";
 
         protected override void OnClose()
         {
@@ -191,6 +217,7 @@ namespace Code.Internal.UserInterface.Pages
             var selectedSpeed = playbackSpeeds[currentSpeedIndex];
             speedButton.GetComponentInChildren<TMP_Text>().text = $"{selectedSpeed}x";
         }
+
 
         private void BackwardSeek() => ReplayController.Instance.FastForward(-10);
         private void ForwardSeek() => ReplayController.Instance.FastForward(10);

@@ -141,7 +141,7 @@ namespace Code.Internal.Scenario
 
             var form = new WWWForm();
             form.AddField("user_scenario_id", sceneSettings.taskId);
-            form.AddField("device_uuid",  /*SystemInfo.deviceUniqueIdentifier*/"");
+            form.AddField("device_uuid",  SystemInfo.deviceUniqueIdentifier);
             form.AddField("status", _currentStatus);
             form.AddBinaryData("file", settingsFile, "Result.json", "application/json");
             form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");
@@ -163,7 +163,7 @@ namespace Code.Internal.Scenario
 
             var form = new WWWForm();
             //form.AddField("user_scenario_id", sceneSettings.taskId);
-            form.AddField("device_uuid",  /*SystemInfo.deviceUniqueIdentifier*/"");
+            form.AddField("device_uuid",  SystemInfo.deviceUniqueIdentifier);
             form.AddField("status", _currentStatus);
             form.AddBinaryData("file", settingsFile, "Result.json", "application/json");
             form.AddBinaryData("replay", replayData, "Replay.replay", "application/octet-stream");

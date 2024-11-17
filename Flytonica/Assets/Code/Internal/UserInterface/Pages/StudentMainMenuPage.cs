@@ -48,11 +48,17 @@ namespace Code.Internal.UserInterface.Pages
             _discovery.ServerFoundCallback -= NetworkDiscoveryOnServerFoundCallback;
         }
 
+        private void Update()
+        {
+            toRoomButton.interactable = _currentIPEndPoint != null;
+        }
+
         protected override void OnOpen()
         {
             base.OnOpen();
             toRoomButton.interactable = _currentIPEndPoint != null;
             _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
+            _discovery.ServerLostCallback += NetworkDiscoveryOnServerFoundCallback;
             _discovery.SearchForServers();
 
             int avatarIndex = 0;
@@ -122,8 +128,15 @@ namespace Code.Internal.UserInterface.Pages
 
         private void NetworkDiscoveryOnServerFoundCallback(IPEndPoint obj)
         {
+            _points.Clear();
             if (!_points.Contains(obj))
                 _points.Add(obj);
+            toRoomButton.interactable = _currentIPEndPoint != null;
+        }
+        
+        private void NetworkDiscoveryOnServerLostCallback(IPEndPoint obj)
+        {
+            _points.Clear();
             toRoomButton.interactable = _currentIPEndPoint != null;
         }
 

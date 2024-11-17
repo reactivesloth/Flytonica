@@ -2841,8 +2841,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1187170627}
   - {fileID: 147284020}
+  - {fileID: 1187170627}
   - {fileID: 224611121}
   m_Father: {fileID: 1988935795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11039,6 +11039,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlobalReplayVariables
       objectReference: {fileID: 0}
+    - target: {fileID: 3989043857247218416, guid: 5922d413b4fe599478f603f7ec88573d, type: 3}
+      propertyPath: pcCamera
+      value: 
+      objectReference: {fileID: 1918380070}
     - target: {fileID: 3989043857247218416, guid: 5922d413b4fe599478f603f7ec88573d, type: 3}
       propertyPath: uiPanelInTablet
       value: 

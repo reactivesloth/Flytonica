@@ -1,5 +1,7 @@
 ﻿using System;
+using Code.Internal.API;
 using Code.Internal.Drone;
+using Code.Internal.Network;
 using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace Code.Internal.Replays
         private const ushort AimFlashEventID = 25;
 
         [SerializeField] private DroneSensors droneSensors;
-        [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
+        [SerializeField] private DroneCameraController droneCameraController;
 
         // Переменные для хранения текущих значений
         private float _cameraSignal;
@@ -36,6 +38,8 @@ namespace Code.Internal.Replays
         private float _aimProgress;
         private bool _isIrMode;
         private int _compassRotation;
+        
+        private string _playerName = string.Empty;
 
         // Переменные для интерполяции (предыдущие и следующие значения)
         private float _cameraSignalPrev, _cameraSignalNext;
@@ -51,6 +55,10 @@ namespace Code.Internal.Replays
         private float _aimProgressPrev, _aimProgressNext;
         private float _altMaxValuePrev, _altMaxValueNext;
         private int _compassRotationPrev, _compassRotationNext;
+
+        public bool IsObservable = false;
+            
+        public string PlayerName => _playerName;
 
         private void OnValidate()
         {
@@ -83,6 +91,8 @@ namespace Code.Internal.Replays
 
             _compassRotation = DroneHUD.Instance.CompassElement.Rotation;
 
+            _playerName = GetComponent<NetBridge>().PlayerNickname;
+
             state.Write(_cameraSignal);
             state.Write(_inputSignal);
             state.Write(_health);
@@ -101,6 +111,7 @@ namespace Code.Internal.Replays
             state.Write(_aimProgress);
             state.Write(_isIrMode);
             state.Write(_compassRotation);
+            state.Write(_playerName);
         }
 
         public override void OnReplayDeserialize(ReplayState state)
@@ -151,6 +162,8 @@ namespace Code.Internal.Replays
 
             _compassRotationPrev = _compassRotationNext;
             _compassRotationNext = state.ReadInt32();
+            
+            _playerName = state.ReadString();
         }
 
         protected override void Awake()
@@ -247,6 +260,8 @@ namespace Code.Internal.Replays
         {
             if (DroneHUD.Instance == null) return;
 
+            if(!IsObservable) return;
+            
             DroneHUD.Instance.AltValueElement.Set(_altitude);
             DroneHUD.Instance.SpeedValueElement.Set(_speed);
 

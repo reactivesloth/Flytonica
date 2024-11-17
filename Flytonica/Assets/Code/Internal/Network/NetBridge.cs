@@ -11,6 +11,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Internal.Network
 {
@@ -22,7 +23,7 @@ namespace Code.Internal.Network
 
         public bool IsObservable = false;
 
-        public readonly SyncVar<string> PlayerNickNameSync = new();
+        public string PlayerNickname;
 
         public bool IsTeacher => HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher;
 
@@ -172,21 +173,24 @@ namespace Code.Internal.Network
         private void SendDroneVarsForTeacher(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
             float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed, bool isIrMode)
         {
-            if (!IsTeacher) return;
-            if (!IsObservable) return;
+            if (IsTeacher && IsObservable)
+            {
+                DroneHUD.Instance.SetMode(sensorsModeName);
+                DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
+                DroneHUD.Instance.SpeedValueElement.Set(speed);
+                DroneHUD.Instance.CameraSignalElement.SetSignal(sensorsCameraSignal);
+                DroneHUD.Instance.InputSignalElement.SetSignal(sensorsInputSignal);
 
-            DroneHUD.Instance.SetMode(sensorsModeName);
-            DroneHUD.Instance.HealthValueElement.Set(sensorsHealth);
-            DroneHUD.Instance.SpeedValueElement.Set(speed);
-            DroneHUD.Instance.CameraSignalElement.SetSignal(sensorsCameraSignal);
-            DroneHUD.Instance.InputSignalElement.SetSignal(sensorsInputSignal);
+                DroneHUD.Instance.BatteryElement.SetСharge(batteryCharge);
+                DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
 
-            DroneHUD.Instance.BatteryElement.SetСharge(batteryCharge);
-            DroneHUD.Instance.BatteryElement.SetVoltage(batteryVoltage);
+                DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
 
-            DroneHUD.Instance.AimElement.SetProgressValue(aimProgress);
+                DroneCameraEffectController.Instance.UpdateDroneEffects(sensorsCameraSignal);
+                GetComponent<DroneCameraController>().SetIrMode(isIrMode);
+            }
             
-            DroneCameraEffectController.Instance.UpdateDroneEffects(sensorsCameraSignal);
+            sensors.SetForReplicate(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, speed);
             GetComponent<DroneCameraController>().SetIrMode(isIrMode);
         }
 
@@ -212,9 +216,8 @@ namespace Code.Internal.Network
         [ObserversRpc]
         private void SetPlayerDataForTeacher(NetworkConnection sender, string value)
         {
-            if (!IsTeacher) return;
-            PlayerNickNameSync.Value = value;
-            UsersManager.Instance.AddPlayer(sender, PlayerNickNameSync.Value, NetworkObject);
+            PlayerNickname = value;
+            UsersManager.Instance.AddPlayer(sender, PlayerNickname, NetworkObject);
         }
 
         [ObserversRpc]

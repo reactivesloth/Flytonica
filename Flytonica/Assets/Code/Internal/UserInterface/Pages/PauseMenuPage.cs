@@ -43,7 +43,7 @@ namespace Code.Internal.UserInterface.Pages
 
             var isTeacher = HttpClient.UserData?.type == UserType.Teacher;
 
-            warningTextObject?.SetActive(!isTeacher && !sceneSettings.isTask);
+            warningTextObject?.SetActive(!isTeacher && sceneSettings.isTask);
 
             restartServerButton.gameObject.SetActive(isTeacher);
 

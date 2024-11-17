@@ -40,11 +40,14 @@ namespace Code.Internal.Drone
             set => _inputSignal = value;
         }
 
-        public float Speed => _rigidbody.linearVelocity.magnitude * 3.6f;
+        private float _speed;
+        
+        public float Speed => _speed;
         public float Altitude => transform.position.y;
         public float Health { get; set; }
 
         public float BatteryVoltage => _droneController.Settings.bateteryCellCount * _droneController.currentVoltage;
+        
         public float BatteryLevel
         {
             get
@@ -72,9 +75,20 @@ namespace Code.Internal.Drone
 
         public string ModeName => savedFlightSettings?.modeName ?? "";
 
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
             _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        public void SetForReplicate(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
+            float sensorsInputSignal, float speed)   
+        {
+            savedFlightSettings.modeName = sensorsModeName;
+            Health = sensorsHealth;
+            CameraSignal = sensorsCameraSignal;
+            InputSignal = sensorsInputSignal;
+            _speed = speed;
         }
 
         private void Awake()
@@ -96,7 +110,8 @@ namespace Code.Internal.Drone
         {
             if(!IsOwner)
                 return;
-            
+
+            _speed = _rigidbody.linearVelocity.magnitude * 3.6f;
             UpdateHud();
 
             if (DroneController.Instance && DroneHUD.Instance)

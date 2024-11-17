@@ -69,6 +69,9 @@ namespace Code.Internal.Drone
         public float Yaw => _yaw;
         public float Throttle => _throttle;
         
+        public DroneInput DroneInput => _droneInput;
+        public DroneCameraController DroneCameraController => droneCameraController;
+        
         protected override void OnValidate()
         {
             droneCameraController = GetComponent<DroneCameraController>();

@@ -1,4 +1,5 @@
 using Code.Internal.Drone;
+using Code.Internal.SceneManagement;
 using UnityEngine;
 
 namespace Code.Internal.XR
@@ -15,6 +16,9 @@ namespace Code.Internal.XR
 
         private void LateUpdate()
         {
+            if(!GameSceneManager.Instance.IsPlaying)
+                return;
+            
             var rotation = transform.rotation;
             
             if (DroneController.Instance != null)

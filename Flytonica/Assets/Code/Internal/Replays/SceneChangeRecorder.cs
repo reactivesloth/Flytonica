@@ -13,7 +13,7 @@ namespace Code.Internal.Replays
         
         private string _activeSceneName = string.Empty;
         private string _loadedSceneName = string.Empty;
-        private bool _replayEnded = false; // Флаг для отслеживания окончания реплея
+        private bool _replayEnded = false;
 
         protected override void Awake()
         {
@@ -37,7 +37,6 @@ namespace Code.Internal.Replays
 
         public override void OnReplaySerialize(ReplayState state)
         {
-            print($"SCENE: {SceneManager.GetActiveScene().name}");
             if(string.IsNullOrEmpty(_activeSceneName) && trackedScenesNames.Contains(SceneManager.GetActiveScene().name))
                 _activeSceneName = SceneManager.GetActiveScene().name;
             state.Write(_activeSceneName);
@@ -86,7 +85,7 @@ namespace Code.Internal.Replays
 
         private async void ReloadScenesAsync()
         {
-            if (_replayEnded) return; // Проверяем, не закончился ли реплей
+            if (_replayEnded) return;
 
             ReplayController.Instance.Pause();
             ReplayController.Instance.IsSceneTransitioning = true;

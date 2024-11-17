@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4523626339567913837}
   - component: {fileID: 991325128229517441}
   - component: {fileID: 3989043857247218416}
+  - component: {fileID: 5620872448875979799}
   m_Layer: 0
   m_Name: replaySceneChangeController
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MonoBehaviour:
   observedComponents:
   - {fileID: 991325128229517441}
   - {fileID: 3989043857247218416}
+  - {fileID: 5620872448875979799}
   runtimeComponents:
   - {fileID: 991325128229517441}
   isPrefab: 1
@@ -95,5 +97,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replayIdentity:
     id: 60528
+  replayObject:
+    reference: {fileID: 4523626339567913837}
+  uiPanelInTablet: {fileID: 0}
+--- !u!114 &5620872448875979799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919793107097774679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b0c827d04d4670ae7a73c84db4da52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 39779
   replayObject:
     reference: {fileID: 4523626339567913837}

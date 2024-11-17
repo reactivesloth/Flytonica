@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 0}
+  _addedNetworkObject: {fileID: 6410941242121581068}
   _networkObjectCache: {fileID: 6410941242121581068}
   _rigidbody: {fileID: 1664149388969179879}
 --- !u!114 &2669200438095210834
@@ -576,6 +576,7 @@ MonoBehaviour:
     reference: {fileID: -3365251737495109800}
   droneSensors: {fileID: 1716966041475679048}
   droneCameraController: {fileID: 1625880259260389076}
+  IsObservable: 0
 --- !u!114 &396808909426539820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,6 +626,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 6410941242121581068}
   sensors: {fileID: 1716966041475679048}
   IsObservable: 0
+  PlayerNickname: 
 --- !u!114 &-557054527576137409
 MonoBehaviour:
   m_ObjectHideFlags: 0
