@@ -21,6 +21,8 @@ namespace Code.Internal.Replays
             }
         }
 
+        [SerializeField] private GameObject replayControlObject;
+
         private ReplayRecordOperation _recordOperation;
         private ReplayPlaybackOperation _playbackOperation;
         private ReplayFileStorage _replayFileStorage;
@@ -60,10 +62,7 @@ namespace Code.Internal.Replays
         public void StartTaskRecording(int taskId)
         {
             print($"TASK_ID: {_taskId}");
-            if (taskId > 0)
-                _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
-            else 
-                _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"PERSONALREPLAY.replay");
+            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, taskId > 0 ? $"{taskId}.replay" : $"PERSONALREPLAY.replay");
 
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
 
@@ -90,12 +89,14 @@ namespace Code.Internal.Replays
                 return null;
             }
         }
-
+        
         public void StartPlayback(int taskId)
         {
             _taskId = taskId;
 
-            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
+            StartPlayback(System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay"));
+            
+            /*_replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, $"{taskId}.replay");
             if (!System.IO.File.Exists(_replayFilePath))
             {
                 Debug.LogError("Файл реплея не найден");
@@ -108,12 +109,12 @@ namespace Code.Internal.Replays
             _playbackOperation.Options.PlaybackEndBehaviour = PlaybackEndBehaviour.LoopPlayback;
             Debug.Log("Начато воспроизведение реплея");
 
-            _playbackOperation.OnPlaybackEnd.AddListener(OnReplayFinished);
+            _playbackOperation.OnPlaybackEnd.AddListener(OnReplayFinished);*/
         }
 
         public void StartPlayback(string path)
         {
-            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, path);
+            _replayFilePath = path;
             if (!System.IO.File.Exists(_replayFilePath))
             {
                 Debug.LogError("Файл реплея не найден");
@@ -127,6 +128,8 @@ namespace Code.Internal.Replays
             Debug.Log("Начато воспроизведение реплея");
 
             _playbackOperation.OnPlaybackEnd.AddListener(OnReplayFinished);
+            
+            replayControlObject.SetActive(true);
         }
 
         public void StopPlayback()
@@ -149,6 +152,8 @@ namespace Code.Internal.Replays
             {
                 Debug.LogWarning("Воспроизведение не было начато");
             }
+            
+            replayControlObject.SetActive(false);
         }
 
         private void OnReplayFinished()
@@ -186,6 +191,20 @@ namespace Code.Internal.Replays
         {
             _playbackOperation?.SeekPlaybackNormalized(normalizedTime);
         }
+        
+        public void FastForward(float seconds)
+        {
+            if (_playbackOperation == null || _playbackOperation.IsDisposed)
+            {
+                Debug.LogWarning("Cannot fast-forward, playback operation is not active.");
+                return;
+            }
+
+            float newTime = Mathf.Min(_playbackOperation.PlaybackTime + seconds, _playbackOperation.Duration);
+            _playbackOperation.SeekPlayback(newTime);
+            Debug.Log($"Перемотка вперед на {seconds} секунд. Новое время воспроизведения: {newTime} секунд.");
+        }
+
 
         public void SetPlaybackSpeed(float speed)
         {

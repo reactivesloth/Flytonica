@@ -20,6 +20,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Slider seekSlider;
         [SerializeField] private Button speedButton;
         [SerializeField] private TMP_Text currentTimeText, allTimeText, nameText;
+        [SerializeField] private Button backSeekButton, forwardSeekButton;
 
         [SerializeField] private float[] playbackSpeeds = { 0.5f, 1f, 1.5f, 2f };
         [SerializeField] private int currentSpeedIndex = 1;
@@ -34,6 +35,9 @@ namespace Code.Internal.UserInterface.Pages
             pauseButton.onClick.AddListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.AddListener(OnSeekSliderChanged);
             speedButton.onClick.AddListener(OnSpeedButtonPressed);
+            
+            backSeekButton.onClick.AddListener(BackwardSeek);
+            forwardSeekButton.onClick.AddListener(ForwardSeek);
 
             UpdatePlayPauseButtons(true);
             UpdateSpeedButtonLabel();
@@ -93,6 +97,9 @@ namespace Code.Internal.UserInterface.Pages
             pauseButton.onClick.RemoveListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.RemoveListener(OnSeekSliderChanged);
             speedButton.onClick.RemoveListener(OnSpeedButtonPressed);
+            
+            backSeekButton.onClick.RemoveListener(BackwardSeek);
+            forwardSeekButton.onClick.RemoveListener(ForwardSeek);
 
             ReplayController.Instance.PlaybackFinished -= OnPauseButtonPressed;
 
@@ -184,5 +191,8 @@ namespace Code.Internal.UserInterface.Pages
             var selectedSpeed = playbackSpeeds[currentSpeedIndex];
             speedButton.GetComponentInChildren<TMP_Text>().text = $"{selectedSpeed}x";
         }
+
+        private void BackwardSeek() => ReplayController.Instance.FastForward(-10);
+        private void ForwardSeek() => ReplayController.Instance.FastForward(10);
     }
 }

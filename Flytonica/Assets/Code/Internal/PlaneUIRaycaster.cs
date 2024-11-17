@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -15,6 +14,7 @@ namespace Code.Internal
         [SerializeField] private string trackedTag;
 
         private GameObject _lastHoveredObject;
+        private GameObject _pressedObject;
 
         private void Start()
         {
@@ -38,7 +38,7 @@ namespace Code.Internal
             foreach (var rayInteractor in xrRayInteractors)
             {
                 if (rayInteractor.TryGetCurrent3DRaycastHit(out var hit) &&
-                    hit.collider.gameObject.CompareTag(trackedTag)) 
+                    hit.collider.gameObject.CompareTag(trackedTag))
                 {
                     var screenPosition = GetScreenPosition(hit);
                     Simulate(rayInteractor, screenPosition);
@@ -71,9 +71,60 @@ namespace Code.Internal
                 _lastHoveredObject = targetObject;
             }
 
-            if (targetObject != null &&
-                rayInteractor.uiPressInput.inputActionReferencePerformed.action.WasPressedThisFrame())
-                SimulateClick(targetObject, pointerData, ExecuteEvents.pointerClickHandler);
+            var inputAction = rayInteractor.uiPressInput.inputActionReferencePerformed.action;
+
+            if (inputAction.WasPressedThisFrame())
+            {
+                if (targetObject != null)
+                {
+                    _pressedObject = targetObject;
+                    pointerData.pressPosition = pointerData.position;
+                    pointerData.pointerPress = targetObject;
+                    pointerData.rawPointerPress = targetObject;
+                    pointerData.delta = Vector2.zero;
+
+                    ExecuteEvents.Execute(_pressedObject, pointerData, ExecuteEvents.pointerDownHandler);
+
+                    // Проверяем, поддерживает ли объект перетаскивание
+                    if (ExecuteEvents.GetEventHandler<IDragHandler>(_pressedObject) != null)
+                    {
+                        pointerData.dragging = true;
+                        ExecuteEvents.Execute(_pressedObject, pointerData, ExecuteEvents.beginDragHandler);
+                    }
+                }
+            }
+
+            if (inputAction.IsPressed() && _pressedObject != null)
+            {
+                pointerData.delta = Vector2.zero;
+                pointerData.position = screenPosition;
+
+                if (pointerData.dragging)
+                {
+                    ExecuteEvents.Execute(_pressedObject, pointerData, ExecuteEvents.dragHandler);
+                }
+            }
+
+            if (inputAction.WasReleasedThisFrame())
+            {
+                if (_pressedObject != null)
+                {
+                    ExecuteEvents.Execute(_pressedObject, pointerData, ExecuteEvents.pointerUpHandler);
+
+                    if (pointerData.dragging)
+                    {
+                        ExecuteEvents.Execute(_pressedObject, pointerData, ExecuteEvents.endDragHandler);
+                        pointerData.dragging = false;
+                    }
+                    else
+                    {
+                        // Выполняем клик, если не было перетаскивания
+                        SimulateClick(_pressedObject, pointerData, ExecuteEvents.pointerClickHandler);
+                    }
+
+                    _pressedObject = null;
+                }
+            }
         }
 
         private static void SimulateClick(GameObject obj, PointerEventData pointerData,
