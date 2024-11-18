@@ -68,7 +68,6 @@ namespace Code.Internal.SceneManagement
 
         public void ToMenuSingle()
         {
-            ReplayController.Instance.StopRecording();
             UIController.Instance.OnMainMenu();
             UnloadScene();
             IsPlaying = false;

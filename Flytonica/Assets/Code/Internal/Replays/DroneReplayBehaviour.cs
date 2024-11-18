@@ -38,7 +38,7 @@ namespace Code.Internal.Replays
         private float _aimProgress;
         private bool _isIrMode;
         private int _compassRotation;
-        
+
         private string _playerName = string.Empty;
 
         // Переменные для интерполяции (предыдущие и следующие значения)
@@ -57,7 +57,7 @@ namespace Code.Internal.Replays
         private int _compassRotationPrev, _compassRotationNext;
 
         public bool IsObservable = false;
-            
+
         public string PlayerName => _playerName;
 
         private void OnValidate()
@@ -77,7 +77,7 @@ namespace Code.Internal.Replays
             _batteryVoltage = droneSensors.BatteryVoltage;
             _pitch = droneSensors.Pitch;
             _roll = droneSensors.Roll;
-            _modeName = droneSensors.ModeName;
+            _modeName = droneSensors.ModeName ?? string.Empty;
             _cameraAngle = droneCameraController.CurrentAngle;
 
             _altMaxValue = DroneHUD.Instance.AltValueElement.MaxValue;
@@ -162,7 +162,7 @@ namespace Code.Internal.Replays
 
             _compassRotationPrev = _compassRotationNext;
             _compassRotationNext = state.ReadInt32();
-            
+
             _playerName = state.ReadString();
         }
 
@@ -260,8 +260,8 @@ namespace Code.Internal.Replays
         {
             if (DroneHUD.Instance == null) return;
 
-            if(!IsObservable) return;
-            
+            if (!IsObservable) return;
+
             DroneHUD.Instance.AltValueElement.Set(_altitude);
             DroneHUD.Instance.SpeedValueElement.Set(_speed);
 
