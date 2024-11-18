@@ -149,8 +149,11 @@ namespace Code.Internal.Drone
             if (_joystick != _findJoystick)
             {
                 _joystick = _findJoystick;
-                _player.controllers.Joysticks.Clear();
-                _player.controllers.Joysticks.Add(_joystick);
+                if (!_player.controllers.Joysticks.IsReadOnly)
+                {
+                    _player.controllers.Joysticks.Clear();
+                    _player.controllers.Joysticks.Add(_joystick);
+                }
             }
         }
 

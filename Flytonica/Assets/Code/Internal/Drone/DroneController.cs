@@ -174,10 +174,10 @@ namespace Code.Internal.Drone
                 ResetDrone();
             }
 
-            // if (!_isEnginesOn)
-            // {
-            //     DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.1f);
-            // }
+            if (!_isEnginesOn && DroneHUD.Instance.MessageBoxElement.IsClear)
+            {
+                 DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.25f);
+            }
         }
 
         public void ResetDrone()

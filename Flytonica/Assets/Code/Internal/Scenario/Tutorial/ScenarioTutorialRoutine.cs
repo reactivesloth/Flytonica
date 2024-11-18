@@ -61,17 +61,23 @@ namespace Code.Internal.Scenario.Tutorial
         
         protected IEnumerator PlayReqlique(ScenarioTutorialReplique replique)
         {
-            DroneHUD.Instance?.SetTask(replique.text);
-            DroneHUD.Instance?.SetMessage(MessageType.Normal, replique.text, replique.clip != null ? replique.clip.length : 2);
-
-            if (replique.clip != null)
-            {
-                _source.PlayOneShot(replique.clip);
-                yield return new WaitForSeconds(replique.clip.length);
-            }
+            if (_source.isPlaying)
+                yield return new WaitForSeconds(1);
             else
             {
-                yield return new WaitForSeconds(2);
+                DroneHUD.Instance?.SetTask(replique.text);
+                DroneHUD.Instance?.SetMessage(MessageType.Normal, replique.text,
+                    replique.clip != null ? replique.clip.length : 2);
+
+                if (replique.clip != null)
+                {
+                    _source.PlayOneShot(replique.clip);
+                    yield return new WaitForSeconds(replique.clip.length + 0.1f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(2);
+                }
             }
         }
     }
