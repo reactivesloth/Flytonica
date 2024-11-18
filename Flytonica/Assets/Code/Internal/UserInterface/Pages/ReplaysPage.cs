@@ -154,7 +154,25 @@ namespace Code.Internal.UserInterface.Pages
 
         private void DeleteLocal()
         {
-            //TODO
+            PopupPanel.ConfigurePopup("Вы действительно хотите удалить?",
+                $"Вы удалите реплей на данном устройстве. Продолжить?",
+                null, "Удалить", Color.red, Color.white,
+                () =>
+                {
+                    var filePath = replaysRoot.SelectedButton.GetSaveData<LocalLogData>().path;
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                        Debug.Log($"Файл по пути {filePath} успешно удалён.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Файл по пути {filePath} не найден.");
+                    }
+                    
+                    GenerateListFromLocal();
+                },
+                null, "Отмена", Color.green, Color.black, null);
         }
 
         private void View()
