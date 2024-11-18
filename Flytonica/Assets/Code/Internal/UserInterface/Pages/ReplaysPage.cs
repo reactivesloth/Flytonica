@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
+using Code.Internal.Replays;
 using Code.Internal.UserInterface.Elements.TableElements;
 using TMPro;
+using UltimateReplay;
+using UltimateReplay.Storage;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,8 +47,10 @@ namespace Code.Internal.UserInterface.Pages
             replaysRoot.SelectionStateChange += SetButtons;
 
             SetButtons(replaysRoot.SelectedButton);
+            
+            print(_isLocal);
         }
-
+        
         protected override void OnClose()
         {
             base.OnClose();
@@ -53,6 +59,7 @@ namespace Code.Internal.UserInterface.Pages
             view.onClick.RemoveListener(View);
 
             replaysRoot.SelectionStateChange -= SetButtons;
+            print("Replays Page Closed");
         }
 
         private void GenerateListFromUser()
@@ -73,13 +80,13 @@ namespace Code.Internal.UserInterface.Pages
                     var data = new TableButtonGenerateData<LogData>(display, replayData);
                     generateData.Add(data);
                 }
-                
+
                 HttpClient.Get(LinkConstants.LogsIndividualMultiUrl(new Dictionary<string, string>
-                    { { "user_id", _currentUserId.ToString() }, { "page", "1" }, { "itemsPerPage", "9999" } }),
+                        { { "user_id", _currentUserId.ToString() }, { "page", "1" }, { "itemsPerPage", "9999" } }),
                     response2 =>
                     {
                         var list2 = JsonUtility.FromJson<MultiLogDataResponse>(response2).data;
-                        
+
                         foreach (var replayData in list2)
                         {
                             var display = new[]
@@ -90,16 +97,38 @@ namespace Code.Internal.UserInterface.Pages
                             var data = new TableButtonGenerateData<LogData>(display, replayData);
                             generateData.Add(data);
                         }
-                        
+
                         replaysRoot.Generate(generateData);
                     });
-
             }, (error, code) => Debug.LogError(error));
         }
-        
+
         private void GenerateListFromLocal()
         {
-            //TODO
+            var files = Directory.GetFiles(Application.persistentDataPath, "*.replay");
+
+            var generateData = new List<TableButtonGenerateData<LocalLogData>>();
+
+            foreach (var filePath in files)
+            {
+                try
+                {
+                    var replayMeta = (CustomMetadata) ReplayFileStorage.ReadMetadataOnly(filePath);
+                    var localLogData = new LocalLogData(filePath, replayMeta);
+                    var display = new[]
+                    {
+                        replayMeta?.date, replayMeta?.studentName, replayMeta?.ReplayName, "-", "-"
+                    };
+                    var data = new TableButtonGenerateData<LocalLogData>(display, localLogData);
+                    generateData.Add(data);
+                }
+                catch (InvalidCastException e)
+                {
+                    Debug.LogError(e);
+                }
+                
+            }
+            replaysRoot.Generate(generateData);
         }
 
         private void Delete()
@@ -130,16 +159,42 @@ namespace Code.Internal.UserInterface.Pages
 
         private void View()
         {
-            var replayData = replaysRoot.SelectedButton.GetSaveData<LogData>();
-
-            viewReplayPage.Init(replayData);
+            if(_isLocal)
+                ViewOffline();
+            else
+                ViewUser();
             viewReplayPage.Open();
         }
+
+        private void ViewUser()
+        {
+            var replayData = replaysRoot.SelectedButton.GetSaveData<LogData>();
+            viewReplayPage.Init(replayData);
+        }
+
+        private void ViewOffline()
+        {
+            var replayPath = replaysRoot.SelectedButton.GetSaveData<LocalLogData>();
+            viewReplayPage.Init(replayPath);
+        } 
 
         private void SetButtons(bool isSelect)
         {
             delete.gameObject.SetActive(isSelect);
             view.gameObject.SetActive(isSelect);
+        }
+    }
+
+    [Serializable]
+    public class LocalLogData
+    {
+        public string path;
+        public CustomMetadata metadata;
+
+        public LocalLogData(string path, CustomMetadata metadata)
+        {
+            this.path = path;
+            this.metadata = metadata;
         }
     }
 }

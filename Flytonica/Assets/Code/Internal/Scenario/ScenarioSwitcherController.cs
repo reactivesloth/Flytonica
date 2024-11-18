@@ -38,7 +38,7 @@ namespace Code.Internal.Scenario
 
         public void StartTask()
         {
-            ReplayController.Instance.StartTaskRecording(sceneSettings.taskId);
+            ReplayController.Instance.StartRecording(sceneSettings.taskId);
             ReportBuilder.Instance.Clear();
             ScoreSum = 0;
 

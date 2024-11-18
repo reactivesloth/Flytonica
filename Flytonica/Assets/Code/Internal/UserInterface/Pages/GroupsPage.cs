@@ -11,15 +11,16 @@ namespace Code.Internal.UserInterface.Pages
     public class GroupsPage : Page
     {
         [SerializeField] private SelectionCollectionManager groupsRoot;
-        [SerializeField] private Button showStudents, setTask;
+        [SerializeField] private Button showStudents, loadedReplays;
         [SerializeField] private StudentInGroupPage studentsPage;
+        [SerializeField] private ReplaysPage replaysPage;
 
         protected override void OnOpen()
         {
             base.OnOpen();
 
             showStudents?.onClick.AddListener(ShowStudent);
-            setTask?.onClick.AddListener(SetTaskList);
+            loadedReplays?.onClick.AddListener(OnLoadedReplayClick);
             groupsRoot.SelectionStateChange += SetButtons;
 
             SetButtons(groupsRoot.SelectedButton);
@@ -31,7 +32,7 @@ namespace Code.Internal.UserInterface.Pages
             base.OnClose();
 
             showStudents?.onClick.RemoveListener(ShowStudent);
-            setTask?.onClick.RemoveListener(SetTaskList);
+            loadedReplays?.onClick.RemoveListener(OnLoadedReplayClick);
             groupsRoot.SelectionStateChange -= SetButtons;
         }
 
@@ -61,14 +62,16 @@ namespace Code.Internal.UserInterface.Pages
             studentsPage.Open();
         }
 
-        private void SetTaskList()
-        {
-        }
-
         private void SetButtons(bool isSelected)
         {
             showStudents?.gameObject.SetActive(isSelected);
-            setTask?.gameObject.SetActive(isSelected);
+        }
+        
+        private void OnLoadedReplayClick()
+        {
+            print("Clicked on the loaded replay page");
+            replaysPage.InitLocal();
+            replaysPage.Open();
         }
     }
 }
