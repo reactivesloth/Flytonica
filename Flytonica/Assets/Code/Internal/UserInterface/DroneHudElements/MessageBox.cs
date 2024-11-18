@@ -13,8 +13,11 @@ namespace Code.Internal.UserInterface.DroneHudElements
         Error
     }
     
+    [RequireComponent(typeof(AudioSource))]
     public class MessageBox : MonoBehaviour
     {
+        private AudioSource _source;
+        
         [SerializeField] private Color 
             normalColor = Color.white, 
             warningColor = Color.yellow, 
@@ -29,6 +32,7 @@ namespace Code.Internal.UserInterface.DroneHudElements
         
         private void Awake()
         {
+            _source = GetComponent<AudioSource>();
             if (Instance == null) Instance = this;
         }
         
@@ -47,7 +51,7 @@ namespace Code.Internal.UserInterface.DroneHudElements
             SceneManager.sceneLoaded -= SceneChanged;
         }
         
-        public void DrawMessage (MessageType type, string message, float duration = 0)
+        public void DrawMessage (MessageType type, string message, float duration = 0, AudioClip clip = null)
         {
             CancelInvoke();
             ClearMessage();
@@ -76,12 +80,16 @@ namespace Code.Internal.UserInterface.DroneHudElements
             {
                 Invoke("ClearMessage", duration);
             }
+
+            if (clip!= null && !_source.isPlaying)
+                _source.PlayOneShot(clip);
         }
 
         public void ClearMessage()
         {
             messageText.text = string.Empty;
             warningImage.gameObject.SetActive(false);
+            
         }
     }
 }

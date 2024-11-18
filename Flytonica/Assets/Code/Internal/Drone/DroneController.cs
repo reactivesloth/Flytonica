@@ -46,6 +46,8 @@ namespace Code.Internal.Drone
 
         [SerializeField] private AudioSource sfxSource;
         [SerializeField] private AudioClip batteryBeep;
+        [SerializeField] private AudioClip batteryLow;
+        [SerializeField] private AudioClip batteryLost;
         [Range(2.4f, 3.8f)] public float currentVoltage = 3.8f;
 
         public DroneSettings Settings => droneSettings;
@@ -346,7 +348,7 @@ namespace Code.Internal.Drone
             batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);   
             
             if(batteryLevelPercent is >= 1 and <= 11) {
-                DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", 5f);
+                DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", batteryLow.length + 2, batteryLow);
                 if (batteryBeep != null && sfxSource != null)
                 {
                     if (!sfxSource.isPlaying)
@@ -357,7 +359,7 @@ namespace Code.Internal.Drone
             {
                 DroneSensors.InputSignal = 0;
                 DroneSensors.CameraSignal = 0;
-                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна");
+                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна", batteryLost.length + 2, batteryLost);
             }
         }
 
