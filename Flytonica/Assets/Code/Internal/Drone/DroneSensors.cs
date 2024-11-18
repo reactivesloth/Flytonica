@@ -73,7 +73,8 @@ namespace Code.Internal.Drone
 
         public float Roll => transform.localEulerAngles.z;
 
-        public string ModeName => savedFlightSettings?.modeName ?? "";
+        private string _modeName; 
+        public string ModeName => _modeName;
 
         protected override void OnValidate()
         {
@@ -84,7 +85,7 @@ namespace Code.Internal.Drone
         public void SetForReplicate(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
             float sensorsInputSignal, float speed)   
         {
-            savedFlightSettings.modeName = sensorsModeName;
+            _modeName = sensorsModeName;
             Health = sensorsHealth;
             CameraSignal = sensorsCameraSignal;
             InputSignal = sensorsInputSignal;
@@ -112,6 +113,7 @@ namespace Code.Internal.Drone
                 return;
 
             _speed = _rigidbody.linearVelocity.magnitude * 3.6f;
+            _modeName = savedFlightSettings?.modeName ?? "";
             UpdateHud();
 
             if (DroneController.Instance && DroneHUD.Instance)

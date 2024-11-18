@@ -113,7 +113,7 @@ namespace Code.Internal.Network
         private void SendDroneVars(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
             float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed, bool isIrMode)
         {
-            SendDroneVarsForTeacher(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal,
+            SendDroneVarsForAll(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal,
                 batteryCharge,
                 batteryVoltage, aimProgress, speed, isIrMode);
         }
@@ -170,9 +170,11 @@ namespace Code.Internal.Network
         }
 
         [ObserversRpc]
-        private void SendDroneVarsForTeacher(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
+        private void SendDroneVarsForAll(string sensorsModeName, float sensorsHealth, float sensorsCameraSignal,
             float sensorsInputSignal, float batteryCharge, float batteryVoltage, float aimProgress, float speed, bool isIrMode)
         {
+            if(IsOwner) return;
+            
             if (IsTeacher && IsObservable)
             {
                 DroneHUD.Instance.SetMode(sensorsModeName);
@@ -191,7 +193,6 @@ namespace Code.Internal.Network
             }
             
             sensors.SetForReplicate(sensorsModeName, sensorsHealth, sensorsCameraSignal, sensorsInputSignal, speed);
-            GetComponent<DroneCameraController>().SetIrMode(isIrMode);
         }
 
         [ObserversRpc]
@@ -200,19 +201,7 @@ namespace Code.Internal.Network
             if (!IsTeacher) return;
             UpdateLocalScenarioRaceState(checkpointStatuses);
         }
-
-        /*[ObserversRpc]
-        private void SendTransportScenarioStateForTeacher()
-        {
-            if(!IsTeacher) return;
-        }
-
-        [ObserversRpc]
-        private void SendSearchingScenarioStateForTeacher()
-        {
-            if(!IsTeacher) return;
-        }*/
-
+        
         [ObserversRpc]
         private void SetPlayerDataForTeacher(NetworkConnection sender, string value)
         {
@@ -231,7 +220,6 @@ namespace Code.Internal.Network
         private void HelpSignalForTeacher(NetworkConnection sender)
         {
             if (!IsTeacher) return;
-
             UsersManager.Instance.HelpSignal(sender);
         }
 
