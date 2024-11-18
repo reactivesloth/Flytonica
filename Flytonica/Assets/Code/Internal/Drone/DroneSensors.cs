@@ -135,7 +135,7 @@ namespace Code.Internal.Drone
             if (savedFlightSettings != _droneController.Settings.currentFlightMode)
             {
                 savedFlightSettings = _droneController.Settings.currentFlightMode;
-                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {ModeName}", 2);
+                DroneHUD.Instance.SetMessage(MessageType.Normal, $"Переключение режима: {savedFlightSettings.modeName}", 2);
             }
 
             UpdateSignals();
