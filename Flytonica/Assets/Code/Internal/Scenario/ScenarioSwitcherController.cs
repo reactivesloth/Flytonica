@@ -6,6 +6,7 @@ using Code.Internal.Replays;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using FishNet;
+using FishNet.Discovery;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -95,11 +96,10 @@ namespace Code.Internal.Scenario
                 Replay, null, "Отправить результат", Color.green, Color.black, () => EndTask(result));*/
 
             float totalScore = 0;
-            if (sceneSettings.isTask)
-                totalScore = ScoreSum / sceneSettings.currentScenarioCollection.nestedScenarios.Count;
+            var count = sceneSettings.currentScenarioCollection?.nestedScenarios?.Count ?? 1;
+            totalScore = ScoreSum / count;
 
             ReportBuilder.Instance.AddParameter("Общая оценка задания", $"{totalScore:F0}%", false);
-            ;
 
             print("End");
             EndTask();
@@ -124,6 +124,7 @@ namespace Code.Internal.Scenario
                 InstanceFinder.ServerManager.StopConnection(true);
             InstanceFinder.ClientManager.StopConnection();
 
+            InstanceFinder.NetworkManager.GetComponent<NetworkDiscovery>().StopSearchingOrAdvertising();
             GameSceneManager.Instance.ToMenuSingle();
         }
 

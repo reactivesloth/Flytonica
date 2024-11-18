@@ -61,7 +61,10 @@ namespace Code.Internal.UserInterface.Pages
                 () =>
                 {
                     UIController.Instance.Unpause(false);
-                    ScenarioSwitcherController.Instance.FailTask();
+                    if(HttpClient.UserData?.type == UserType.Teacher)
+                        ScenarioSwitcherController.Instance.EndSession();
+                    else
+                        ScenarioSwitcherController.Instance.FailTask();
                 }, null, "Продолжить задание", Color.green, Color.black, ReturnToGame);
             //GameSceneManager.Instance.ToMenuSingle();
         }

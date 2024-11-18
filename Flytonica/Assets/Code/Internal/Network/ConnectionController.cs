@@ -146,6 +146,7 @@ namespace Code.Internal.Network
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
+                print(sceneSettings.isNet);
                 if (sceneSettings.isNet)
                     StartRecording(connection);
             }

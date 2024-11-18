@@ -47,8 +47,11 @@ namespace Code.Internal.UserInterface.Pages
             onlinePlayButtonText.text = isXr ? vrText : pcText;
             editScenarioButton.interactable = !isXr;
 
-            _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
-            _discovery.SearchForServers();
+            if (isXr)
+            {
+                _discovery.ServerFoundCallback += NetworkDiscoveryOnServerFoundCallback;
+                _discovery.SearchForServers();
+            }
 
             playScenarioButton.onClick.AddListener(OnPlayScenarioClicked);
             editScenarioButton.onClick.AddListener(OnEditScenarioClicked);

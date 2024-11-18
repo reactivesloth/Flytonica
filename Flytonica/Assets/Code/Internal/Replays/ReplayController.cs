@@ -64,7 +64,7 @@ namespace Code.Internal.Replays
 
         public void StartRecording(int taskId, string type = "")
         {
-            print($"TASK_ID: {_taskId}");
+            print($"TASK_ID: {taskId}");
             _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, taskId > 0 ? $"{taskId}.replay" : "PERSONALREPLAY.replay");
             
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
@@ -81,6 +81,7 @@ namespace Code.Internal.Replays
         {
             if (_recordOperation != null)
             {
+                print(_replayFilePath);
                 _customMetadata.date = DateTime.Now.ToString("g");
                 _replayFileStorage.Metadata = _customMetadata;
                 

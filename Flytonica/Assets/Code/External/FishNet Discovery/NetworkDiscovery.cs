@@ -69,6 +69,7 @@ namespace FishNet.Discovery
 
         private void ServerConnectionStateChangedEventHandler(ServerConnectionStateArgs args)
         {
+            print(args.ConnectionState);
             if (args.ConnectionState == LocalConnectionState.Started)
             {
                 AdvertiseServer();
