@@ -8,6 +8,7 @@ namespace Code.Internal.Scenario
 {
     public class LostDroneZone : MonoBehaviour
     {
+        [SerializeField] private AudioClip lowSignal, lostSignal;
         [SerializeField] private bool showZoneOnMap = false;
         [SerializeField] private string warningText, errorText;
 
@@ -29,7 +30,7 @@ namespace Code.Internal.Scenario
         private void OnWarningZoneEnter()
         {
             if (DroneHUD.Instance != null)
-                DroneHUD.Instance.SetMessage(MessageType.Warning, warningText);
+                DroneHUD.Instance.SetMessage(MessageType.Warning, warningText, lowSignal.length + 1, lowSignal);
             RandomEffect(0.5f);
         }
 
@@ -46,7 +47,7 @@ namespace Code.Internal.Scenario
         private void OnDangerZoneEnter()
         {
             if (DroneHUD.Instance != null)
-                DroneHUD.Instance.SetMessage(MessageType.Error, errorText);
+                DroneHUD.Instance.SetMessage(MessageType.Error, errorText, lowSignal.length + 1, lostSignal);
             RandomEffect();
         }
 

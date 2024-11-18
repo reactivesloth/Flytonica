@@ -17,6 +17,8 @@ namespace Code.Internal.Scenario
     
     public class ScenarioRules : MonoBehaviour
     {
+        [SerializeField] private AudioClip outOfLocationWarning;
+        [SerializeField] private AudioClip outOfLocation;
         [SerializeField] private SceneLoadingSettings _sceneLoadingSettings;
         [SerializeField] private float allowedForbiddenTime = 10;
         private float failTime = 0;
@@ -82,11 +84,11 @@ namespace Code.Internal.Scenario
                         savedSignal = CurrentDroneSensors.CameraSignalModifier;
                     CurrentDroneSensors.CameraSignalModifier = 0.5f;
                     failTime = allowedForbiddenTime;
-                    DroneHUD.Instance.SetMessage(MessageType.Warning, $"Вы приближаетесь к границе локации, вернитесь назад!", 0.1f);
+                    DroneHUD.Instance.SetMessage(MessageType.Warning, $"Вы приближаетесь к границе локации, вернитесь назад!", 0.1f, outOfLocationWarning);
                     break;
                 case ScenarioZoneWarningType.Unallowed:
                     failTime -= Time.deltaTime;
-                    DroneHUD.Instance.SetMessage(MessageType.Error, $"Вы покинули границу локации, сценарий будет перезапущен через {failTime.ToString("F2")} секунд", 0.1f);
+                    DroneHUD.Instance.SetMessage(MessageType.Error, $"Вы покинули границу локации, сценарий будет перезапущен через {failTime.ToString("F2")} секунд", 0.1f, outOfLocation);
                     if (savedSignal <= -1)
                         savedSignal = CurrentDroneSensors.CameraSignalModifier;
                     CurrentDroneSensors.CameraSignalModifier = 0;
