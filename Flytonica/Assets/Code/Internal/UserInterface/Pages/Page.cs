@@ -43,7 +43,7 @@ namespace Code.Internal.UserInterface.Pages
 
         protected virtual void OnOpen()
         {
-            
+            print(CurrentPage.gameObject.name);
         }
         
         protected virtual void OnClose()

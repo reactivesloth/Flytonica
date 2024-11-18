@@ -205,7 +205,7 @@ namespace Code.Internal.Network
         }
         
         [TargetRpc]
-        public void StartRecording(NetworkConnection connection) => ReplayController.Instance.StartTaskRecording(-1);
+        public void StartRecording(NetworkConnection connection) => ReplayController.Instance.StartRecording(-1);
         
         public void MovePlayer(NetworkConnection connection)
         {

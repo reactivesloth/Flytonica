@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.Internal.API;
 using UltimateReplay;
 using UltimateReplay.Storage;
 using UnityEngine;
@@ -36,6 +37,8 @@ namespace Code.Internal.Replays
         public float TotalPlaybackTime => !_playbackOperation.IsDisposed ? _playbackOperation.Duration : 0f;
 
         public bool IsSceneTransitioning { get; set; }
+        
+        private CustomMetadata _customMetadata;
 
         protected void OnEnable()
         {
@@ -59,12 +62,16 @@ namespace Code.Internal.Replays
             }
         }
 
-        public void StartTaskRecording(int taskId)
+        public void StartRecording(int taskId, string type = "")
         {
             print($"TASK_ID: {_taskId}");
-            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, taskId > 0 ? $"{taskId}.replay" : $"PERSONALREPLAY.replay");
-
+            _replayFilePath = System.IO.Path.Combine(Application.persistentDataPath, taskId > 0 ? $"{taskId}.replay" : "PERSONALREPLAY.replay");
+            
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
+            
+            _customMetadata = new CustomMetadata();
+            _customMetadata.studentName = HttpClient.UserData.name;
+            _customMetadata.type = type;
 
             _recordOperation = ReplayManager.BeginRecording(_replayFileStorage);
             Debug.Log("Начата запись реплея");
@@ -74,13 +81,16 @@ namespace Code.Internal.Replays
         {
             if (_recordOperation != null)
             {
+                _customMetadata.date = DateTime.Now.ToString("g");
+                _replayFileStorage.Metadata = _customMetadata;
+                
                 _recordOperation.StopRecording();
                 Debug.Log("Остановлена запись реплея");
 
                 _replayFileStorage.Dispose();
                 _replayFileStorage = null;
                 _recordOperation = null;
-
+                
                 return _replayFilePath;
             }
             else
@@ -211,5 +221,14 @@ namespace Code.Internal.Replays
             if (_playbackOperation == null) return;
             _playbackOperation.PlaybackTimeScale = Mathf.Max(0, speed);
         }
+    }
+    
+    [Serializable]
+    public class CustomMetadata : ReplayMetadata
+    {
+        public string studentName = "Гость";
+        public string date;
+        public string type;
+        public int timeInSeconds;
     }
 }

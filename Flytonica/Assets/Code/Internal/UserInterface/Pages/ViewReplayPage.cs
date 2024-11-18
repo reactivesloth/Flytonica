@@ -142,12 +142,14 @@ namespace Code.Internal.UserInterface.Pages
             }
         }
 
-        public void Init(string path)
+        public void Init(LocalLogData logData)
         {
-            nameText.text = string.Empty;
-            if (System.IO.File.Exists(path))
+            nameText.text = logData.metadata.ReplayName;
+            SetOwnerName(logData.metadata.studentName);
+            
+            if (System.IO.File.Exists(logData.path))
             {
-                ReplayController.Instance.StartPlayback(path);
+                ReplayController.Instance.StartPlayback(logData.path);
             }
         }
 
