@@ -47,8 +47,8 @@ namespace Code.Internal.MapEditor.Editor
     {
         static MapEditorImagePreviewGenerator()
         {
-            //EditorApplication.projectChanged += OnProjectChanged;
-            //CheckAndSetIcons();
+            EditorApplication.projectChanged += OnProjectChanged;
+            CheckAndSetIcons();
         }
 
         private static void OnProjectChanged()
