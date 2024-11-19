@@ -81,13 +81,10 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLeaderBoardOpen()
         {
-            if (!Leaderboard.Instance.gameObject.activeSelf)
-                Leaderboard.Instance.Open();
-            else
-                Leaderboard.Instance.Close();
+            Leaderboard.Instance.Open();
         }
 
-        private void Help(NetworkConnection connection)
+        private void Help(NetworkConnection connection) 
         {
             if (!playersButtons.TryGetValue(connection, out var button))
                 return;

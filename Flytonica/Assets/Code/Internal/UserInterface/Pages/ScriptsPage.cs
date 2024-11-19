@@ -132,10 +132,6 @@ namespace Code.Internal.UserInterface.Pages
             
             print(sceneSettings.currentScenario.nextScenario?.name);
             
-            ScenarioSwitcherController.Instance.StartTask();
-
-            InstanceFinder.ServerManager.StartConnection();
-
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
@@ -144,6 +140,9 @@ namespace Code.Internal.UserInterface.Pages
                 InstanceFinder.ServerManager.OnServerConnectionState -= callback;
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
+            
+            ScenarioSwitcherController.Instance.StartTask();
+            InstanceFinder.ServerManager.StartConnection();
         }
 
         private ScenarioSettings GetTask()

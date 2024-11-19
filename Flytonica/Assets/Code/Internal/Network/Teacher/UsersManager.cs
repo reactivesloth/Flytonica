@@ -81,7 +81,7 @@ namespace Code.Internal.Network.Teacher
         protected void ResetPlayerRpc(NetworkConnection connection)
         {
             DroneController.Instance?.ResetDrone();
-            ConnectionController.Instance?.MovePlayer(connection);
+            //ConnectionController.Instance?.MovePlayer(connection, );
         }
     }
 

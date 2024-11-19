@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Code.Internal.Network.Teacher;
 using Code.Internal.Scenario;
 using UnityEngine;
@@ -33,14 +34,15 @@ namespace Code.Internal.UserInterface.Elements
             gameObject.SetActive(false);
         }
 
-        public void Open(UnityAction closeAction = null)
+        private void OnEnable()
+        {
+            closeButton.onClick.AddListener(Close);
+        }
+
+        public void Open()
         {
             print("Open leaderboard");
             gameObject.SetActive(true);
-            if (closeAction != null)
-                closeButton.onClick.AddListener(closeAction);
-            closeButton.onClick.AddListener(Close);
-            
             GenerateResultTable();
             timer = 0; // Сбросить таймер при открытии
         }
@@ -60,6 +62,7 @@ namespace Code.Internal.UserInterface.Elements
 
         public void Close()
         {
+            
             gameObject.SetActive(false);
         }
 

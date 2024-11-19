@@ -29,7 +29,7 @@ namespace Code.Internal.Network
 
         private bool _sceneLoaded;
         private readonly Dictionary<NetworkConnection, UserData> _pendingConnections = new();
-        
+
         private struct UserData
         {
             public UserType UserType;
@@ -67,12 +67,13 @@ namespace Code.Internal.Network
         public override void OnStartClient()
         {
             base.OnStartClient();
-            
+
             var isTeacher = HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher;
             clientControls.ForEach(o => o.SetActive(!isTeacher));
             hostControls.ForEach(o => o.SetActive(isTeacher));
 
-            ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type, PlayerPrefs.GetInt("Avatar"));
+            ServerConnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type,
+                PlayerPrefs.GetInt("Avatar"));
         }
 
         public override void OnStopClient()
@@ -121,11 +122,11 @@ namespace Code.Internal.Network
         private async void OnConnectedPlayer(NetworkConnection connection, UserType userType, int avatarId)
         {
             print("PlayerConnected");
-            
+
             while (!Observers.Contains(connection))
                 await Task.Delay(100);
-            
-            
+
+
             var scenario = sceneSettings.currentScenario;
             var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
                 drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
@@ -136,22 +137,19 @@ namespace Code.Internal.Network
                 TargetInitializeScenario(connection, JsonUtility.ToJson(currentScenario));
 
             var isTeacher = userType == UserType.Teacher;
-            
+
             if (isTeacher)
             {
-                
             }
             else
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
-                    .Spawn(connection, sceneSettings.currentScenario.currentDrone); 
+                    .Spawn(connection, sceneSettings.currentScenario.currentDrone);
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
                 print(sceneSettings.isNet);
                 if (sceneSettings.isNet)
                     StartRecording(connection);
             }
-
-            MovePlayerRpc(connection);
         }
 
         private void OnDisconnectedPlayer(NetworkConnection connection)
@@ -199,26 +197,18 @@ namespace Code.Internal.Network
             print(sceneSettings.currentScenario.currentDrone.currentFlightMode.name);
         }
 
+        public void MovePlayerSignal(NetworkConnection conn, Vector3 position, Quaternion rotation) => MovePlayerRpc(conn, position, rotation);
+
         [TargetRpc]
-        public void MovePlayerRpc(NetworkConnection connection)
+        public void MovePlayerRpc(NetworkConnection conn, Vector3 position, Quaternion rotation) => MovePlayer(position, rotation);
+
+        public void MovePlayer(Vector3 position, Quaternion rotation)
         {
-            MovePlayer(connection);
+            var player = GameObject.FindWithTag("Player");
+            player.transform.SetPositionAndRotation(position, rotation);
         }
-        
+
         [TargetRpc]
         public void StartRecording(NetworkConnection connection) => ReplayController.Instance.StartRecording(-1);
-        
-        public void MovePlayer(NetworkConnection connection)
-        {
-            var spawners = GameObject.FindGameObjectsWithTag("Player Respawn")
-                .Select(o => o.transform).ToArray();
-
-            if (spawners.Length == 0)
-                return;
-
-            var player = GameObject.FindWithTag("Player");
-            var spawn = spawners[Random.Range(0, spawners.Length)];
-            player.transform.position = spawn.position;
-        }
     }
 }
