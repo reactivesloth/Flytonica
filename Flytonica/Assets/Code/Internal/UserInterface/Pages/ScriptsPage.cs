@@ -128,20 +128,20 @@ namespace Code.Internal.UserInterface.Pages
             sceneSettings.isNet = false;
             sceneSettings.isTask = _isTaskInit;
             sceneSettings.taskId = _isTaskInit ? currentScenarioCollection.id : -1;
+            if(sceneSettings.currentScenarioCollection.nestedScenarios?.Count <=0)
+                return;
             sceneSettings.currentScenario = sceneSettings.currentScenarioCollection.nestedScenarios[0];
-            
-            print(sceneSettings.currentScenario.nextScenario?.name);
             
             Action<ServerConnectionStateArgs> callback = null;
             callback = args =>
             {
                 if (args.ConnectionState != LocalConnectionState.Started) return;
                 InstanceFinder.ClientManager.StartConnection();
+                ScenarioSwitcherController.Instance.StartTask();
                 InstanceFinder.ServerManager.OnServerConnectionState -= callback;
             };
             InstanceFinder.ServerManager.OnServerConnectionState += callback;
             
-            ScenarioSwitcherController.Instance.StartTask();
             InstanceFinder.ServerManager.StartConnection();
         }
 

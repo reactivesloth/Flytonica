@@ -5,9 +5,12 @@ using Code.Internal.MapEditor;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.DroneHudElements;
 using Code.Internal.UserInterface.Pages;
+using Code.Internal.XR;
 using UltimateReplay;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.Replays
 {
@@ -42,11 +45,11 @@ namespace Code.Internal.Replays
             var allDrones = FindObjectsByType<DroneController>(FindObjectsSortMode.None);
             var newDrones = allDrones.Where(d => !Drones.Contains(d));
             var removedDrones = Drones.Where(d => d == null || !d.gameObject.activeSelf);
-            
+
             foreach (var removedDrone in removedDrones)
             {
                 Drones.Remove(removedDrone);
-                
+
                 if (removedDrone != _currentDrone) continue;
                 _currentDrone = null;
                 _currentDroneIndex = -1;
@@ -73,19 +76,30 @@ namespace Code.Internal.Replays
                 ChangeCamera();
         }
 
-        private void ChangeCamera()
+        public void ChangeCamera()
         {
-            // Turn off the current drone's camera if any
+            // Проверяем, активна ли платформа XR
+            if (XRSettings.enabled && XRSettings.isDeviceActive ||
+                FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+            {
+                ChangeCameraXR();
+            }
+            else
+            {
+                ChangeCameraPC();
+            }
+        }
+
+        private void ChangeCameraPC()
+        {
             if (_currentDroneIndex >= 0 && _currentDroneIndex < Drones.Count)
             {
                 var currentDrone = Drones[_currentDroneIndex];
-                SetDroneCamera(currentDrone, false);
+                SetDroneCameraPC(currentDrone, false);
             }
 
-            // Move to the next drone
             _currentDroneIndex++;
 
-            // If no more drones, switch to player view
             if (_currentDroneIndex >= Drones.Count)
             {
                 _currentDroneIndex = -1;
@@ -96,7 +110,7 @@ namespace Code.Internal.Replays
 
             var newDrone = Drones[_currentDroneIndex];
             _currentDrone = newDrone;
-            SetDroneCamera(newDrone, true);
+            SetDroneCameraPC(newDrone, true);
 
             var droneCameraController = newDrone.GetComponent<DroneCameraController>();
             if (droneCameraController)
@@ -107,17 +121,69 @@ namespace Code.Internal.Replays
             }
         }
 
-        private void SetDroneCamera(DroneController drone, bool isActive)
+        private void ChangeCameraXR()
+        {
+            if (_currentDrone != null)
+            {
+                SetDroneCameraXR(_currentDrone, false);
+            }
+
+            _currentDroneIndex++;
+
+            if (_currentDroneIndex >= Drones.Count)
+            {
+                _currentDroneIndex = -1;
+                _currentDrone = null;
+                DroneHUD.Instance.ShowHUD(false);
+                DroneHUD.Instance.MessageBoxElement.ClearMessage();
+                return;
+            }
+
+            _currentDrone = Drones[_currentDroneIndex];
+            SetDroneCameraXR(_currentDrone, true);
+
+            var droneCameraController = _currentDrone.GetComponent<DroneCameraController>();
+            if (droneCameraController)
+            {
+                var playerName = droneCameraController.GetComponent<DroneReplayBehaviour>().PlayerName;
+                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, playerName);
+                DroneHUD.Instance.ShowHUD(true);
+            }
+        }
+
+        private void SetDroneCameraPC(DroneController drone, bool isActive)
         {
             var droneInput = drone.GetComponent<DroneInput>();
             if (!droneInput)
                 return;
             droneInput.DroneCam = isActive;
+
             var droneCameraController = drone.GetComponent<DroneCameraController>();
             if (!droneCameraController)
                 return;
-            droneCameraController.GetComponent<DroneReplayBehaviour>().IsObservable = isActive;
+
+            var droneReplayBehaviour = droneCameraController.GetComponent<DroneReplayBehaviour>();
+            if (droneReplayBehaviour)
+                droneReplayBehaviour.IsObservable = isActive;
+
+            var xrDisableHeadTracking = drone.GetComponent<XRDisableHeadTrackingInFPV>();
+            if (xrDisableHeadTracking)
+                xrDisableHeadTracking.IsViewed = isActive;
+
             droneCameraController.SetCamera(isActive);
+        }
+
+        private void SetDroneCameraXR(DroneController drone, bool isActive)
+        {
+            var droneReplayBehaviour = drone.GetComponent<DroneReplayBehaviour>();
+            if (droneReplayBehaviour)
+                droneReplayBehaviour.IsObservable = isActive;
+
+            var droneCameraController = drone.GetComponent<DroneCameraController>();
+            if (!droneCameraController)
+                return;
+
+            droneCameraController.UiCamera.SetActive(isActive);
         }
 
         protected override void OnReplayStart()
@@ -131,10 +197,25 @@ namespace Code.Internal.Replays
         protected override void OnReplayEnd()
         {
             base.OnReplayEnd();
-            if (!IsReplaying)
-                return;
             UIController.Instance.SetUiToTablet(uiPanelInTablet, false);
             DroneHUD.Instance.ShowHUD(false);
+
+            // Отключаем активную камеру при завершении воспроизведения
+            if (_currentDrone != null)
+            {
+                if (XRSettings.enabled && XRSettings.isDeviceActive ||
+                    FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+                {
+                    SetDroneCameraXR(_currentDrone, false);
+                }
+                else
+                {
+                    SetDroneCameraPC(_currentDrone, false);
+                }
+                _currentDrone = null;
+                _currentDroneIndex = -1;
+            }
+
             if (pcCamera?.gameObject.GetComponent<MapEditorCamera>() != null)
                 Destroy(pcCamera?.GetComponent<MapEditorCamera>());
             pcCamera?.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);

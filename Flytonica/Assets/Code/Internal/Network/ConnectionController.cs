@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
@@ -10,7 +9,6 @@ using Code.Internal.SceneManagement;
 using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Code.Internal.Network
 {

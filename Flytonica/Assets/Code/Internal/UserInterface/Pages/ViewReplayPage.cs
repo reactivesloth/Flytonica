@@ -16,7 +16,7 @@ namespace Code.Internal.UserInterface.Pages
 {
     public class ViewReplayPage : Page
     {
-        [SerializeField] private Button mainMenuButton, toStudentsButton, mapButton;
+        [SerializeField] private Button mainMenuButton, toStudentsButton, mapButton, nextButton;
 
         [SerializeField] private RectTransform playZone;
         [SerializeField] private Button playButton;
@@ -38,6 +38,9 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnEnable()
         {
+            nextButton.onClick.AddListener(OnNext);
+            mapButton.onClick.AddListener(OnMap);
+
             playButton.onClick.AddListener(OnPlayButtonPressed);
             pauseButton.onClick.AddListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.AddListener(OnSeekSliderChanged);
@@ -62,6 +65,13 @@ namespace Code.Internal.UserInterface.Pages
                 gameUi.sizeDelta = playZone.sizeDelta;
             }
         }
+
+        private void OnMap()
+        {
+            FindAnyObjectByType<bl_MiniMap>()?.m_Canvas?.gameObject.SetActive(true);
+        }
+
+        private void OnNext() => PlaybackReplayBehaviour.Instance.ChangeCamera();
 
         private void Update()
         {
@@ -100,6 +110,9 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnDisable()
         {
+            nextButton.onClick.RemoveListener(OnNext);
+            mapButton.onClick.AddListener(OnMap);
+
             playButton.onClick.RemoveListener(OnPlayButtonPressed);
             pauseButton.onClick.RemoveListener(OnPauseButtonPressed);
             seekSlider.onValueChanged.RemoveListener(OnSeekSliderChanged);
@@ -127,7 +140,7 @@ namespace Code.Internal.UserInterface.Pages
             SetOwnerName(logData.user_name);
 
             nameText.text = logData.scenario_name;
-            
+
             if (System.IO.File.Exists(filePath))
             {
                 ReplayController.Instance.StartPlayback(usedId);
@@ -146,7 +159,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             nameText.text = logData.metadata.ReplayName;
             SetOwnerName(logData.metadata.studentName);
-            
+
             if (System.IO.File.Exists(logData.path))
             {
                 ReplayController.Instance.StartPlayback(logData.path);
