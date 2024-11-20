@@ -51,6 +51,29 @@ namespace TransformGizmos
             }
             Destroy(gameObject);
         }
+        
+        private void OnEnable()
+        {
+            SetColliders(false);
+        }
+        
+        private void OnDisable()
+        {
+            SetColliders(true);
+        }
+
+        private void SetColliders(bool enabledState)
+        {
+            if (m_targetObject == null) return;
+            
+            if (m_targetObject.TryGetComponent(out Collider ownCollider))
+                ownCollider.enabled = enabledState;
+                
+            foreach (var childCollider in m_targetObject.GetComponentsInChildren<Collider>())
+            {
+                childCollider.enabled = enabledState;
+            }
+        }
 
         public void Initialization(GameObject targetObject, Material clickedMaterial, Material gizmoTransparentMaterial, GameObject objectWithMeshes, GameObject degreesText, GameObject rotationAppendix)
         {

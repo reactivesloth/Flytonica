@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TransformGizmos
@@ -40,24 +41,24 @@ namespace TransformGizmos
 
         private void OnEnable()
         {
-            if (m_targetObject != null)
-            {
-                //disable collider so that the movement vectors can be hovered
-                if (m_targetObject.GetComponent<Collider>() != null)
-                {
-                    m_targetObject.GetComponent<Collider>().enabled = false;
-                }
-            }
-
+            SetColliders(false);
         }
+        
         private void OnDisable()
         {
-            if (m_targetObject != null)
+            SetColliders(true);
+        }
+
+        private void SetColliders(bool enabledState)
+        {
+            if (m_targetObject == null) return;
+            
+            if (m_targetObject.TryGetComponent(out Collider ownCollider))
+                ownCollider.enabled = enabledState;
+                
+            foreach (var childCollider in m_targetObject.GetComponentsInChildren<Collider>())
             {
-                if (m_targetObject.GetComponent<Collider>() != null)
-                {
-                    m_targetObject.GetComponent<Collider>().enabled = true;
-                }
+                childCollider.enabled = enabledState;
             }
         }
 
