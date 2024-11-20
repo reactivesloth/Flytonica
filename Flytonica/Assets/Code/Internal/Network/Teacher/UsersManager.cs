@@ -72,11 +72,17 @@ namespace Code.Internal.Network.Teacher
 
         public void ResetPlayer(NetworkConnection connection)
         {
-            if(!_playerDatas.TryGetValue(connection, out var data))return;
+            if(!_playerDatas.TryGetValue(connection, out var data)) return;
             
-            ResetPlayerRpc(connection);
+            ResetPlayerServerRpc(connection);
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        protected void ResetPlayerServerRpc(NetworkConnection connection)
+        {
+            ResetPlayerRpc(connection);
+        }
+        
         [TargetRpc]
         protected void ResetPlayerRpc(NetworkConnection connection)
         {
