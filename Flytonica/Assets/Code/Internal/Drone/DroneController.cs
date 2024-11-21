@@ -334,7 +334,7 @@ namespace Code.Internal.Drone
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
             
-            if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 1)
+            if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 0.1f)
                 ResetEngines();
         }
 
