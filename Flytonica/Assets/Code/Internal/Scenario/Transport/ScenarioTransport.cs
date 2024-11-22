@@ -39,9 +39,6 @@ namespace Code.Internal.Scenario.Transport
                     dropZone.Delivered += OnCargoDelivery;
                 }
             }
-
-            if (ScenarioCondition == ScenarioCondition.Waiting)
-                StartRace();
         }
 
         protected override void StartRace()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.Drone;
@@ -83,6 +84,8 @@ namespace Code.Internal.Scenario
             resultBuilder.AddParameter("Название сценария", CurrentScenario.name);
             resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
             resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
+
+            StartCoroutine(ShowStartMap());
         }
 
         protected virtual void StartRace()
@@ -221,6 +224,29 @@ namespace Code.Internal.Scenario
             var timeSpan = TimeSpan.FromSeconds(t);
             var dateTime = DateTime.Today.Add(timeSpan);
             return dateTime.ToString("mm:ss");
+        }
+
+        private IEnumerator ShowStartMap()
+        {
+            while (!DroneInput.Instance && !FindAnyObjectByType<ScenarioInitializer>(FindObjectsInactive.Include).CameraInitialized)
+                yield return null;
+            yield return new WaitForSeconds(0.5f);
+            
+            var mapCanvasObject = FindAnyObjectByType<bl_MiniMap>(FindObjectsInactive.Include).m_Canvas.gameObject;
+            mapCanvasObject.SetActive(true);
+            DroneInput.Instance?.MenuCameraHandle(true);
+            StartCoroutine(WaitMapClose(mapCanvasObject));
+        }
+
+        private IEnumerator WaitMapClose(GameObject mapCanvas)
+        {
+            print(mapCanvas.activeSelf);
+            while (mapCanvas.activeSelf)
+                yield return null;
+            print(mapCanvas.activeSelf);
+            DroneInput.Instance?.MenuCameraHandle(false);
+            if (ScenarioCondition == ScenarioCondition.Waiting)
+                StartRace();
         }
     }
 }

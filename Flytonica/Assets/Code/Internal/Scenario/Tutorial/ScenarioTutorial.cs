@@ -27,11 +27,6 @@ namespace Code.Internal.Scenario.Tutorial
         public override void Initialize(ScenarioSettings scenario)
         {
             base.Initialize(scenario);
-            
-            if (ScenarioCondition == ScenarioCondition.Waiting)
-            {
-                StartRace();
-            }
         }
 
         protected override void StartRace()
