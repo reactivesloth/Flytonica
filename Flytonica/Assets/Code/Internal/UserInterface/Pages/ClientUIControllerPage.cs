@@ -39,7 +39,8 @@ namespace Code.Internal.UserInterface.Pages
         private void OnViewChanged(bool isFpv)
         {
             print($"OnViewChanged {isFpv}");
-            mapUi.SetActive(false);
+            if(_isFpv)
+                mapUi.SetActive(false);
             mapButton.gameObject.SetActive(!isFpv);
         }
     }

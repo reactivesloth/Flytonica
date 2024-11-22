@@ -251,11 +251,6 @@ namespace Code.Internal.Scenario.Searching
                         if (o.TryGetComponent(out bl_MiniMapEntity entity))
                             Destroy(entity);
             }
-
-            if (ScenarioCondition == ScenarioCondition.Waiting)
-            {
-                StartRace();
-            }
         }
     }
 }

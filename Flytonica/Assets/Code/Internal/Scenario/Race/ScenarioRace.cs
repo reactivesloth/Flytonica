@@ -157,11 +157,6 @@ namespace Code.Internal.Scenario.Race
 
 
             SetNextCheckpoints();
-
-            if (ScenarioCondition == ScenarioCondition.Waiting)
-            {
-                StartRace();
-            }
         }
 
         protected override void StartRace()

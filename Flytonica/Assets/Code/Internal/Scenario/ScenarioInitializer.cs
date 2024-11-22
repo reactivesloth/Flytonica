@@ -26,6 +26,7 @@ namespace Code.Internal.Scenario
         private ScenarioBase _currentScenario;
 
         public ScenarioBase CurrentScenario => _currentScenario;
+        public bool CameraInitialized => _cameraInitialized;
 
         private void Update()
         {
