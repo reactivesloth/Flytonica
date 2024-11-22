@@ -15,6 +15,8 @@ namespace Code.Internal.Scenario
         [SerializeField] private DroneTriggerCallback warning, danger;
         [Range(0, 1)] [SerializeField] private float cameraLostPercent = 0.5f, controlLostPercent = 0.5f;
 
+        [SerializeField] private LineRenderer mapLine;
+
         private DroneSensors CurrentDroneSensors => DroneController.Instance?.DroneSensors;
 
         private void Awake()
@@ -102,6 +104,43 @@ namespace Code.Internal.Scenario
             var radius = Mathf.Max(boxCollider.size.x, boxCollider.size.y, boxCollider.size.z) / 2f;
             entity.CircleAreaRadius = radius;
             entity.OnUpdateItem();
+            DrawColliderBoundary();
+        }
+        
+        private void DrawColliderBoundary()
+        {
+            var boxCollider = warning.GetComponent<BoxCollider>();
+            if (!boxCollider)
+                return;
+
+            // Настройка параметров LineRenderer
+            mapLine.loop = true;
+            mapLine.positionCount = 5; // 4 угла + начальная точка для замыкания контура
+
+            // Вычисление вершин верхней грани BoxCollider
+            Vector3[] localVertices = new Vector3[4];
+            Vector3 halfSize = boxCollider.size * 0.5f;
+            Vector3 center = boxCollider.center;
+
+            localVertices[0] = center + new Vector3(-halfSize.x, halfSize.y, -halfSize.z);
+            localVertices[1] = center + new Vector3(halfSize.x, halfSize.y, -halfSize.z);
+            localVertices[2] = center + new Vector3(halfSize.x, halfSize.y, halfSize.z);
+            localVertices[3] = center + new Vector3(-halfSize.x, halfSize.y, halfSize.z);
+
+            // Преобразование вершин в мировые координаты
+            for (int i = 0; i < localVertices.Length; i++)
+            {
+                localVertices[i] = warning.transform.TransformPoint(localVertices[i]);
+            }
+
+            // Установка позиций вершин в LineRenderer
+            mapLine.SetPositions(new Vector3[] {
+                localVertices[0],
+                localVertices[1],
+                localVertices[2],
+                localVertices[3],
+                localVertices[0] // Замыкаем контур
+            });
         }
     }
 }
