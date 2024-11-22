@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections;
 using Code.Internal.SceneManagement;
+using Code.Internal.UserInterface;
 using FishNet.Object;
 using UnityEditor;
 using UnityEngine;
+using MessageType = Code.Internal.UserInterface.DroneHudElements.MessageType;
 
 namespace Code.Internal.Drone
 {
     [RequireComponent(typeof(Rigidbody))]
     public class DroneHealthController : NetworkBehaviour
     {
+        [SerializeField] private AudioClip hitMessageClip;
         [SerializeField] private float timeOutSecs = 1f;
         
         private Rigidbody _rigidbody;
@@ -54,13 +57,14 @@ namespace Code.Internal.Drone
             return normalizedForce * 100f;
         }
 
-        private void ApplyDamage(float damage)
+        public void ApplyDamage(float damage)
         {
             if(!_isCanDamage)
                 return;
             
             _currentHealth -= damage;
-            Debug.Log($"Drone received {damage} damage. Current health: {_currentHealth}");
+            if (hitMessageClip != null)
+                DroneHUD.Instance.SetMessage(MessageType.Error, "Внимание! Произошло столкновение!", hitMessageClip.length, hitMessageClip);
 
             if (_currentHealth <= 0)
             {
@@ -83,6 +87,7 @@ namespace Code.Internal.Drone
 
         private void DestroyDrone()
         {
+            DroneHUD.Instance.SetMessage(MessageType.Error,"Внимание! Произошло столкновение! Задание провалено.", 1f);
             DroneController.Instance.ResetDrone();
             _currentHealth = Settings.healthPoints;
             CurrentDroneSensors.CameraSignalModifier = 1;

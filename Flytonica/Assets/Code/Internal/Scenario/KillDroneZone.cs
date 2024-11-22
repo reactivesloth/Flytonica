@@ -1,16 +1,24 @@
+using System;
+using Code.Internal.Drone;
+using Code.Internal.UserInterface;
+using Code.Internal.UserInterface.DroneHudElements;
 using UnityEngine;
 
 public class KillDroneZone : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public string message;
+    public AudioClip messageKillClip;
+ 
+    private void OnTriggerEnter(Collider other)
     {
+        DroneController drone = null;
+        if (other.GetComponentInParent<DroneController>() == DroneController.Instance)
+        {
+            drone = DroneController.Instance;
+        }
+        if (drone== null) return;
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        DroneHUD.Instance.SetMessage(MessageType.Error, message, messageKillClip.length, messageKillClip);
+        drone.BroadcastMessage("ApplyDamage", 1000);
     }
 }
