@@ -230,7 +230,7 @@ namespace Code.Internal.Scenario
         {
             while (!DroneInput.Instance && !FindAnyObjectByType<ScenarioInitializer>(FindObjectsInactive.Include).CameraInitialized)
                 yield return null;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
             
             var mapCanvasObject = FindAnyObjectByType<bl_MiniMap>(FindObjectsInactive.Include).m_Canvas.gameObject;
             mapCanvasObject.SetActive(true);
@@ -240,10 +240,8 @@ namespace Code.Internal.Scenario
 
         private IEnumerator WaitMapClose(GameObject mapCanvas)
         {
-            print(mapCanvas.activeSelf);
             while (mapCanvas.activeSelf)
                 yield return null;
-            print(mapCanvas.activeSelf);
             DroneInput.Instance?.MenuCameraHandle(false);
             if (ScenarioCondition == ScenarioCondition.Waiting)
                 StartRace();
