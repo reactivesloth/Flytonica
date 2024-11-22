@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using Code.Internal.Drone;
+using Code.Internal.Scenario.FreeFlight;
 using Code.Internal.Scenario.Race;
 using Code.Internal.Scenario.Searching;
 using Code.Internal.Scenario.Transport;
@@ -126,7 +128,9 @@ namespace Code.Internal.Scenario
             switch (_settings.scenarioType)
             {
                 case ScenarioType.FreeFlight:
-                    freeFlightObjects.SetActive(true);
+                    freeFlightObjects?.SetActive(true);
+                    _currentScenario = FindAnyObjectByType<ScenarioFreeFlight>();
+                    _currentScenario.Initialize(_settings);
                     break;
                 case ScenarioType.Tutorial:
                     tutorialModeObjects?.SetActive(true);
@@ -156,7 +160,7 @@ namespace Code.Internal.Scenario
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
+            
             Wind.Instance.Init(_settings.windSettings);
         }
     }
