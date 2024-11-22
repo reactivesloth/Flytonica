@@ -50,12 +50,13 @@ namespace Code.Internal.UserInterface.DroneHudElements
         {
             SceneManager.sceneLoaded -= SceneChanged;
         }
-        
-        public void DrawMessage (MessageType type, string message, float duration = 0, AudioClip clip = null)
+
+        public void DrawMessage(MessageType type, string message, float duration = 0, AudioClip clip = null,
+            bool forcePush = false)
         {
             CancelInvoke();
             ClearMessage();
-            
+
             switch (type)
             {
                 case MessageType.Normal:
@@ -81,8 +82,11 @@ namespace Code.Internal.UserInterface.DroneHudElements
                 Invoke("ClearMessage", duration);
             }
 
-            if (clip!= null && !_source.isPlaying)
+            if (clip != null && (!_source.isPlaying || forcePush))
+            {
+                _source.Stop();
                 _source.PlayOneShot(clip);
+            }
         }
 
         public void ClearMessage()

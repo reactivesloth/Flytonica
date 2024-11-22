@@ -18,13 +18,6 @@ namespace Code.Internal.Scenario.Tutorial
     [RequireComponent(typeof(AudioSource))]
     public class ScenarioTutorialRoutine : MonoBehaviour
     {
-        protected AudioSource _source;
-
-        private void Awake()
-        {
-            _source = GetComponent<AudioSource>();
-        }
-
         private void OnDisable()
         {
             StopAllCoroutines();
@@ -61,23 +54,15 @@ namespace Code.Internal.Scenario.Tutorial
         
         protected IEnumerator PlayReqlique(ScenarioTutorialReplique replique)
         {
-            if (_source.isPlaying)
-                yield return new WaitForSeconds(1);
+            DroneHUD.Instance?.SetTask(replique.text);
+            DroneHUD.Instance?.SetMessage(MessageType.Normal, replique.text, replique.clip.length, replique.clip, true);
+            if (replique.clip != null)
+            {
+                yield return new WaitForSeconds(replique.clip.length + 1f);
+            }
             else
             {
-                DroneHUD.Instance?.SetTask(replique.text);
-                DroneHUD.Instance?.SetMessage(MessageType.Normal, replique.text,
-                    replique.clip != null ? replique.clip.length : 2);
-
-                if (replique.clip != null)
-                {
-                    _source.PlayOneShot(replique.clip);
-                    yield return new WaitForSeconds(replique.clip.length + 0.1f);
-                }
-                else
-                {
-                    yield return new WaitForSeconds(2);
-                }
+                yield return new WaitForSeconds(2);
             }
         }
     }

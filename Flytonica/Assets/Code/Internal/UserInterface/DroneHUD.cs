@@ -94,9 +94,9 @@ namespace Code.Internal.UserInterface
             if (MessageBoxElement != null) MessageBoxElement.ClearMessage();
         }
 
-        public void SetMessage( MessageType type,string text, float duration = 0, AudioClip clip = null)
+        public void SetMessage( MessageType type,string text, float duration = 0, AudioClip clip = null, bool forcePush = false)
         {
-            if (MessageBoxElement != null) MessageBoxElement.DrawMessage(type, text, duration, clip);
+            if (MessageBoxElement != null) MessageBoxElement.DrawMessage(type, text, duration, clip, forcePush);
         }
     }
 }
