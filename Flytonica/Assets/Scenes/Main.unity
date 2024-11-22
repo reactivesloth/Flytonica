@@ -1989,7 +1989,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -60.533997}
+  m_AnchoredPosition: {x: 0, y: -60.533936}
   m_SizeDelta: {x: -600, y: 59.225}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &322182622
@@ -10672,6 +10672,14 @@ PrefabInstance:
     - target: {fileID: 2133509574044806547, guid: a0a9073dfefcf834191f22f6a94b11d0, type: 3}
       propertyPath: m_Color.a
       value: 0.21176471
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184365772864354074, guid: a0a9073dfefcf834191f22f6a94b11d0, type: 3}
+      propertyPath: MaxZoom
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184365772864354074, guid: a0a9073dfefcf834191f22f6a94b11d0, type: 3}
+      propertyPath: MinZoom
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2184365772864354074, guid: a0a9073dfefcf834191f22f6a94b11d0, type: 3}
       propertyPath: m_Canvas
