@@ -18,22 +18,31 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private TMP_InputField keyInputField;
         [SerializeField] private Button activateButton;
         [SerializeField] private GameObject loadLicenceScreen;
+        [SerializeField] private Toggle devServerToggleSwitcher;
 
         protected void Start()
         {
+            devServerToggleSwitcher.isOn = (PlayerPrefs.GetInt("DevelopmentServer", 0) == 1);
             Open();
         }
 
         private void OnEnable()
         {
             activateButton.onClick.AddListener(OnActivate);
+            devServerToggleSwitcher.onValueChanged.AddListener(OnDevServer);
         }
 
         private void OnDisable()
         {
             activateButton.onClick.RemoveListener(OnActivate);
+            devServerToggleSwitcher.onValueChanged.RemoveListener(OnDevServer);
         }
 
+        private void OnDevServer(bool arg0)
+        {
+            PlayerPrefs.SetInt("DevelopmentServer", arg0 ? 1 : 0);
+        }
+        
         protected override void OnOpen()
         {
             base.OnOpen();

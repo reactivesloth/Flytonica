@@ -17,17 +17,20 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private Page teacherMainMenu, studentMainMenu;
         [SerializeField] private Header teacherHeader;
         [SerializeField] private Toggle rememberMeToggleSwitcher;
+        [SerializeField] private Toggle devServerToggleSwitcher;
         
         private void LoadPrefs()
         {
             loginField.text = PlayerPrefs.GetString("Login");
             passwordField.text = PlayerPrefs.GetString("Password");
             rememberMeToggleSwitcher.isOn = (PlayerPrefs.GetInt("RememberMe", 0) == 1);
+            devServerToggleSwitcher.isOn = (PlayerPrefs.GetInt("DevelopmentServer", 0) == 1);
         }
 
         private void SetPrefs()
         {
             PlayerPrefs.SetString("RememberMe", rememberMeToggleSwitcher.isOn ? "1" : "0");
+            PlayerPrefs.SetInt("DevelopmentServer", devServerToggleSwitcher.isOn ? 1 : 0);
             if (rememberMeToggleSwitcher.isOn)
             {
                 PlayerPrefs.SetString("Login", loginField.text);
@@ -42,9 +45,14 @@ namespace Code.Internal.UserInterface.Pages
             LoadPrefs();
             loginButton.onClick.AddListener(OnLogin);
             demoButton.onClick.AddListener(OnDemo);
-            
+            devServerToggleSwitcher.onValueChanged.AddListener(OnDevServer);
             if(HttpClient.IsAuthorized)
                 Login();
+        }
+
+        private void OnDevServer(bool arg0)
+        {
+            PlayerPrefs.SetInt("DevelopmentServer", arg0 ? 1 : 0);
         }
 
         protected override void OnClose()
@@ -52,6 +60,7 @@ namespace Code.Internal.UserInterface.Pages
             base.OnClose();
             loginButton.onClick.RemoveListener(OnLogin);
             demoButton.onClick.RemoveListener(OnDemo);
+            devServerToggleSwitcher.onValueChanged.RemoveListener(OnDevServer);
         }
 
         private void OnLogin()

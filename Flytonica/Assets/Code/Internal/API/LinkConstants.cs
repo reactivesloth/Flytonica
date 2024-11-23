@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using System.Web;
+using UnityEngine;
 
 namespace Code.Internal.API
 {
     public static class LinkConstants
     {
-        public const string ServerUrl = "https://dronesimapi.4app.pro", Version = "v1";
+        public const string DevServerUrl = "https://dronesimapi.4app.pro";
+        public const string ProdServerUrl = "https://api.flytonica-edu.ru";
+        public const string Version = "v1";
 
         // Path for user authentication
         // Sends: UserAuthRequestData (login, password)
@@ -154,7 +155,7 @@ namespace Code.Internal.API
 
         private static string CombineUrl(string path, Dictionary<string, string> queryParams = null, bool isVersion = true)
         {
-            var url = new StringBuilder($"{ServerUrl}/");
+            var url = new StringBuilder($"{(PlayerPrefs.GetInt("DevelopmentServer", 0) == 1 ? DevServerUrl : ProdServerUrl)}/");
             if (isVersion)
                 url.Append($"{Version}/");
             url.Append($"{path}");
