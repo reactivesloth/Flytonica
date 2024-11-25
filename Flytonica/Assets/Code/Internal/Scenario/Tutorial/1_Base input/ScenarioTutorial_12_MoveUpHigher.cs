@@ -2,7 +2,7 @@ using System.Collections;
 using Code.Internal.Drone;
 using UnityEngine;
 
-namespace Code.Internal.Scenario.Tutorial
+namespace Code.Internal.Scenario.Tutorial._1_Base_input
 {
     public class ScenarioTutorial_12_MoveUpHigher : ScenarioTutorialRoutine
     {
@@ -18,33 +18,33 @@ namespace Code.Internal.Scenario.Tutorial
         protected override IEnumerator RunRoutine()
         {
             // Вступление
-            yield return StartCoroutine(PlayReqlique(welcomeText));
+            yield return StartCoroutine(PlayReplique(welcomeText));
 
             // Запуск двигателя
-            yield return StartCoroutine(PlayReqlique(engineInit));
+            yield return StartCoroutine(PlayReplique(engineInit));
             yield return new WaitUntil(() => DroneController.Instance.EnginesEnabled);
 
             // Поднятие дрона в воздух на 1-2 метра
-            yield return StartCoroutine(PlayReqlique(takeOff2m));
+            yield return StartCoroutine(PlayReplique(takeOff2m));
             yield return new WaitUntil(() => DroneController.Instance.DroneSensors.GetHeightFromFloor() > 1 && DroneController.Instance.DroneSensors.GetHeightFromFloor() < 2);
             
             // Не торопитесь, выполняйте все действия плавно
-            yield return StartCoroutine(PlayReqlique(notRushingRecommendation));
+            yield return StartCoroutine(PlayReplique(notRushingRecommendation));
             
             // Поднятие дрона в воздух на 5 метров
-            yield return StartCoroutine(PlayReqlique(takeOff5m));
+            yield return StartCoroutine(PlayReplique(takeOff5m));
             yield return new WaitUntil(() => DroneController.Instance.DroneSensors.GetHeightFromFloor() > 5);
 
             // Учитвайте, что на высоте на дрон влияет ветер
-            yield return StartCoroutine(PlayReqlique(windRecommendation));
+            yield return StartCoroutine(PlayReplique(windRecommendation));
             
             // Приземление
-            yield return StartCoroutine(PlayReqlique(landing));
+            yield return StartCoroutine(PlayReplique(landing));
             yield return new WaitUntil(() => 
                 DroneController.Instance.GetComponent<Rigidbody>().linearVelocity.magnitude < 0.1f && DroneController.Instance.DroneSensors.GetHeightFromFloor() < 1);
             
             // Отключение двигателей
-            yield return StartCoroutine(PlayReqlique(engineOff));
+            yield return StartCoroutine(PlayReplique(engineOff));
             yield return new WaitUntil(() => DroneController.Instance.EnginesEnabled == false);
 
             Finish();

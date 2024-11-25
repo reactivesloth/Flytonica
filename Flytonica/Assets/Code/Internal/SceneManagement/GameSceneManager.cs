@@ -77,7 +77,6 @@ namespace Code.Internal.SceneManagement
             var player = GameObject.FindWithTag("Player");
             player.transform.position = Vector3.zero;
             vrPlayer?.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-            pcPlayer?.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         private void LoadSceneLocal(string sceneName)

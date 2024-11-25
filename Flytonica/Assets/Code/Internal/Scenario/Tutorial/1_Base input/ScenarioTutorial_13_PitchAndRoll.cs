@@ -2,7 +2,7 @@ using System.Collections;
 using Code.Internal.Drone;
 using UnityEngine;
 
-namespace Code.Internal.Scenario.Tutorial
+namespace Code.Internal.Scenario.Tutorial._1_Base_input
 {
     public class ScenarioTutorial_13_PithAndRoll : ScenarioTutorialRoutine
     {
@@ -19,43 +19,43 @@ namespace Code.Internal.Scenario.Tutorial
         protected override IEnumerator RunRoutine()
         {
             // Вступление
-            yield return StartCoroutine(PlayReqlique(welcomeText));
+            yield return StartCoroutine(PlayReplique(welcomeText));
 
             // Запуск двигателя
-            yield return StartCoroutine(PlayReqlique(engineInit));
+            yield return StartCoroutine(PlayReplique(engineInit));
             yield return new WaitUntil(() => DroneController.Instance.EnginesEnabled);
 
             // Набор высоты
-            yield return StartCoroutine(PlayReqlique(takeOff));
+            yield return StartCoroutine(PlayReplique(takeOff));
             yield return new WaitUntil(() => DroneController.Instance.DroneSensors.GetHeightFromFloor() > 1);
             
             // Движение вперед
-            yield return StartCoroutine(PlayReqlique(moveForward));
+            yield return StartCoroutine(PlayReplique(moveForward));
             yield return new WaitUntil(() => DroneController.Instance.Pitch > 0.1f);
             yield return new WaitForSeconds(2);
             
             // Движение назад
-            yield return StartCoroutine(PlayReqlique(moveBackward));
+            yield return StartCoroutine(PlayReplique(moveBackward));
             yield return new WaitUntil(() => DroneController.Instance.Pitch < -0.1f);
             yield return new WaitForSeconds(2);
             
             // Движение влево
-            yield return StartCoroutine(PlayReqlique(moveLeft));
+            yield return StartCoroutine(PlayReplique(moveLeft));
             yield return new WaitUntil( () => DroneController.Instance.Roll < 0.1f);
             yield return new WaitForSeconds(2);
             
             // Движение вправо
-            yield return StartCoroutine(PlayReqlique(moveRight));
+            yield return StartCoroutine(PlayReplique(moveRight));
             yield return new WaitUntil( () => DroneController.Instance.Roll > 0.1f);
             yield return new WaitForSeconds(2);
             
             // Приземление
-            yield return StartCoroutine(PlayReqlique(landing));
+            yield return StartCoroutine(PlayReplique(landing));
             yield return new WaitUntil(() => 
                 DroneController.Instance.GetComponent<Rigidbody>().linearVelocity.magnitude < 0.1f && DroneController.Instance.DroneSensors.GetHeightFromFloor() < 1);
             
             // Отключение двигателей
-            yield return StartCoroutine(PlayReqlique(engineOff));
+            yield return StartCoroutine(PlayReplique(engineOff));
             yield return new WaitUntil(() => DroneController.Instance.EnginesEnabled == false);
 
             Finish();
