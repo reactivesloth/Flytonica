@@ -20,6 +20,7 @@ namespace Code.Internal.Replays
 
         [SerializeField] private GameObject uiPanelInTablet;
         [SerializeField] private Camera pcCamera;
+        [SerializeField] private GameObject vrPlayer;
 
         public readonly List<DroneController> Drones = new();
         private int _currentDroneIndex = -1;
@@ -219,6 +220,7 @@ namespace Code.Internal.Replays
             if (pcCamera?.gameObject.GetComponent<MapEditorCamera>() != null)
                 Destroy(pcCamera?.GetComponent<MapEditorCamera>());
             pcCamera?.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            vrPlayer?.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
     }
 }
