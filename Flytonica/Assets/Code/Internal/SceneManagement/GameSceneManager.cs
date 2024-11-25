@@ -7,6 +7,7 @@ using FishNet;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using FishNet.Transporting;
+using JetBrains.Annotations;
 using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,8 @@ namespace Code.Internal.SceneManagement
 {
     public class GameSceneManager : NetworkBehaviour
     {
+        [SerializeField] [CanBeNull] private Transform pcPlayer, vrPlayer;
+        
         public static GameSceneManager Instance { get; private set; }
         public string CurrentGlobalScene { get; private set; }
         public MapSettings CurrentMapSettings { get; private set; }
@@ -73,6 +76,8 @@ namespace Code.Internal.SceneManagement
             IsPlaying = false;
             var player = GameObject.FindWithTag("Player");
             player.transform.position = Vector3.zero;
+            vrPlayer?.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            pcPlayer?.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         private void LoadSceneLocal(string sceneName)
