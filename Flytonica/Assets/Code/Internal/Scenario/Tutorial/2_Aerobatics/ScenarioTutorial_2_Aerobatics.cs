@@ -48,8 +48,6 @@ namespace Code.Internal.Scenario.Tutorial._2_Aerobatics
                 droneTriggerCallback.OnDroneEnter += () => OnEnterWayPoint(index1);
             }
 
-            _previousWayPointPosition = DroneController.Instance.transform.position;
-
             SetWayPoint(0);
 
             base.Initialize();

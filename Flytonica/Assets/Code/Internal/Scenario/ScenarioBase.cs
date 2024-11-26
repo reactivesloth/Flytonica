@@ -3,7 +3,9 @@ using System.Collections;
 using System.Globalization;
 using Code.Internal.API;
 using Code.Internal.Drone;
+using Code.Internal.Scenario.FreeFlight;
 using Code.Internal.Scenario.Race;
+using Code.Internal.Scenario.Tutorial;
 using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using Code.Internal.UserInterface.Elements;
@@ -85,7 +87,12 @@ namespace Code.Internal.Scenario
             resultBuilder.AddParameter("Тип сценария", CurrentScenario.scenarioType.GetName());
             resultBuilder.AddParameter("Модель дрона", CurrentScenario.currentDrone?.name);
 
-            StartCoroutine(ShowStartMap());
+            if(this is not ScenarioTutorial && this is not ScenarioFreeFlight)
+                StartCoroutine(ShowStartMap());
+            else if (ScenarioCondition == ScenarioCondition.Waiting)
+                StartRace();
+            
+            //StartCoroutine(ShowStartMap());
         }
 
         protected virtual void StartRace()

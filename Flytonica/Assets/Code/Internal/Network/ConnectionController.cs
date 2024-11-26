@@ -80,7 +80,8 @@ namespace Code.Internal.Network
             hostControls.ForEach(o => o.SetActive(false));
             clientControls.ForEach(o => o.SetActive(false));
             ServerDisconnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
-            OnServerDisconnected();
+            if(!ServerManager.Started)
+                OnServerDisconnected();
         }
 
         /*private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
