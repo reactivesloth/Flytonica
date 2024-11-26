@@ -80,6 +80,7 @@ namespace Code.Internal.Network
             hostControls.ForEach(o => o.SetActive(false));
             clientControls.ForEach(o => o.SetActive(false));
             ServerDisconnectionHandle(ClientManager.Connection, (int)HttpClient.UserData.type);
+            OnServerDisconnected();
         }
 
         /*private void OnRemoteConnectionState(NetworkConnection connection, RemoteConnectionStateArgs args)
@@ -208,5 +209,7 @@ namespace Code.Internal.Network
 
         [TargetRpc]
         public void StartRecording(NetworkConnection connection) => ReplayController.Instance.StartRecording(-1);
+        
+        public void OnServerDisconnected() => ScenarioSwitcherController.Instance.EndSession();
     }
 }
