@@ -94,6 +94,9 @@ namespace Code.Internal.Scenario.Race
 
         private void SetNextCheckpoints()
         {
+            if (checkpoints.Count <= 0) return;
+            
+            
             checkpoints[_nextCheckpoint].ChangeStatus(CheckpointStatus.Current);
             if (_nextCheckpoint + 1 < checkpoints.Count)
                 checkpoints[_nextCheckpoint + 1].ChangeStatus(CheckpointStatus.Next);

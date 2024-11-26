@@ -88,6 +88,9 @@ namespace Code.Internal.UserInterface
         {
             mainPanel.gameObject.SetActive(true);
             firstPage.Open(true);
+    
+            if (DroneHUD.Instance != null)
+                DroneHUD.Instance.ClearMessage();
         }
 
         public void SetUiToTablet(GameObject tabletPanel, bool useTablet)
