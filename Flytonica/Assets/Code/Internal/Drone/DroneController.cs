@@ -340,8 +340,9 @@ namespace Code.Internal.Drone
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
 
-            if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 0.1f)
-                ResetEngines();
+            // Выключение двигателей при Throttle 0 или S на клавиатуре
+            // if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 0.1f)
+            //    ResetEngines();
         }
 
         private void CalculateBattery()
