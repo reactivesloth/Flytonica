@@ -73,6 +73,7 @@ namespace Code.Internal.UserInterface.Pages
 
         public void Init(List<ScenarioSettings> scenarios, bool isTask = false)
         {
+            _selectedScenario = null;
             _isTaskInit = isTask;
             
             updateButton?.gameObject.SetActive(_isTaskInit);
@@ -124,6 +125,8 @@ namespace Code.Internal.UserInterface.Pages
         {
             currentScenarioCollection = _isTaskInit ? GetTask() : GetScenarioList();
 
+            if(currentScenarioCollection == null) return;
+            
             sceneSettings.currentScenarioCollection = currentScenarioCollection;
             sceneSettings.isNet = false;
             sceneSettings.isTask = _isTaskInit;
@@ -147,6 +150,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private ScenarioSettings GetTask()
         {
+            if (!_selectedScenario) return null;
+            
             //Init next
             if (_selectedScenario.nestedScenarios == null) return _selectedScenario;
             for (var i = 0; i < _selectedScenario.nestedScenarios.Count - 1; i++)
@@ -157,9 +162,11 @@ namespace Code.Internal.UserInterface.Pages
         private ScenarioSettings GetScenarioList()
         {
             var selectedScenarios =
-                _buttonScenarioDictionary.Where(s => s.Key.ToggleIsOn && s.Value.settingType == SettingType.Scenario)
+                _buttonScenarioDictionary
+                    .Where(s => s.Key.ToggleIsOn && s.Value.settingType == SettingType.Scenario)
                     .Select(s => s.Value).ToList();
-
+            if(selectedScenarios.Count == 0) return null;
+            
             //Init next
             for (var i = 0; i < selectedScenarios.Count - 1; i++)
                 selectedScenarios[i].nextScenario = selectedScenarios[i + 1];
@@ -198,9 +205,7 @@ namespace Code.Internal.UserInterface.Pages
                 infoPanel?.Open(scenarioInfo);
                 return;
             }
-
             
-
             _selectedScenario = scenarioInfo;
             infoPanel?.Open(_selectedScenario);
         }
