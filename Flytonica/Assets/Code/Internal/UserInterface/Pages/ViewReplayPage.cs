@@ -188,6 +188,8 @@ namespace Code.Internal.UserInterface.Pages
         {
             ReplayController.Instance.StopPlayback();
             base.OnClose();
+            print("Replay closed");
+            FindAnyObjectByType<SceneChangeRecorder>()?.ForceEnd();
         }
 
         private void OnPlayButtonPressed()

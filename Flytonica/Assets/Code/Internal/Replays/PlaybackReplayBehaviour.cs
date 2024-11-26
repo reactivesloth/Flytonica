@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Code.Internal.Drone;
 using Code.Internal.MapEditor;
@@ -47,20 +48,27 @@ namespace Code.Internal.Replays
             var newDrones = allDrones.Where(d => !Drones.Contains(d));
             var removedDrones = Drones.Where(d => d == null || !d.gameObject.activeSelf);
 
-            foreach (var removedDrone in removedDrones)
+            try
             {
-                Drones.Remove(removedDrone);
+                foreach (var removedDrone in removedDrones)
+                {
+                    Drones.Remove(removedDrone);
 
-                if (removedDrone != _currentDrone) continue;
-                _currentDrone = null;
-                _currentDroneIndex = -1;
-                DroneHUD.Instance.ShowHUD(false);
-                DroneHUD.Instance.MessageBoxElement.ClearMessage();
+                    if (removedDrone != _currentDrone) continue;
+                    _currentDrone = null;
+                    _currentDroneIndex = -1;
+                    DroneHUD.Instance.ShowHUD(false);
+                    DroneHUD.Instance.MessageBoxElement.ClearMessage();
+                }
+
+                foreach (var newDrone in newDrones)
+                {
+                    Drones.Add(newDrone);
+                }
             }
-
-            foreach (var newDrone in newDrones)
+            catch (InvalidOperationException e)
             {
-                Drones.Add(newDrone);
+                Debug.LogWarning(e);
             }
 
             FindAnyObjectByType<ViewReplayPage>()?.SetPlayerList(Drones);

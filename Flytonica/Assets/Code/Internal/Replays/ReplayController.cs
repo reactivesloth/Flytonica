@@ -69,9 +69,11 @@ namespace Code.Internal.Replays
             
             _replayFileStorage = ReplayFileStorage.FromFile(_replayFilePath);
             
-            _customMetadata = new CustomMetadata();
-            _customMetadata.studentName = HttpClient.UserData.name;
-            _customMetadata.type = type;
+            _customMetadata = new CustomMetadata
+            {
+                studentName = HttpClient.UserData.name,
+                type = type
+            };
 
             _recordOperation = ReplayManager.BeginRecording(_replayFileStorage);
             Debug.Log("Начата запись реплея");
@@ -87,9 +89,10 @@ namespace Code.Internal.Replays
                 
                 _recordOperation.StopRecording();
                 Debug.Log("Остановлена запись реплея");
-
+                
                 _replayFileStorage.Dispose();
                 _replayFileStorage = null;
+                _recordOperation.Dispose();
                 _recordOperation = null;
                 
                 return _replayFilePath;
@@ -156,6 +159,7 @@ namespace Code.Internal.Replays
 
                 _replayFileStorage.Dispose();
                 _replayFileStorage = null;
+                _playbackOperation.Dispose();
                 _playbackOperation = null;
                 _currentReplayScene = default;
             }
@@ -165,6 +169,7 @@ namespace Code.Internal.Replays
             }
             
             replayControlObject.SetActive(false);
+            
         }
 
         private void OnReplayFinished()

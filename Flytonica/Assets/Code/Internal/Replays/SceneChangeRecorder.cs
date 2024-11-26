@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Code.Internal.UserInterface;
 using System.Threading.Tasks;
 using UltimateReplay;
@@ -45,6 +46,7 @@ namespace Code.Internal.Replays
         public override void OnReplayDeserialize(ReplayState state)
         {
             _activeSceneName = state.ReadString();
+            //print(_activeSceneName);
         }
         
         protected override void OnReplayStart()
@@ -56,12 +58,13 @@ namespace Code.Internal.Replays
 
             _replayEnded = false; // Сбрасываем флаг при старте реплея
             _loadedSceneName = string.Empty;
+            _activeSceneName = string.Empty;
         }
 
         protected override void OnReplayUpdate(float t)
         {
             base.OnReplayUpdate(t);
-            if (!IsReplaying)
+            if (_replayEnded || !IsReplaying)
                 return;
 
             if (_loadedSceneName == _activeSceneName || string.IsNullOrEmpty(_activeSceneName))
@@ -80,17 +83,17 @@ namespace Code.Internal.Replays
             _replayEnded = true; // Устанавливаем флаг окончания реплея
             _loadedSceneName = string.Empty;
             DroneHUD.Instance.ShowHUD(false);
-            UnloadAllScenes();
+            UnloadAllScenes(1000);
         }
 
         private async void ReloadScenesAsync()
         {
-            if (_replayEnded) return;
+            if (_replayEnded || !IsReplaying) return;
 
             ReplayController.Instance.Pause();
             ReplayController.Instance.IsSceneTransitioning = true;
 
-            await UnloadLoadedScene();
+            await UnloadAllScenes();
 
             if (string.IsNullOrEmpty(_activeSceneName) || _replayEnded)
                 return;
@@ -101,7 +104,7 @@ namespace Code.Internal.Replays
             if (_replayEnded)
             {
                 // Если реплей закончился во время загрузки, выгружаем сцену
-                await SceneManager.UnloadSceneAsync(_activeSceneName);
+                await UnloadAllScenes();
                 return;
             }
 
@@ -121,12 +124,20 @@ namespace Code.Internal.Replays
                 return;
 
             var unloadedScene = SceneManager.GetSceneByName(_loadedSceneName);
-            if (unloadedScene.IsValid())
+            if (unloadedScene.IsValid() && unloadedScene.isLoaded)
+            {
+                Debug.Log($"Unloading scene: {_loadedSceneName}");
                 await SceneManager.UnloadSceneAsync(_loadedSceneName);
+            }
+            else
+            {
+                Debug.LogWarning($"Scene {_loadedSceneName} is not valid or not loaded");
+            }
         }
 
-        private async void UnloadAllScenes()
+        private async Task UnloadAllScenes(int delay = 0)
         {
+            await Task.Delay(delay);
             foreach (var sceneName in trackedScenesNames)
             {
                 var scene = SceneManager.GetSceneByName(sceneName);
@@ -136,6 +147,8 @@ namespace Code.Internal.Replays
                     await SceneManager.UnloadSceneAsync(sceneName);
                 }
             }
-        }
+        } 
+        
+        public void ForceEnd() => _replayEnded = true;
     }
 }
