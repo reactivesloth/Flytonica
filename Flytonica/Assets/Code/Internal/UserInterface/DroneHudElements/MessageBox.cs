@@ -29,6 +29,8 @@ namespace Code.Internal.UserInterface.DroneHudElements
         public static MessageBox Instance { get; private set; }
 
         public bool IsClear => messageText.text.Length < 1;
+        public string CurrentMessage => messageText.text;
+        
         
         private void Awake()
         {

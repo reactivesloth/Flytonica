@@ -10,17 +10,18 @@ namespace Code.Internal.UserInterface
     public class DroneHUD : MonoBehaviour
     {
         public static DroneHUD Instance { get; private set; }
-        
+
         [SerializeField] private GameObject HUDPanel;
         [SerializeField] private bool keepActiveHUDPanelforXR = true;
         [field: SerializeField] public RectTransform gameUi;
 
-        [Header("UI element")] 
-        [SerializeField] private TMP_Text windText;
+        [Header("UI element")] [SerializeField]
+        private TMP_Text windText;
+
         [SerializeField] private TMP_Text modeText;
         [SerializeField] private TMP_Text taskText;
         [SerializeField] private TMP_Text timeText;
-        
+
         [field: SerializeField] public ValueElement AltValueElement { get; private set; }
         [field: SerializeField] public ValueElement SpeedValueElement { get; private set; }
         [field: SerializeField] public AimElement AimElement { get; private set; }
@@ -36,7 +37,7 @@ namespace Code.Internal.UserInterface
         public string CurrentWindText => windText.text;
         public string CurrentTaskText => taskText.text;
         public string CurrentTimeText => timeText.text;
-        
+
         private void Awake()
         {
             Instance = this;
@@ -46,14 +47,15 @@ namespace Code.Internal.UserInterface
         {
             if (keepActiveHUDPanelforXR)
             {
-                if (XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+                if (XRSettings.isDeviceActive && XRSettings.enabled ||
+                    FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
                 {
                     HUDPanel.SetActive(true);
                     return;
                 }
             }
 
-            if (HUDPanel!= null)
+            if (HUDPanel != null)
                 HUDPanel.SetActive(value);
         }
 
@@ -84,6 +86,7 @@ namespace Code.Internal.UserInterface
                 timeText.text = string.Empty;
                 return;
             }
+
             if (timeText != null) timeText.text = $"SEC {text}";
         }
 
@@ -94,7 +97,8 @@ namespace Code.Internal.UserInterface
             if (MessageBoxElement != null) MessageBoxElement.ClearMessage();
         }
 
-        public void SetMessage( MessageType type,string text, float duration = 0, AudioClip clip = null, bool forcePush = false)
+        public void SetMessage(MessageType type, string text, float duration = 0, AudioClip clip = null,
+            bool forcePush = false)
         {
             if (MessageBoxElement != null) MessageBoxElement.DrawMessage(type, text, duration, clip, forcePush);
         }

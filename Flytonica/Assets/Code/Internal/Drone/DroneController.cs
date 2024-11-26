@@ -19,7 +19,9 @@ namespace Code.Internal.Drone
     {
         [SerializeField] private DroneSettings droneSettings;
 
-        [FormerlySerializedAs("droneCamera")] [SerializeField] private DroneCameraController droneCameraController;
+        [FormerlySerializedAs("droneCamera")] [SerializeField]
+        private DroneCameraController droneCameraController;
+
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private float pathPointInterval = 1.0f; // Интервал в секундах
 
@@ -70,10 +72,10 @@ namespace Code.Internal.Drone
         public float Roll => _roll;
         public float Yaw => _yaw;
         public float Throttle => _throttle;
-        
+
         public DroneInput DroneInput => _droneInput;
         public DroneCameraController DroneCameraController => droneCameraController;
-        
+
         protected override void OnValidate()
         {
             droneCameraController = GetComponent<DroneCameraController>();
@@ -125,7 +127,7 @@ namespace Code.Internal.Drone
             com += engineRR.transform.position;
             com /= 4;
             com.y = 0;
-            
+
             _rigidBody.centerOfMass = com;*/
 
             if (!engineFL.GetComponent<NetworkTransform>())
@@ -146,9 +148,9 @@ namespace Code.Internal.Drone
 
         private void Update()
         {
-            if(!IsOwner)
+            if (!IsOwner)
                 return;
-            
+
             if (!_droneInput)
                 _droneInput = DroneInput.Instance;
 
@@ -176,9 +178,12 @@ namespace Code.Internal.Drone
                 ResetDrone();
             }
 
-            if (!_isEnginesOn && DroneHUD.Instance.MessageBoxElement.IsClear)
+            if (!_isEnginesOn && DroneHUD.Instance.MessageBoxElement.IsClear &&
+                DroneHUD.Instance.MessageBoxElement.CurrentMessage !=
+                "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта")
             {
-                 DroneHUD.Instance.SetMessage(MessageType.Normal, "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта", 0.25f);
+                DroneHUD.Instance.SetMessage(MessageType.Normal,
+                    "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта");
             }
         }
 
@@ -187,7 +192,7 @@ namespace Code.Internal.Drone
             ResetEngines();
 
             DroneCargoController.OnReset();
-            
+
             var spawnPoint = GameObject.FindGameObjectWithTag("Respawn").transform;
             _transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
             _rigidBody.linearVelocity = Vector3.zero;
@@ -206,17 +211,16 @@ namespace Code.Internal.Drone
         private void UpdateInput()
         {
             EnginesOn();
-            
+
             _droneInput.InputSignalLevel = DroneSensors.InputSignal;
-            
-            if(!_isEnginesOn)
+
+            if (!_isEnginesOn)
                 return;
-            
+
             _throttle = (_droneInput.Throttle + 1) / 2;
             _pitch = _droneInput.Pitch;
             _roll = _droneInput.Roll;
             _yaw = _droneInput.Yaw;
-            
         }
 
         private void ResetEngines()
@@ -258,8 +262,10 @@ namespace Code.Internal.Drone
                 float angleTolerance = 25f; // Допустимое отклонение в градусах
 
                 // Проверяем, находится ли угол стика в допустимом диапазоне
-                bool isLeftStickInPosition = MathF.Abs(DeltaAngle(leftStickAngle, leftStickTargetAngle)) <= angleTolerance;
-                bool isRightStickInPosition = MathF.Abs(DeltaAngle(rightStickAngle, rightStickTargetAngle)) <= angleTolerance;
+                bool isLeftStickInPosition =
+                    MathF.Abs(DeltaAngle(leftStickAngle, leftStickTargetAngle)) <= angleTolerance;
+                bool isRightStickInPosition =
+                    MathF.Abs(DeltaAngle(rightStickAngle, rightStickTargetAngle)) <= angleTolerance;
 
                 if (isLeftStickInPosition && isRightStickInPosition)
                 {
@@ -298,7 +304,7 @@ namespace Code.Internal.Drone
                 ResetEngines();
                 return;
             }
-            
+
             if (_currentFlightSettings == null || !_isEnginesOn) return;
 
             _rigidBody.freezeRotation = _rigidBody.linearVelocity.magnitude > 1;
@@ -333,7 +339,7 @@ namespace Code.Internal.Drone
             engineFR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlFr);
             engineRR.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRl);
             engineRL.UpdateEngine(_rigidBody, currentVoltage, acceleration, controlRr);
-            
+
             if (_throttle < 0.05f && DroneSensors.GetHeightFromFloor() < 0.1f)
                 ResetEngines();
         }
@@ -345,21 +351,25 @@ namespace Code.Internal.Drone
             float batteryLevel = droneSettings.bateteryCellCount * currentVoltage;
             float minBatteryLevel = droneSettings.bateteryCellCount * droneSettings.minBatteryCellVoltage;
             float maxBatteryLevel = droneSettings.bateteryCellCount * droneSettings.maxBatteryCellVoltage;
-            batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);   
-            
-            if(batteryLevelPercent is >= 1 and <= 11) {
-                DroneHUD.Instance.SetMessage(MessageType.Warning,"Обратите внимание: низкий уровень заряда батареи", batteryLow.length + 2, batteryLow);
+            batteryLevelPercent = ((batteryLevel - minBatteryLevel) * 100) / (maxBatteryLevel - minBatteryLevel);
+
+            if (batteryLevelPercent is >= 1 and <= 11)
+            {
+                DroneHUD.Instance.SetMessage(MessageType.Warning, "Обратите внимание: низкий уровень заряда батареи",
+                    batteryLow.length + 2, batteryLow);
                 if (batteryBeep != null && sfxSource != null)
                 {
                     if (!sfxSource.isPlaying)
                         sfxSource.PlayOneShot(batteryBeep);
                 }
             }
-            if(batteryLevelPercent <= 0f)
+
+            if (batteryLevelPercent <= 0f)
             {
                 DroneSensors.InputSignal = 0;
                 DroneSensors.CameraSignal = 0;
-                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна", batteryLost.length + 2, batteryLost);
+                DroneHUD.Instance.SetMessage(MessageType.Error, "Батарея разряжена, связь с квадрокоптером потеряна",
+                    batteryLost.length + 2, batteryLost);
             }
         }
 
@@ -447,7 +457,7 @@ namespace Code.Internal.Drone
             // Применяем силу ветра к Rigidbody дрона
             _rigidBody.AddForce(windForce, ForceMode.Force);
         }
-        
+
         private IEnumerator AddPointCoroutine()
         {
             while (true)
