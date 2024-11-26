@@ -1,5 +1,6 @@
 ﻿using System;
 using Code.Internal.API;
+using Code.Internal.SceneManagement;
 using UltimateReplay;
 using UltimateReplay.Storage;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Code.Internal.Replays
         }
 
         [SerializeField] private GameObject replayControlObject;
+        [SerializeField] private SceneLoadingSettings sceneLoadingSettings;
 
         private ReplayRecordOperation _recordOperation;
         private ReplayPlaybackOperation _playbackOperation;
@@ -71,6 +73,7 @@ namespace Code.Internal.Replays
             
             _customMetadata = new CustomMetadata
             {
+                ReplayName = sceneLoadingSettings.currentScenario.name,
                 studentName = HttpClient.UserData.name,
                 type = type
             };

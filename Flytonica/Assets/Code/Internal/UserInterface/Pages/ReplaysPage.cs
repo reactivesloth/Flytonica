@@ -75,7 +75,7 @@ namespace Code.Internal.UserInterface.Pages
                     var display = new[]
                     {
                         DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture),
-                        replayData.user_name, replayData.scenario_name, "-", "-"
+                        replayData.user_name, replayData.scenario_name
                     };
                     var data = new TableButtonGenerateData<LogData>(display, replayData);
                     generateData.Add(data);
@@ -92,7 +92,7 @@ namespace Code.Internal.UserInterface.Pages
                             var display = new[]
                             {
                                 DateTime.Parse(replayData.created_at).ToString(CultureInfo.InvariantCulture),
-                                replayData.user_name, "", "-", "-"
+                                replayData.user_name, replayData.id.ToString()
                             };
                             var data = new TableButtonGenerateData<LogData>(display, replayData);
                             generateData.Add(data);
@@ -117,7 +117,7 @@ namespace Code.Internal.UserInterface.Pages
                     var localLogData = new LocalLogData(filePath, replayMeta);
                     var display = new[]
                     {
-                        replayMeta?.date, replayMeta?.studentName, replayMeta?.ReplayName, "-", "-"
+                        replayMeta?.date, replayMeta?.studentName, replayMeta?.ReplayName
                     };
                     var data = new TableButtonGenerateData<LocalLogData>(display, localLogData);
                     generateData.Add(data);
