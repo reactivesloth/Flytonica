@@ -29,6 +29,8 @@ namespace Code.Internal.Scenario.Tutorial._2_Aerobatics
         [SerializeField, Tooltip("Допустимая погрешность вращения вокруг оси Y в градусах")]
         private float acceptableRotationError = 5f;
 
+        [SerializeField] private bool isCheckDroneCollision = true;
+
         private int _currentWayPointIndex;
         private int _nextWayPointIndex;
         private Vector3 _previousWayPointPosition;
@@ -58,6 +60,7 @@ namespace Code.Internal.Scenario.Tutorial._2_Aerobatics
             yield return StartCoroutine(PlayReplique(welcomeText));
             yield return new WaitUntil(() => _currentWayPointIndex == wayPoints.Length); 
             yield return StartCoroutine(PlayReplique(finishText));
+            DroneController.Instance.GetComponent<DroneHealthController>().OnObjectCollision -= ResetScenario;
             yield return new WaitUntil(() => DroneController.Instance.EnginesEnabled == false);
             Finish();
             StopAllCoroutines();
@@ -153,6 +156,7 @@ namespace Code.Internal.Scenario.Tutorial._2_Aerobatics
             _isDeviationCheckActive = false;
 
             _previousWayPointPosition = DroneController.Instance.transform.position;
+            DroneController.Instance.GetComponent<DroneHealthController>().OnObjectCollision -= ResetScenario;
 
             SetWayPoint(0);
             DroneController.Instance.ResetDrone();
@@ -206,6 +210,9 @@ namespace Code.Internal.Scenario.Tutorial._2_Aerobatics
                 {
                     _initialYRotation = DroneController.Instance.transform.eulerAngles.y;
                 }
+                
+                if(isCheckDroneCollision)
+                    DroneController.Instance.GetComponent<DroneHealthController>().OnObjectCollision += ResetScenario;
             }
 
             SetWayPoint(++_currentWayPointIndex);
