@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +33,8 @@ namespace Code.Internal.UserInterface.Pages
             gameObject.SetActive(true);
             OnOpen();
             
-            PrevPages?.Peek()?.Close();
+            if (PrevPages?.Peek() != CurrentPage)
+                PrevPages?.Peek()?.Close();
         }
 
         public virtual void Close()
