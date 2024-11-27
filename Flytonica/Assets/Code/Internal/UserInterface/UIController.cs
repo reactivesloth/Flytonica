@@ -82,6 +82,7 @@ namespace Code.Internal.UserInterface
         {
             Page.CurrentPage.Close();
             mainPanel.gameObject.SetActive(false);
+            _isPaused = false;
         }
 
         public void OnMainMenu()
