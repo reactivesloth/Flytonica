@@ -178,12 +178,15 @@ namespace Code.Internal.Drone
                 ResetDrone();
             }
 
-            if (!_isEnginesOn && DroneHUD.Instance.MessageBoxElement.IsClear &&
-                DroneHUD.Instance.MessageBoxElement.CurrentMessage !=
-                "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта")
+            if (!_isEnginesOn && DroneHUD.Instance.MessageBoxElement.IsClear)
             {
                 DroneHUD.Instance.SetMessage(MessageType.Normal,
                     "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта");
+            }
+            else if (_isEnginesOn && DroneHUD.Instance.MessageBoxElement.CurrentMessage ==
+                     "Для запуска двигателей потяните оба стика вниз и сведите к центру пульта")
+            {
+                DroneHUD.Instance.ClearMessage();
             }
         }
 
