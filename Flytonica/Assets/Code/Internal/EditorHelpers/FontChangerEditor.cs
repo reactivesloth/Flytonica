@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace Code.Internal.EditorHelpers
@@ -19,3 +20,4 @@ namespace Code.Internal.EditorHelpers
         }
     }
 }
+#endif

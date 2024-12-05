@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Code.Internal.EditorHelpers
 
         public void ApplyFontChanges()
         {
-    #if UNITY_EDITOR
+
             // Обновляем шрифты в teacherUI
             if (teacherUI != null && teacherFont != null)
             {
@@ -53,7 +54,7 @@ namespace Code.Internal.EditorHelpers
 
             // Помечаем сцену как измененную
             UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
-    #endif
         }
     }
 }
+#endif
