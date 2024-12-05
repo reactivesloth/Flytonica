@@ -441,11 +441,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forcePrevPage: {fileID: 0}
   backButton: {fileID: 0}
-  pauseController: {fileID: 8615773165684796209}
+  sceneSettings: {fileID: 0}
+  keyBindingPage: {fileID: 0}
+  warningTextObject: {fileID: 0}
   toMainMenuButton: {fileID: 6793816824605468408}
   teacherHelpButton: {fileID: 2526506579073075004}
   returnToGameButton: {fileID: 6825566263548808740}
   keyBindingButton: {fileID: 1430730688890781275}
+  replayButton: {fileID: 0}
+  restartServerButton: {fileID: 0}
 --- !u!1 &1641759544294951408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1110,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &4644373202963463084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1136,6 +1140,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3589e86479275434a80ce83f27084a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiCamera: {fileID: 0}
+  panelRTUI: {fileID: 0}
 --- !u!114 &6715870418511935233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1167,9 +1173,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc58de00d7f6c4649a1757333eda2d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainPanel: {fileID: 0}
   pauseMenuPage: {fileID: 5111553137276730620}
+  firstPage: {fileID: 0}
   pauseButtons:
   - {fileID: 5138549941603372021, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  mainUiPanel: {fileID: 0}
 --- !u!1 &4168445879576074279
 GameObject:
   m_ObjectHideFlags: 0

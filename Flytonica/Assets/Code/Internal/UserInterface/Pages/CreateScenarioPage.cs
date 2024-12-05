@@ -43,7 +43,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private GameObject step1, step2, step3, step4;
 
         [Header("Step 1: ")] [SerializeField] private Toggle enableViewSelection;
-        [SerializeField] private Toggle viewSelection;
+        [SerializeField] private Toggle firstViewSelection, thirdViewSelection;
         [SerializeField] private ToggleGroup mapsGroup;
         [SerializeField] private ToggleGroup typeSelectionGroup;
 
@@ -63,6 +63,7 @@ namespace Code.Internal.UserInterface.Pages
         [SerializeField] private List<GameObject> layersSettings;
         [SerializeField] private TMP_Dropdown overlayForce, overlayDirection;
         [SerializeField] private List<TMP_Dropdown> forces, directions;
+        [SerializeField] private GameObject windWarning;
 
         [Header("Step 4: ")] [SerializeField] private TMP_InputField title;
         [SerializeField] private TMP_InputField description;
@@ -154,7 +155,7 @@ namespace Code.Internal.UserInterface.Pages
                         break;
                     case 2:
                         _isViewSelection = enableViewSelection.isOn;
-                        _isThirdPersonMode = viewSelection.isOn;
+                        _isThirdPersonMode = thirdViewSelection.isOn;
                         _currentMap = _mapToggles[mapsGroup.GetFirstActiveToggle()];
                         _currentType = _scenarioTypeToggles[typeSelectionGroup.GetFirstActiveToggle()];
                         InitStep2();
@@ -246,7 +247,8 @@ namespace Code.Internal.UserInterface.Pages
 
             isWindToggle.isOn = !isEnableWindSettings;
             isWindToggle.interactable = isEnableWindSettings;
-
+            windWarning.SetActive(!isEnableWindSettings);
+            
             WindTogglesChange();
         }
 
