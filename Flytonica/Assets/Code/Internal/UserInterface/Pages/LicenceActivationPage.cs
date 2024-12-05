@@ -90,7 +90,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void OnLicenceInvalid()
         {
-            // Обработка невалидной лицензии
+            MakeError("Ваша лицензия истекла, обратитесь к администратору", OnOpen);
         }
 
         private void ErrorGetLicence()

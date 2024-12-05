@@ -5,6 +5,7 @@ using Code.Internal.API.Wrappers.SendModels;
 using Code.Internal.UserInterface.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UserType = Code.Internal.API.Wrappers.UserType;
 
@@ -107,6 +108,15 @@ namespace Code.Internal.UserInterface.Pages
         private void OnErrorLogin(string response, long code)
         {
             Debug.LogError($"{code}: {response}");
+            MakeError($"{code}: {response}", OnOpen);
+        }
+        
+        private void MakeError(string error, UnityAction action)
+        {
+            PopupPanel.ConfigurePopup("Ошибка",
+                error,
+                leftButtonAction: action, leftButtonText: "Повторить",
+                rightButtonText: "Закрыть");
         }
     }
 }
