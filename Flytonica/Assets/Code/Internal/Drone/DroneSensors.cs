@@ -173,5 +173,17 @@ namespace Code.Internal.Drone
                 return Mathf.Infinity;
             }
         }
+
+        public float GetDistanceFromCeiling()
+        {
+            if (Physics.Raycast(_droneController.transform.position + Vector3.up * 0.1f, Vector3.up, out RaycastHit hit, Mathf.Infinity))
+            {
+                return hit.distance;
+            }
+            else
+            {
+                return Mathf.Infinity;
+            }
+        }
     }
 }

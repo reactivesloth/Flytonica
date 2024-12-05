@@ -321,12 +321,10 @@ namespace Code.Internal.Drone
 
             if (_currentFlightSettings.throttleType == ControlType.HOLD)
             {
-                var landingGear = Physics.Raycast(_transform.position, Vector3.down, out _, 1);
                 acceleration += _droneInput.Throttle switch
                 {
-                    > 0.2f when _rigidBody.linearVelocity.y < _currentFlightSettings.maxAscendingSpeed => 0.1f,
-                    < -0.2f when _rigidBody.linearVelocity.y >
-                                 (landingGear ? -1 : -_currentFlightSettings.maxDescendingSpeed) => -0.1f,
+                    > 0.2f when _rigidBody.linearVelocity.y < _currentFlightSettings.maxAscendingSpeed && DroneSensors.GetDistanceFromCeiling() > 0.5f => 0.1f,
+                    < -0.2f when _rigidBody.linearVelocity.y > (DroneSensors.GetHeightFromFloor() < 1 ? -1 : -_currentFlightSettings.maxDescendingSpeed) => -0.1f,
                     _ => _rigidBody.linearVelocity.y > 0 ? -0.1f : 0.1f
                 };
                 acceleration = Mathf.Clamp(acceleration, 0, 1);
