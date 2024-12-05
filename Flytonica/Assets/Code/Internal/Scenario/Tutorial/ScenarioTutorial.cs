@@ -16,12 +16,6 @@ namespace Code.Internal.Scenario.Tutorial
         protected override void Update()
         {
             base.Update();
-#if UNITY_EDITOR
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
-            {
-                FinishRace();
-            }
-#endif
         }
 
         public override void Initialize(ScenarioSettings scenario)

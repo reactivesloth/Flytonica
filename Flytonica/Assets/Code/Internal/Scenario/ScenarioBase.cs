@@ -69,6 +69,17 @@ namespace Code.Internal.Scenario
             }
 
             DroneHUD.Instance?.SetTime(GetTimeWithMs(TotalTime));
+        
+#if UNITY_EDITOR
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Tab))
+            {
+                FinishRace(true);
+            }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.CapsLock))
+            {
+                FinishRace(false);
+            }
+#endif
         }
 
         public virtual void Initialize(ScenarioSettings scenario)
@@ -118,8 +129,8 @@ namespace Code.Internal.Scenario
 
             AddStatistic();
 
-            PopupPanel.ConfigurePopup("Задание выполнено!",
-                $"Отлично, сценарий успешно завершен! Можете ознакомиться со своими результатами.\nВремя выполнения: {GetTimeWithMs(TotalTime)}",
+            PopupPanel.ConfigurePopup(success ? "Задание выполнено!" : "Задание провалено!",
+                (success ? $"Отлично, сценарий успешно завершен! Можете ознакомиться со своими результатами." : "Сценарий провален. В следующий раз у вас точно получится!") + $"\nВремя выполнения: {GetTimeWithMs(TotalTime)}",
                 null, "Продолжить", Color.green, Color.black,
                 () => { ScenarioSwitcherController.Instance.NextOrEnd(); }, showClose: false);
         }
