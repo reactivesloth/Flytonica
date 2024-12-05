@@ -21,7 +21,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             _currentUserId = userId;
             _studentName = studentName;
-            title.text = $"Задания для {studentName}";
+            title.text = $"Задания для: {studentName}";
         }
 
         protected override void OnOpen()
