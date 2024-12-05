@@ -79,7 +79,7 @@ namespace Code.Internal.API.Wrappers
             if (windForceId >= 0 && windForceId < windForces.Length)
             {
                 var minForce = windForces[windForceId];
-                var maxForce = windForceId + 1 < windForces.Length ? windForces[windForceId + 1] : float.MaxValue;
+                var maxForce = windForceId + 1 < windForces.Length ? windForces[windForceId + 1] : minForce;
                 return (minForce, maxForce);
             }
             else

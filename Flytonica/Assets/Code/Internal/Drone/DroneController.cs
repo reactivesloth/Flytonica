@@ -450,7 +450,7 @@ namespace Code.Internal.Drone
             float dragCoefficient = 0.5f;
 
             // Вычисляем силу ветра по аэродинамической формуле
-            float windForceMagnitude = 0.5f * airDensity * windSpeed * windSpeed * crossSectionalArea * dragCoefficient;
+            float windForceMagnitude = crossSectionalArea * ((airDensity * (windSpeed))/2) * dragCoefficient;
 
             // Применяем направление ветра
             Vector3 windForce = direction.normalized * windForceMagnitude;
