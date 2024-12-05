@@ -55,8 +55,8 @@ namespace Code.Internal.UserInterface.Pages
 
         private void ToMainMenuButton()
         {
-            PopupPanel.ConfigurePopup("Выйти?",
-                "Вы действительно хотите выйти", null, "Выйти", Color.red,
+            PopupPanel.ConfigurePopup("Вы уверены, что хотите завершить сессию?",
+                "", null, "Выйти", Color.red,
                 Color.black,
                 () =>
                 {

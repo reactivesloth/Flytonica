@@ -125,7 +125,7 @@ namespace Code.Internal.Replays
             if (droneCameraController)
             {
                 var playerName = droneCameraController.GetComponent<DroneReplayBehaviour>().PlayerName;
-                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, playerName);
+                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n");
                 DroneHUD.Instance.ShowHUD(true);
             }
         }
@@ -155,7 +155,7 @@ namespace Code.Internal.Replays
             if (droneCameraController)
             {
                 var playerName = droneCameraController.GetComponent<DroneReplayBehaviour>().PlayerName;
-                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, playerName);
+                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n");
                 DroneHUD.Instance.ShowHUD(true);
             }
         }
