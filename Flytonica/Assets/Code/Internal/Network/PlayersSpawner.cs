@@ -25,10 +25,16 @@ namespace Code.Internal.Network
                 .Select(o => o.transform).ToArray();
 
             var spawn = spawners[Random.Range(0, spawners.Length)];
+
+            var position = spawn.transform.position + Vector3.back + Vector3.up * 0.1f;
+            if (Physics.Raycast(position, Vector3.down, out RaycastHit hit, 5))
+            {
+                position.y = hit.point.y;
+            }
             
-            ConnectionController.Instance.MovePlayerSignal(connection, spawn.transform.position + Vector3.back, spawn.transform.rotation);
+            ConnectionController.Instance.MovePlayerSignal(connection, position, spawn.transform.rotation);
             
-            var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, spawn.position,
+            var drone = InstanceFinder.NetworkManager.GetPooledInstantiated(settings.prefab, Physics.Raycast(spawn.position + Vector3.up * 0.1f, Vector3.down, out hit, 5) ? hit.point : spawn.position,
                 spawn.rotation, true);
             InstanceFinder.ServerManager.Spawn(drone, connection, UnityEngine.SceneManagement.SceneManager.GetSceneByName("Main"));
             _drones.Add(drone);
