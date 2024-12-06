@@ -52,7 +52,7 @@ namespace Code.Internal.UserInterface.Pages
         
         private void OnLeaveButtonClick()
         {
-            PopupPanel.ConfigurePopup("Выйти в меню?", "Вы уверены, что хотите удалить редактируемый сценарий? Прогресс нельзя будет восстановить.", null, "Вернуться в меню", StyleConstants.Instance.Red, Color.white,
+            PopupPanel.ConfigurePopup("Вы уверенны что хотите выйти без сохранения?", "Вы уверены, что хотите удалить редактируемый сценарий? Прогресс нельзя будет восстановить.", null, "Вернуться в меню", StyleConstants.Instance.Red, Color.white,
                 () => { scenariosManagementPage?.Open();}, null, "Продолжить", StyleConstants.Instance.Green, Color.black, () => {});
         }
         
