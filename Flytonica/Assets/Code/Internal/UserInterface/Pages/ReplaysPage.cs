@@ -143,20 +143,20 @@ namespace Code.Internal.UserInterface.Pages
         {
             PopupPanel.ConfigurePopup("Вы действительно хотите удалить?",
                 $"Вы удалите весь отчёт о прохождении этого задания в ЛМС. Продолжить?",
-                null, "Удалить", Color.red, Color.white,
+                null, "Удалить", StyleConstants.Instance.Red, Color.white,
                 () =>
                 {
                     HttpClient.Delete(LinkConstants.LogDeleteUrl(replaysRoot.SelectedButton.GetSaveData<LogData>().id),
                         callback: GenerateListFromUser);
                 },
-                null, "Отмена", Color.green, Color.black, null);
+                null, "Отмена", StyleConstants.Instance.Green, Color.black, null);
         }
 
         private void DeleteLocal()
         {
             PopupPanel.ConfigurePopup("Вы действительно хотите удалить?",
                 $"Вы удалите реплей на данном устройстве. Продолжить?",
-                null, "Удалить", Color.red, Color.white,
+                null, "Удалить", StyleConstants.Instance.Red, Color.white,
                 () =>
                 {
                     var filePath = replaysRoot.SelectedButton.GetSaveData<LocalLogData>().path;
@@ -172,7 +172,7 @@ namespace Code.Internal.UserInterface.Pages
                     
                     GenerateListFromLocal();
                 },
-                null, "Отмена", Color.green, Color.black, null);
+                null, "Отмена", StyleConstants.Instance.Green, Color.black, null);
         }
 
         private void View()

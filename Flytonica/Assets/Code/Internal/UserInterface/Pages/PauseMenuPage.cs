@@ -56,8 +56,8 @@ namespace Code.Internal.UserInterface.Pages
         private void ToMainMenuButton()
         {
             PopupPanel.ConfigurePopup("Вы уверены, что хотите завершить сессию?",
-                "", null, "Выйти", Color.red,
-                Color.black,
+                "", null, "Выйти", StyleConstants.Instance.Red,
+                Color.white,
                 () =>
                 {
                     UIController.Instance.Unpause(false);
@@ -65,7 +65,7 @@ namespace Code.Internal.UserInterface.Pages
                         ScenarioSwitcherController.Instance.EndSession();
                     else
                         ScenarioSwitcherController.Instance.FailTask();
-                }, null, "Продолжить задание", Color.green, Color.black, ReturnToGame);
+                }, null, "Продолжить задание", StyleConstants.Instance.Green, Color.black, ReturnToGame);
             //GameSceneManager.Instance.ToMenuSingle();
         }
 

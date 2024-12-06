@@ -11,7 +11,7 @@ namespace Code.Internal.UserInterface
         [SerializeField] private TMP_Text titleText, descriptionText;
         [SerializeField] private Button cancelButton;
         [SerializeField] private Sprite standardButtonSprite;
-        [SerializeField] private Color standardButtonColor = Color.white;
+        [SerializeField] private Color standardButtonColor = StyleConstants.Instance.Green;
         [SerializeField] private Color standardButtonTextColor = Color.black;
 
         [Header("Left Button elements")] [SerializeField]
@@ -146,7 +146,7 @@ namespace Code.Internal.UserInterface
             {
                 deleteAction?.Invoke();
                 popup.Hide();
-            }, "Удалить", null, Color.red, Color.white);
+            }, "Удалить", null, StyleConstants.Instance.Red, Color.white);
             popup.SetRightButton(true, popup.Hide, "Отменить");
             popup.Show();
         }

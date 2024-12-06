@@ -131,7 +131,7 @@ namespace Code.Internal.Scenario
 
             PopupPanel.ConfigurePopup(success ? "Задание выполнено!" : "Задание провалено!",
                 (success ? $"Отлично, сценарий успешно завершен! Можете ознакомиться со своими результатами." : "Сценарий провален. В следующий раз у вас точно получится!") + $"\nВремя выполнения: {GetTimeWithMs(TotalTime)}",
-                null, "Продолжить", Color.green, Color.black,
+                null, "Продолжить", StyleConstants.Instance.Green, Color.black,
                 () => { ScenarioSwitcherController.Instance.NextOrEnd(); }, showClose: false);
         }
 
