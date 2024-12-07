@@ -234,7 +234,23 @@ namespace Code.Internal.UserInterface.Pages
                     }
                 }
             }
+
+            UpdateStartGameButton();
         }
+        
+        /// <summary>
+        /// Проверяет, есть ли хотя бы один выбранный сценарий, включая дочерние, и обновляет состояние кнопки startGameButton.
+        /// Если ни один не выбран — отключаем кнопку, иначе включаем.
+        /// </summary>
+        private void UpdateStartGameButton()
+        {
+            var anySelected = _buttonScenarioDictionary.Keys.Any(b =>
+                b.ToggleIsOn || b.GetAllDescendants().Any(d => d.ToggleIsOn)
+            );
+
+            startGameButton.interactable = anySelected;
+        }
+
         
         #region Tasks Get
 

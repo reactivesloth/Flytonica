@@ -54,14 +54,7 @@ namespace Code.Internal.UserInterface.Elements
             selectToggle.gameObject.SetActive(isOnToggle);
 
             numberText.text = number;
-            print(settings);
             titleText.text = settings.name;
-
-            /*if (isTaskInit && ParentButton != null)
-            {
-                @object.Interactable = false;
-                @object.enabled = false;
-            }*/
 
             selectToggle?.onValueChanged.AddListener(OnToggleValueChanged);
         }
@@ -124,6 +117,10 @@ namespace Code.Internal.UserInterface.Elements
         private void OnUnselectAction()
         {
             Selected?.Invoke(null);
+            
+            if(!selectToggle.gameObject.activeSelf)
+                selectToggle.isOn = false;
+            
             if (ChildButtons.Count > 0)
                 CloseList();
         }
@@ -171,6 +168,35 @@ namespace Code.Internal.UserInterface.Elements
         private void OnToggleValueChanged(bool isOn)
         {
             ToggleChanged?.Invoke(this);
+            UpdateParentToggle(); // Добавляем вызов обновления родительских галочек при изменении состояния
+        }
+        
+        /// <summary>
+        /// Обновляет состояние родительской галочки на основе состояния дочерних галочек.
+        /// Если у родителя нет выбранных дочерних элементов, снимаем его галочку.
+        /// Если хотя бы один потомок выбран, ставим галочку родителю.
+        /// Затем рекурсивно поднимаемся вверх по иерархии.
+        /// </summary>
+        public void UpdateParentToggle()
+        {
+            if (ParentButton == null)
+                return;
+
+            bool anyChildSelected = false;
+            foreach (var child in ParentButton.ChildButtons)
+            {
+                if (child.ToggleIsOn)
+                {
+                    anyChildSelected = true;
+                    break;
+                }
+            }
+
+            // Обновляем состояние родителя без уведомлений, чтобы не вызвать лишние события
+            ParentButton.SetToggleState(anyChildSelected, false);
+
+            // Рекурсивно обновляем родителей
+            ParentButton.UpdateParentToggle();
         }
 
         private void OnDisable()
@@ -178,7 +204,7 @@ namespace Code.Internal.UserInterface.Elements
             @object.SelectAction -= OnSelectAction;
             @object.UnselectAction -= OnUnselectAction;
             @object.StateChanged -= UpdateArrowVisibility;
-            selectToggle?.onValueChanged.RemoveListener(OnToggleValueChanged);
+            //selectToggle?.onValueChanged.RemoveListener(OnToggleValueChanged);
         }
 
         public void Select()
