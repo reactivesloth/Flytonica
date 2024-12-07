@@ -164,26 +164,12 @@ namespace Code.Internal.Drone
         
         public float GetHeightFromFloor()
         {
-            if (Physics.Raycast(_droneController.transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity))
-            {
-                return hit.distance;
-            }
-            else
-            {
-                return Mathf.Infinity;
-            }
+            return Physics.Raycast(_droneController.transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore) ? hit.distance : Mathf.Infinity;
         }
 
         public float GetDistanceFromCeiling()
         {
-            if (Physics.Raycast(_droneController.transform.position + Vector3.up * 0.1f, Vector3.up, out RaycastHit hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore))
-            {
-                return hit.distance;
-            }
-            else
-            {
-                return Mathf.Infinity;
-            }
+            return Physics.Raycast(_droneController.transform.position + Vector3.up * 0.1f, Vector3.up, out RaycastHit hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore) ? hit.distance : Mathf.Infinity;
         }
     }
 }

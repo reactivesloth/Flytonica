@@ -400,21 +400,16 @@ namespace Code.Internal.Drone
                     break;
                 }
                 case ControlType.HOLD:
-                    if (rotationMagnitude > 0.1f &&
-                        _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed)
-                    {
-                        rotation = Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y,
-                            -_roll * _currentFlightSettings.maxStabilizedAngle);
-                    }
-                    else
-                    {
-                        rotation = Quaternion.Euler(-eulerAngles.x, eulerAngles.y, -eulerAngles.z);
-                    }
-
+                    var rotateHold = rotationMagnitude > 0.01f && _rigidBody.linearVelocity.magnitude < _currentFlightSettings.maxStabilizedSpeed;
+                    rotation = rotateHold
+                        ? Quaternion.Euler(_pitch * _currentFlightSettings.maxStabilizedAngle, eulerAngles.y,
+                            -_roll * _currentFlightSettings.maxStabilizedAngle)
+                        : Quaternion.Euler(0, eulerAngles.y, 0);
                     _transform.Rotate(
                         new Vector3(0, _yaw, 0) * (_currentFlightSettings.maxAngularSpeed * Time.deltaTime),
                         Space.World);
-                    _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, Time.deltaTime);
+                    _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation,
+                        Time.deltaTime * (rotateHold ? 1 : 5));
                     break;
                 default:
                     _transform.Rotate(
