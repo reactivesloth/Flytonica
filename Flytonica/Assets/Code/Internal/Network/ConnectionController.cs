@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers;
@@ -140,13 +141,23 @@ namespace Code.Internal.Network
 
             if (isTeacher)
             {
+                var spawners = GameObject.FindGameObjectsWithTag("Respawn")
+                    .Select(o => o.transform).ToArray();
+                var point = spawners[Random.Range(0, spawners.Length)];
+                float distance = Random.Range(3f, 5f);
+                float angle = Random.Range(0f, 360f);
+                float rad = angle * Mathf.Deg2Rad;
+                Vector3 offset = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad)) * distance;
+                var position = point.position + offset + Vector3.up * 0.1f;
+                if (Physics.Raycast(position, Vector3.down, out RaycastHit hit, 5))
+                    position.y = hit.point.y;
+                MovePlayerSignal(connection, position, point.rotation);
             }
             else
             {
                 var drone = NetworkManager.GetComponent<PlayersSpawner>()
                     .Spawn(connection, sceneSettings.currentScenario.currentDrone);
                 AvatarController.Instance.SpawnAvatar(connection, avatarId);
-                print(sceneSettings.isNet);
                 if (sceneSettings.isNet)
                     StartRecording(connection);
             }
