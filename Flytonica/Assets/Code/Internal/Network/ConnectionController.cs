@@ -127,7 +127,6 @@ namespace Code.Internal.Network
             while (!Observers.Contains(connection))
                 await Task.Delay(100);
 
-
             var scenario = sceneSettings.currentScenario;
             var currentScenario = new ScenarioSettingsData(scenario.name, scenario.description,
                 drones.drones.IndexOf(scenario.currentDrone), maps.maps.IndexOf(scenario.currentMap),
