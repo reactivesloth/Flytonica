@@ -20,7 +20,7 @@ namespace Code.Internal.Avatars
     public class AvatarController : NetworkBehaviour
     {
         private static AvatarController _instance;
-
+        [SerializeField] private bool useHands = false;
         [SerializeField] private Transform player;
         [SerializeField] private AvatarsList avatarsList;
 
@@ -65,12 +65,16 @@ namespace Code.Internal.Avatars
         public void InitUserAvatar(NetworkConnection avatarOwner, NetworkObject avatar)
         {
             var vrIk = avatar.GetComponent<VRIK>();
-            bool isVR = XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null;
+            bool isVR = XRSettings.isDeviceActive && XRSettings.enabled ||
+                        FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null;
 
             var rig = isVR ? vrRig : desktopRig;
             vrIk.solver.spine.headTarget = rig.head;
-            vrIk.solver.leftArm.target = rig.leftHand;
-            vrIk.solver.rightArm.target = rig.rightHand;
+            if (useHands)
+            {
+                vrIk.solver.leftArm.target = rig.leftHand;
+                vrIk.solver.rightArm.target = rig.rightHand;
+            }
         }
 
         [ObserversRpc]
