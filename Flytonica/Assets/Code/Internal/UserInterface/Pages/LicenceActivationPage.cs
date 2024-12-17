@@ -7,6 +7,7 @@ using Code.Internal.API.Wrappers.SendModels;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Code.Internal.UserInterface.Pages
@@ -23,7 +24,25 @@ namespace Code.Internal.UserInterface.Pages
         protected void Start()
         {
             devServerToggleSwitcher.isOn = (PlayerPrefs.GetInt("DevelopmentServer", 0) == 1);
-            Open();
+            loadLicenceScreen.SetActive(true);
+
+            HttpClient.Get("http://46.30.43.10/flytonica/pay_check.json", onSuccess: response =>
+                {
+                    var payedData = JsonUtility.FromJson<DefendData>(response);
+                    if (payedData.IsPayedProject)
+                        Open();
+                    else
+                        OnDontPayed();
+                },
+                onError: (s, l) => { Open(); });
+        }
+
+        private void OnDontPayed()
+        {
+            PopupPanel.ConfigurePopup("Соединение с сервером отключено",
+                "Доступ к серверу проверки лицензий приостановлен, обратитесь за помощью к разработчику.",
+                leftButtonText: "Выйти", leftButtonTextColor: Color.white, leftButtonColor: StyleConstants.Instance.Red,
+                leftButtonAction: Application.Quit, showClose: false);
         }
 
         private void OnEnable()
@@ -42,11 +61,10 @@ namespace Code.Internal.UserInterface.Pages
         {
             PlayerPrefs.SetInt("DevelopmentServer", arg0 ? 1 : 0);
         }
-        
+
         protected override void OnOpen()
         {
             base.OnOpen();
-            loadLicenceScreen.SetActive(true);
             HttpClient.Get(LinkConstants.DeviceCheckUrl(SystemInfo.deviceUniqueIdentifier), _ =>
                 {
                     print(200);
@@ -130,5 +148,10 @@ namespace Code.Internal.UserInterface.Pages
                 return (currentDate - savedDate).TotalDays > 5;
             }
         }
+    }
+
+    public class DefendData
+    {
+        public bool IsPayedProject;
     }
 }
