@@ -42,8 +42,9 @@ namespace Code.Internal.Scenario
             ReplayController.Instance.StartRecording(sceneSettings.taskId);
             ReportBuilder.Instance.Clear();
             ScoreSum = 0;
+            _currentStatus = 0;
 
-            ReportBuilder.Instance.AddParameter("Количество участников", "1", false);
+            //ReportBuilder.Instance.AddParameter("Количество участников", "1", false);
         }
 
         public void NextOrEnd(bool isFailed = false)

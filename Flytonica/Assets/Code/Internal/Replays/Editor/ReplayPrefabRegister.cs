@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using UltimateReplay;
 using UnityEditor;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace Code.Internal.Replays
         private static void FindReplayObjects()
         {
             var allPrefabs = Resources.LoadAll<GameObject>("");
-            
+
             foreach (var prefab in allPrefabs)
             {
                 if (prefab.TryGetComponent(out ReplayObject replayObject))
@@ -55,3 +56,4 @@ namespace Code.Internal.Replays
         }
     }
 }
+#endif
