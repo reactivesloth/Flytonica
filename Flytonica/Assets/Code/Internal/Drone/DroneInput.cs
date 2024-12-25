@@ -1,4 +1,5 @@
-﻿using FishNet.Object;
+﻿using System;
+using FishNet.Object;
 using UnityEngine;
 using Rewired;
 using UnityEngine.InputSystem;
@@ -47,6 +48,11 @@ namespace Code.Internal.Drone
         private bool _afterMenuDroneCamValue;
 
         public static DroneInput Instance { get; private set; }
+
+        private void OnEnable()
+        {
+            DroneIrMode = false;
+        }
 
         private void Awake()
         {

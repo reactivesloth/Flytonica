@@ -73,7 +73,7 @@ namespace Code.Internal.Replays
             
             _customMetadata = new CustomMetadata
             {
-                ReplayName = sceneLoadingSettings.currentScenario.name,
+                ReplayName = sceneLoadingSettings.currentScenarioCollection.name,
                 studentName = HttpClient.UserData.name,
                 type = type
             };

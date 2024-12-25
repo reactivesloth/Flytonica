@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Code.Internal.API;
 using Code.Internal.API.Wrappers.ReceiveModels;
 using Code.Internal.Replays;
@@ -47,10 +48,10 @@ namespace Code.Internal.UserInterface.Pages
             replaysRoot.SelectionStateChange += SetButtons;
 
             SetButtons(replaysRoot.SelectedButton);
-            
+
             print(_isLocal);
         }
-        
+
         protected override void OnClose()
         {
             base.OnClose();
@@ -105,31 +106,59 @@ namespace Code.Internal.UserInterface.Pages
 
         private void GenerateListFromLocal()
         {
+            // Получаем все файлы с расширением .replay
             var files = Directory.GetFiles(Application.persistentDataPath, "*.replay");
+
+            // Сортируем по дате изменения (от более новых к более старым)
+            var sortedFiles = files
+                .OrderByDescending(f => File.GetLastWriteTime(f))
+                .ToList();
 
             var generateData = new List<TableButtonGenerateData<LocalLogData>>();
 
-            foreach (var filePath in files)
+            foreach (var filePath in sortedFiles)
             {
                 try
                 {
-                    var replayMeta = (CustomMetadata) ReplayFileStorage.ReadMetadataOnly(filePath);
+                    var replayMeta = (CustomMetadata)ReplayFileStorage.ReadMetadataOnly(filePath);
                     var localLogData = new LocalLogData(filePath, replayMeta);
+
                     var display = new[]
                     {
-                        replayMeta?.date, replayMeta?.studentName, replayMeta?.ReplayName
+                        // Может быть, вы хотите отображать ещё и реальную дату файликовых операций?
+                        // Тогда можно добавить File.GetLastWriteTime(filePath).ToString() в display
+                        replayMeta?.date,
+                        replayMeta?.studentName,
+                        replayMeta?.ReplayName
                     };
+            
                     var data = new TableButtonGenerateData<LocalLogData>(display, localLogData);
                     generateData.Add(data);
                 }
                 catch (InvalidCastException e)
                 {
+                    // Если каст не прошёл, заполняем поля заглушками
+                    var display = new[]
+                    {
+                        "-", "-", Path.GetFileName(filePath)
+                    };
+
+                    var meta = new LocalLogData(filePath, new CustomMetadata
+                    {
+                        studentName = "-",
+                        date = "-"
+                    });
+            
+                    var data = new TableButtonGenerateData<LocalLogData>(display, meta);
+                    generateData.Add(data);
                     Debug.LogError(e);
                 }
-                
             }
+
+            // Генерируем элементы в UI
             replaysRoot.Generate(generateData);
         }
+
 
         private void Delete()
         {
@@ -169,7 +198,7 @@ namespace Code.Internal.UserInterface.Pages
                     {
                         Debug.LogWarning($"Файл по пути {filePath} не найден.");
                     }
-                    
+
                     GenerateListFromLocal();
                 },
                 null, "Отмена", StyleConstants.Instance.Green, Color.black, null);
@@ -177,7 +206,7 @@ namespace Code.Internal.UserInterface.Pages
 
         private void View()
         {
-            if(_isLocal)
+            if (_isLocal)
                 ViewOffline();
             else
                 ViewUser();
@@ -194,7 +223,7 @@ namespace Code.Internal.UserInterface.Pages
         {
             var replayPath = replaysRoot.SelectedButton.GetSaveData<LocalLogData>();
             viewReplayPage.Init(replayPath);
-        } 
+        }
 
         private void SetButtons(bool isSelect)
         {

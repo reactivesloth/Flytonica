@@ -2,6 +2,7 @@
 using System.Linq;
 using Code.Internal.UserInterface;
 using System.Threading.Tasks;
+using Code.Internal.Scenario;
 using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,8 @@ namespace Code.Internal.Replays
         private string _activeSceneName = string.Empty;
         private string _loadedSceneName = string.Empty;
         private bool _replayEnded = false;
+
+        public static event Action sceneChanged;
 
         protected override void Awake()
         {
@@ -98,8 +101,15 @@ namespace Code.Internal.Replays
             if (string.IsNullOrEmpty(_activeSceneName) || _replayEnded)
                 return;
 
+            sceneChanged?.Invoke();
             var loadSceneOp = SceneManager.LoadSceneAsync(_activeSceneName, LoadSceneMode.Additive);
             await loadSceneOp;
+
+            foreach (Transform child in FindAnyObjectByType<ScenarioInitializer>().transform)
+            {
+                if(child.CompareTag("Respawn"))
+                    child.gameObject.SetActive(false);
+            }
 
             if (_replayEnded)
             {

@@ -41,7 +41,7 @@ namespace Code.Internal.Replays
             InputHandle();
             UpdateDrones();
         }
-
+        
         private void UpdateDrones()
         {
             var allDrones = FindObjectsByType<DroneController>(FindObjectsSortMode.None);
@@ -125,7 +125,7 @@ namespace Code.Internal.Replays
             if (droneCameraController)
             {
                 var playerName = droneCameraController.GetComponent<DroneReplayBehaviour>().PlayerName;
-                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n");
+                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n \n");
                 DroneHUD.Instance.ShowHUD(true);
             }
         }
@@ -155,7 +155,7 @@ namespace Code.Internal.Replays
             if (droneCameraController)
             {
                 var playerName = droneCameraController.GetComponent<DroneReplayBehaviour>().PlayerName;
-                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n");
+                DroneHUD.Instance.MessageBoxElement.DrawMessage(MessageType.Normal, $"{playerName}\n \n \n \n");
                 DroneHUD.Instance.ShowHUD(true);
             }
         }
@@ -201,6 +201,7 @@ namespace Code.Internal.Replays
 
             UIController.Instance.SetUiToTablet(uiPanelInTablet, true);
             pcCamera?.gameObject.GetOrAddComponent<MapEditorCamera>();
+            SceneChangeRecorder.sceneChanged += ResetPlayback;
         }
 
         protected override void OnReplayEnd()
@@ -229,6 +230,49 @@ namespace Code.Internal.Replays
                 Destroy(pcCamera?.GetComponent<MapEditorCamera>());
             pcCamera?.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             vrPlayer?.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            
+            SceneChangeRecorder.sceneChanged -= ResetPlayback;
         }
+        
+        /// <summary>
+        /// Метод для ручного «сброса» воспроизведения в начальное состояние.
+        /// </summary>
+        public void ResetPlayback()
+        {
+            print("RESET REPLAY");
+            // 1. Если есть активный дрон — отключаем его камеру
+            if (_currentDrone != null)
+            {
+                if (XRSettings.enabled && XRSettings.isDeviceActive ||
+                    FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
+                {
+                    SetDroneCameraXR(_currentDrone, false);
+                }
+                else
+                {
+                    SetDroneCameraPC(_currentDrone, false);
+                }
+            }
+
+            // 2. Сбрасываем текущие ссылки и индексы
+            _currentDrone = null;
+            _currentDroneIndex = -1;
+
+            // 3. Скрываем HUD и очищаем сообщения
+            DroneHUD.Instance.ShowHUD(false);
+            DroneHUD.Instance.MessageBoxElement.ClearMessage();
+
+            // -- НЕ отключаем UI на планшете (убрали UIController.Instance.SetUiToTablet(uiPanelInTablet, false))
+
+            // -- НЕ уничтожаем MapEditorCamera (убрали логику Destroy())
+
+            // 4. Возвращаем PC-камеру и VR-плеера в (0,0,0)
+            pcCamera?.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            vrPlayer?.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            // 5. (Опционально) при желании, можно сбросить флаг, указывающий, что реплей идёт.
+            // IsReplaying = false;
+        }
+
     }
 }

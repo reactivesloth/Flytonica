@@ -117,6 +117,7 @@ namespace Code.Internal.Scenario
 
         protected virtual void FinishRace(bool success = true)
         {
+            print($"End scenario, success {success}");
             ScenarioCondition = ScenarioCondition.Finished;
             _isSuccess = success;
             IsStarting = false;
