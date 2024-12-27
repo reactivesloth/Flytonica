@@ -1,6 +1,6 @@
 // Copyright (c) 2015 Augie R. Maddox, Guavaman Enterprises. All rights reserved.
 
-//#define REWIRED_CONTROL_MAPPER_USE_TMPRO
+#define REWIRED_CONTROL_MAPPER_USE_TMPRO
 
 #if UNITY_2020 || UNITY_2021 || UNITY_2022 || UNITY_2023 || UNITY_6000 || UNITY_6000_0_OR_NEWER
 #define UNITY_2020_PLUS

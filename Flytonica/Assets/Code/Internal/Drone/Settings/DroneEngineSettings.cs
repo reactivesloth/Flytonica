@@ -2,7 +2,7 @@
 
 namespace Code.Internal.Drone
 {
-    [CreateAssetMenu(fileName = "Engine", menuName = "Drones/Engine", order = 1)]
+    [CreateAssetMenu(fileName = "Engine", menuName = "Flytoncia/Drones/Engine", order = 1)]
     public class DroneEngineSettings : ScriptableObject
     {
         public new string name = "Drone Engine";

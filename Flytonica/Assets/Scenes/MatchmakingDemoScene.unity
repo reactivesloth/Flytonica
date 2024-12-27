@@ -583,7 +583,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prevPage: {fileID: 1470309795}
   _backButton: {fileID: 1542265169}
-  isSingle: 1
   createLobbyButton: {fileID: 1430087835}
   lobbyPage: {fileID: 1358909179}
 --- !u!1 &332074459
@@ -1929,7 +1928,7 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
-  _isSpawnable: 1
+  _isSpawnable: 0
   _isGlobal: 0
   _initializeOrder: 0
   _defaultDespawnType: 0
@@ -1949,7 +1948,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  <SceneId>k__BackingField: 4227324655
+  <SceneId>k__BackingField: 3573140467
   <AssetPathHash>k__BackingField: 0
 --- !u!114 &953281385
 MonoBehaviour:

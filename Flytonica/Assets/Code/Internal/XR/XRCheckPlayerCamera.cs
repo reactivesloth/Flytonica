@@ -1,6 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace Code.Internal.XR
 {
@@ -8,10 +8,15 @@ namespace Code.Internal.XR
     {
         [SerializeField] private GameObject desktopPlayer;
         [SerializeField] private GameObject XRPlayer;
-        
+
         private void Start()
         {
-            if (XRSettings.isDeviceActive && XRSettings.enabled)
+            Invoke("Initialize", 1);
+        }
+        
+        private void Initialize ()
+        {
+            if (XRSettings.isDeviceActive && XRSettings.enabled || FindAnyObjectByType<XRDeviceSimulator>(FindObjectsInactive.Include) != null)
             {
                 desktopPlayer.SetActive(false);
                 XRPlayer.SetActive(true);

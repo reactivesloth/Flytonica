@@ -1,40 +1,69 @@
 using System;
+using Code.Internal.API;
+using Code.Internal.API.Wrappers;
 using Code.Internal.Drone;
-using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.SpatialTracking;
 
 namespace Code.Internal.XR
 {
-    [RequireComponent(typeof(XROrigin))]
     public class XRDisableHeadTrackingInFPV : MonoBehaviour
     {
-        private XROrigin _xrOrigin;
-        private TrackedPoseDriver[] _poseDriver;
+        public bool shouldBeEnabledInFPV = true;
+        
+        [SerializeField] private GameObject switchedCamera;
+        [SerializeField] private GameObject[] enabledInFPVObjects;
+        [SerializeField] private GameObject[] disabledInFPVObjects;
         private DroneInput _droneInput;
 
-        private void Awake()
-        {
-            _xrOrigin = gameObject.GetComponent<XROrigin>();
-            _poseDriver = gameObject.GetComponentsInChildren<TrackedPoseDriver>(true);
-        }
-
+        public bool IsViewed = false;
+        
         private void Update()
         {
-            if (_droneInput == null)
+            if (!_droneInput)
             {
-                _droneInput = FindAnyObjectByType<DroneInput>();
-                return;
+                if(switchedCamera)
+                    switchedCamera.SetActive(!shouldBeEnabledInFPV);
+                _droneInput = DroneInput.Instance;
             }
-
-            if (_xrOrigin.enabled != !_droneInput.DroneCam)
-                _xrOrigin.enabled = !_droneInput.DroneCam;
-
-            foreach (var poseDriver in _poseDriver)
+            
+            if(_droneInput && _droneInput.IsOwner)
             {
-                if (poseDriver.enabled != !_droneInput.DroneCam)
-                    poseDriver.enabled = !_droneInput.DroneCam;
+                if (switchedCamera)
+                    SwitchObject(shouldBeEnabledInFPV, switchedCamera);
+                SwitchObject(!shouldBeEnabledInFPV, enabledInFPVObjects);
+                SwitchObject(shouldBeEnabledInFPV, disabledInFPVObjects);
             }
+            else if(HttpClient.IsAuthorized && HttpClient.UserData.type == UserType.Teacher)
+            {
+                if (switchedCamera)
+                    SwitchViewObject(IsViewed, switchedCamera);
+            }
+        }
+
+        private void SwitchObject(bool value, GameObject o) {
+            o?.SetActive(_droneInput.DroneCam switch
+            {
+                true => value,
+                false => !value
+            });
+        }
+        
+        private void SwitchViewObject(bool value, GameObject o) {
+            o?.SetActive(IsViewed);
+        }
+        
+        private void SwitchObject(bool value, GameObject[] ojbects)
+        {
+            foreach (var o in ojbects)
+            {
+                SwitchObject(value, o);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if(switchedCamera)
+                switchedCamera.SetActive(!shouldBeEnabledInFPV);
         }
     }
 }

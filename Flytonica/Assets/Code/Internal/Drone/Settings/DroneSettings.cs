@@ -1,23 +1,28 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Code.Internal.Drone
 {
-    [CreateAssetMenu(fileName = "Drone", menuName = "Drones/Drone", order = 1)]
+    [CreateAssetMenu(fileName = "Drone", menuName = "Flytoncia/Drones/Drone", order = 1)]
     public class DroneSettings : ScriptableObject
     {
-        public string modeName = "Drone";
+        public GameObject prefab;
+        public string modelName = "Drone";
         [Header("Body")] 
         public float weight = 0.8f;
         public AirframeType airframeType = AirframeType.QuadX;
         public DroneEngineSettings droneEngine;
         public DronePropellerSettings dronePropeller;
         
-        [Header("Flight Modes")] public DroneFlightSettings[] flightModes;
+        [Header("Flight Modes")] public List<DroneFlightSettings> flightModes;
+        [HideInInspector] public DroneFlightSettings currentFlightMode;
 
-        [FormerlySerializedAs("batteryVoltage_V")] [Header("Power")] 
-        public float batteryVoltageV = 15.4f;
-        public float batteryCapacityMah = 5000;
+        [Header("Battery")] 
+        public float bateteryCellCount = 4;
+        public float minBatteryCellVoltage = 2.4f;
+        public float maxBatteryCellVoltage = 3.8f;
+        public float batteryCellCapacity = 1000;
         public float batteryEnergyWh = 77;
         
         [Header("Safety\nLow Battery Failsafe Trigger")]
@@ -29,6 +34,14 @@ namespace Code.Internal.Drone
         [Header("RC Loss Failsafe Trigger")]
         public DroneFailsafeAction rCLossFailsafeTrigger = DroneFailsafeAction.Terminate;
         public float rCLossTimeout = 2;
+
+        [Header("Signal settings")] 
+        public float maxDistanceInMetres;
+
+        [Header("Damage info")] public float healthPoints = 100f;
+        public float maxImpactForce = 100f;
+        public float damageThreshold = 2f;
+
     }
 
     public enum AirframeType

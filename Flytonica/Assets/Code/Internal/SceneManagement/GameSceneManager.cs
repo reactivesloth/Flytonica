@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Linq;
-using Code.Internal.Drone;
-using Code.Internal.Network;
+using System.Threading.Tasks;
+using Code.Internal.Replays;
+using Code.Internal.UserInterface;
 using FishNet;
 using FishNet.Managing.Scened;
+using FishNet.Object;
+using FishNet.Transporting;
+using JetBrains.Annotations;
+using UltimateReplay;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Code.Internal.SceneManagement
 {
-    public class GameSceneManager : MonoBehaviour
+    public class GameSceneManager : NetworkBehaviour
     {
-        public static GameSceneManager Instance { get; private set; }
+        [SerializeField] [CanBeNull] private Transform pcPlayer, vrPlayer;
         
-        [SerializeField] private string loadSceneName;
-        [SerializeField] private DroneController drone;
-
+        public static GameSceneManager Instance { get; private set; }
         public string CurrentGlobalScene { get; private set; }
+        public MapSettings CurrentMapSettings { get; private set; }
+
+        public bool IsPlaying { get; private set; }
 
         private void Awake()
         {
@@ -24,42 +30,92 @@ namespace Code.Internal.SceneManagement
                 Instance = this;
             else
                 Destroy(this);
-            
-            LoadSceneLocal("MatchmakingDemoScene");
+
+            QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("QualitySettingsLevel", 1), false);
+            LoadSceneLocal("UI Scene");
         }
 
-        public void LoadGame()
+        public override void OnStartClient()
         {
-            UnloadScene("MatchmakingDemoScene");
-            LoadSceneGlobal(loadSceneName, InstanceFinder.NetworkManager.GetComponent<PlayersSpawner>().SpawnDrones);
+            base.OnStartClient();
+            UIController.Instance.OnGameStart();
+            IsPlaying = true;
+        }
+
+        public void LoadGlobalScene(MapSettings sceneSettingsCurrentMap, Action callback = null)
+        {
+            CurrentMapSettings = sceneSettingsCurrentMap;
+            var sceneName = sceneSettingsCurrentMap.loadingSceneName;
+
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                Debug.LogError("Scene name is null or empty. Please check the MapSettings.");
+                return;
+            }
+
+            var sceneLoadData = new SceneLoadData(sceneName);
+            Action<SceneLoadEndEventArgs> onSceneLoaded = null;
+
+            onSceneLoaded = args =>
+            {
+                if (!args.LoadedScenes.Select(s => s.name).Contains(sceneName))
+                    return;
+                Debug.Log($"Scene {sceneName} loaded successfully.");
+                callback?.Invoke();
+                InstanceFinder.SceneManager.OnLoadEnd -= onSceneLoaded;
+            };
+
+            InstanceFinder.SceneManager.OnLoadEnd += onSceneLoaded;
+            InstanceFinder.SceneManager.LoadGlobalScenes(sceneLoadData);
+        }
+
+        public void ToMenuSingle()
+        {
+            UIController.Instance.OnMainMenu();
+            UnloadScene();
+            IsPlaying = false;
+            var player = GameObject.FindWithTag("Player");
+            player.transform.position = Vector3.zero;
+            vrPlayer?.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         private void LoadSceneLocal(string sceneName)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
-        
-        /// <summary>
-        /// Загрузка глобальной сцены для всех подключений 
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="callback"></param>
-        private void LoadSceneGlobal(string sceneName, Action callback = null)
+
+        private void UnloadScene()
         {
-            var sceneData = new SceneLoadData(sceneName);
-            
-            InstanceFinder.SceneManager.LoadGlobalScenes(sceneData);
-            InstanceFinder.SceneManager.OnLoadEnd += args =>
-            {
-                if (args.LoadedScenes.Select(s => s.name).Contains(sceneName)) 
-                    callback?.Invoke();
-            };
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if (scene.name != "Main")
+                UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
         }
 
-        private void UnloadScene(string sceneName)
+        public void Replay()
         {
-            var sud = new SceneUnloadData(sceneName);
-            InstanceFinder.NetworkManager.SceneManager.UnloadGlobalScenes(sud);
+            if (!IsPlaying)
+                return;
+            if (NetworkManager == null || NetworkManager.ClientManager == null)
+                return;
+
+            IsPlaying = false;
+
+            NetworkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
+            NetworkManager.ClientManager.StopConnection();
+        }
+
+        private void OnClientConnectionState(ClientConnectionStateArgs args)
+        {
+            if (args.ConnectionState == LocalConnectionState.Stopped)
+            {
+                NetworkManager.ClientManager.StartConnection();
+            }
+            else if (args.ConnectionState == LocalConnectionState.Started)
+            {
+                UIController.Instance.OnGameStart();
+                IsPlaying = true;
+                NetworkManager.ClientManager.OnClientConnectionState -= OnClientConnectionState;
+            }
         }
     }
 }

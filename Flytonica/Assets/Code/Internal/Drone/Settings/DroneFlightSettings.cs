@@ -3,16 +3,18 @@ using UnityEngine;
 
 namespace Code.Internal.Drone
 {
-    [CreateAssetMenu(fileName = "Flight Mode", menuName = "Drones/Fligh Mode", order = 1)]
+    [CreateAssetMenu(fileName = "Flight Mode", menuName = "Flytoncia/Drones/Fligh Mode", order = 1)]
     public class DroneFlightSettings : ScriptableObject
     {
         public string modeName = "Flight Mode";
 
+        public float maxSpeed = 150;
+        
         [Header("Throttle")] 
-        public ControlType throttleType = ControlType.STABILIZED;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxAscendingSpeed = 1;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxDescendingSpeed = 1;
-        [ShowIf("throttleType", ControlType.STABILIZED)] public float maxHeight = 6000;
+        public ControlType throttleType = ControlType.HOLD;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxAscendingSpeed = 1;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxDescendingSpeed = 1;
+        [ShowIf("throttleType", ControlType.HOLD)] public float maxHeight = 6000;
         [ShowIf("throttleType", ControlType.MANUAL)] public AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
         
         
@@ -31,6 +33,7 @@ namespace Code.Internal.Drone
     {
         MANUAL,
         STABILIZED,
-        MIXED
+        MIXED,
+        HOLD
     }
 }
