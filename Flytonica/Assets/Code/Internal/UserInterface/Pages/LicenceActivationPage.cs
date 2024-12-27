@@ -26,23 +26,7 @@ namespace Code.Internal.UserInterface.Pages
             devServerToggleSwitcher.isOn = (PlayerPrefs.GetInt("DevelopmentServer", 0) == 1);
             loadLicenceScreen.SetActive(true);
 
-            HttpClient.Get("http://46.30.43.10/flytonica/pay_check.json", onSuccess: response =>
-                {
-                    var payedData = JsonUtility.FromJson<DefendData>(response);
-                    if (payedData.IsPayedProject)
-                        Open();
-                    else
-                        OnDontPayed();
-                },
-                onError: (s, l) => { Open(); });
-        }
-
-        private void OnDontPayed()
-        {
-            PopupPanel.ConfigurePopup("Соединение с сервером отключено",
-                "Доступ к серверу проверки лицензий приостановлен, обратитесь за помощью к разработчику.",
-                leftButtonText: "Выйти", leftButtonTextColor: Color.white, leftButtonColor: StyleConstants.Instance.Red,
-                leftButtonAction: Application.Quit, showClose: false);
+            Open();
         }
 
         private void OnEnable()
@@ -148,10 +132,5 @@ namespace Code.Internal.UserInterface.Pages
                 return (currentDate - savedDate).TotalDays > 5;
             }
         }
-    }
-
-    public class DefendData
-    {
-        public bool IsPayedProject;
     }
 }
