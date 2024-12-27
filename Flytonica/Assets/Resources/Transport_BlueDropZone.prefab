@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7164438295507727870}
   - component: {fileID: 2960932306178131700}
   - component: {fileID: 2284285956893658050}
+  - component: {fileID: -5943307070559655029}
   m_Layer: 0
   m_Name: Transport_BlueDropZone
   m_TagString: Untagged
@@ -73,7 +74,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selected: 0
   Type: 5
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 0dcdcd1cb91ef4941bb1ae588eafd9c2, type: 3}
   displayName: "\u0421\u0438\u043D\u044F\u044F \u0437\u043E\u043D\u0430 \u0441\u0431\u0440\u043E\u0441\u0430"
   sortOrder: 0
 --- !u!114 &7221918900659166052
@@ -133,6 +134,7 @@ MonoBehaviour:
     id: 8631
   observedComponents:
   - {fileID: 7164438295507727870}
+  - {fileID: -5943307070559655029}
   runtimeComponents:
   - {fileID: 7164438295507727870}
   isPrefab: 1
@@ -171,6 +173,22 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &-5943307070559655029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955882340377954675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 8065
+  replayObject:
+    reference: {fileID: 2960932306178131700}
 --- !u!1001 &3370469696215417912
 PrefabInstance:
   m_ObjectHideFlags: 0

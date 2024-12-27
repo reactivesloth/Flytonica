@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -4357942786156734500}
   - component: {fileID: -6960811195390966582}
   - component: {fileID: -1112184049652604890}
+  - component: {fileID: 7566859048574739639}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -176,6 +177,7 @@ MonoBehaviour:
   observedComponents:
   - {fileID: -6070491025120947964}
   - {fileID: -6960811195390966582}
+  - {fileID: 7566859048574739639}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -229,6 +231,22 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &7566859048574739639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847547470021264952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 26047
+  replayObject:
+    reference: {fileID: -4357942786156734500}
 --- !u!1 &7684557770456935339
 GameObject:
   m_ObjectHideFlags: 0

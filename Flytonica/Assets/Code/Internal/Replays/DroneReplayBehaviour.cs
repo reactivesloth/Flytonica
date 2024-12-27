@@ -2,6 +2,7 @@
 using Code.Internal.API;
 using Code.Internal.Drone;
 using Code.Internal.Network;
+using Code.Internal.SceneManagement;
 using Code.Internal.UserInterface;
 using UltimateReplay;
 using UnityEngine;
@@ -40,6 +41,8 @@ namespace Code.Internal.Replays
         private int _compassRotation;
 
         private string _playerName = string.Empty;
+
+        private ScenarioType _scenarioType = ScenarioType.FreeFlight;
 
         // Переменные для интерполяции (предыдущие и следующие значения)
         private float _cameraSignalPrev, _cameraSignalNext;
@@ -92,6 +95,8 @@ namespace Code.Internal.Replays
             _compassRotation = DroneHUD.Instance.CompassElement.Rotation;
 
             _playerName = GetComponent<NetBridge>().PlayerNickname;
+            
+            _scenarioType = DroneHUD.Instance.AimElement.ScenarioType;
 
             state.Write(_cameraSignal);
             state.Write(_inputSignal);
@@ -112,6 +117,7 @@ namespace Code.Internal.Replays
             state.Write(_isIrMode);
             state.Write(_compassRotation);
             state.Write(_playerName);
+            state.Write((int)_scenarioType);
         }
 
         public override void OnReplayDeserialize(ReplayState state)
@@ -164,6 +170,8 @@ namespace Code.Internal.Replays
             _compassRotationNext = state.ReadInt32();
 
             _playerName = state.ReadString();
+
+            _scenarioType = (ScenarioType) state.ReadInt32();
         }
 
         protected override void Awake()
@@ -283,6 +291,7 @@ namespace Code.Internal.Replays
             DroneHUD.Instance.SetWind(_windText);
             DroneHUD.Instance.SetTime(_timeText);
             DroneHUD.Instance.AimElement.SetProgressValue(_aimProgress);
+            DroneHUD.Instance.AimElement.SetActionIcon(_scenarioType);
             DroneHUD.Instance.CompassElement.SetRotation(_compassRotation);
         }
     }

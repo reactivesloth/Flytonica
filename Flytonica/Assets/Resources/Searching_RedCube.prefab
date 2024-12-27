@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -8171765549717789759}
   - component: {fileID: 2256808639637593740}
   - component: {fileID: -1491401243674857015}
+  - component: {fileID: 2904918963697395439}
   m_Layer: 13
   m_Name: Searching_RedCube
   m_TagString: Untagged
@@ -172,6 +173,7 @@ MonoBehaviour:
     id: 65432
   observedComponents:
   - {fileID: -8171765549717789759}
+  - {fileID: 2904918963697395439}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -209,3 +211,19 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &2904918963697395439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5255128501767349553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 39951
+  replayObject:
+    reference: {fileID: 2256808639637593740}

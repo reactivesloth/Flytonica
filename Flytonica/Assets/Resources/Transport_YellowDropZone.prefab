@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8638441185324995663}
   - component: {fileID: 3794084733581732351}
   - component: {fileID: -977740895815111226}
+  - component: {fileID: 340175179027619092}
   m_Layer: 0
   m_Name: Transport_YellowDropZone
   m_TagString: Untagged
@@ -73,7 +74,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selected: 0
   Type: 5
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: cc272617976706a4189a8aa5f2ed30be, type: 3}
   displayName: "\u0416\u0451\u043B\u0442\u0430\u044F \u0437\u043E\u043D\u0430 \u0441\u0431\u0440\u043E\u0441\u0430"
   sortOrder: 0
 --- !u!114 &7221918900659166052
@@ -133,6 +134,7 @@ MonoBehaviour:
     id: 9791
   observedComponents:
   - {fileID: 8638441185324995663}
+  - {fileID: 340175179027619092}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -170,6 +172,22 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &340175179027619092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955882340377954675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 52237
+  replayObject:
+    reference: {fileID: 3794084733581732351}
 --- !u!1001 &3370469696215417912
 PrefabInstance:
   m_ObjectHideFlags: 0

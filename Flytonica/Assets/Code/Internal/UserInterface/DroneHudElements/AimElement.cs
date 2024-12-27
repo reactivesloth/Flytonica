@@ -22,6 +22,8 @@ namespace Code.Internal.UserInterface.DroneHudElements
         public event Action<Color, float> OnFlash;
 
         public float Progress => progressImage.fillAmount;
+        
+        public ScenarioType ScenarioType { get; private set; }
 
         private void Awake()
         {
@@ -47,6 +49,8 @@ namespace Code.Internal.UserInterface.DroneHudElements
 
         public void SetActionIcon(ScenarioType scenarioType)
         {
+            ScenarioType = scenarioType;
+            
             actionIcon.sprite = scenarioType switch
             {
                 ScenarioType.Transport => transportAim,

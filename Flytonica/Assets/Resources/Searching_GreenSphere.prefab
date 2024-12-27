@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7021631100181162824}
   - component: {fileID: 3044620237536947275}
   - component: {fileID: -8763354750707147570}
+  - component: {fileID: -7533014898777181233}
   m_Layer: 13
   m_Name: Searching_GreenSphere
   m_TagString: Untagged
@@ -125,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selected: 0
-  Type: 0
+  Type: 6
   icon: {fileID: 2800000, guid: 8599d60507e15074f9e9039e0fc19799, type: 3}
   displayName: "\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430"
   sortOrder: 0
@@ -172,6 +173,7 @@ MonoBehaviour:
     id: 3426
   observedComponents:
   - {fileID: 7021631100181162824}
+  - {fileID: -7533014898777181233}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -209,3 +211,19 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &-7533014898777181233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2794291290784090685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 55676
+  replayObject:
+    reference: {fileID: 3044620237536947275}

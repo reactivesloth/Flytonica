@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -3078803797394555135}
   - component: {fileID: 2859220045077601505}
   - component: {fileID: -6221928352606120752}
+  - component: {fileID: -7875687379633353854}
   m_Layer: 0
   m_Name: Transport_GreenTakeZone
   m_TagString: Untagged
@@ -96,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selected: 1
   Type: 5
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 6f41addafc365c1438bb0b28d489a3c0, type: 3}
   displayName: "\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0437\u043E\u043D\u0430
     \u043F\u043E\u0434\u043D\u044F\u0442\u0438\u044F"
   sortOrder: 0
@@ -159,6 +160,7 @@ MonoBehaviour:
     id: 25402
   observedComponents:
   - {fileID: -3078803797394555135}
+  - {fileID: -7875687379633353854}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -196,6 +198,22 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &-7875687379633353854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664735927538801708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 37745
+  replayObject:
+    reference: {fileID: 2859220045077601505}
 --- !u!1 &5467952066054761119
 GameObject:
   m_ObjectHideFlags: 0

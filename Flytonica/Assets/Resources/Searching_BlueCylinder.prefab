@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -216427840527887365}
   - component: {fileID: -4239784983032245937}
   - component: {fileID: 894363076911328125}
+  - component: {fileID: 8050242596376225503}
   m_Layer: 13
   m_Name: Searching_BlueCylinder
   m_TagString: Untagged
@@ -174,6 +175,7 @@ MonoBehaviour:
     id: 46469
   observedComponents:
   - {fileID: -216427840527887365}
+  - {fileID: 8050242596376225503}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -211,3 +213,19 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &8050242596376225503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380827621280574158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 5560
+  replayObject:
+    reference: {fileID: -4239784983032245937}

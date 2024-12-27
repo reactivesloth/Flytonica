@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8624685336811787022}
   - component: {fileID: 8202506450953314012}
   - component: {fileID: -5025889322293741145}
+  - component: {fileID: -2255850608725679131}
   m_Layer: 0
   m_Name: Transport_PurpleTakeZone
   m_TagString: Untagged
@@ -96,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selected: 1
   Type: 5
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 37dae73fb67cc7541a2f7588ec1e5b57, type: 3}
   displayName: "\u0424\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u0430\u044F \u0437\u043E\u043D\u0430
     \u043F\u043E\u0434\u043D\u044F\u0442\u0438\u044F"
   sortOrder: 0
@@ -159,6 +160,7 @@ MonoBehaviour:
     id: 64824
   observedComponents:
   - {fileID: 8624685336811787022}
+  - {fileID: -2255850608725679131}
   runtimeComponents: []
   isPrefab: 1
   prefabType: 0
@@ -196,6 +198,22 @@ MonoBehaviour:
   RenderDelay: 0
   m_Effect: 2
   CustomIconPrefab: {fileID: 0}
+--- !u!114 &-2255850608725679131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664735927538801708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a58b32183d374ae3bcd23c05bda9d3b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 5815
+  replayObject:
+    reference: {fileID: 8202506450953314012}
 --- !u!1 &5467952066054761119
 GameObject:
   m_ObjectHideFlags: 0
